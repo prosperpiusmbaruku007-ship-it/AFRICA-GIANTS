@@ -1106,17 +1106,35 @@ async def _notify_reviewers(item, *, renotify=False):
     return ok_count
 
 
-def _mark_notified(item, sent_count, *, renotify=False):
-    from datetime import datetime, timezone
-    item["last_notified_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    item["notify_count"] = int(item.get("notify_count") or 0) + 1
-    if not item.get("first_notified_at"):
-        item["first_notified_at"] = item["last_notified_at"]    # decision latency counts from here
-    item["last_notify_recipients"] = sent_count
-    if renotify:
-        item["renotify_count"] = int(item.get("renotify_count") or 0) + 1
+def _fresh_item(item):
+    """The CURRENT stored copy of a queue item (the caller's copy may be seconds old: a sweep holds one across network awaits).
+    Falls back to the caller's copy when the store cannot be read."""
     try:
-        REVIEW_QUEUE[item["review_id"]] = item
+        return dict(REVIEW_QUEUE[item["review_id"]])
+    except Exception:                                                # noqa: BLE001
+        return item
+
+
+def _mark_notified(item, sent_count, *, renotify=False):
+    """Record a notification WITHOUT clobbering anything written since the caller read the item.
+
+    ⛔ LOST-UPDATE BUG, FOUND LIVE 2026-11-13: this used to write the caller's (stale) copy back whole. A re-notify sweep that
+    had read a draft before the timeout sweep sent its holding message therefore OVERWROTE the stored item and erased
+    `holding_notice_ts` -- and, for an auto-send, would have put a SENT draft back to `pending`. It now re-reads, changes only the
+    notification fields, and mirrors them onto the caller's copy."""
+    from datetime import datetime, timezone
+    fresh = _fresh_item(item)
+    stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    fields = {"last_notified_at": stamp,
+              "notify_count": int(fresh.get("notify_count") or 0) + 1,
+              "first_notified_at": fresh.get("first_notified_at") or stamp,    # decision latency counts from here
+              "last_notify_recipients": sent_count}
+    if renotify:
+        fields["renotify_count"] = int(fresh.get("renotify_count") or 0) + 1
+    fresh.update(fields)
+    item.update(fields)
+    try:
+        REVIEW_QUEUE[item["review_id"]] = fresh
     except Exception as e:                                           # noqa: BLE001
         print(f"[review] could not record notification for {item['review_id']}: {e}")
 
@@ -1166,7 +1184,9 @@ def _cohort_health():
             # TEST SENDERS (TEST_SENDERS in the secret): full review loop, not counted above or in any limit below.
             "test_senders": {"listed": n_test_listed, "rejected_entries": n_test_rejected, "seen": test_seen,
                              "excluded_from": "participants_seen, over_capacity, seen_exceeds_review_capacity",
-                             "unit": "sender IDENTITIES, not people: one phone seen as both a number and a linked ID counts as 2"},
+                             "unit": "sender IDENTITIES, not people: one phone seen as both a number and a linked ID counts as 2",
+                             # presence only, never the value: tells "the key never reached the app" from "it parsed to nothing"
+                             "env_present": bool(os.environ.get("TEST_SENDERS", "").strip())},
             "over_capacity": (None if (seen is None or not size) else seen > size),
             # The ceiling can be higher than the roster can review; THIS is the monitor for the gap that
             # actually matters -- participants served vs participants one roster can review properly.
@@ -1847,6 +1867,7 @@ async def sweep_review_queue():
     settings = _settings()
     released, renotified, pending = 0, 0, 0
     for it in _queue_items():
+        it = _fresh_item(it)                     # the queue snapshot is old by the time we reach this item
         if it.get("status") != "pending":
             continue
         pending += 1
@@ -1860,8 +1881,9 @@ async def sweep_review_queue():
             print(f"[sweep] RELEASED {it['review_id']} from "
                   f"...{_core().number_tail(it.get('released_from'))} — back to the roster, "
                   f"NOT sent", flush=True)
-        if core.needs_renotify(it, renotify_after_s=settings.renotify_after_s,
-                               max_renotifies=settings.max_renotifies):
+        it = _fresh_item(it)                     # a timeout send may have decided it while we released/scanned
+        if it.get("status") == "pending" and core.needs_renotify(
+                it, renotify_after_s=settings.renotify_after_s, max_renotifies=settings.max_renotifies):
             sent = await _notify_reviewers(it, renotify=True)
             _mark_notified(it, sent, renotify=True)
             renotified += 1
@@ -1930,11 +1952,13 @@ async def _do_auto_send(it, settings):
         print(f"[autosend] store failed for {rid}: {type(e).__name__} -- NOT sent", flush=True)
         return False
     send_ok, send_error = await _send_once(cur["sender"], text)
-    upd["send_ok"], upd["send_error"] = send_ok, send_error
-    upd["send_state"] = core.send_state(send_ok, send_error)
-    upd["reply_address_kind"] = core.reply_address_kind(cur["sender"])
+    fresh = _fresh_item(upd)
+    fresh.update(send_ok=send_ok, send_error=send_error, send_state=core.send_state(send_ok, send_error),
+                 reply_address_kind=core.reply_address_kind(cur["sender"]), status="auto_sent",
+                 auto_sent_ts=upd["auto_sent_ts"], auto_sent_text=text)
+    upd.update({k: fresh[k] for k in ("send_ok", "send_error", "send_state", "reply_address_kind")})
     try:
-        REVIEW_QUEUE[rid] = upd
+        REVIEW_QUEUE[rid] = fresh
     except Exception as e:                                           # noqa: BLE001
         print(f"[autosend] send result recorded only in logs ({e})", flush=True)
     _write_row({
@@ -1975,7 +1999,7 @@ async def _do_holding_notice(it, settings):
             pass
         return False
     ok, err = await _send_once(cur["sender"], core.HOLDING_TEXT)
-    cur = dict(cur)
+    cur = _fresh_item(cur)                     # the send took seconds: write onto what is stored NOW, not what we read before it
     cur["holding_notice_ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cur["holding_notice_ok"] = bool(ok or core.is_pending_receipt(err))
     cur["holding_notice_error"] = None if cur["holding_notice_ok"] else str(err)[:120]

@@ -756,3 +756,60 @@ def test_the_probe_seeder_refuses_other_kinds_and_is_not_a_web_endpoint():
     src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"), encoding="utf-8").read()
     i = src.index("async def seed_timeout_probe")
     assert "fastapi_endpoint" not in src[i - 200:i]
+
+
+# ── THE LOST-UPDATE BUG FOUND LIVE 2026-11-13 ────────────────────────────────────────────────────
+# A re-notify sweep read a draft, awaited the network, then wrote its STALE copy back whole -- erasing the holding-notice record the
+# timeout sweep had written meanwhile (live: holding_notice_ts vanished while the message HAD been sent). For an auto-send the same
+# overwrite would have put a SENT draft back to `pending`, where a human could approve it and send the answer twice.
+def test_mark_notified_does_not_clobber_what_was_written_since_the_caller_read_the_item(monkeypatch):
+    mw, _ = _load_mw(monkeypatch)
+    it = _aged(mw, 16)
+    stale = dict(mw.REVIEW_QUEUE[it["review_id"]])                       # the sweep's copy, taken early
+    cur = dict(mw.REVIEW_QUEUE[it["review_id"]])
+    cur.update(status="auto_sent", auto_sent_ts="T", holding_notice_ts="H", send_state="delivered")
+    mw.REVIEW_QUEUE[it["review_id"]] = cur                                # the timeout sweep wrote while the sweep awaited
+    mw._mark_notified(stale, 1, renotify=True)
+    stored = mw.REVIEW_QUEUE[it["review_id"]]
+    assert stored["status"] == "auto_sent" and stored["auto_sent_ts"] == "T" and stored["holding_notice_ts"] == "H"
+    assert stored["send_state"] == "delivered"
+    assert stored["renotify_count"] == 1 and stored["notify_count"] == 1 and stored["last_notified_at"], "the notification IS recorded"
+    assert stale["renotify_count"] == 1, "and mirrored onto the caller's copy"
+
+
+def test_the_sweeper_does_not_renotify_a_draft_a_timeout_send_decided_meanwhile(monkeypatch):
+    mw, sent = _load_mw(monkeypatch)
+    it = _aged(mw, 16)
+    notified = []
+
+    async def fake_notify(item, *, renotify=False):
+        notified.append(item["review_id"])
+        return 1
+    monkeypatch.setattr(mw, "_notify_reviewers", fake_notify)
+    snapshot = mw._queue_items()                                          # the sweep's snapshot: pending
+    monkeypatch.setattr(mw, "_queue_items", lambda: snapshot)
+    decided = dict(mw.REVIEW_QUEUE[it["review_id"]], status="auto_sent")  # decided after the snapshot
+    mw.REVIEW_QUEUE[it["review_id"]] = decided
+    _run(mw.sweep_review_queue.get_raw_f()())
+    assert notified == [], "a decided draft must not be pushed to the roster as 'pending'"
+
+
+def test_the_holding_notice_record_survives_a_concurrent_renotify_sweep(monkeypatch):
+    """The exact live failure, end to end: timeout sweep and re-notify sweep interleaved on a model draft."""
+    mw, sent = _load_mw(monkeypatch)
+    it = _aged(mw, 16, answer_path="fact", engine_working=None, facts=["f"], model_calls=1)
+    stale = dict(mw.REVIEW_QUEUE[it["review_id"]])
+    _sweep(mw)                                                            # holding message sent and recorded
+    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_ts"]
+    mw._mark_notified(stale, 1, renotify=True)                            # the re-notify sweep finishes late with its old copy
+    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_ts"], "the record of the holding message must not be erased"
+    assert _sweep(mw)["holding_notices"] == 0 and len([1 for _, t in sent if t == core.HOLDING_TEXT]) == 1
+
+
+def test_health_says_whether_TEST_SENDERS_reached_the_app_without_showing_it(monkeypatch):
+    mw, _ = _load_mw(monkeypatch)
+    monkeypatch.delenv("TEST_SENDERS", raising=False)
+    assert mw._cohort_health()["test_senders"]["env_present"] is False
+    monkeypatch.setenv("TEST_SENDERS", "+255799000111")
+    t = mw._cohort_health()["test_senders"]
+    assert t["env_present"] is True and "255799000111" not in str(t)
