@@ -97,7 +97,8 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # be given a test roster without writing to the production secret.
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
-                    "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY")
+                    "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
+                    "INFERENCE_HEALTH_URL")
 
 image = (
     modal.Image.debian_slim(python_version="3.11")
@@ -186,6 +187,9 @@ _WATCH_KEY = "session"
 PENDING_ROWS = modal.Dict.from_name("chike-pending-rows-kv", create_if_missing=True)
 # Who has been sent the participant disclosure (runbook 8a). Keyed by sender HASH, never a number.
 DISCLOSURES = modal.Dict.from_name("chike-disclosures-kv", create_if_missing=True)
+# Exactly-once claims for the review timeout: `auto:<review_id>` and `hold:<review_id>` (put-if-absent), so two overlapping
+# sweeps can never send an auto-answer or a holding message twice.
+AUTOSEND = modal.Dict.from_name("chike-autosend-kv", create_if_missing=True)
 # A question that is being answered RIGHT NOW (before a draft exists to be 'pending' in the review queue).
 # Keyed by sender hash; stamped at the start of answer_and_send, cleared when it ends, ignored once stale.
 INFLIGHT = modal.Dict.from_name("chike-inflight-kv", create_if_missing=True)
@@ -236,10 +240,35 @@ def _settings():
         cohort_size=int(os.environ.get("COHORT_SIZE", "0") or 0),
         roster=parse_roster_env(),
         test_sender_hashes=_test_sender_parse()[0],
+        autosend_enabled=_autosend_cfg()[0], autosend_after_s=_autosend_cfg()[1],
         review_signing_key=os.environ.get("REVIEW_SIGNING_KEY", ""),
         claim_ttl_s=float(os.environ.get("CLAIM_TTL_S", "900")),
         renotify_after_s=float(os.environ.get("RENOTIFY_AFTER_S", "1800")),
     )
+
+
+def _autosend_cfg():
+    """(enabled, after_s) for the review timeout, FAIL-CLOSED (see core.parse_autosend)."""
+    try:
+        return _core().parse_autosend(os.environ.get("AUTOSEND_ENGINE"), os.environ.get("AUTOSEND_AFTER_S"))
+    except Exception:                                                # noqa: BLE001
+        return False, 900.0
+
+
+def _record_model_outcome(row):
+    """Feeds the dead-model watch: one real question's model outcome. Never raises."""
+    import time as _t
+    try:
+        w = dict(BRIDGE_WATCH.get("model_watch") or {})
+        if row.get("fallback") or row.get("error_class"):
+            w["consecutive_failures"] = int(w.get("consecutive_failures") or 0) + 1
+            w["last_err_ts"] = _t.time()
+            w["last_error"] = str(row.get("error_class") or "fallback")[:40]
+        else:
+            w.update(consecutive_failures=0, last_ok_ts=_t.time())
+        BRIDGE_WATCH["model_watch"] = w
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[model-watch] not recorded: {type(e).__name__}", flush=True)
 
 
 def _test_sender_parse():
@@ -344,12 +373,16 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
             facts = (result.get("facts") or result.get("retrieved_facts") or ())
             captured["facts"] = list(facts) if isinstance(facts, (list, tuple)) else []
             captured["path"] = result.get("path")
+            captured["model_calls"] = result.get("model_calls")      # None when absent: NOT eligible for auto-send
+            g = result.get("guards")
+            captured["guards"] = list(g) if isinstance(g, (list, tuple)) else None
         return result
 
     async def _hold_for_review(to, reply_text, row):
         item = core.review_item(row=row, sender=to, draft=reply_text,
                                 engine_working=captured.get("working"),
-                                facts=captured.get("facts", ()))
+                                facts=captured.get("facts", ()),
+                                model_calls=captured.get("model_calls"), guards=captured.get("guards"))
         item["retry_of"] = retry_of
         item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
         item["answer_path"] = captured.get("path")                         # engine vs model, on the card
@@ -398,6 +431,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         row["retry_of"] = retry_of
     row.update(disclosure)
     row["answer_path"] = captured.get("path")
+    _record_model_outcome(row)
     _write_row(row)
     _clear_inflight(sender, settings)
     return {"fallback": row["fallback"], "error_class": row["error_class"],
@@ -528,6 +562,22 @@ def _link_failure_shape(core, settings, r_raw, v_raw, t_raw):
         "t_present": bool(t_raw), "t_len": len(t_raw or ""), "t_is_hex": bool(_re.fullmatch(r"[0-9a-f]+", t_raw or "")),
         "signing_key_set": bool(settings.review_signing_key), "roster_size": len(settings.roster),
     }
+
+
+def _autosend_banner(it):
+    """What will happen (or already happened) to this draft without a person: sends itself, never auto-sends, or WAS auto-sent."""
+    try:
+        s = _settings()
+        note = _core().autosend_note(it, after_s=s.autosend_after_s, enabled=s.autosend_enabled)
+    except Exception:                                                # noqa: BLE001
+        return ""
+    if not note:
+        return ""
+    sent = it.get("status") == "auto_sent"
+    css = ("background:#4a1010;border:2px solid #ff4d4d;color:#ffd6d6" if sent
+           else "background:#10304a;border:1px solid #4da3ff;color:#d6ebff")
+    return ("<div style='" + css + ";border-radius:8px;padding:10px;margin-bottom:8px;font-weight:700'>"
+            + _esc(note[0]) + "<br>" + _esc(note[1]) + "</div>")
 
 
 def _evidence_banner(it):
@@ -718,6 +768,29 @@ def _send_alert_email(subject, body):
         return False, f"{type(e).__name__}"
 
 
+def _inference_web_status():
+    """(ok, error). A SHALLOW check of the chike-inference web tier: its /health answers 200 with status ok. It does NOT
+    wake the GPU (that would cost a cold start every poll). Never raises; the error is a class name."""
+    import json as _json
+    import urllib.request
+    url = os.environ.get("INFERENCE_HEALTH_URL", "https://prosperpiusmbaruku007--chike-inference-health.us-east.modal.run")
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            body = _json.loads(r.read().decode("utf-8"))
+            if int(r.status) == 200 and body.get("status") == "ok":
+                return True, None
+            return False, f"status {body.get('status')!r}"
+    except Exception as e:                                           # noqa: BLE001
+        return False, type(e).__name__
+
+
+def _model_watch():
+    try:
+        return dict(BRIDGE_WATCH.get("model_watch") or {})
+    except Exception:                                                # noqa: BLE001
+        return {}
+
+
 def _session_state():
     try:
         return dict(BRIDGE_WATCH.get(_WATCH_KEY) or {})
@@ -784,9 +857,21 @@ def poll_bridge_status():
         notes.append(f"{subj}: {body}")
         sent.append({"event": ev})
         print(f"[bridge-poll] EVENT {ev}", flush=True)
+    # chike-inference is on the same switch (2026-11-13): a dead model must not look like "slow drafts". TWO signals, because
+    # each is blind to the other's failure: a SHALLOW web-tier check every poll (does not wake the GPU) catches a stopped or
+    # crashed app; the outcome of REAL questions catches a GPU path that fails while the web tier is up.
+    inf_ok, inf_err = _inference_web_status()
+    state["inference_failures"] = 0 if inf_ok else int(state.get("inference_failures") or 0) + 1
+    state["inference_last_error"] = inf_err
+    problems = []
+    if state["inference_failures"] >= 2:
+        problems.append(f"chike-inference web tier not answering ({inf_err}) for {state['inference_failures']} polls")
+    mw_problem = core.model_watch_problem(_model_watch(), now)
+    if mw_problem:
+        problems.append(mw_problem)
     # THE HEARTBEAT. Sent on EVERY poll, before the state write, so a failing write cannot silence it; a poll that
     # never runs sends nothing, and that silence is itself the alarm.
-    decision, reason = core.heartbeat_decision(verdict, detail, state, threshold, kind)
+    decision, reason = core.heartbeat_decision(verdict, detail, state, threshold, kind, extra_problems=problems)
     ping = None
     if decision != "skip":
         text = (f"{reason}\n" + "\n".join(notes))[:2000] if decision == "fail" else ""
@@ -1009,7 +1094,9 @@ async def _notify_reviewers(item, *, renotify=False):
     for number, name in settings.roster:
         text = core.notification_text(
             item, _draft_link(settings, item, number), reviewer_name=name,
-            renotify=renotify)
+            renotify=renotify,
+            autosend_note_text=core.autosend_note(item, after_s=settings.autosend_after_s,
+                                                  enabled=settings.autosend_enabled))
         ok, detail = await _send_once(number, text)
         if ok or core.is_pending_receipt(detail):      # accepted by WhatsApp; the ceiling flags a stall
             ok_count += 1
@@ -1078,7 +1165,8 @@ def _cohort_health():
     return {"declared_size": size, "participants_seen": seen,
             # TEST SENDERS (TEST_SENDERS in the secret): full review loop, not counted above or in any limit below.
             "test_senders": {"listed": n_test_listed, "rejected_entries": n_test_rejected, "seen": test_seen,
-                             "excluded_from": "participants_seen, over_capacity, seen_exceeds_review_capacity"},
+                             "excluded_from": "participants_seen, over_capacity, seen_exceeds_review_capacity",
+                             "unit": "sender IDENTITIES, not people: one phone seen as both a number and a linked ID counts as 2"},
             "over_capacity": (None if (seen is None or not size) else seen > size),
             # The ceiling can be higher than the roster can review; THIS is the monitor for the gap that
             # actually matters -- participants served vs participants one roster can review properly.
@@ -1157,6 +1245,23 @@ def _supervision_health():
                 "supervised_error": f"{type(e).__name__}: {e}"}
 
 
+def _review_timeout_health():
+    enabled, after_s = _autosend_cfg()
+    return {"enabled": enabled, "after_s": after_s,
+            "rule": ("after the window a MODEL-FREE engine answer (model_calls == 0, no guard, working and evidence present) "
+                     "sends prefixed as an unchecked automated calculation; anything else stays in review and the participant "
+                     "gets ONE holding message. A model-written word is never sent unreviewed."),
+            "raw_flag": os.environ.get("AUTOSEND_ENGINE"), "raw_after_s": os.environ.get("AUTOSEND_AFTER_S")}
+
+
+def _latency_section(items):
+    """A failing latency computation degrades THIS field to an error, never the whole /health."""
+    try:
+        return _core().latency_summary(items)
+    except Exception as e:                                           # noqa: BLE001
+        return {"ok": False, "error": f"{type(e).__name__}"}
+
+
 def _review_queue_health():
     """Queue depth for /health. A supervised pilot's one operational risk is a queue nobody
     is clearing, and a pending count that nothing reports is a queue nobody is watching."""
@@ -1170,7 +1275,12 @@ def _review_queue_health():
             "oldest_pending_ts": oldest,
             # Drafts waiting for a human that carry NOTHING to check them against. Should be 0; a non-zero
             # value is the evidence pipeline failing again, visible without opening a single card.
-            "pending_without_evidence": sum(1 for i in pending if _core().evidence_is_loud(i))}
+            "pending_without_evidence": sum(1 for i in pending if _core().evidence_is_loud(i)),
+            # The review timeout's footprint (2026-11-13): answers that went out with no person having read them, and
+            # participants who got a holding message instead of an answer.
+            "auto_sent": sum(1 for i in items if i.get("status") == "auto_sent"),
+            "holding_notices_sent": sum(1 for i in items if i.get("holding_notice_ts")),
+            "latency_24h": _latency_section(items)}
 
 
 @app.function(image=image, secrets=SECRETS)
@@ -1205,6 +1315,7 @@ def review(token: str = None):
             "<div class=m>..." + _esc(it.get("sender_tail")) + " &middot; "
             + _esc(it.get("ts_held")) + " &middot; "
             + _esc(it.get("model_latency_ms")) + "ms" + flags + "</div>"
+            + _autosend_banner(it)
             + _evidence_banner(it)                 # FIRST: before the question and before the draft
             + _duplicate_banner(it, items)
             + "<div class=q>" + _esc(it.get("question")) + "</div>"
@@ -1219,7 +1330,16 @@ def review(token: str = None):
                if it.get("claimed_by") else "<div class=o>unclaimed</div>")
             + "<div class=o>notified " + str(it.get("notify_count") or 0) + "x</div>"
             "</div>")
-    body = "".join(cards) or "<p class=z>Queue empty.</p>"
+    auto_items = [i for i in items if i.get("status") == "auto_sent"][-30:]
+    auto_html = ("" if not auto_items else
+                 "<h1>AUTO-SENT without a person reading them (" + str(len(auto_items)) + ")</h1>" + "".join(
+                     "<div class=c>" + _autosend_banner(i) + "<div class=m>..." + _esc(i.get("sender_tail")) + " &middot; "
+                     + _esc(i.get("auto_sent_ts")) + " &middot; send " + _esc(i.get("send_state")) + "</div>"
+                     "<div class=q>" + _esc(i.get("question")) + "</div>"
+                     "<div class=w>" + _esc(i.get("auto_sent_text") or i.get("draft")) + "</div>"
+                     "<div class=w><b>Engine working</b><br>" + _esc(i.get("engine_working")) + "</div></div>"
+                     for i in reversed(auto_items)))
+    body = ("".join(cards) or "<p class=z>Queue empty.</p>") + auto_html
     head = (
         "<!doctype html><meta name=viewport "
         'content="width=device-width,initial-scale=1">'
@@ -1345,6 +1465,7 @@ def _d_page(r, v, t, via="query"):
         "<div class=m>" + _esc(name) + " &middot; mteja ...“"
         + _esc(it.get("sender_tail")) + "” &middot; " + _esc(it.get("ts_held")) + "</div>"
         + banner
+        + _autosend_banner(it)
         + _evidence_banner(it)                     # FIRST: before the question and before the draft
         + _duplicate_banner(it, _queue_items())
         + '<div class=lock id=lock>Inashikiliwa&hellip;</div>'
@@ -1719,7 +1840,7 @@ async def _send_digest(items):
 
 
 @app.function(image=image, secrets=SECRETS, timeout=600,
-              schedule=_sched(modal.Period(minutes=3)))
+              schedule=_sched(modal.Period(minutes=1)))
 async def sweep_review_queue():
     """Release expired claims; re-notify unclaimed drafts. Never sends to a participant."""
     core = _core()
@@ -1766,6 +1887,124 @@ async def sweep_review_queue():
             "sent_to_participants": 0}
 
 
+# ⛔⛔ THE REVIEW TIMEOUT -- THE ONE FUNCTION THAT CAN SEND A DRAFT NOBODY APPROVED, AND IT IS DELIBERATELY NOT THE SWEEPER.
+#
+# `sweep_review_queue` above still has NO send path (asserted by AST). The founder changed the R7 reading on 2026-11-13: a
+# deterministic engine answer may send after 15 minutes unreviewed; a model-written one never does. That authority lives
+# HERE, in a function of its own, so the guarantee on the sweeper is not diluted and so this one can be held to its own
+# structural rule (tests/test_review_timeout.py): it sends ONLY `core.autosend_text(item)` and ONLY after
+# `core.autosend_verdict` returned `auto_send` for that very item, which requires `engine_only_verdict` -- an explicit
+# model_calls == 0, no guard, working + evidence present. Everything else gets ONE holding message and stays in review.
+async def _do_auto_send(it, settings):
+    from datetime import datetime, timezone
+    core = _core()
+    rid = it["review_id"]
+    try:
+        if not AUTOSEND.put("auto:" + rid, datetime.now(timezone.utc).isoformat(), skip_if_exists=True):
+            return False                                   # another sweep has it: exactly once
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[autosend] claim failed for {rid}: {type(e).__name__} -- NOT sent", flush=True)
+        return False
+    try:
+        cur = REVIEW_QUEUE[rid]                            # re-read AFTER claiming: a reviewer may have acted meanwhile
+    except Exception:                                                # noqa: BLE001
+        return False
+    action, _why = core.autosend_verdict(cur, after_s=settings.autosend_after_s, enabled=settings.autosend_enabled)
+    if action != "auto_send" or not cur.get("sender"):
+        try:
+            AUTOSEND.pop("auto:" + rid)                    # not ours to send: release the claim so a human path is unaffected
+        except Exception:                                            # noqa: BLE001
+            pass
+        return False
+    now = datetime.now(timezone.utc)
+    text = core.autosend_text(cur)
+    upd = dict(cur)
+    upd.update(status="auto_sent", auto_sent_ts=now.isoformat(timespec="seconds"), auto_sent_text=text,
+               decided_by_name=core.AUTOSEND_NAME, decided_by=None, decided_ts=now.isoformat(timespec="seconds"),
+               final=None, edit_reason=None)
+    held = core._held_clock(cur)
+    upd["decision_latency_s"] = int((now - held).total_seconds()) if held else None
+    try:
+        REVIEW_QUEUE[rid] = upd                            # STORE BEFORE SENDING (as review_act does)
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[autosend] store failed for {rid}: {type(e).__name__} -- NOT sent", flush=True)
+        return False
+    send_ok, send_error = await _send_once(cur["sender"], text)
+    upd["send_ok"], upd["send_error"] = send_ok, send_error
+    upd["send_state"] = core.send_state(send_ok, send_error)
+    upd["reply_address_kind"] = core.reply_address_kind(cur["sender"])
+    try:
+        REVIEW_QUEUE[rid] = upd
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[autosend] send result recorded only in logs ({e})", flush=True)
+    _write_row({
+        "ts": upd["decided_ts"], "build": upd.get("build"), "kind": "review",
+        "sender_hash": upd["sender_hash"], "sender_tail": upd.get("sender_tail"),
+        "sender_domain": core.sender_domain(cur["sender"]), "reply_address_kind": upd["reply_address_kind"],
+        "send_state": upd["send_state"], "question": upd.get("question"), "reply": text, "reply_chars": len(text),
+        "model_latency_ms": upd.get("model_latency_ms"), "total_latency_ms": None, "fallback": upd.get("fallback"),
+        "error_class": upd.get("error_class"), "error_detail": None, "cold_start_suspected": False, "ack_sent": False,
+        "acks_sent": 0, "send_ok": send_ok, "send_error": send_error, "supervision": "auto_sent",
+        "draft": upd["draft"], "final": None, "edit_reason": None, "decision_latency_s": upd["decision_latency_s"],
+        "decided_by_name": core.AUTOSEND_NAME, "auto_sent": True, "test_sender": bool(upd.get("test_sender")),
+        "notify_count": upd.get("notify_count"),
+    })
+    print(f"[autosend] AUTO-SENT {rid} after {upd['decision_latency_s']}s send_ok={send_ok} (NO person read it)", flush=True)
+    return True
+
+
+async def _do_holding_notice(it, settings):
+    from datetime import datetime, timezone
+    core = _core()
+    rid = it["review_id"]
+    try:
+        if not AUTOSEND.put("hold:" + rid, datetime.now(timezone.utc).isoformat(), skip_if_exists=True):
+            return False
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[autosend] holding claim failed for {rid}: {type(e).__name__}", flush=True)
+        return False
+    try:
+        cur = REVIEW_QUEUE[rid]
+    except Exception:                                                # noqa: BLE001
+        return False
+    action, _why = core.autosend_verdict(cur, after_s=settings.autosend_after_s, enabled=settings.autosend_enabled)
+    if action != "hold_notice" or not cur.get("sender"):
+        try:
+            AUTOSEND.pop("hold:" + rid)
+        except Exception:                                            # noqa: BLE001
+            pass
+        return False
+    ok, err = await _send_once(cur["sender"], core.HOLDING_TEXT)
+    cur = dict(cur)
+    cur["holding_notice_ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    cur["holding_notice_ok"] = bool(ok or core.is_pending_receipt(err))
+    cur["holding_notice_error"] = None if cur["holding_notice_ok"] else str(err)[:120]
+    try:
+        REVIEW_QUEUE[rid] = cur
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[autosend] holding result recorded only in logs ({e})", flush=True)
+    print(f"[autosend] HOLDING NOTICE for {rid}: ok={cur['holding_notice_ok']} (answer stays in review)", flush=True)
+    return True
+
+
+@app.function(image=image, secrets=SECRETS, timeout=300, schedule=_sched(modal.Period(minutes=1)))
+async def review_timeout_sweep():
+    """Once a minute: for each pending draft past the window, auto-send a model-free engine answer, or send ONE holding
+    message for anything else. A no-op unless AUTOSEND_ENGINE is explicitly on (fail-closed)."""
+    core = _core()
+    settings = _settings()
+    if not settings.autosend_enabled:
+        return {"enabled": False}
+    out = {"enabled": True, "auto_sent": 0, "holding_notices": 0}
+    for it in _queue_items():
+        action, _why = core.autosend_verdict(it, after_s=settings.autosend_after_s, enabled=True)
+        if action == "auto_send":
+            out["auto_sent"] += 1 if await _do_auto_send(it, settings) else 0
+        elif action == "hold_notice":
+            out["holding_notices"] += 1 if await _do_holding_notice(it, settings) else 0
+    return out
+
+
 @app.function(image=image, secrets=SECRETS, timeout=120)
 def dump_queue():
     """The queue, over the CLI, with the phone numbers stripped.
@@ -1787,6 +2026,43 @@ def dump_queue():
     # JSON line is parseable by the caller.
     print("QUEUE " + json.dumps(out, default=str), flush=True)
     return out
+
+
+@app.function(image=image, secrets=SECRETS, timeout=120)
+async def seed_timeout_probe(kind: str = "engine", age_min: int = 20):
+    """LIVE VERIFICATION OF THE REVIEW TIMEOUT (2026-11-13). Seeds ONE `TEST-` draft addressed to the FIRST REVIEWER'S OWN phone,
+    already `age_min` minutes old, so `review_timeout_sweep` can be exercised end to end without waiting 15 minutes and without
+    any participant. `kind='engine'` = a model-free engine answer (model_calls 0, no guard, working present): the sweep must
+    AUTO-SEND it, prefixed. `kind='model'` = a model-path answer: the sweep must send ONLY the holding message. Not a web
+    endpoint (CLI credentials only, like seed_test_draft); sends nothing itself and notifies no one."""
+    from datetime import datetime, timedelta, timezone
+    if kind not in ("engine", "model"):
+        raise ValueError("kind must be 'engine' or 'model'")
+    core = _core()
+    settings = _settings()
+    if not settings.roster:
+        raise RuntimeError("needs a roster")
+    sender = settings.roster[0][0]                 # the reviewer's own phone: never a participant
+    now = datetime.now(timezone.utc)
+    held = (now - timedelta(minutes=int(age_min))).isoformat(timespec="seconds")
+    sender_hash, sender_tail = core.sender_ids(sender, settings.sender_salt)
+    label = f"timeout-{kind}-{now.strftime('%H%M%S')}"
+    row = {"ts": held, "build": BUILD, "kind": "question", "sender_hash": sender_hash, "sender_tail": sender_tail,
+           "question": f"[MTIHANI {label}] kipimo cha muda", "model_latency_ms": 0, "fallback": False, "error_class": None,
+           "test_sender": True}
+    engine = kind == "engine"
+    item = core.review_item(
+        row=row, sender=sender,
+        draft=(f"[MTIHANI {label}] Jibu la injini: hesabu ya mfano, hakuna maneno ya modeli." if engine
+               else f"[MTIHANI {label}] Jibu la modeli: HALIPASWI kutumwa bila kukaguliwa."),
+        engine_working=("MFANO: hesabu ya injini = 0" if engine else None),
+        facts=([] if engine else ["mfano: ukweli ulioletwa"]),
+        review_id=f"TEST-{label}", model_calls=(0 if engine else 1), guards=[])
+    item["answer_path"] = "engine:vat_registration" if engine else "fact"
+    item["held_at"] = held
+    REVIEW_QUEUE[item["review_id"]] = item
+    print(f"SEEDED {item['review_id']} aged {age_min} min (kind={kind})", flush=True)
+    return item["review_id"]
 
 
 @app.function(image=image, secrets=SECRETS, timeout=120)
@@ -1974,7 +2250,8 @@ def health():
         "app": "chike-whatsapp",
         "model_timeout_s": float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
-        "max_renotifies": int(os.environ.get("MAX_RENOTIFIES", "3")),
+        "max_renotifies": int(os.environ.get("MAX_RENOTIFIES", "3")),      # 0 = NO CAP
+        "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a
         # config-only change has no code diff to remind you a deploy happened, and a

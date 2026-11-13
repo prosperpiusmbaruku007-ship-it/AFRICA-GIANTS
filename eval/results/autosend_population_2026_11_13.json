@@ -1,0 +1,18 @@
+{
+ "harness": "eval/controls/measure_autosend_population_2026_11_13.py",
+ "population": "the 400 gate questions (eval/results/gate_production_0e11c3d.json)",
+ "backend": "stub (every generate() returns a fixed string; retrieval stubbed) -- measures WHICH ROUTES CALL THE MODEL, not answer quality",
+ "n": 400,
+ "counts": {
+  "other|has_model_calls": 295,
+  "engine_literal_rule|model_free": 18,
+  "engine_literal_rule|has_model_calls": 81,
+  "other|model_free": 6
+ },
+ "literal_rule": "path all engine:* (no :ask), working present",
+ "examples_literal_rule_but_model_wrote_a_sentence": [
+  "Mfanyakazi ana mshahara wa jumla wa TZS 500,000 kwa mwezi — mwajiri anachangia kiasi gani ",
+  "Mfanyakazi anapata mshahara wa jumla wa TZS 800,000 — kiasi gani kinakatwa mshahara wake k",
+  "Wafanyakazi 5 kila mmoja anapata TZS 400,000 kwa mwezi — mwajiri anachangia kiasi gani NSS"
+ ]
+}

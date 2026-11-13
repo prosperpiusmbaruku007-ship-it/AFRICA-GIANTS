@@ -1275,6 +1275,30 @@ shipping — ON THE CONDITION BELOW.**
 > WIDENED who may review and did not weaken what review means — and a condition that gets
 > quietly relaxed while being "updated" is exactly what the void list below exists to stop.*
 
+> ### ⚖️ **AMENDMENT 2026-11-13 — A CHANGE TO THIS READING, MADE BY THE FOUNDER, AND RECORDED AS ONE.**
+> **FROM:** *"every reply is read by a human reviewer on the roster before it is sent … no auto-send, ever."*
+> **TO:** **every model-generated reply is read by a human; deterministic engine answers may send after 15 minutes unreviewed.**
+>
+> **The mechanism (`handler_core.autosend_verdict`, `modal_whatsapp.review_timeout_sweep`).** A draft not reviewed within 15 minutes
+> of becoming reviewable (the clock starts at `held_at`, not at the question — a cold GPU start is not review time) is either
+> **auto-sent**, prefixed plainly as an automated calculation not yet checked by a person, or — if it is not a deterministic
+> engine answer — left in review while the participant receives **one holding message** (no figures, no rates, TRA's verified
+> toll-free contact). The draft stays in review and sends as normal when a human approves it. Auto-sent answers are flagged on the
+> review card and the push, listed on the admin page, counted in `/health` (`review_queue.auto_sent`), and attributed to
+> `AUTO-SEND (engine answer, no person read it)` — never to a person.
+>
+> **⛔ WHAT "DETERMINISTIC ENGINE ANSWER" MEANS HERE, AND WHY IT IS STRICTER THAN `path: engine:*`.** On the compute path the reply is a
+> **model-written body with the engine's working appended** (`Orchestrator._render`). Measured over the 400 gate questions
+> (`eval/controls/measure_autosend_population_2026_11_13.py`): the literal path rule would match 99 and **81 of those contain a
+> model-written sentence**; only 18 are model-free. A rule on the path would have auto-sent model text, which is exactly what the
+> founder's own sentence forbids. So eligibility requires an explicit **`model_calls == 0`** from the orchestrator's counter
+> (generation *and* the slot extractor's model fallback), an empty `guards` list, the engine's working present, and a non-empty evidence
+> block. **Everything fails closed:** a missing field, an unknown count, `None`, a typo in the flag, an item stored before the feature
+> existed — none can qualify by omission.
+>
+> **This amendment WIDENS what may send unreviewed; the first one widened who may review. It is therefore the most consequential
+> change to this reading to date, and its limits are the void list below. The timeout is OFF unless `AUTOSEND_ENGINE` is explicitly on.**
+
 **WHY THE CONDITION IS THE WHOLE RULING AND NOT A CAVEAT.** What R7 forbids is an unsupervised
 system giving a Tanzanian employer a confident wrong compliance answer. A cohort where a human
 reads every reply before it goes is **not that system** — the human is the gate. Remove the
@@ -1329,9 +1353,14 @@ decays the same way):
 widen it.** Any one of these ends it and puts the cohort back under R7 as a launch:
 
 1. **auto-sending any class of reply**, however safe it looks;
-2. **a draft sending because a timeout expired** — the no-auto-send line, named separately from
-   (1) because it is the form that arrives as an operational convenience rather than a product
-   decision, and because a backed-up queue is precisely when it will be proposed;
+2. **a MODEL-WRITTEN draft sending because a timeout expired** — *amended 2026-11-13: this line used to read "a draft
+   sending because a timeout expired" and now excepts the model-free engine answers the amendment above permits.* Named
+   separately from (1) because it is the form that arrives as an operational convenience rather than a product decision, and
+   because a backed-up queue is precisely when it will be proposed;
+2a. **any model-path answer sending without review** (added 2026-11-13) — including an engine-path reply whose first sentence the
+   model wrote (`model_calls > 0`), any fact, clarification or refusal path, a fallback, and any reply whose model-call count is
+   missing or unknown;
+2b. **any engine answer sending unreviewed when a guard fired or the evidence block is empty** (added 2026-11-13);
 3. **a reviewer added to the roster without being told the review standard** — a seat on the
    roster is authority to approve a compliance answer that a Tanzanian employer will act on;
    an untrained reviewer is an unreviewed reply with a name attached, which is worse than an

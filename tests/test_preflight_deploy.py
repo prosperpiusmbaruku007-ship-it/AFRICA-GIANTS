@@ -161,6 +161,7 @@ def test_cannot_evaluate_exits_2_not_0():
 # The specimen is the real thing: the /health a bare `modal deploy chike-whatsapp` produced on
 # 2026-11-10 — cohort 0, links unissuable — which passed gates 1-3 and failed safe.
 _GOOD_WA = {"supervised": True, "cohort": {"declared_size": 5}, "disclosure": {"enabled": True},
+            "review_timeout": {"enabled": True, "after_s": 900.0},
             "roster": {"reviewers": 1, "signing_key_set": True,
                        "review_urls_set": True, "can_issue_links": True},
             "bridge": {"session_status": "connected", "session_detail": "open",
@@ -378,4 +379,16 @@ def test_configured_but_the_last_ping_failed_warns_loudly_and_does_not_refuse():
     del pf.WARNINGS[:]
     h["bridge"]["alerting"]["last_ping"]["ok"] = True
     pf.check_whatsapp_health(h, today="2026-11-12")
+    assert pf.WARNINGS == []
+
+
+def test_a_deploy_that_silently_drops_the_review_timeout_warns_loudly_and_does_not_refuse():
+    import copy
+    del pf.WARNINGS[:]
+    h = copy.deepcopy(_GOOD_WA)
+    h["review_timeout"] = {"enabled": False, "raw_flag": None, "raw_after_s": None}
+    assert pf.check_whatsapp_health(h, today="2026-11-14") == []
+    assert "THE REVIEW TIMEOUT IS OFF" in " ".join(pf.WARNINGS)
+    del pf.WARNINGS[:]
+    pf.check_whatsapp_health(_GOOD_WA, today="2026-11-14")
     assert pf.WARNINGS == []

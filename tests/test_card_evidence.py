@@ -64,7 +64,7 @@ def test_a_model_answer_reports_the_FACTS_it_was_given_and_no_engine():
 def test_an_empty_reply_traces_without_raising():
     class R:
         sub_answers, refused = (), True
-    assert answer_trace.trace(R()) == {"working": None, "facts": [], "path": "refusal"}
+    assert answer_trace.trace(R()) == {"working": None, "facts": [], "path": "refusal", "model_calls": None, "guards": []}
 
 
 # ── the wiring, on the deployed files' structure ──────────────────────────────────────────────

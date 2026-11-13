@@ -97,6 +97,10 @@ class SubAnswer:
     # no model call was made. Structured rather than inferred from the text, because a
     # transcript review needs to count these without string-matching Swahili copy.
     coverage_refused: bool = False
+    # Which fidelity guard acted on this part: "" (none) | "blanked" (a model body deleted, the engine's working kept)
+    # | "replaced" (a model body replaced by guard copy). Bookkeeping only -- never changes the text. The review
+    # timeout (2026-11-13) refuses to auto-send anything a guard touched.
+    guard: str = ""
 
 
 @dataclass(frozen=True)
@@ -110,6 +114,25 @@ class Reply:
     raw_text: str = ""
     sub_answers: tuple = ()
     needs_clarification: bool = False           # any sub-answer asked to clarify (never-guess)
+    # HOW MANY TIMES THE MODEL WAS CALLED to produce this reply (generation AND slot-extraction fallback). None =
+    # unknown (an externally supplied extractor cannot be counted). ZERO means no model-written word is in the reply.
+    # FAIL-CLOSED CONSUMER: the review timeout auto-sends only on an explicit 0; None, missing or >0 never does.
+    model_calls: Optional[int] = None
+
+
+class _CountingBackend:
+    """Delegates to the real backend and counts `generate`/`generate_raw` into the owning orchestrator."""
+
+    def __init__(self, inner, owner):
+        self._inner = inner
+        self._owner = owner
+
+    def generate(self, *a, **k):
+        self._owner._model_calls += 1
+        return self._inner.generate(*a, **k)
+
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
 
 
 class Orchestrator:
@@ -197,7 +220,11 @@ class Orchestrator:
             or generation_cleanup.STOP_STRINGS
         )
         # Slot extractor shares the injected backend by default (same DI contract).
-        self.extractor = extractor or SlotExtractor(backend, gen_params)
+        # Every model call is counted (`_model_calls`), including the slot extractor's fallback, so `Reply.model_calls`
+        # can say whether ANY model-written text could be in a reply. Under concurrency the count can only OVER-state.
+        self._model_calls = 0
+        self._extractor_external = extractor is not None
+        self.extractor = extractor or SlotExtractor(_CountingBackend(backend, self), gen_params)
         # Chike system prompt (R14) for the generate-stage RAG wrapper.
         self.system_prompt = (
             system_prompt if system_prompt is not None else prompting.load_system_prompt()
@@ -387,7 +414,7 @@ class Orchestrator:
                 # verbatim so 'TZS 0' is guaranteed present whatever the model says.
                 result = rules_engine.sdl_zero_below_threshold(zero_count)
                 prompt = self._build_compute_prompt(sq.text, result)
-                reply = self.backend.generate(prompt, self.gen_params)
+                reply = self._generate(prompt)
                 return SubAnswer(sub_question=sq, text=reply, computation=result)
 
         # PATTERN F2. The headcount differs BY NAMED MONTH and straddles the threshold
@@ -515,7 +542,7 @@ class Orchestrator:
                     inputs["party"] = routing.nssf_party(sq.text)
                 result = rules_engine.compute(sq.computation_type, **inputs)
                 prompt = self._build_compute_prompt(sq.text, result)
-                reply = self.backend.generate(prompt, self.gen_params)
+                reply = self._generate(prompt)
                 return SubAnswer(sub_question=sq, text=reply, computation=result)
             # PREREQ-1 M1/M2/M3: the compute path is blocked because the only figure offered
             # is NOT a payroll base (a loan, rent, market value, utility bill, or a count of
@@ -560,8 +587,12 @@ class Orchestrator:
             inputs["resident"] = routing.paye_resident(sq.text)
         result = rules_engine.compute(sq.computation_type, **inputs)
         prompt = self._build_compute_prompt(sq.text, result)
-        reply = self.backend.generate(prompt, self.gen_params)
+        reply = self._generate(prompt)
         return SubAnswer(sub_question=sq, text=reply, computation=result)
+
+    def _generate(self, prompt):
+        self._model_calls += 1
+        return self.backend.generate(prompt, self.gen_params)
 
     @staticmethod
     def _deterministic_answer(sq: SubQuestion, result: ComputationResult) -> SubAnswer:
@@ -605,11 +636,7 @@ class Orchestrator:
         res = premise.resolve(sa.sub_question.text, sa.computation)
         if res.action == "untouched":
             return sa
-        return SubAnswer(
-            sub_question=sa.sub_question, text=sa.text, raw_text=sa.raw_text,
-            facts=sa.facts, computation=res.result,
-            needs_clarification=sa.needs_clarification,
-            coverage_refused=sa.coverage_refused)
+        return dataclasses.replace(sa, computation=res.result)
 
     def _answer_minimum_wage(self, sq: SubQuestion) -> SubAnswer:
         """GN 605A lawfulness — deterministic end to end, with four never-guess exits.
@@ -869,7 +896,7 @@ class Orchestrator:
                 if agrees else
                 rules_engine.deny_positive_premise(result, restate=claim))
         prompt = self._build_compute_prompt(sq.text, result)
-        reply = self.backend.generate(prompt, self.gen_params)
+        reply = self._generate(prompt)
         return SubAnswer(sub_question=sq, text=reply, computation=result)
 
     def _answer_fact(self, sq: SubQuestion) -> SubAnswer:
@@ -881,7 +908,7 @@ class Orchestrator:
                              needs_clarification=True)
         facts = tuple(self.retriever(sq.text))
         prompt = self._build_fact_prompt(sq.text, facts)
-        reply = self.backend.generate(prompt, self.gen_params)
+        reply = self._generate(prompt)
         return SubAnswer(sub_question=sq, text=reply, facts=facts)
 
     def _pool_facts(self, retrieval_queries) -> tuple:
@@ -913,7 +940,7 @@ class Orchestrator:
                              needs_clarification=True)
         facts = self._pool_facts(retrieval_queries)
         prompt = self._build_fact_prompt(generation_question, facts)
-        reply = self.backend.generate(prompt, self.gen_params)
+        reply = self._generate(prompt)
         return self._validate_and_clean(SubAnswer(sub_question=sq, text=reply, facts=facts))
 
     # --- Generate-stage prompts (production-aligned RAG wrapper, chike.prompting) ---
@@ -985,6 +1012,7 @@ class Orchestrator:
         # Preserve the pre-clean generation in raw_text before overwriting text,
         # so future clean_reply changes can be rescored offline (see SubAnswer docstring).
         cleaned = generation_cleanup.clean_reply(sub.text, self.stop_strings)
+        guard = ""
         if sub.computation is not None and (
                 fidelity.body_contradicts_working(cleaned, sub.computation)
                 or fidelity.body_reduces_authoritative_amount(cleaned, sub.computation)
@@ -1028,6 +1056,7 @@ class Orchestrator:
                 or fidelity.body_states_unsupported_figure(
                     sub.sub_question.text, cleaned, sub.computation.working)):
             cleaned = ""
+            guard = "blanked"
         elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned):
             # ⛔ THE FACT PATH CANNOT BE BLANKED, AND THAT IS WHY THIS IS A SECOND BRANCH RATHER
             # THAN ONE MORE `or` ABOVE. _render returns the body alone when there is no
@@ -1047,7 +1076,7 @@ class Orchestrator:
             subject = fidelity.stated_wrong_thresholds(cleaned)[0][0]
             return dataclasses.replace(
                 sub, text=clarification.wrong_threshold_withheld(subject),
-                raw_text=sub.text, needs_clarification=True)
+                raw_text=sub.text, needs_clarification=True, guard="replaced")
         elif sub.computation is None and fidelity.body_states_wrong_fee_band(
                 sub.sub_question.text, cleaned):
             # D-FIDELITY-8 (built, priced and WIRED 2026-10-08). A registration fee stated for
@@ -1079,14 +1108,14 @@ class Orchestrator:
             # this defect (eval/fidelity/scope_fee_table_guard_2026_10_08.py).
             return dataclasses.replace(
                 sub, text=clarification.wrong_fee_band_withheld(),
-                raw_text=sub.text, needs_clarification=True)
+                raw_text=sub.text, needs_clarification=True, guard="replaced")
         elif sub.computation is None and fidelity.body_contradicts_stated_headcount(
                 cleaned, sub.sub_question.text):
             stated = fidelity.stated_headcount(sub.sub_question.text)
             return dataclasses.replace(
                 sub, text=clarification.headcount_contradiction(stated),
-                raw_text=sub.text, needs_clarification=True)
-        return dataclasses.replace(sub, text=cleaned, raw_text=sub.text)
+                raw_text=sub.text, needs_clarification=True, guard="replaced")
+        return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)
 
     @staticmethod
     def _cross_levy_guard(subs: Sequence[SubAnswer]) -> list:
@@ -1110,7 +1139,7 @@ class Orchestrator:
                     and fidelity.body_contradicts_siblings(
                         sa.text, {k: v for k, v in by_levy.items()
                                   if k != sa.computation.computation})):
-                sa = dataclasses.replace(sa, text="")
+                sa = dataclasses.replace(sa, text="", guard="blanked")
             out.append(sa)
         return out
 
@@ -1160,7 +1189,14 @@ class Orchestrator:
         return out
 
     def answer(self, question: str) -> Reply:
-        """Full pipeline entry point.
+        """Full pipeline entry point; stamps `Reply.model_calls` (see Reply). The pipeline itself is `_answer`."""
+        before = self._model_calls
+        reply = self._answer(question)
+        calls = None if self._extractor_external else max(0, self._model_calls - before)
+        return dataclasses.replace(reply, model_calls=calls)
+
+    def _answer(self, question: str) -> Reply:
+        """The pipeline.
 
         Route-aware merge (ADR 0001 Phase B): decomposition is a RETRIEVAL fan-out that
         RE-COLLAPSES to a single generation whenever every part is fact — matching v15

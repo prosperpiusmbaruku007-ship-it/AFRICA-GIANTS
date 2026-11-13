@@ -121,7 +121,8 @@ def test_no_handler_path_branches_on_test_sender_except_the_counts():
     """Structural: `test_sender` may be read ONLY where counts are made. A reference inside deliver / hold / the
     reviewer authentication would be an exemption from review wearing the name of a statistic."""
     allowed = {"_blank_row", "review_item", "is_test_sender_hash", "_is_test_item", "review_summary", "parse_test_senders",
-               "_participants_split", "_cohort_health"}
+               "_participants_split", "_cohort_health",
+               "_do_auto_send"}      # only COPIES the flag into the transcript row; the verdict never reads it
     for path in ("handler_core.py", "modal_whatsapp.py"):
         tree = ast.parse(open(os.path.join(_ROOT, "chike-whatsapp", path), encoding="utf-8").read())
         for fn in ast.walk(tree):

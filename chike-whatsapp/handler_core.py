@@ -215,6 +215,10 @@ class Settings:
     # draft, review) -- only the COUNTS differ. Hashes of the senders listed in the TEST_SENDERS secret.
     test_sender_hashes: frozenset = frozenset()
 
+    # ── THE REVIEW TIMEOUT (2026-11-13) -- see the block above `engine_only_verdict`. FAIL-CLOSED: off unless explicit.
+    autosend_enabled: bool = False
+    autosend_after_s: float = 900.0
+
     # Signs the per-(draft, reviewer) action links. SEPARATE from ADMIN_TOKEN on purpose: a
     # leaked read token must not become a forgeable action link.
     #
@@ -303,7 +307,25 @@ def advance_session_health(prev, verdict, detail, now, *, fail_threshold=2,
     return st, events
 
 
-def heartbeat_decision(verdict, detail, state, threshold, pending_kind=None):
+def model_watch_problem(w, now, window_s=6 * 3600.0):
+    """A string when REAL model calls are failing, else None. `w` is {consecutive_failures, last_ok_ts, last_err_ts,
+    last_error} kept by the handler on every answered question. Failing = two or more in a row, no success since the
+    last failure, the last failure within `window_s`. Honest limit: with no traffic a dead GPU path is invisible here
+    (a shallow web-tier check cannot see it); a failure ages out after `window_s` and a real or tester question that
+    succeeds clears it at once."""
+    w = w or {}
+    try:
+        fails = int(w.get("consecutive_failures") or 0)
+        err_ts = float(w.get("last_err_ts") or 0)
+        ok_ts = float(w.get("last_ok_ts") or 0)
+    except (TypeError, ValueError):
+        return None
+    if fails >= 2 and err_ts and ok_ts < err_ts and (now - err_ts) <= window_s:
+        return f"the last {fails} real questions failed at the model ({w.get('last_error')}) with no success since"
+    return None
+
+
+def heartbeat_decision(verdict, detail, state, threshold, pending_kind=None, extra_problems=()):
     """('ok' | 'fail' | 'skip', reason) -- what the watcher tells the dead-man's-switch this poll.
 
     ok   = the bridge is connected, one lease holder, and no send is stuck past the ceiling with NOTHING receipted.
@@ -313,15 +335,22 @@ def heartbeat_decision(verdict, detail, state, threshold, pending_kind=None):
            (Silence is safe: the check's period is longer than several polls.)
     A recipient whose phone is merely off (`bridge_recipient_offline`) is NOT a problem here: other messages are being
     receipted, so the bridge works, and a page for it would teach the founder to ignore pages."""
-    if str(detail or "").startswith("TWO_SOCKETS"):
-        return "fail", f"TWO SOCKETS: {detail}"
-    if pending_kind == "bridge_suspect":
-        return "fail", "sends past the receipt ceiling and NO receipt for any message since"
-    if verdict != "connected":
-        if int((state or {}).get("consecutive_failures", 0)) >= int(threshold):
-            return "fail", f"bridge {verdict} ({detail})"
-        return "skip", f"one non-connected reading ({verdict}); debounce"
-    return "ok", ""
+    extra = [str(p) for p in (extra_problems or ()) if p]
+
+    def _verdict():
+        if str(detail or "").startswith("TWO_SOCKETS"):
+            return "fail", f"TWO SOCKETS: {detail}"
+        if pending_kind == "bridge_suspect":
+            return "fail", "sends past the receipt ceiling and NO receipt for any message since"
+        if verdict != "connected":
+            if int((state or {}).get("consecutive_failures", 0)) >= int(threshold):
+                return "fail", f"bridge {verdict} ({detail})"
+            return "skip", f"one non-connected reading ({verdict}); debounce"
+        return "ok", ""
+    d, why = _verdict()
+    if extra:           # a problem in ANOTHER watched system (chike-inference) fails the same check, whatever the bridge says
+        return "fail", "; ".join(([why] if d == "fail" else []) + extra)
+    return d, why
 
 
 def poll_age_verdict(state, now, *, max_age_s=15 * 60):
@@ -1111,6 +1140,8 @@ def release_expired_claim(item, *, now=None):
 
 def renotify_exhausted(item, max_renotifies=3):
     """True once a draft has used its re-notifications. It then goes to the daily digest."""
+    if int(max_renotifies) <= 0:           # 0 = NO CAP (founder, 2026-11-13: re-notify every N minutes, no cap)
+        return False
     return int(item.get("renotify_count") or 0) >= int(max_renotifies)
 
 
@@ -1170,7 +1201,7 @@ def needs_renotify(item, *, now=None, renotify_after_s=1800.0, max_renotifies=3)
         return True
 
 
-def review_item(row, sender, draft, engine_working=None, facts=(), review_id=None):
+def review_item(row, sender, draft, engine_working=None, facts=(), review_id=None, model_calls=None, guards=None):
     """A queue entry. `sender` is the REAL number, which the transcript deliberately does not
     store — so this lives in its own store, behind its own token, and is purged on decision.
 
@@ -1193,6 +1224,11 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
         # The evidence the reviewer needs in order to judge the draft rather than guess at
         # it: the engine's deterministic working and the facts retrieval actually served.
         "engine_working": engine_working,
+        # How many times the model was called for this reply (0 = no model-written word) and which guards acted. None =
+        # unknown, which the review timeout treats as NOT eligible. `held_at` = when the draft became reviewable.
+        "model_calls": model_calls,
+        "guards": (list(guards) if guards is not None else None),
+        "held_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "facts": list(facts),
         "model_latency_ms": row.get("model_latency_ms"),
         "fallback": row.get("fallback"),
@@ -1376,7 +1412,201 @@ def evidence_is_loud(item) -> bool:
     return evidence_state(item) in EVIDENCE_LOUD
 
 
-def notification_text(item, link, reviewer_name=None, renotify=False):
+# ── THE REVIEW TIMEOUT (founder's decision, 2026-11-13 -- a CHANGE TO THE R7 READING, recorded in CLAUDE.md) ─────────
+#
+# BEFORE: every reply is read by a human. AFTER: every MODEL-GENERATED reply is read by a human; a deterministic engine
+# answer may send after 15 minutes unreviewed. A draft not reviewed within `after_s` of becoming reviewable is either
+#   * AUTO-SENT, prefixed plainly as an automated calculation not yet checked by a person -- ONLY if NO MODEL-WRITTEN
+#     WORD IS IN IT (see engine_only_verdict), or
+#   * left in review, and the participant gets ONE holding message (no figures, no rates) with TRA's contact.
+#
+# ⛔ "path: engine:*" IS NOT THE SAME AS "NO MODEL TEXT". On the compute path the reply is a MODEL-WRITTEN body with the
+# engine's working appended (Orchestrator._render), and the fidelity guards exist precisely because that body can be wrong.
+# Measured over the 400 gate questions (eval/controls/measure_autosend_population_2026_11_13.py): the literal rule would
+# match 99 and 81 of them contain a model-written sentence; only 18 are model-free. The rule the founder stated -- "model-path
+# answers never send unreviewed" -- is enforced on `model_calls == 0`, an explicit ZERO from the orchestrator's own counter.
+# Anything else (missing, None, unknown, > 0) fails CLOSED.
+AUTOSEND_AFTER_S = 900.0
+AUTOSEND_NAME = "AUTO-SEND (engine answer, no person read it)"
+AUTOSEND_PREFIX = ("Hii ni hesabu ya kiotomatiki ya mfumo — bado haijakaguliwa na mtu. "
+                   "(Automated calculation, not yet checked by a person.)\n\n")
+# TRA's own contact page, fetched 2026-11-13 (tra.go.tz and /index.php/contact-us): toll-free call centres 0800 750 075,
+# 0800 780 078, 0800 110 016; call-centre hours 08:00-19:00 East African time, Monday-Friday. NO FIGURE OR RATE appears below
+# (asserted in tests): a holding message that carried a number would be a model-free answer nobody reviewed.
+HOLDING_TEXT = ("Jibu la swali lako bado linakaguliwa na mtu kabla ya kutumwa, kwa hiyo hatujalituma bado. "
+                "Tutakutumia mara litakapokaguliwa. Kwa jambo la dharura, wasiliana na TRA moja kwa moja: "
+                "piga bila malipo 0800 780 078 au 0800 750 075 (Jumatatu–Ijumaa, 08:00–19:00), au tembelea tra.go.tz.")
+
+
+def parse_autosend(flag, after_s):
+    """(enabled, after_s). FAIL-CLOSED: the timeout is ON only for an explicit "1"/"true"/"yes" AND a sane positive
+    number of seconds; a typo in either turns the WHOLE timeout OFF (every draft then simply waits for a human, which
+    is the safe direction). /health reports the parsed result."""
+    on = str(flag or "").strip().lower() in ("1", "true", "yes")
+    try:
+        secs = float(after_s) if after_s not in (None, "") else AUTOSEND_AFTER_S
+    except (TypeError, ValueError):
+        return False, AUTOSEND_AFTER_S
+    if not (60.0 <= secs <= 24 * 3600.0):
+        return False, AUTOSEND_AFTER_S
+    return on, secs
+
+
+def engine_only_verdict(item):
+    """(bool, reason). True ONLY for a reply with no model-written word in it.
+
+    Every condition is positive and explicit, so a stored item that predates a field (or a field that failed to arrive)
+    can never qualify by omission: missing = no."""
+    if item.get("fallback"):
+        return False, "fallback reply"
+    path = str(item.get("answer_path") or "")
+    if not path:
+        return False, "no answer path recorded"
+    for part in path.split("+"):
+        if not part.startswith("engine:") or part.endswith(":ask"):
+            return False, f"path {path!r} is not engine-only"
+    if not str(item.get("engine_working") or "").strip():
+        return False, "no deterministic working"
+    if evidence_is_loud(item):
+        return False, "the evidence block is empty"
+    guards = item.get("guards")
+    if not isinstance(guards, list):
+        return False, "guard record missing"
+    if guards:
+        return False, f"a guard fired ({', '.join(map(str, guards))})"
+    calls = item.get("model_calls")
+    if isinstance(calls, bool) or not isinstance(calls, int):
+        return False, "model-call count unknown"
+    if calls != 0:
+        return False, f"the model was called {calls} time(s): a model-written sentence may be in the reply"
+    if not str(item.get("draft") or "").strip():
+        return False, "empty draft"
+    return True, "engine-only, model-free, no guard, evidence present"
+
+
+def _held_clock(item):
+    """When the draft became REVIEWABLE (not when the question arrived: a cold GPU start is not review time)."""
+    for k in ("held_at", "first_notified_at", "ts_held"):
+        v = item.get(k)
+        if v:
+            try:
+                d = datetime.fromisoformat(v)
+                return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+            except Exception:                                        # noqa: BLE001
+                continue
+    return None
+
+
+def autosend_verdict(item, now=None, after_s=AUTOSEND_AFTER_S, enabled=True):
+    """(action, reason): 'off' | 'never' | 'wait' | 'auto_send' | 'hold_notice' | 'done'. Pure.
+
+    A claimed, unexpired draft WAITS (a person has it open: acting under them is a race, and they are by definition
+    reviewing). Nothing here ever returns auto_send for a draft that engine_only_verdict rejects."""
+    if not enabled:
+        return "off", "review timeout is off"
+    if item.get("status") != "pending":
+        return "never", "not pending"
+    now = now or datetime.now(timezone.utc)
+    held = _held_clock(item)
+    if held is None:
+        return "wait", "no usable hold time"
+    if (now - held).total_seconds() < float(after_s):
+        return "wait", "inside the review window"
+    if item.get("claimed_by") and not _claim_expired(item, now):
+        return "wait", "a reviewer has it open"
+    ok, why = engine_only_verdict(item)
+    if ok:
+        return ("done", "already auto-sent") if item.get("auto_sent_ts") else ("auto_send", why)
+    if item.get("holding_notice_ts"):
+        return "done", "holding notice already sent"
+    return "hold_notice", why
+
+
+def autosend_text(item):
+    """EXACTLY what an auto-send sends: the plain prefix + the stored draft. Nothing else, no model call."""
+    return AUTOSEND_PREFIX + str(item.get("draft") or "").strip()
+
+
+def autosend_note(item, now=None, after_s=AUTOSEND_AFTER_S, enabled=True):
+    """(sw, en) banner for a card / push, or None. Says plainly what will happen to this draft if nobody acts."""
+    if item.get("status") == "auto_sent":
+        return ("⚠️ ILITUMWA KIOTOMATIKI saa " + str(item.get("auto_sent_ts") or "?")
+                + " bila mtu kuisoma — iangalie sasa.",
+                "AUTO-SENT at " + str(item.get("auto_sent_ts") or "?") + " with NO person having read it -- check it now.")
+    if not enabled or item.get("status") != "pending":
+        return None
+    held = _held_clock(item)
+    when = ((held + timedelta(seconds=float(after_s))).strftime("%H:%M UTC") if held else "?")
+    ok, why = engine_only_verdict(item)
+    if ok:
+        return (f"⏱️ AUTO-SEND: jibu hili la injini (halina maneno ya modeli) litatumwa lenyewe saa {when} usipoliangalia.",
+                f"AUTO-SEND: this model-free engine answer SENDS ITSELF at {when} unless you act.")
+    return (f"⏱️ JIBU LA MODELI: halitatumwa bila kukaguliwa. Saa {when} mteja atapata ujumbe wa kusubiri tu.",
+            f"MODEL ANSWER: never auto-sent. At {when} the participant gets a holding message only ({why}).")
+
+
+def latency_summary(items, now=None, window_s=86400.0, target_s=900.0):
+    """Question-to-delivery over the last `window_s`, median and worst, how many exceeded `target_s`, and WHY.
+
+    Delivery = the moment the answer was handed to WhatsApp and accepted (`decided_ts`; for an auto-send, `auto_sent_ts`).
+    Cause of an over-target answer: `gpu_or_model` when the model's own time was at least as long as the human wait, else
+    `review_wait`; `cold_start` is the subset where the model took >= 30 s. Withheld drafts are not deliveries. Pending
+    drafts older than the target are counted separately (`undelivered_over_target`) -- they are the worst latencies and
+    must not vanish from a figure computed over delivered answers only. Test senders are reported in `including_test`."""
+    now = now or datetime.now(timezone.utc)
+
+    def one(rows):
+        totals, over, causes, cold, autos, undeliv = [], 0, {"review_wait": 0, "gpu_or_model": 0}, 0, 0, 0
+        for i in rows:
+            held0 = None
+            try:
+                held0 = datetime.fromisoformat(i.get("ts_held"))
+                held0 = held0 if held0.tzinfo else held0.replace(tzinfo=timezone.utc)
+            except Exception:                                        # noqa: BLE001
+                held0 = None
+            if held0 is None:
+                continue
+            if i.get("status") == "pending":
+                if (now - held0).total_seconds() > target_s and (now - held0).total_seconds() <= window_s * 7:
+                    undeliv += 1
+                continue
+            if i.get("status") not in ("sent", "edited", "auto_sent") or i.get("send_ok") is not True:
+                continue
+            stamp = i.get("auto_sent_ts") if i.get("status") == "auto_sent" else i.get("decided_ts")
+            try:
+                done = datetime.fromisoformat(stamp)
+                done = done if done.tzinfo else done.replace(tzinfo=timezone.utc)
+            except Exception:                                        # noqa: BLE001
+                continue
+            if (now - done).total_seconds() > window_s:
+                continue
+            total = max(0.0, (done - held0).total_seconds())
+            totals.append(total)
+            autos += 1 if i.get("status") == "auto_sent" else 0
+            if total > target_s:
+                over += 1
+                model_s = float(i.get("model_latency_ms") or 0) / 1000.0
+                if model_s >= total - model_s:
+                    causes["gpu_or_model"] += 1
+                    cold += 1 if model_s >= 30 else 0
+                else:
+                    causes["review_wait"] += 1
+        totals.sort()
+        return {"delivered": len(totals),
+                "median_s": (int(totals[len(totals) // 2]) if totals else None),
+                "worst_s": (int(totals[-1]) if totals else None),
+                "over_target": over, "over_target_causes": causes, "over_target_cold_start": cold,
+                "auto_sent": autos, "undelivered_over_target": undeliv}
+
+    real = [i for i in items if not _is_test_item(i)]
+    return {"window_hours": window_s / 3600.0, "target_s": target_s,
+            "real_participants": one(real), "including_test_senders": one(list(items)),
+            "_note": ("question-to-delivery; the question time is the row timestamp, the delivery time is when WhatsApp accepted "
+                      "the send (receipt lag is separate). An over-target answer is `review_wait` if the human wait was longer "
+                      "than the model's own time, else `gpu_or_model`.")}
+
+
+def notification_text(item, link, reviewer_name=None, renotify=False, autosend_note_text=None):
     """The WhatsApp push a reviewer receives the moment a draft is ready.
 
     ⚠️ THE DRAFT IS INCLUDED IN FULL AND THE EVIDENCE IS SUMMARISED, NOT OMITTED. A
@@ -1405,6 +1635,8 @@ def notification_text(item, link, reviewer_name=None, renotify=False):
     dups = item.get("duplicates_pending") or []
     if dups:
         lines += [DUPLICATE_WARNING_SW.format(n=len(dups)), DUPLICATE_WARNING_EN.format(n=len(dups)), ""]
+    if autosend_note_text:
+        lines += [autosend_note_text[0], autosend_note_text[1], ""]
     if evidence_is_loud(item):
         # FIRST, before the question: a reviewer reading on a phone must meet this before the draft.
         lines += [EVIDENCE_WARNING_SW, EVIDENCE_WARNING_EN]
@@ -1694,6 +1926,7 @@ def review_summary(items, signing_key=None, test_hashes=()):
         "pending": sum(1 for i in items if i.get("status") == "pending"),
         "decided": len(decided),
         "counts": counts,
+        "auto_sent": sum(1 for i in items if i.get("status") == "auto_sent"),   # no human decision: NOT in the rate below
         "edit_or_withhold_rate": (
             None if not decided
             else round((counts["edited"] + counts["withheld"]) / len(decided), 3)),

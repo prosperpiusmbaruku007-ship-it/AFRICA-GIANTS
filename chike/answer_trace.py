@@ -23,8 +23,9 @@ PURE: no I/O, no model. `path` names WHICH SOURCE produced the answer, because "
 def trace(reply) -> dict:
     """{'working': str|None, 'facts': [str], 'path': str} for an orchestrator Reply."""
     subs = list(getattr(reply, "sub_answers", None) or ())
+    calls = getattr(reply, "model_calls", None)
     if getattr(reply, "refused", False) and not subs:
-        return {"working": None, "facts": [], "path": "refusal"}
+        return {"working": None, "facts": [], "path": "refusal", "model_calls": calls, "guards": []}
     working_parts, facts, seen, paths = [], [], set(), []
     for sa in subs:
         comp = getattr(sa, "computation", None)
@@ -51,4 +52,8 @@ def trace(reply) -> dict:
             paths.append(p)
     if not paths:
         paths = ["refusal"] if getattr(reply, "refused", False) else ["fact"]
-    return {"working": "\n".join(working_parts) or None, "facts": facts, "path": "+".join(paths)}
+    return {"working": "\n".join(working_parts) or None, "facts": facts, "path": "+".join(paths),
+            # model_calls: how many times the model was called (0 = no model-written word in the reply; None = unknown).
+            # guards: which fidelity guards acted. Both feed the review timeout, which fails CLOSED on anything but
+            # an explicit 0 and an empty list.
+            "model_calls": calls, "guards": [g for g in (getattr(sa, "guard", "") for sa in subs) if g]}

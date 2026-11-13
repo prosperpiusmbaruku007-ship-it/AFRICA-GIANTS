@@ -182,6 +182,14 @@ def check_whatsapp_health(h, today=None):
             f"cohort.declared_size is {size!r}; it must be > 0. COHORT_SIZE is a DEPLOY-TIME "
             f"env var baked into the image — a deploy without it silently reverts to 0 "
             f"(monitor-only) and the pilot loses its over-capacity signal.")
+    rt = (h or {}).get("review_timeout")
+    if isinstance(rt, dict) and rt.get("enabled") is not True:
+        # 2026-11-13: AUTOSEND_ENGINE / AUTOSEND_AFTER_S are deploy-time env like COHORT_SIZE. Omitting them silently turns
+        # the 15-minute rule OFF -- the SAFE direction (every draft waits for a human, no holding message goes out), so
+        # a loud warning rather than a refusal, but the founder must not believe the timeout is running.
+        WARNINGS.append(
+            f"THE REVIEW TIMEOUT IS OFF (raw flag {rt.get('raw_flag')!r}, raw after_s {rt.get('raw_after_s')!r}). "
+            f"Engine answers will NOT auto-send and no holding message will be sent; every draft waits for a human.")
     roster = (h or {}).get("roster") or {}
     if roster.get("can_issue_links") is not True:
         fails.append(
