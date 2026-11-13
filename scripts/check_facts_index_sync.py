@@ -433,34 +433,39 @@ PINNED = {
     # would silently match almost any row a future index edit introduces), so this is
     # kept as a fragment rather than a fragile present_elsewhere pin.
     "prohibited_business_activities_for_non_citizens_order_year": ("fragment", None),
-    # ---- 2026-11-13: THREE-PROFILE COVERAGE BATCH (employer / trader / bookkeeper) -------------------------------------
-    # 24 NEW facts, pending the R15 regen. They are in locked_facts.json and in precompute_rag_embeddings.CONCISE_BILINGUAL_FACTS
-    # but not in the served index, which only the Kaggle regen can rebuild. test_pending_r15_keys_are_still_pending starts failing
-    # the moment the regen lands -- THAT is the signal to delete this block.
-    "paye_remittance_deadline": ("pending_r15", None),
-    "employment_particulars_required": ("pending_r15", None),
-    "employment_particulars_keeping": ("pending_r15", None),
-    "termination_notice_period": ("pending_r15", None),
-    "severance_pay": ("pending_r15", None),
-    "annual_leave_days": ("pending_r15", None),
-    "overtime_pay_rate": ("pending_r15", None),
-    "working_hours_limits": ("pending_r15", None),
-    "maternity_leave_days": ("pending_r15", None),
-    "maternity_leave_premature_birth": ("pending_r15", None),
-    "paternity_leave_days": ("pending_r15", None),
-    "unfair_termination_compensation": ("pending_r15", None),
-    "domestic_worker_minimum_wage": ("pending_r15", None),
-    "tin_apply_deadline": ("pending_r15", None),
-    "individual_income_tax_return": ("pending_r15", None),
-    "dividend_withholding_rate": ("pending_r15", None),
-    "professional_service_fee_wht": ("pending_r15", None),
-    "vat_registration_who_must": ("pending_r15", None),
-    "vat_refund_when": ("pending_r15", None),
-    "vat_refund_deadline": ("pending_r15", None),
-    "vat_credit_sale_timing": ("pending_r15", None),
-    "record_keeping_period": ("pending_r15", None),
-    "input_vat_passenger_vehicle": ("pending_r15", None),
-    "late_return_penalty": ("pending_r15", None),
+    # 2026-11-13 coverage batch: its 24 pending_r15 pins were REMOVED when the regen landed (HF commit of the 208-row index);
+    # test_pending_r15_keys_are_still_pending is what forces that removal.
+    # 2026-11-13 coverage batch (24 new facts + 4 rewritten rows): the served rows are CONCISE Swahili, led with the asker's words, so they
+    # carry no `key: ` prefix and cannot match by key. Each is pinned present_elsewhere on a substring that is also the anchor of its
+    # retrievability guard in kaggle/regenerate_rag_e5.py (unique across the 208-row index, checked by the regen). Re-checked every run.
+    "paye_penalty_rate": ("present_elsewhere", "Nikichelewa kulipa PAYE adhabu ni nini"),
+    "provisional_tax_instalments": ("present_elsewhere", "mwishoni mwa mwezi wa 3, 6, 9 na 12"),
+    "VAT_zero_rated_vs_exempt_input_VAT": ("present_elsewhere", "HAWEZI kudai input VAT"),
+    "efd_tra_closure_authority": ("present_elsewhere", "Nikikosa kutoa risiti ya EFD adhabu ni nini"),
+    "paye_remittance_deadline": ("present_elsewhere", "ifikapo tarehe 7 ya mwezi unaofuata"),
+    "employment_particulars_required": ("present_elsewhere", "maelezo ya maandishi anapoanza kazi"),
+    "employment_particulars_keeping": ("present_elsewhere", "ayahifadhi miaka 5 baada ya mfanyakazi kuacha"),
+    "termination_notice_period": ("present_elsewhere", "siku 28 kwa wa kila mwezi"),
+    "severance_pay": ("present_elsewhere", "siku 7 kwa kila mwaka kamili"),
+    "annual_leave_days": ("present_elsewhere", "Angalau siku 28 mfululizo"),
+    "overtime_pay_rate": ("present_elsewhere", "Angalau mara 1.5 ya mshahara wa msingi"),
+    "working_hours_limits": ("present_elsewhere", "saa 45 kwa wiki"),
+    "maternity_leave_days": ("present_elsewhere", "Siku 84 zenye malipo"),
+    "maternity_leave_premature_birth": ("present_elsewhere", "wiki 40 za ujauzito"),
+    "paternity_leave_days": ("present_elsewhere", "siku 3 zenye malipo"),
+    "unfair_termination_compensation": ("present_elsewhere", "miezi 12 hadi 24"),
+    "domestic_worker_minimum_wage": ("present_elsewhere", "TZS 328,000"),
+    "tin_apply_deadline": ("present_elsewhere", "Namba ya Mlipakodi (TIN) kwa TRA"),
+    "individual_income_tax_return": ("present_elsewhere", "30 Juni ya mwaka unaofuata"),
+    "dividend_withholding_rate": ("present_elsewhere", "kampuni nyingine: 10%"),
+    "professional_service_fee_wht": ("present_elsewhere", "mkazi 5%, asiye mkazi 15%"),
+    "vat_registration_who_must": ("present_elsewhere", "huduma za kitaalamu zenye leseni"),
+    "vat_refund_when": ("present_elsewhere", "hubebwa mbele hadi vipindi 6"),
+    "vat_refund_deadline": ("present_elsewhere", "ndani ya miaka 3 baada ya mwisho wa kipindi cha kodi"),
+    "vat_credit_sale_timing": ("present_elsewhere", "invoice, siku ya kupokea malipo"),
+    "record_keeping_period": ("present_elsewhere", "Miaka 5 tangu tarehe husika"),
+    "input_vat_passenger_vehicle": ("present_elsewhere", "gari la abiria, vipuri au matengenezo"),
+    "late_return_penalty": ("present_elsewhere", "Adhabu ya kuchelewa kuwasilisha return ya VAT"),
 }
 
 

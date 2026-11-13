@@ -45,9 +45,13 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # git-log excavation: 19bcfabb887c49643268b9a5659ae31d90d31a982fb42930a250b23d6f5ae405 — the
 # 2026-10-07 BRELA index. The pin FIRED on this change, with its own instruction attached, which
 # is the only reason the constant and the index are in the same commit.
+#
+# ⭐ BUMPED 2026-11-13 for the three-profile coverage regen (184 -> 208 rows: 24 new facts appended + 5 rewritten rows). Previous value, kept
+# for rollback: 5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f -- the row-9 index of 2026-10-09 (184 rows). Computed from
+# the fetched HF file, which was verified identical (rows and order) to the local build of adb03a2 BEFORE it was committed.
 EXPECTED_SERVED_SHA256 = (
-    "5f76d40cf46d8be515f356c05bfb072529482c5bdf3dab966264965a9d98381f")
-EXPECTED_ROWS = 184
+    "78b2b4d2e36dd88eb9c297a087fbf8f68a010e800d7c36b980eab0b1d7917577")
+EXPECTED_ROWS = 208
 
 
 def _src():

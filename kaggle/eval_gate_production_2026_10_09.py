@@ -174,7 +174,7 @@ RAW = f'https://raw.githubusercontent.com/{REPO}/main'
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 
 # The index production serves. ASSERTED, not assumed — see gate_index_identity() below.
-EXPECTED_FACT_COUNT = 184
+EXPECTED_FACT_COUNT = 208   # 2026-11-13: 184 -> 208 with the three-profile coverage regen (the gate must be measured against THIS index)
 
 # The commit the last full gate ran at, and its re-derived in-corpus headline. Both are read
 # back out of the committed artifact at run time rather than trusted from this comment.
@@ -185,7 +185,7 @@ BASELINE_COMMIT = '1476caa'
 PRODUCTION_HEALTH = 'https://prosperpiusmbaruku007--chike-inference-health.modal.run'
 
 print('=' * 90)
-print('FULL GATE — production configuration, 184-fact index, D-FIDELITY-7 and -8 wired')
+print('FULL GATE — production configuration, 208-fact index, D-FIDELITY-7 and -8 wired')
 print('=' * 90)
 
 # ── AUTH ─────────────────────────────────────────────────────────────────────────────────

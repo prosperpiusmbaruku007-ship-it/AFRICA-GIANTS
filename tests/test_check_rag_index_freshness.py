@@ -446,23 +446,25 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    # EIGHTEENTH FLIP (2026-11-13): PENDING the coverage-batch regen -- see test_content_limb_passes_on_the_real_built_texts.
-    assert ok is False, (
-        f"the live repo reports FRESH: the coverage regen has landed. Flip back to `ok is True` / 208 rows and delete the "
-        f"pending_r15 pins: {report}")
-    assert report["content_matches"] is False, report
+    assert ok is True, (
+        f"the live repo reports STALE after the coverage regen's dual-commit. The content limb IS the verdict, so this means "
+        f"build_fact_texts() over this tree no longer equals a served file -- do not flip this back to False to make it green; "
+        f"find what moved: {report}")
+    assert report["content_matches"] is True, report
     assert report["content_build_error"] is None, report
+    assert report["diverging"] == {}, report["diverging"]
     for _d in ("kaggle", "chike-inference"):
         with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
             _served = json.load(_fh)
-        assert len(_served) == 184, (_d, len(_served))
+        assert len(_served) == 208, (_d, len(_served))
         assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], _served[9][:200]
+    assert report["embedding_rows_match"] is True, report
     assert report["built_rows"] == 208, report["built_rows"]
     assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
     assert report["artifacts_diverged"] is False, (
-        "the two index directories disagree -- a different defect from a pending regen")
+        "the two index directories disagree -- a different defect from a pending regen, and one the R15 dual-commit step exists to prevent")
 
 
 # ── THE CONTENT LIMB, PLANTED IN EVERY DIRECTION (added 2026-10-08) ─────────────────────────
@@ -507,27 +509,26 @@ SERVED_TEXTS = _served_texts()
 
 
 def test_content_limb_passes_on_the_real_built_texts():
-    """⭐ EIGHTEENTH FLIP, to PENDING -- THE 2026-11-13 THREE-PROFILE COVERAGE BATCH.
+    """⭐ NINETEENTH FLIP, back to `assert ok is True` -- the 2026-11-13 three-profile coverage regen shipped (HF dataset commit of the
+    208-row index; fetched file verified IDENTICAL, rows and order, to the local build of adb03a2) and was dual-committed.
 
-    24 NEW rows (employer / trader / bookkeeper questions that reached no fact) are appended AFTER the group passages, so no existing row
-    number moves, and FIVE existing rows are REWRITTEN Swahili-first so they surface (rows 1, 26, 58, 90, 95). The served index cannot
-    catch up until the Kaggle R15 regen runs, so the builder and the served files DISAGREE, and this test asserts exactly that and
-    exactly how: 208 built rows vs 184 served, and the first 184 differ ONLY at the five declared rewrites. Flip back to
-    `assert ok is True` (and 208) once the regen has run and the artifacts are dual-committed -- `ok is True` alone would not show
-    that the intended rows are the ones that moved, so the specifics are asserted then too.
-
-    (Seventeenth flip, kept for provenance: back to True after the dc8843e regen; row 9 must still carry the BASE/SOURCE separation.)"""
+    `ok is True` alone would not show that the intended rows are the ones that moved, so the specifics are re-asserted against the SERVED
+    text: 208 rows, the five rewrites carry their new Swahili-first leads, the 24 new rows are present and in the appended position, and
+    row 9 still carries the BASE/SOURCE separation (seventeenth flip). (Eighteenth flip, kept for provenance: PENDING that regen --
+    208 built vs 184 served, the first 184 differing only at rows 1, 26, 58, 90, 95.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    assert ok is False, (
-        "built and served now AGREE -- the coverage regen has landed. Flip this back to `ok is True` and 208 rows, remove the "
-        f"pending_r15 pins for the 24 new keys in scripts/check_facts_index_sync.py, and re-assert the specifics: {rep}")
-    assert rep["content_matches"] is False
-    assert len(REAL_TEXTS) == 208 and len(SERVED_TEXTS) == 184, (len(REAL_TEXTS), len(SERVED_TEXTS))
-    moved = [i for i in range(184) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
-    assert moved == [1, 26, 58, 90, 95], (
-        f"the rows that differ among the first 184 are not exactly the five declared rewrites: {moved}")
+    assert ok is True, (
+        f"the real builder's output no longer matches the served index. If a fact or the builder has changed, an R15 regen is owed and "
+        f"THAT is the fix -- not flipping this: {rep}")
+    assert rep["content_matches"] is True
+    assert rep["diverging"] == {}, rep["diverging"]
+    assert len(REAL_TEXTS) == 208 and len(SERVED_TEXTS) == 208 and REAL_TEXTS == SERVED_TEXTS
+    assert "Nikichelewa kulipa PAYE adhabu ni nini" in SERVED_TEXTS[1]
+    assert "Nikikosa kutoa risiti ya EFD adhabu ni nini" in SERVED_TEXTS[95]
+    assert SERVED_TEXTS[58].startswith("Je nahitaji mashine ya risiti (EFD)?") and "HAKUNA kizingiti cha mauzo" in SERVED_TEXTS[58]
+    assert "Mauzo yangu ya mwaka ni milioni 15" not in SERVED_TEXTS[58], "row 58 regained the generic lead that sat in the top 3 of ~1/3 of questions"
+    assert "ifikapo tarehe 7 ya mwezi unaofuata" in SERVED_TEXTS[184] and "TZS 328,000" in " ".join(SERVED_TEXTS[184:])
     assert "HAIKATWI" in REAL_TEXTS[9] and "ikihesabiwa" in REAL_TEXTS[9], REAL_TEXTS[9][:200]
-    assert REAL_TEXTS[9] == SERVED_TEXTS[9]
 
 
 def test_content_limb_BLOCKS_a_single_changed_row():

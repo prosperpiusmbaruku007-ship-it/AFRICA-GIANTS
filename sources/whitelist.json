@@ -373,5 +373,20 @@
     "last_verified": "2026-10-05",
     "re_scrape_trigger": "When WCF online services or forms change",
     "notes": "OWNERSHIP VERIFIED FROM THE SITE ITSELF 2026-10-05 (HTTP 200, 40,323 bytes): 'WCF - PORTAL / WORKERS COMPENSATION FUND SELF SERVICE PORTAL'. A subdomain of the verified wcf.go.tz, listed SEPARATELY because validate_dataset deliberately does not collapse arbitrary subdomains -- a portal is a different service from a parent site and treating them as one would be a policy change disguised as a bug fix. Cited by 9 cleaned pairs."
+  },
+  {
+    "id": "tier1a_parliament_polis_001",
+    "url": "https://polis.bunge.go.tz",
+    "institution": "Bunge la Tanzania (National Assembly) - Polis portal of Bills and Acts",
+    "source_type": "official_gazette",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "pdf_official",
+    "decay_risk": "Stable",
+    "last_verified": "2026-11-13",
+    "re_scrape_trigger": "When a cited Act is amended or a consolidation supersedes it",
+    "notes": "OWNERSHIP VERIFIED FROM THE SITES THEMSELVES 2026-11-13: https://polis.bunge.go.tz/ (HTTP 200) titles itself 'Bunge Polis' and 'Bunge la Tanzania - Jamhuri ya Muungano ya Tanzania' with a 'Miswada na Sheria' (Bills and Acts) menu; https://www.bunge.go.tz/ redirects to https://www.parliament.go.tz/ (the already-whitelisted tier1c_parliament_ppa2023 domain), whose own pages link to polis.bunge.go.tz 37 times. Listed SEPARATELY because validate_dataset deliberately does not collapse arbitrary subdomains. FIRST USE: the Labour Laws (Amendments) Act, 2025 (Act No. 4 of 2025, Gazette Supplement No. 4 Vol. 106 of 14 March 2025), whose text on this host is word-for-word identical (similarity 1.0) to the FB Attorneys scan first read; it supplies the premature-birth maternity/paternity provisions and the unfair-termination compensation scales (facts maternity_leave_premature_birth, paternity_leave_days, unfair_termination_compensation). NOTE the host's file name says 'ACT, 2024 ... CHAPA DOM' while the document is the 2025 Act: the file name is not the citation, the Gazette Supplement header is."
   }
 ]
