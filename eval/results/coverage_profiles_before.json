@@ -1,0 +1,2106 @@
+[
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nina wafanyakazi 8, kila mmoja analipwa TZS 600,000 kwa mwezi. PAYE ni kiasi gani kwa mmoja?",
+  "path": "engine:paye:ask",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+  "top3": [
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mfanyakazi wangu analipwa 900,000, nikate kodi ya PAYE kiasi gani?",
+  "path": "engine:paye",
+  "model_calls": 2,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] PAYE = TZS 68,000 + 25% × (TZS 900,000 − TZS 760,000) = TZS 103,000",
+  "top3": [
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "NSSF ya mwajiri ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mshahara wa mfanyakazi ni 700,000, NSSF ni kiasi gani kwa mwezi?",
+  "path": "engine:nssf",
+  "model_calls": 2,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] NSSF (sehemu ya mfanyakazi) = 10% × TZS 700,000 = TZS 70,000 — jumla ya NSSF ni 20% (mwajiri TZS 70,000 + mfanyakazi TZS 70,000)",
+  "top3": [
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz",
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nina wafanyakazi 12, je SDL inanihusu?",
+  "path": "engine:sdl",
+  "model_calls": 2,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] Ndiyo. Una wafanyakazi 12 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+  "top3": [
+   "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya ",
+   "Waajiri/taasisi zisizolipa SDL (msamaha): idara za Serikali, mamlaka za Serikali za Mitaa, taasisi za kidiplom"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "SDL ni asilimia ngapi na inalipwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya ",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, ni lazima nijisajili WCF nikiwa na wafanyakazi 5?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, ",
+   "wcf new employer registration: A new employer must register with WCF within 30 days of hiring their first empl"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "WCF ni asilimia ngapi ya mshahara?",
+  "path": "engine:wcf",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mam",
+  "top3": [
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi ",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta ina chake, sekta 16 n",
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+   "duration of maternity cash benefit: 12 weeks"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mwisho wa kulipa NSSF ni tarehe ngapi kila mwezi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni ",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Return ya PAYE inawasilishwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "workers compensation amendment rules citation: Workers Compensation (Amendment) Regulations, 2021 (Government ",
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni ",
+   "paye p9 deadline: The annual employment-income withholding certificate is due by 30 January of the following y"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, nikichelewa kulipa PAYE kuna adhabu gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi kisicholipwa.",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwi"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mfanyakazi akipata ajali kazini nifanye nini? Natakiwa kuripoti WCF ndani ya siku ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Naweza kumfukuza mfanyakazi bila notisi? Malipo ya kuachishwa kazi ni yapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Likizo ya uzazi ni siku ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa 100% ya mshahara wakati wa likizo ya uzazi.",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata."
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nina wafanyakazi 9 na nimeajiri wa 10, SDL inaanza lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.",
+   "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kik",
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "OSHA inahitaji nini kwa duka lenye wafanyakazi 10?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kik",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania."
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mshahara wa mfanyakazi ni 1,200,000 na nina wafanyakazi 14. Jumla ya makato yote ni kiasi gani?",
+  "path": "engine:ambiguous_multi:ask",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi.",
+  "top3": [
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+  "path": "engine:vat_registration",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,00",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy",
+   "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 mo",
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu ni milioni 150 kwa mwaka, nalipa kodi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6."
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Je, ni lazima nitumie mashine ya EFD? Mauzo yangu ni milioni 30.",
+  "path": "engine:efd_requirement",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General pub",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy",
+   "efd approved supplier verification: To verify that an EFD supplier/distributor (msambazaji) is TRA-approved, b"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Naanza kutumia EFD lini, kuna kizingiti cha mauzo?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Presumptive tax ni nini na nani anastahili?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu ni milioni 120 kwa mwaka, nitalipa kodi ya makadirio kiasi gani?",
+  "path": "engine:presumptive",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kodi ya makadirio = 4.0% × TZS 120,000,000 = TZS 4,800,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndan",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6."
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Kizingiti cha kujisajili VAT ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "VAT ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza",
+   "council service levy is a cap not a rate: Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOM",
+   "vat withholding formula correct: VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu yamefika milioni 210, nifanye nini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 100,000,000 kwa miezi 6."
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Return ya VAT inawasilishwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "vat return submission deadline: VAT return for domestic (non-import) supplies is due on or before the 20th day",
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V",
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nitapataje TIN?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   " unresolved items: ",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nawezaje kurudisha VAT niliyolipa ninaponunua bidhaa?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nikikosa kutoa risiti ya EFD adhabu ni nini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Naweza kutumia risiti ya mkono badala ya EFD?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Ninaagiza bidhaa kutoka China, ushuru wa forodha ni kiasi gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "market dues no national amount: Ushuru wa soko au genge ni kiasi gani? Hakuna kiwango kimoja cha kitaifa. Kias",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "business licence fee national schedule local collection: Leseni ya biashara inagharimu kiasi gani? Ada imepang",
+   "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nahitaji kusajili jina la biashara BRELA, gharama ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu",
+   "business name maintenance fee: The BRELA annual business-name maintenance/operating fee ('ada ya uendeshaji', ",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Kodi ya duka la rejareja la milioni 80 kwa mwaka?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Je, nikipanga fremu ya duka nakatwa kodi ya zuio ya pango?",
+  "path": "engine:rent_wht",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nimeuza bidhaa kwa mkopo, VAT inalipwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mapato yangu ni 15 milioni, ninahitaji kuwasilisha return ya mapato?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000."
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja ana mauzo ya milioni 90 na wafanyakazi 6, ni kodi gani anapaswa kulipa?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mshahara wa mfanyakazi ni 1,500,000, PAYE na NSSF ni kiasi gani?",
+  "path": "engine:nssf+engine:paye",
+  "model_calls": 4,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] NSSF (sehemu ya mfanyakazi) = 10% × TZS 1,500,000 = TZS 150,000 — jumla ya NSSF ni 20% (mwajiri TZS 150,000 + mfanyakazi TZS 150,000)  [MODEL] PAYE = TZS 128,000 + 30% × (TZS 1,500,000 − TZS 1",
+  "top3": [
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz",
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kampuni ndogo ya mteja ina faida, kodi ya mapato ya kampuni ni asilimia ngapi?",
+  "path": "engine:corporate_tax",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma h",
+  "top3": [
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+   "Kodi ya kampuni Tanzania ni asilimia 30 kwa kampuni za kawaida. Kampuni zilizoorodheshwa DSE (Soko la Hisa la ",
+   "Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwa"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Ubia wa watu wawili unalipa kodi ya mapato vipi?",
+  "path": "engine:partnership_tax",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato Kifungu 48(1)) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana ",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja ana hasara kwa miaka mitatu, kuna kodi ya chini kabisa (AMT)?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwa",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "penalty imprisonment tanzanian citizen: three months null"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Ushuru wa zuio kwa huduma zinazolipwa kwa mkandarasi ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "council service levy is a cap not a rate: Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOM",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Withholding tax kwenye gawio ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V",
+   "royalties wht rate: The DEFAULT withholding tax rate on royalty payments is 15% for BOTH residents and non-res",
+   "vat withholding formula correct: VAT withholding rate applies to the CONSIDERATION (invoice value exclusive of"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja anakodisha jengo la biashara, kodi ya zuio ya pango ni asilimia ngapi?",
+  "path": "engine:rent_wht",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Tarehe ya mwisho ya kuwasilisha return ya VAT na PAYE ni lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "vat return submission deadline: VAT return for domestic (non-import) supplies is due on or before the 20th day",
+   "vat withholding remittance deadline: VAT withholding remitted to TRA within 10 days after the end of each tax ",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Annual return BRELA inawasilishwa lini na ada yake ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000.",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kampuni ya kigeni inachelewa kuwasilisha annual return, adhabu ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+   "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000.",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Je, mteja anaweza kudai VAT ya pembejeo kwa gari la kampuni?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Rekodi za biashara zihifadhiwe kwa miaka mingapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi",
+   "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja anapaswa kulipa kodi ya mapato kwa awamu (instalment) lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Capital gains tax kwa kuuza hisa ni asilimia ngapi?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Transfer pricing inahitaji nyaraka gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+   "certified copy agreement law constitution fee: Ada ya kuwasilisha nakala iliyothibitishwa ya katiba ya kampuni",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Stamp duty kwenye mkataba wa pango ni kiasi gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "certified copy agreement law constitution fee: Ada ya kuwasilisha nakala iliyothibitishwa ya katiba ya kampuni",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja ana biashara Zanzibar, ZRA inatoza nini?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+   "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mge"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "SDL ni asilimia ngapi? Na WCF? Na NSSF ya mwajiri?",
+  "path": "engine:sdl+fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri p",
+  "top3": [
+   "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya ",
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja ana wafanyakazi 20 wa mishahara tofauti, nahitaji kuhesabu SDL kwa jumla ya mishahara milioni 18.",
+  "path": "engine:sdl",
+  "model_calls": 2,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] SDL = 3.5% × TZS 18,000,000 = TZS 630,000",
+  "top3": [
+   "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "penalty fine tanzanian citizen: five million TZS"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "base",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kodi ya mapato ya mfanyakazi asiye mkazi (non-resident) ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "minimum monthly contributions maternity benefit: 36 monthly_contributions",
+   "duration of maternity cash benefit: 12 weeks"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nalipa mfanyakazi wa nyumbani 150,000 kwa mwezi, je ni sawa?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+   "duration of maternity cash benefit: 12 weeks"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mfanyakazi wa duka analipwa 200,000 kwa mwezi, je inatosha kisheria?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nalipa mlinzi 120,000 kwa mwezi, ni halali?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "application fee patent: 12,000 TZS -- patent application fee",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "unpaid contribution penalty frequency: each month or a part of a month null"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta ina chake, sekta 16 n",
+   "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfanyakazi. Mwajiri hul",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n"
+  ],
+  "generic_in_top3": false,
+  "want": "GN605A rate range|domestic",
+  "want_rank": 24
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta ina chake, sekta 16 n",
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa"
+  ],
+  "generic_in_top3": false,
+  "want": "GN 605A|GN605A",
+  "want_rank": 1
+ },
+ {
+  "kind": "A",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta ina chake, sekta 16 n",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi ",
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada."
+  ],
+  "generic_in_top3": false,
+  "want": "GN 605A|GN605A",
+  "want_rank": 1
+ },
+ {
+  "kind": "A",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nina duka, mauzo milioni 80 kwa mwaka, kodi ya makadirio ni ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Kodi ya duka la rejareja la milioni 80 kwa mwaka?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "A",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo ya mwaka ni milioni 150, nalipa kodi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mshahara wa mfanyakazi ni 800,000 kwa mwezi, PAYE ni kiasi gani?",
+  "path": "engine:paye",
+  "model_calls": 2,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL] PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+  "top3": [
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi ",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, ni halali kumfukuza mfanyakazi bila notisi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Je, ni halali kutumia risiti ya mkono badala ya EFD?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+  "path": "engine:vat_registration",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 100,000,00",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy",
+   "vat registration threshold: VAT registration threshold is TZS 200,000,000 per year OR TZS 100,000,000 per 6 mo",
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Mauzo yangu ni milioni 40 kwa mwaka, nalipa kodi ya makadirio kiasi gani?",
+  "path": "engine:presumptive",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kodi ya makadirio = 4.0% × TZS 40,000,000 = TZS 1,600,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "ctl",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kampuni ina mapato ya milioni 300, kodi ya mapato ya kampuni ni asilimia ngapi?",
+  "path": "engine:corporate_tax",
+  "model_calls": 0,
+  "refused": false,
+  "guards": [],
+  "text": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi (First Schedule para 3(1)). Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma h",
+  "top3": [
+   "Kodi ya kampuni Tanzania ni asilimia 30 kwa kampuni za kawaida. Kampuni zilizoorodheshwa DSE (Soko la Hisa la ",
+   "Kampuni yenye hasara miaka mitatu mfululizo hulipa AMT (Alternative Minimum Tax) ya asilimia 1 ya mauzo ya mwa",
+   "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "B",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Nikichelewa kulipa PAYE kuna adhabu gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi kisicholipwa.",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwi"
+  ],
+  "generic_in_top3": true,
+  "want": "Late PAYE remittance penalty",
+  "want_rank": 5
+ },
+ {
+  "kind": "B",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nikikosa kutoa risiti ya EFD adhabu ni nini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan",
+   "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiy"
+  ],
+  "generic_in_top3": true,
+  "want": "efd tra closure authority",
+  "want_rank": 17
+ },
+ {
+  "kind": "B",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "BRELA: ukichelewa kuwasilisha ritani (annual return) ya kampuni, faini ni TZS 2,500 kwa kila mwezi wa kuchelew",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V"
+  ],
+  "generic_in_top3": true,
+  "want": "vat late (return|filing)",
+  "want_rank": ">30"
+ },
+ {
+  "kind": "B",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Naweza kudai VAT niliyolipa nikinunua bidhaa za biashara?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V"
+  ],
+  "generic_in_top3": true,
+  "want": "input VAT",
+  "want_rank": 4
+ },
+ {
+  "kind": "B",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": "provisional tax instalments",
+  "want_rank": ">30"
+ },
+ {
+  "kind": "B",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada."
+  ],
+  "generic_in_top3": false,
+  "want": "GN605A rate range",
+  "want_rank": ">30"
+ },
+ {
+  "kind": "B",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, ni lazima nijisajili WCF nikiwa na wafanyakazi 5?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, ",
+   "wcf new employer registration: A new employer must register with WCF within 30 days of hiring their first empl"
+  ],
+  "generic_in_top3": false,
+  "want": "wcf (employer )?registration|WCF.{0,60}(sajili|regist)",
+  "want_rank": 2
+ },
+ {
+  "kind": "B",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "OSHA inahitaji nini kwa duka lenye wafanyakazi 10?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kik",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria ya OSHA Na.5 ya 2003), ",
+   "OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania."
+  ],
+  "generic_in_top3": false,
+  "want": "OSHA Tanzania: kila mwajiri",
+  "want_rank": 2
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "PAYE inalipwa tarehe ngapi kila mwezi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni ",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata."
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Return ya PAYE inawasilishwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "workers compensation amendment rules citation: Workers Compensation (Amendment) Regulations, 2021 (Government ",
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni ",
+   "paye p9 deadline: The annual employment-income withholding certificate is due by 30 January of the following y"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "OSHA Tanzania: kila mwajiri lazima asajili mahali pa kazi na OSHA. Sheria inahusu maeneo yote ya kazi bila kik",
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Naweza kumfukuza mfanyakazi bila notisi? Notisi ni muda gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, ",
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Mfanyakazi akiachishwa kazi anastahili malipo ya kuachishwa (severance) kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa 100% ya mshahara wakati wa likizo ya uzazi.",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Likizo ya mwaka ni siku ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Overtime inalipwa kiasi gani?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo cha hadi miaka miwi",
+   "Kwa wafanyakazi 12 wenye mshahara TZS 600,000 kila mmoja, NSSF jumla ni TZS 1,440,000 (SI TZS 120,000 — hiyo n",
+   "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Likizo ya uzazi ni siku ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa 100% ya mshahara wakati wa likizo ya uzazi.",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata."
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "1 EMPLOYER 3-15",
+  "q": "Likizo ya baba (paternity leave) ni siku ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "NSSF likizo ya uzazi (maternity benefit): mfanyakazi analipwa 100% ya mshahara wakati wa likizo ya uzazi.",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata."
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nitapataje TIN?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   " unresolved items: ",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo Y",
+   "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD) au inaruhusiwa kuan"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nawezaje kurejeshewa VAT (VAT refund)?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "vat withholding buyer remits directly: The withholding agent (qualifying buyer / mnunuzi anayehitimu) remits V",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanza",
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Ushuru wa zuio kwa huduma za mkandarasi ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "council service levy is a cap not a rate: Ushuru wa huduma wa halmashauri (service levy): sheria inaweka KIKOM",
+   "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.go.tz (si nssf.or.tz"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Rekodi za biashara zihifadhiwe kwa miaka mingapi?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi",
+   "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "C",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Naweza kudai VAT ya pembejeo kwa gari la kampuni?",
+  "path": "fact",
+  "model_calls": 1,
+  "refused": false,
+  "guards": [],
+  "text": "[MODEL]",
+  "top3": [
+   "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya ri",
+   "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUNA sharti l",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": true,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Capital gains tax kwa kuuza hisa ni asilimia ngapi?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa his",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha",
+   "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini "
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Transfer pricing inahitaji nyaraka gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+   "certified copy agreement law constitution fee: Ada ya kuwasilisha nakala iliyothibitishwa ya katiba ya kampuni",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Stamp duty kwenye mkataba wa pango ni kiasi gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya k",
+   "certified copy agreement law constitution fee: Ada ya kuwasilisha nakala iliyothibitishwa ya katiba ya kampuni",
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo yasiyozidi TZS 200,00",
+   "presumptive excluded services: Kodi ya makadirio HAITUMIKI kwa wataalamu huru (independent professionals) wala",
+   "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya mwaka: ha"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "2 TRADER 11M-200M",
+  "q": "Ninaagiza bidhaa kutoka China, ushuru wa forodha ni kiasi gani?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "PAYE kwa mshahara wa TZS 800,000 ni TZS 78,000 kamili. Hii ni jibu la mwisho, si mahesabu ya ziada.",
+   "market dues no national amount: Ushuru wa soko au genge ni kiasi gani? Hakuna kiwango kimoja cha kitaifa. Kias",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ },
+ {
+  "kind": "D",
+  "profile": "3 BOOKKEEPER MIXED",
+  "q": "Mteja ana biashara Zanzibar, ZRA inatoza nini?",
+  "path": "refusal",
+  "model_calls": 0,
+  "refused": true,
+  "guards": [],
+  "text": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra",
+  "top3": [
+   "Ada za alama ya biashara (trademark) BRELA: kusajili alama moja TZS 60,000; kuhuisha (renewal) TZS 30,000; mfu",
+   "Ada nyingine za kuwasilisha nyaraka BRELA: kuwasilisha memorandum na articles ni TZS 66,000; stempu kwa kila n",
+   "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mge"
+  ],
+  "generic_in_top3": false,
+  "want": null,
+  "want_rank": null
+ }
+]
