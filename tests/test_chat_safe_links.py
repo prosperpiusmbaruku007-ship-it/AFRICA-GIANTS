@@ -21,7 +21,7 @@ _spec.loader.exec_module(hc)
 
 KEY = "test-key"
 HOST = "https://prosperpiusmbaruku007--chike-whatsapp-d.modal.run"
-NUMBER = "255712615913@s.whatsapp.net"
+NUMBER = "255700000098@s.whatsapp.net"
 URL_RE = re.compile(r"https?://\S+")
 
 
@@ -106,7 +106,7 @@ def _load_mw(monkeypatch):
     spec.loader.exec_module(mw)
     isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("SENDER_SALT", "salt")
-    monkeypatch.setenv("REVIEWER_ROSTER", "+255712615913:Prosper")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000098:Prosper")
     monkeypatch.setenv("REVIEW_SIGNING_KEY", KEY)
     return mw
 

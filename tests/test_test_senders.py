@@ -146,7 +146,7 @@ def _load_mw(monkeypatch, test_senders=TESTER):
     spec.loader.exec_module(mw)
     isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("SENDER_SALT", SALT)
-    monkeypatch.setenv("REVIEWER_ROSTER", "+255712615913:Prosper")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000098:Prosper")
     monkeypatch.setenv("REVIEW_SIGNING_KEY", "k")
     monkeypatch.setenv("COHORT_SIZE", "3")
     monkeypatch.setenv("TEST_SENDERS", test_senders)

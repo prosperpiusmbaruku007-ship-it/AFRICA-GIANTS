@@ -309,7 +309,7 @@ def test_a_pending_row_is_registered_under_the_filename_it_was_stored_under(monk
 
 
 # -- the admin view shows reviewer HANDLES, never phone numbers --------------------------------------
-_REVIEWER_JID = "255712615913@s.whatsapp.net"
+_REVIEWER_JID = "255700000098@s.whatsapp.net"
 _KEY = "test-signing-key-not-a-secret"
 
 
@@ -335,7 +335,7 @@ def test_public_review_items_replace_reviewer_numbers_with_handles_and_drop_the_
 
 def test_without_a_signing_key_the_view_masks_to_a_tail_rather_than_showing_the_number():
     shown = core.public_review_items([_decided()], None)
-    assert shown[0]["decided_by"] == "...5913"
+    assert shown[0]["decided_by"] == "...0098"
 
 
 def test_per_reviewer_is_keyed_by_handle_not_jid():

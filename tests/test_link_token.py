@@ -20,7 +20,7 @@ hc = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(hc)
 
 KEY = "test-key"
-NUMBER = "255712615913@s.whatsapp.net"
+NUMBER = "255700000098@s.whatsapp.net"
 OTHER = "255700000022@s.whatsapp.net"
 IDS = ["2026-11-12T00:41:28+00:00-b5908217", "2026-11-12T00:42:57+00:00-b5908217",
        "2026-11-11T20:54:51+00:00-b5908217", "TEST-1791721161A"]
@@ -113,7 +113,7 @@ def _load_mw(monkeypatch):
     spec.loader.exec_module(mw)
     isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("SENDER_SALT", "salt")
-    monkeypatch.setenv("REVIEWER_ROSTER", "+255712615913:Prosper")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000098:Prosper")
     monkeypatch.setenv("REVIEW_SIGNING_KEY", KEY)
     return mw
 

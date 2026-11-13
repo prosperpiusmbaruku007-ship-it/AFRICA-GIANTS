@@ -254,9 +254,9 @@ def test_the_clock_starts_when_the_draft_became_reviewable_not_when_the_question
 
 
 def test_a_draft_a_reviewer_has_open_waits_and_an_expired_claim_does_not():
-    it = _item(claimed_by="255712615913@s.whatsapp.net", claim_expires_at=(NOW + timedelta(minutes=5)).isoformat())
+    it = _item(claimed_by="255700000098@s.whatsapp.net", claim_expires_at=(NOW + timedelta(minutes=5)).isoformat())
     assert _v(it) == "wait"
-    it = _item(claimed_by="255712615913@s.whatsapp.net", claim_expires_at=(NOW - timedelta(seconds=1)).isoformat())
+    it = _item(claimed_by="255700000098@s.whatsapp.net", claim_expires_at=(NOW - timedelta(seconds=1)).isoformat())
     assert _v(it) == "auto_send"
 
 
@@ -389,7 +389,7 @@ def _load_mw(monkeypatch, enabled="1"):
     spec.loader.exec_module(mw)
     isolate_modal_stores(mw, monkeypatch)
     monkeypatch.setenv("SENDER_SALT", "s")
-    monkeypatch.setenv("REVIEWER_ROSTER", "+255712615913:Prosper")
+    monkeypatch.setenv("REVIEWER_ROSTER", "+255700000098:Prosper")
     monkeypatch.setenv("REVIEW_SIGNING_KEY", "k")
     monkeypatch.setenv("REVIEW_D_URL", "https://d.example")
     monkeypatch.setenv("REVIEW_CLAIM_URL", "https://c.example")
@@ -501,7 +501,7 @@ def test_a_young_or_claimed_draft_is_left_alone(monkeypatch):
     mw, sent = _load_mw(monkeypatch)
     young = _aged(mw, 14)
     claimed = _aged(mw, 30, review_id="2026-11-13T11:00:00+00:00-claimed1",
-                    claimed_by="255712615913@s.whatsapp.net",
+                    claimed_by="255700000098@s.whatsapp.net",
                     claim_expires_at=(datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat())
     _sweep(mw)
     assert sent == []
