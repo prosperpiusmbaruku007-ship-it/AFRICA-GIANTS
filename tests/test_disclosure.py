@@ -348,6 +348,6 @@ def test_the_webhook_hands_the_linked_id_through_to_both_entry_points():
 def test_the_real_payload_with_senderPn_yields_the_phone_as_sender_and_the_lid_as_alias():
     body = {"event": "messages.received", "data": {"messages": {
         "remoteJid": LID, "conversation": "Habari",
-        "key": {"remoteJid": LID, "senderPn": "255760915913@s.whatsapp.net"}}}}
+        "key": {"remoteJid": LID, "senderPn": "255700000099@s.whatsapp.net"}}}}
     p = hc.parse_webhook(body)
     assert p["sender"].endswith("@s.whatsapp.net") and p["sender_lid"] == LID

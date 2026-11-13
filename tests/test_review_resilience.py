@@ -316,7 +316,7 @@ _KEY = "test-signing-key-not-a-secret"
 def _decided(**kw):
     base = {"review_id": "2026-11-11T20:54:51+00:00-b5908217", "status": "sent", "decided_by": _REVIEWER_JID,
             "claimed_by": _REVIEWER_JID, "released_from": _REVIEWER_JID, "decided_by_name": "Prosper",
-            "sender": "255760915913@s.whatsapp.net", "decision_latency_s": 28}
+            "sender": "255700000099@s.whatsapp.net", "decision_latency_s": 28}
     base.update(kw)
     return base
 
