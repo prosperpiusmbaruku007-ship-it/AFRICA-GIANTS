@@ -1,0 +1,360 @@
+{
+ "identity": {
+  "served": {
+   "build": "8b8c8db",
+   "rag_rows_loaded": 208,
+   "rag_embeddings_shape": [
+    208,
+    768
+   ],
+   "rag_facts_text_sha256": "78b2b4d2e36dd88eb9c297a087fbf8f68a010e800d7c36b980eab0b1d7917577",
+   "config_rag_fact_count": 208,
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+   "coldstart": {
+    "container_import_ts": 1794581047.587,
+    "enter_started_ts": 1794581047.598,
+    "enter_done_ts": 1794581085.277,
+    "import_to_enter_s": 0.0,
+    "load_s": 37.7,
+    "gpu": "Tesla T4"
+   }
+  },
+  "committed_rows": 208,
+  "committed_sha256": "78b2b4d2e36dd88eb9c297a087fbf8f68a010e800d7c36b980eab0b1d7917577",
+  "took_s": 75.8
+ },
+ "rows": [
+  {
+   "kind": "NEW",
+   "q": "Nitapataje TIN?",
+   "note": "TAA s.22/24",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 15.6,
+   "must": "siku\\s*15|siku\\s*7|NIDA",
+   "must_ok": true,
+   "facts": [
+    "Nitapataje TIN? Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15",
+    "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kw",
+    " unresolved items: "
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "PAYE inalipwa tarehe ngapi kila mwezi?",
+   "note": "ITA s.109",
+   "reply": "PAYE inalipwa ndani ya siku 7 baada ya mwisho wa mwezi husika — yaani ifikapo tarehe 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 5.5,
+   "must": "tarehe\\s*7|siku\\s*7",
+   "must_ok": true,
+   "facts": [
+    "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho",
+    "Nikichelewa kulipa PAYE adhabu ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi a",
+    "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. U"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "note": "ELRA notice",
+   "reply": "Kwa mfanyakazi wa kila mwezi, notisi ni siku 4. Thibitisha na mamlaka husika (osha.go.tz).",
+   "took_s": 4.2,
+   "must": "28",
+   "must_ok": false,
+   "facts": [
+    "Notisi ya kuacha au kuachishwa kazi ni siku ngapi? Mwezi wa kwanza: siku 7. Baada ya hapo:",
+    "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na ak",
+    "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Severance pay inahesabiwaje?",
+   "note": "ELRA severance",
+   "reply": "Mfanyakazi aliyetimiza miezi 12+ (miaka 1+) anapata: mshahara wake wa mwisho + asilimia 25% ya mshahara wake wa mwisho. Thibitisha na sheria husika (elra.go.tz).",
+   "took_s": 6.1,
+   "must": "siku\\s*7|saba",
+   "must_ok": false,
+   "facts": [
+    "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na ak",
+    "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi kisicholipwa",
+    "Likizo ya baba (paternity leave): siku 3 zenye malipo ukichukua ndani ya siku 7 tangu mtot"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "note": "ELRA maternity",
+   "reply": "Thibitisha na ELRA.Kiwango cha sasa cha likizo ya uzazi kinacholipwa ni siku 84. Thibitisha na ELRA (Employment and Labour Relations Act).",
+   "took_s": 4.8,
+   "must": "84",
+   "must_ok": true,
+   "facts": [
+    "Likizo ya uzazi ni siku ngapi? Siku 84 zenye malipo; siku 100 ukizaa watoto zaidi ya mmoja",
+    "Likizo ya uzazi mtoto akizaliwa kabla ya wakati: mfanyakazi ana likizo yenye malipo kuanzi",
+    "Likizo ya baba (paternity leave): siku 3 zenye malipo ukichukua ndani ya siku 7 tangu mtot"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "note": "ELRA annual leave",
+   "reply": "Ndiyo, unatakiwa kulipa mshahara kamili wakati wa likizo. Hakuna sheria inayokuruhusu kusimamisha malipo ya mshahara wakati wa likizo. Thibitisha na ELRA (elra.go.tz).",
+   "took_s": 7.2,
+   "must": "28",
+   "must_ok": false,
+   "facts": [
+    "Likizo ya mwaka ni siku ngapi? Angalau siku 28 mfululizo kwa kila mzunguko wa likizo (siku",
+    "Likizo ya uzazi ni siku ngapi? Siku 84 zenye malipo; siku 100 ukizaa watoto zaidi ya mmoja",
+    "Likizo ya baba (paternity leave): siku 3 zenye malipo ukichukua ndani ya siku 7 tangu mtot"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Overtime inalipwa kiasi gani?",
+   "note": "ELRA overtime",
+   "reply": "Kiwango cha chini cha overtime ni asilimia 25% ya mshahara wa msingi. Thibitisha na GN605A (sekta yako).",
+   "took_s": 4.2,
+   "must": "1\\.5|1,5|moja na nusu",
+   "must_ok": false,
+   "facts": [
+    "Overtime (saa za ziada) inalipwa kiasi gani? Angalau mara 1.5 ya mshahara wa msingi. Overt",
+    "Faini ya juu kabisa kwa kosa la NSSF ni TZS 10,000,000 (shilingi milioni kumi), au kifungo",
+    "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na ak"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "note": "GN 605A item 4",
+   "reply": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni karibu TZS 80,000 kwa mwezi. Thibitisha na GN 605A (sekta ya huduma za nyumbani).",
+   "took_s": 5.3,
+   "must": "80,000|328,000|265,000|160,000",
+   "must_ok": true,
+   "facts": [
+    "Kima cha chini cha mshahara kwa dada wa kazi au mfanyakazi wa nyumbani (kwa mwezi, GN 605A",
+    "Kima cha chini cha mshahara (GN 605A): hakina kiwango kimoja kwa nchi nzima — kila sekta i",
+    "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfa"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?",
+   "note": "ITA s.105",
+   "reply": "Kodi ya zuio kwenye gawio ni asilimia 5 kwa kampuni zilizoorodheshwa DSE, asilimia 5 kwa kampuni mkazi zinazotoa kwa kampuni mkazi, na asilimia 10 kwa kampuni nyingine. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 7.2,
+   "must": "10|5",
+   "must_ok": true,
+   "facts": [
+    "Gawio (dividend) linakatwa kodi ya zuio asilimia ngapi? Kampuni iliyoorodheshwa Soko la Hi",
+    "Kodi ya zuio kwa mshauri, wakili, mhasibu, mkaguzi, mhandisi au huduma nyingine za kitaala",
+    "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "note": "VAT s.15",
+   "reply": "Kwa mauzo ya mkopo, unaweza kuomba kulipa VAT kidogo kidogo kulingana na makubaliano ya malipo. Thibitisha na tra.go.tz.",
+   "took_s": 4.5,
+   "must": "invoice|ankara|20",
+   "must_ok": false,
+   "facts": [
+    "Nimeuza kwa mkopo, VAT inalipwa lini? VAT inakuwa inadaiwa mapema zaidi kati ya: siku ya k",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya map"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Naweza kudai VAT ya pembejeo kwa gari la kampuni?",
+   "note": "VAT s.72(3)(c)",
+   "reply": "Hapana kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo. Burudani nayo haidaiwi (Sheria ya VAT, Kifungu 72(3)). Thibitisha na TRA (tra.go.tz).",
+   "took_s": 8.4,
+   "must": "abiria|hapana|Hapana",
+   "must_ok": true,
+   "facts": [
+    "Naweza kudai VAT ya pembejeo kwa gari la kampuni? Hapana kwa gari la abiria, vipuri au mat",
+    "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWE",
+    "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako "
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEW",
+   "q": "Rekodi za biashara zihifadhiwe kwa miaka mingapi?",
+   "note": "TAA s.43",
+   "reply": "Kwa mujibu wa sheria za Tanzania, rekodi za biashara zinatakiwa kuhifadhiwa kwa angalau miaka 5. Thibitisha na tra.go.tz.",
+   "took_s": 4.9,
+   "must": "\\b5\\b|tano",
+   "must_ok": true,
+   "facts": [
+    "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya map",
+    "Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unatosha, hakuna hati nyingine. Mwa",
+    "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndi"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "REWRITTEN",
+   "q": "Nikikosa kutoa risiti ya EFD adhabu ni nini?",
+   "note": "efd_tra_closure_authority",
+   "reply": "Adhabu zinazowezekana ni pamoja na: onyo la maandishi, faini, kusimamisha kifaa cha EFD, kufungwa kwa eneo la biashara, na hatua za jinai kwa makosa yanayoendelea. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 7.1,
+   "must": "onyo|faini|funga|kufunga|leseni",
+   "must_ok": true,
+   "facts": [
+    "Nikikosa kutoa risiti ya EFD adhabu ni nini? TRA inaweza kutoa onyo la maandishi, kutoza f",
+    "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako ",
+    "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD)"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "REWRITTEN",
+   "q": "Nikichelewa kulipa PAYE kuna adhabu gani?",
+   "note": "paye_penalty_rate",
+   "reply": "Kuna adhabu ya asilimia 2.5 kwa kila mwezi au sehemu ya mwezi ambayo PAYE haijalipwa. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 4.9,
+   "must": "2\\.5|2,5",
+   "must_ok": true,
+   "facts": [
+    "Nikichelewa kulipa PAYE adhabu ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi a",
+    "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 ya kiasi kisicholipwa",
+    "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "REWRITTEN",
+   "q": "Je nahitaji mashine ya risiti (EFD) nikiuza milioni 15 kwa mwaka?",
+   "note": "efd_not_every_business",
+   "reply": "Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 9.0,
+   "must": "Ndiyo|ndiyo|default",
+   "must_ok": true,
+   "facts": [
+    "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako ",
+    "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI T",
+    "Mteja amenunua kwa kiasi kidogo tu (mfano shilingi 2,000) -- nampa risiti ya mashine (EFD)"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "ENGINE-A",
+   "q": "Nalipa mfanyakazi wa nyumbani 150,000 kwa mwezi, je ni sawa?",
+   "note": "domestic cue -> sector statement",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja, kuanzia TZS 80,000 hadi TZS 328,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kulinganisha TZS 150,000 kwa mwezi bila kujua aina ya kazi hasa. Viwango ni: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "took_s": 1.2,
+   "must": "kazi za nyumbani|80,000",
+   "must_ok": true,
+   "facts": [],
+   "path": "engine:minimum_wage"
+  },
+  {
+   "kind": "ENGINE-A",
+   "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+   "note": "presumptive cue (named turnover)",
+   "reply": "Kodi ya makadirio hupigwa kwa MAUZO YA MWAKA mzima, si ya mwezi mmoja. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya mwaka, nami nitakuhesabia.",
+   "took_s": 1.3,
+   "must": "makadirio|4\\.0%|4%|1,",
+   "must_ok": true,
+   "facts": [],
+   "path": "engine:presumptive:ask"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "SDL ni asilimia ngapi?",
+   "note": "must still answer",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "took_s": 1.3,
+   "must": "3\\.5|3,5|tatu na nusu",
+   "must_ok": true,
+   "facts": [],
+   "path": "engine:sdl"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "NSSF ya mwajiri ni asilimia ngapi?",
+   "note": "must still answer",
+   "reply": "NSSF ya mwajiri ni asilimia 10 ya mshahara wake. Thibitisha na nssf.go.tz.",
+   "took_s": 3.6,
+   "must": "\\b10\\b",
+   "must_ok": true,
+   "facts": [
+    "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa mshahara ghafi wa mfa",
+    "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). Tovuti sahihi ni nssf.",
+    "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote k"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "Kizingiti cha kujisajili VAT ni kiasi gani?",
+   "note": "VAT threshold row must not be displaced",
+   "reply": "Kizingiti cha kujisajili VAT ni TZS 200,000,000 kwa miezi 12, au TZS 100,000,000 kwa miezi 6. Ukifikisha kiasi hicho, lazima ujisajili rasmi na TRA ndani ya siku 30. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 7.1,
+   "must": "200",
+   "must_ok": true,
+   "facts": [
+    "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI T",
+    "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod"
+   ],
+   "path": "fact"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "Mshahara wa mfanyakazi ni 800,000 kwa mwezi, PAYE ni kiasi gani?",
+   "note": "engine unchanged",
+   "reply": "Kwa mshahara wa TZS 800,000/mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "took_s": 9.6,
+   "must": "78,000",
+   "must_ok": true,
+   "facts": [],
+   "path": "engine:paye"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "Je, ni lazima nitumie mashine ya EFD? Mauzo yangu ni milioni 30.",
+   "note": "EFD engine unchanged",
+   "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General public notice) inayotaja jina lako au kundi lako maalum. Thibitisha na TRA kama taarifa kama hiyo inakuhusu. Thibitisha na TRA (tra.go.tz).",
+   "took_s": 1.2,
+   "must": "Ndiyo|ndiyo",
+   "must_ok": true,
+   "facts": [],
+   "path": "engine:efd_requirement"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "Capital gains tax kwa kuuza hisa ni asilimia ngapi?",
+   "note": "kept refusal",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "took_s": 1.2,
+   "must": "nje ya mada|Samahani",
+   "must_ok": true,
+   "facts": [],
+   "path": "refusal"
+  },
+  {
+   "kind": "NEGATIVE",
+   "q": "Ninaagiza bidhaa kutoka China, ushuru wa forodha ni kiasi gani?",
+   "note": "kept refusal",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "took_s": 1.3,
+   "must": "nje ya mada|Samahani",
+   "must_ok": true,
+   "facts": [],
+   "path": "refusal"
+  }
+ ]
+}
