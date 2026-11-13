@@ -260,3 +260,30 @@ def test_the_real_reviewer_page_flags_a_missing_path_as_a_broken_pipeline(monkey
     mw = _load_mw(monkeypatch)
     html = _render_d(mw, _item(answer_path=None))
     assert "HAKUNA USHAHIDI" in html and "evidence pipeline itself may be broken" in html
+
+
+# ── R41 for the review timeout: the stored item carries what the auto-send verdict needs, from a real-shaped model result ─────────
+def test_the_stored_item_carries_model_calls_and_guards_from_the_model_result(monkeypatch):
+    mw = _load_mw(monkeypatch)
+    item, _ = _drive(mw, monkeypatch, {"reply": "Unatakiwa kujisajili VAT.", "working": "VAT: 250M >= 200M",
+                                       "facts": [], "path": "engine:vat_registration", "model_calls": 0, "guards": []})
+    assert item["model_calls"] == 0 and item["guards"] == [] and item["held_at"]
+    assert hc.engine_only_verdict(item)[0] is True
+
+
+def test_a_model_result_WITHOUT_the_counts_stores_unknown_and_is_never_auto_sendable(monkeypatch):
+    """The old inference container (or any regression of `run`): no model_calls/guards in the result -> None -> not eligible."""
+    mw = _load_mw(monkeypatch)
+    item, _ = _drive(mw, monkeypatch, {"reply": "Ndiyo.", "working": "VAT: 250M >= 200M", "facts": [],
+                                       "path": "engine:vat_registration"})
+    assert item["model_calls"] is None and item["guards"] is None
+    assert hc.engine_only_verdict(item)[0] is False
+
+
+def test_run_returns_model_calls_and_guards_in_the_real_function_body():
+    out = _real_run(Orchestrator(_Says(), retriever=lambda q: ["F"], ooc_phrases=[], in_scope_phrases=[]))(
+        "Faini ya kuchelewa kulipa NSSF ni kiasi gani?")
+    assert out["model_calls"] >= 1 and out["guards"] == []
+    out = _real_run(Orchestrator(_Says(), retriever=lambda q: [], ooc_phrases=[], in_scope_phrases=[]))(
+        "Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT")
+    assert out["model_calls"] == 0 and out["path"] == "engine:vat_registration"

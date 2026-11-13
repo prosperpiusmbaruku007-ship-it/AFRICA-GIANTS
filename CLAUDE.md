@@ -1500,6 +1500,24 @@ introduced it.
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
 
+### ⛔⛔ R43 — A LABEL ON A PATH IS NOT A PROPERTY OF THE TEXT; AND A WRITE-BACK ACROSS AN AWAIT IS A LOST UPDATE. (added 2026-11-13)
+
+**Two defects found building one feature (the 15-minute review timeout), both by looking at stored/measured items instead of the design.**
+
+1. **`path: engine:*` does not mean "no model wrote this".** The founder's rule — *engine-path answers may auto-send* — rested on the idea that an engine path is deterministic. It is not:
+   on the compute path the reply is a **model-written body with the engine's working appended**. Measured over the 400 gate questions: the literal rule matches 99, **81 of them contain a
+   model-written sentence**, 18 are model-free. The rule that implements the founder's *intent* is on the thing that matters — **how many times the model was called to produce the reply**
+   (`Reply.model_calls`, an explicit integer 0) — not on a label somewhere upstream of it. **A policy stated in terms of a proxy (a path name, a field, a status) must be re-derived in terms of the
+   property it stands for, and the gap measured, before it gates anything that sends.** And every consumer of such a count fails CLOSED: missing, None, unknown, a typo'd flag, an item
+   stored before the field existed — none may qualify by omission.
+2. **A read-modify-write that spans a network await writes a stale copy.** The re-notify sweep read a draft, awaited the push, then stored its old copy whole — erasing the holding-notice
+   record the timeout sweep wrote meanwhile (**seen live: the message HAD been sent and its record vanished**); for an auto-send the same overwrite would have put a SENT draft back to
+   `pending`, where a human could approve it and send it twice. `modal.Dict` has no compare-and-set, so: **re-read before the write, change only your own fields, and make the
+   exactly-once decision with `put(skip_if_exists=True)`**, never with a field in the item you are about to overwrite.
+
+**And the third lesson is the one about the test, not the code:** the first test of fix (2) *passed with the fix removed*, because the draft under test was not yet due for re-notification, so the sweep
+never reached the line. A guard test needs a **positive control** (the same setup, without the condition, must do the thing) or it proves nothing (R20, R26).
+
 ### ⛔⛔ R42 — A CHARACTER LEGAL IN A URL BUT TREATED AS A BOUNDARY BY WHATEVER DISPLAYS IT. EVERY LINK SENT THROUGH A CHAT APP IS ONE UNBROKEN ALPHANUMERIC TOKEN. (added 2026-11-12)
 
 **Two bugs, one class, found three days apart.** The reviewer's link was `?r=<review id>&v=<handle>&t=<token>` and a review id is `<isoformat ts>-<hash>`:
