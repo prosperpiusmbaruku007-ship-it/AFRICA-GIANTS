@@ -779,6 +779,7 @@ def test_mark_notified_does_not_clobber_what_was_written_since_the_caller_read_t
 
 def test_the_sweeper_does_not_renotify_a_draft_a_timeout_send_decided_meanwhile(monkeypatch):
     mw, sent = _load_mw(monkeypatch)
+    monkeypatch.setenv("RENOTIFY_AFTER_S", "60")           # the item (16 min old) MUST be due, or this test passes vacuously
     it = _aged(mw, 16)
     notified = []
 
@@ -813,3 +814,18 @@ def test_health_says_whether_TEST_SENDERS_reached_the_app_without_showing_it(mon
     monkeypatch.setenv("TEST_SENDERS", "+255799000111")
     t = mw._cohort_health()["test_senders"]
     assert t["env_present"] is True and "255799000111" not in str(t)
+
+
+def test_CONTROL_the_same_sweep_does_renotify_a_draft_that_is_still_pending(monkeypatch):
+    """Without this the test above could pass because nothing was due. The sweep must notify a genuinely pending, due draft."""
+    mw, sent = _load_mw(monkeypatch)
+    monkeypatch.setenv("RENOTIFY_AFTER_S", "60")
+    it = _aged(mw, 16, answer_path="fact", model_calls=1, engine_working=None, facts=["f"])
+    notified = []
+
+    async def fake_notify(item, *, renotify=False):
+        notified.append(item["review_id"])
+        return 1
+    monkeypatch.setattr(mw, "_notify_reviewers", fake_notify)
+    _run(mw.sweep_review_queue.get_raw_f()())
+    assert notified == [it["review_id"]]
