@@ -1108,9 +1108,15 @@ async def _notify_reviewers(item, *, renotify=False):
 
 def _fresh_item(item):
     """The CURRENT stored copy of a queue item (the caller's copy may be seconds old: a sweep holds one across network awaits).
-    Falls back to the caller's copy when the store cannot be read."""
+
+    Returns **None when the item NO LONGER EXISTS** (archived or removed while the caller held its copy): the caller must then write
+    NOTHING. Writing the stale copy back would RESURRECT a deleted draft (seen live 2026-11-13: two probe drafts archived out of the
+    queue were re-created by an in-flight re-notify sweep and went on pinging the reviewer). Falls back to the caller's copy only
+    when the store cannot be READ (not when the key is simply absent)."""
     try:
         return dict(REVIEW_QUEUE[item["review_id"]])
+    except KeyError:
+        return None
     except Exception:                                                # noqa: BLE001
         return item
 
@@ -1124,6 +1130,9 @@ def _mark_notified(item, sent_count, *, renotify=False):
     notification fields, and mirrors them onto the caller's copy."""
     from datetime import datetime, timezone
     fresh = _fresh_item(item)
+    if fresh is None:
+        print(f"[review] {item.get('review_id')} no longer exists -- notification NOT recorded (not resurrecting it)", flush=True)
+        return
     stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
     fields = {"last_notified_at": stamp,
               "notify_count": int(fresh.get("notify_count") or 0) + 1,
@@ -1277,7 +1286,7 @@ def _review_timeout_health():
 def _latency_section(items):
     """A failing latency computation degrades THIS field to an error, never the whole /health."""
     try:
-        return _core().latency_summary(items)
+        return _core().latency_summary(items, test_hashes=_test_sender_parse()[0])
     except Exception as e:                                           # noqa: BLE001
         return {"ok": False, "error": f"{type(e).__name__}"}
 
@@ -1869,7 +1878,7 @@ async def sweep_review_queue():
     released, renotified, pending = 0, 0, 0
     for it in _queue_items():
         it = _fresh_item(it)                     # the queue snapshot is old by the time we reach this item
-        if it.get("status") != "pending":
+        if it is None or it.get("status") != "pending":
             continue
         pending += 1
         it, was_released = core.release_expired_claim(it)
@@ -1883,7 +1892,7 @@ async def sweep_review_queue():
                   f"...{_core().number_tail(it.get('released_from'))} — back to the roster, "
                   f"NOT sent", flush=True)
         it = _fresh_item(it)                     # a timeout send may have decided it while we released/scanned
-        if it.get("status") == "pending" and core.needs_renotify(
+        if it is not None and it.get("status") == "pending" and core.needs_renotify(
                 it, renotify_after_s=settings.renotify_after_s, max_renotifies=settings.max_renotifies):
             sent = await _notify_reviewers(it, renotify=True)
             _mark_notified(it, sent, renotify=True)
@@ -1954,6 +1963,9 @@ async def _do_auto_send(it, settings):
         return False
     send_ok, send_error = await _send_once(cur["sender"], text)
     fresh = _fresh_item(upd)
+    if fresh is None:
+        print(f"[autosend] {rid} was removed during the send -- result NOT written (not resurrecting it)", flush=True)
+        return True
     fresh.update(send_ok=send_ok, send_error=send_error, send_state=core.send_state(send_ok, send_error),
                  reply_address_kind=core.reply_address_kind(cur["sender"]), status="auto_sent",
                  auto_sent_ts=upd["auto_sent_ts"], auto_sent_text=text)
@@ -2002,6 +2014,9 @@ async def _do_holding_notice(it, settings):
     keys = core.holding_authorities(cur)
     ok, err = await _send_once(cur["sender"], core.holding_text(cur))
     cur = _fresh_item(cur)                     # the send took seconds: write onto what is stored NOW, not what we read before it
+    if cur is None:
+        print(f"[autosend] {rid} was removed during the send -- holding record NOT written (not resurrecting it)", flush=True)
+        return True                            # the message WAS sent; the record is gone with the item
     cur["holding_notice_authority"] = keys or None          # which contact line the participant was given (None = generic)
     cur["holding_notice_ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cur["holding_notice_ok"] = bool(ok or core.is_pending_receipt(err))

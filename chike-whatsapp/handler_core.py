@@ -1594,7 +1594,7 @@ def autosend_note(item, now=None, after_s=AUTOSEND_AFTER_S, enabled=True):
             f"MODEL ANSWER: never auto-sent. At {when} the participant gets a holding message only ({why}).")
 
 
-def latency_summary(items, now=None, window_s=86400.0, target_s=900.0):
+def latency_summary(items, now=None, window_s=86400.0, target_s=900.0, test_hashes=()):
     """Question-to-delivery over the last `window_s`, median and worst, how many exceeded `target_s`, and WHY.
 
     Delivery = the moment the answer was handed to WhatsApp and accepted (`decided_ts`; for an auto-send, `auto_sent_ts`).
@@ -1647,7 +1647,9 @@ def latency_summary(items, now=None, window_s=86400.0, target_s=900.0):
                 "over_target": over, "over_target_causes": causes, "over_target_cold_start": cold,
                 "auto_sent": autos, "undelivered_over_target": undeliv}
 
-    real = [i for i in items if not _is_test_item(i)]
+    # classify by the flag AND by the designated test-sender hashes, so rows written before TEST_SENDERS existed are not read as
+    # real participants (2026-11-13: an old tester row made `real_participants` show one delivery with a 21-hour latency).
+    real = [i for i in items if not _is_test_item(i, test_hashes)]
     return {"window_hours": window_s / 3600.0, "target_s": target_s,
             "real_participants": one(real), "including_test_senders": one(list(items)),
             "_note": ("question-to-delivery; the question time is the row timestamp, the delivery time is when WhatsApp accepted "

@@ -907,3 +907,83 @@ def test_a_licence_question_gets_BRELA_in_the_holding_message_not_TRA(monkeypatc
     assert core.AUTHORITY_CONTACTS["brela"] in text and "TRA" not in text and "0800 780 078" not in text
     assert "30 Juni" not in text, "the draft is never in the holding message"
     assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_authority"] == ["brela"]
+
+
+# ── DELETED ITEMS STAY DELETED; OLD TESTER ROWS ARE NOT "REAL PARTICIPANTS" (both found live 2026-11-13) ──────────────────────
+def test_a_sweep_holding_a_stale_copy_does_not_resurrect_an_item_that_was_archived(monkeypatch):
+    mw, _ = _load_mw(monkeypatch)
+    it = _aged(mw, 16)
+    stale = dict(mw.REVIEW_QUEUE[it["review_id"]])
+    mw.REVIEW_QUEUE.pop(it["review_id"])                                 # archived out of the queue while the sweep held its copy
+    mw._mark_notified(stale, 1, renotify=True)
+    assert it["review_id"] not in mw.REVIEW_QUEUE, "the notification write RE-CREATED a deleted draft"
+
+
+def test_the_sweeper_skips_an_item_that_no_longer_exists(monkeypatch):
+    mw, _ = _load_mw(monkeypatch)
+    monkeypatch.setenv("RENOTIFY_AFTER_S", "60")
+    it = _aged(mw, 16, answer_path="fact", model_calls=1, engine_working=None, facts=["f"])
+    notified = []
+
+    async def fake_notify(item, *, renotify=False):
+        notified.append(item["review_id"])
+        return 1
+    monkeypatch.setattr(mw, "_notify_reviewers", fake_notify)
+    snapshot = mw._queue_items()
+    monkeypatch.setattr(mw, "_queue_items", lambda: snapshot)
+    mw.REVIEW_QUEUE.pop(it["review_id"])
+    _run(mw.sweep_review_queue.get_raw_f()())
+    assert notified == [] and it["review_id"] not in mw.REVIEW_QUEUE
+
+
+def test_a_holding_notice_for_an_item_removed_during_the_send_writes_nothing(monkeypatch):
+    mw, sent = _load_mw(monkeypatch)
+    it = _aged(mw, 16, answer_path="fact", model_calls=1, engine_working=None, facts=["f"])
+    snapshot = dict(mw.REVIEW_QUEUE[it["review_id"]])
+
+    async def send_then_vanish(to, text):
+        sent.append((to, text))
+        mw.REVIEW_QUEUE.pop(it["review_id"])                             # archived while the message was in flight
+        return True, None
+    monkeypatch.setattr(mw, "_send_once", send_then_vanish)
+    _run(mw._do_holding_notice(snapshot, mw._settings()))
+    assert len(sent) == 1 and it["review_id"] not in mw.REVIEW_QUEUE
+
+
+def test_a_store_that_cannot_be_READ_still_falls_back_to_the_callers_copy(monkeypatch):
+    """Only an ABSENT key means deleted. A read error is not evidence of deletion: fall back, as before."""
+    mw, _ = _load_mw(monkeypatch)
+
+    class Flaky(dict):
+        def __getitem__(self, k):
+            raise RuntimeError("store hiccup")
+    monkeypatch.setattr(mw, "REVIEW_QUEUE", Flaky())
+    item = {"review_id": "x"}
+    assert mw._fresh_item(item) is item
+
+
+def test_latency_classifies_older_tester_rows_by_hash_so_real_participants_is_not_polluted():
+    old_tester_row = _delivered(50)                         # no test_sender flag: written before TEST_SENDERS existed
+    old_tester_row["sender_hash"] = "tester000001"
+    real = _delivered(5)
+    real["sender_hash"] = "participant1"
+    r = core.latency_summary([old_tester_row, real], now=NOW, test_hashes=frozenset({"tester000001"}))
+    assert r["real_participants"]["delivered"] == 1 and r["real_participants"]["worst_s"] == 300
+    assert r["including_test_senders"]["delivered"] == 2
+    # the control arm: without the hashes the old tester row IS read as a participant (the bug)
+    assert core.latency_summary([old_tester_row, real], now=NOW)["real_participants"]["delivered"] == 2
+
+
+def test_health_latency_excludes_an_unstamped_tester_row_by_the_TEST_SENDERS_list(monkeypatch):
+    """The wiring, not only the function: /health must pass the designated hashes to latency_summary."""
+    mw, _ = _load_mw(monkeypatch)
+    tester = "255799000111@s.whatsapp.net"
+    monkeypatch.setenv("TEST_SENDERS", "+255799000111")
+    h = core.sender_ids(tester, "s")[0]
+    done = datetime.now(timezone.utc)
+    row = {"review_id": "2026-11-13T00:00:00+00:00-old00001", "status": "sent", "send_ok": True, "sender_hash": h,
+           "ts_held": (done - timedelta(minutes=50)).isoformat(timespec="seconds"),
+           "decided_ts": done.isoformat(timespec="seconds"), "model_latency_ms": 300}      # NO test_sender flag
+    mw.REVIEW_QUEUE[row["review_id"]] = row
+    lat = mw._review_queue_health()["latency_24h"]
+    assert lat["real_participants"]["delivered"] == 0 and lat["including_test_senders"]["delivered"] == 1

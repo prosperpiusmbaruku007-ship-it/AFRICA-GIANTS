@@ -1,0 +1,66 @@
+{
+ "archived_at": "2026-11-13T01:29:37+00:00",
+ "why": "synthetic TEST-timeout-topic probes (holding message topic check); moved out of the queue so they do not re-notify every 7 minutes. Not deleted.",
+ "items": {
+  "TEST-timeout-topic-licence-012906": {
+   "review_id": "TEST-timeout-topic-licence-012906",
+   "ts_held": "2026-11-13T01:09:06+00:00",
+   "build": "8d879b3",
+   "sender_hash": "1ee5f9cca2a3",
+   "sender_tail": "5913",
+   "test_sender": true,
+   "question": "Leseni ya biashara inaisha lini?",
+   "draft": "[MTIHANI topic-licence] jibu la modeli, halipaswi kutumwa",
+   "engine_working": null,
+   "model_calls": 1,
+   "guards": [],
+   "held_at": "2026-11-13T01:09:06+00:00",
+   "facts": [
+    "mfano"
+   ],
+   "model_latency_ms": 0,
+   "fallback": false,
+   "error_class": null,
+   "status": "pending",
+   "claim_count": 0,
+   "release_count": 0,
+   "retry_of": null,
+   "answer_path": "fact",
+   "holding_notice_authority": [
+    "brela"
+   ],
+   "holding_notice_ts": "2026-11-13T01:29:32+00:00",
+   "holding_notice_ok": true,
+   "holding_notice_error": null
+  },
+  "TEST-timeout-topic-unknown-012906": {
+   "review_id": "TEST-timeout-topic-unknown-012906",
+   "ts_held": "2026-11-13T01:09:06+00:00",
+   "build": "8d879b3",
+   "sender_hash": "1ee5f9cca2a3",
+   "sender_tail": "5913",
+   "test_sender": true,
+   "question": "Nimeajiri watu 5, nifanye nini kuhusu bima?",
+   "draft": "[MTIHANI topic-unknown] jibu la modeli, halipaswi kutumwa",
+   "engine_working": null,
+   "model_calls": 1,
+   "guards": [],
+   "held_at": "2026-11-13T01:09:06+00:00",
+   "facts": [
+    "mfano"
+   ],
+   "model_latency_ms": 0,
+   "fallback": false,
+   "error_class": null,
+   "status": "pending",
+   "claim_count": 0,
+   "release_count": 0,
+   "retry_of": null,
+   "answer_path": "fact",
+   "holding_notice_authority": null,
+   "holding_notice_ts": "2026-11-13T01:29:30+00:00",
+   "holding_notice_ok": true,
+   "holding_notice_error": null
+  }
+ }
+}
