@@ -676,6 +676,38 @@ critical_queries = [
     # Without it, the ladder could lose its four new bands and the existing guard would still pass
     # on an unchanged opening sentence.
     ('BRELA share-capital ladder now has nine bands (the four new top bands)', 'query: Mtaji wa hisa wa kampuni yangu ni TZS 2,000,000,000. Ada ya kusajili ni ngapi?', ['hadi TZS 10,000,000,000 ni TZS 600,000']),
+    # ---- 2026-11-13 THREE-PROFILE COVERAGE BATCH: one retrievability guard per new fact and per rewritten row. The anchor is a substring
+    # of the concise text that no other row carries (checked unique against the prospective index); the query is the batch's own question.
+    # Each was MEASURED in the top 3 locally first (eval/index_quality/measure_coverage_batch_2026_11_13.py) -- a guard is a control, and
+    # a control not watched to pass here would be watched to fail on Kaggle.
+    ('PAYE payment deadline (coverage batch 2026-11-13)', 'query: PAYE inalipwa tarehe ngapi kila mwezi?', ['ifikapo tarehe 7 ya mwezi unaofuata']),
+    ('Employment written particulars', 'query: Mfanyakazi mpya nimpe nini cha maandishi anapoanza kazi?', ['maelezo ya maandishi anapoanza kazi']),
+    ('Employment particulars keeping', 'query: Nahifadhi mikataba ya wafanyakazi waliondoka kwa muda gani?', ['ayahifadhi miaka 5 baada ya mfanyakazi kuacha']),
+    ('Termination notice period', 'query: Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?', ['siku 28 kwa wa kila mwezi']),
+    ('Severance pay', 'query: Severance pay inahesabiwaje?', ['siku 7 kwa kila mwaka kamili']),
+    ('Annual leave days', 'query: Likizo ya mwaka ni siku ngapi?', ['angalau siku 28 mfululizo']),
+    ('Overtime pay rate', 'query: Overtime inalipwa kiasi gani?', ['angalau mara 1.5 ya mshahara wa msingi']),
+    ('Working hours limits', 'query: Saa za kazi kwa wiki ni ngapi kisheria?', ['saa 45 kwa wiki']),
+    ('Maternity leave days', 'query: Likizo ya uzazi ni siku ngapi?', ['Siku 84 zenye malipo']),
+    ('Maternity leave premature birth', 'query: Mtoto akizaliwa kabla ya wakati mama anapata likizo ya uzazi ya muda gani?', ['wiki 40 za ujauzito']),
+    ('Paternity leave days', 'query: Likizo ya baba (paternity leave) ni siku ngapi?', ['siku 3 zenye malipo']),
+    ('Unfair termination compensation', 'query: Nimemfukuza mfanyakazi bila utaratibu, fidia ya kuachishwa kazi isivyo haki ni kiasi gani?', ['miezi 12 hadi 24']),
+    ('Domestic worker minimum wage (GN 605A item 4)', 'query: Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?', ['TZS 328,000']),
+    ('TIN application', 'query: Nitapataje TIN?', ['Namba ya Mlipakodi (TIN) kwa TRA']),
+    ('Individual income tax return', 'query: Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?', ['30 Juni ya mwaka unaofuata']),
+    ('Dividend withholding', 'query: Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?', ['kampuni nyingine: 10%']),
+    ('Professional service fee withholding', 'query: Nikimlipa mshauri wa kodi au mhasibu, nakata kodi ya zuio asilimia ngapi?', ['mkazi 5%, asiye mkazi 15%']),
+    ('VAT registration: professionals regardless of turnover', 'query: Mhasibu au wakili anahitaji kusajili VAT hata kama mauzo ni madogo?', ['huduma za kitaalamu zenye leseni']),
+    ('VAT refund', 'query: Nawezaje kurejeshewa VAT (VAT refund)?', ['hubebwa mbele hadi vipindi 6']),
+    ('VAT refund deadline', 'query: Nina muda gani wa kuomba kurejeshewa VAT?', ['ndani ya miaka 3 baada ya mwisho wa kipindi cha kodi']),
+    ('VAT on credit sales', 'query: Nimeuza kwa mkopo, VAT inalipwa lini?', ['invoice, siku ya kupokea malipo']),
+    ('Record keeping period', 'query: Rekodi za biashara zihifadhiwe kwa miaka mingapi?', ['Miaka 5 tangu tarehe husika']),
+    ('Input VAT on passenger vehicles', 'query: Naweza kudai VAT ya pembejeo kwa gari la kampuni?', ['gari la abiria, vipuri au matengenezo']),
+    ('Late return penalty', 'query: Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?', ['Adhabu ya kuchelewa kuwasilisha return ya VAT']),
+    ('PAYE late payment penalty (rewritten row)', 'query: Nikichelewa kulipa PAYE kuna adhabu gani?', ['Nikichelewa kulipa PAYE adhabu ni nini']),
+    ('EFD enforcement (rewritten row)', 'query: Nikikosa kutoa risiti ya EFD adhabu ni nini?', ['Nikikosa kutoa risiti ya EFD adhabu ni nini']),
+    ('Provisional tax instalments (rewritten row)', 'query: Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?', ['mwishoni mwa mwezi wa 3, 6, 9 na 12']),
+    ('Input VAT zero-rated vs exempt (rewritten row, batch)', 'query: Naweza kudai VAT niliyolipa nikinunua bidhaa za biashara?', ['HAWEZI kudai input VAT']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

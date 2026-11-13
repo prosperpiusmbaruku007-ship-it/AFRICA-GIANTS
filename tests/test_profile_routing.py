@@ -49,3 +49,27 @@ def test_new_patterns_contain_no_control_characters():
     """R39: a non-raw escape compiles to a backspace and matches nothing, invisibly."""
     for name in ("_WAGE_NALIPA_WORKER_PATTERN", "_PRESUMPTIVE_NAMED_TURNOVER_PATTERN"):
         assert not re.search(r"[\x00-\x1f]", getattr(routing, name)), name
+
+
+# ── domestic-work sector cues (2026-11-13): GN 605A item 4 is "Domestic Work or Services"; the commonest phrasings were unmatched ─────
+from chike.rules_engine import wage_schedule as _ws          # noqa: E402
+
+
+@pytest.mark.parametrize("q", [
+    "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+    "Nalipa mfanyakazi wa nyumbani 150,000 kwa mwezi, je ni sawa?",
+    "Nalipa msaidizi wa nyumbani 90,000 kwa mwezi, ni halali?",
+    "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+])
+def test_domestic_work_phrasings_resolve_to_the_sector_and_never_to_a_single_row(q):
+    outcome, value = _ws.resolve(q)
+    assert (outcome, value) == (_ws.SECTOR, 4), (outcome, value)     # sector-only: lists the four rates, picks none
+
+
+def test_a_house_rent_question_is_not_read_as_domestic_work():
+    assert _ws.resolve("Nyumba yangu ya kupanga inalipwa 150,000, ni halali?") == (_ws.NONE, None)
+
+
+def test_the_four_domestic_rates_in_the_engine_equal_the_gazette():
+    """GN 605A Second Schedule item 4, read from the TanzLII gazette text on 2026-11-13 (monthly column)."""
+    assert {r[1]: r[7] for r in _ws.BY_SECTOR[4]} == {"a": 328000, "b": 265000, "c": 160000, "d": 80000}

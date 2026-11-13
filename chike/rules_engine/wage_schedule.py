@@ -203,7 +203,10 @@ _CUES = [
     # employer is and whether the worker resides in the household (80,000 .. 328,000), and
     # no ordinary phrasing for the worker settles that.
     (r'\b(mfanyakazi wa ndani|dada wa kazi|house ?girl|house ?boy|mtumishi wa nyumbani|'
-     r'yaya|mlezi wa watoto)\b', 4, None),
+     r'yaya|mlezi wa watoto|'
+     # 2026-11-13: the commonest way to ask ("mfanyakazi wa nyumbani", "kazi za nyumbani") was missing; GN 605A item 4 is literally
+     # titled "Domestic Work or Services". Still SECTOR-ONLY: it lists the four rates and never picks one.
+     r'mfanyakazi wa nyumbani|wafanyakazi wa nyumbani|msaidizi wa nyumbani|kazi za nyumbani)\b', 4, None),
     # sector 5 — hotel and hospitality
     (r'\b(nyota (?:nne|tano)|four star|five star)\b', 5, 'a'),
     (r'\b(nyota tatu|three star)\b', 5, 'b'),

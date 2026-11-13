@@ -111,7 +111,7 @@ def test_the_FOUNDING_INCIDENT_is_still_caught_by_the_content_limb():
     texts, err = mod.built_fact_texts(REPO)
     assert err is None, err
     # A corrected fact: the served index still carries a value the current facts reject.
-    stale_served = list(texts)
+    stale_served = list(_served_texts())      # planted on the SERVED rows (not the built ones): immune to a pending regen
     hit = next((i for i, t in enumerate(stale_served) if "EFD" in t or "efd" in t), None)
     assert hit is not None, "no EFD row found — re-point this specimen"
     stale_served[hit] = stale_served[hit] + " Kizingiti ni TZS 11,000,000."
@@ -446,47 +446,23 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    assert ok is True, (
-        f"the live repo reports STALE after the dc8843e dual-commit. The content limb IS the "
-        f"verdict, so this means build_fact_texts() over this tree no longer equals a served "
-        f"file — do not flip this back to False to make it green; find what moved: {report}")
-    assert report["content_matches"] is True, report
+    # EIGHTEENTH FLIP (2026-11-13): PENDING the coverage-batch regen -- see test_content_limb_passes_on_the_real_built_texts.
+    assert ok is False, (
+        f"the live repo reports FRESH: the coverage regen has landed. Flip back to `ok is True` / 208 rows and delete the "
+        f"pending_r15 pins: {report}")
+    assert report["content_matches"] is False, report
     assert report["content_build_error"] is None, report
-    assert report["diverging"] == {}, report["diverging"]
-    # ⛔ `ok is True` ALONE DOES NOT ESTABLISH THAT THE INTENDED ROW IS THE ONE THAT MOVED — it is
-    # equally true of an index that never changed at all. So the specifics are re-asserted against
-    # the SERVED text, per the sixteenth flip's own instruction, in both deploy dirs separately.
     for _d in ("kaggle", "chike-inference"):
         with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
             _served = json.load(_fh)
         assert len(_served) == 184, (_d, len(_served))
-        assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], (
-            f"{_d} row 9 no longer separates the BASE from the SOURCE, which is the entire "
-            f"point of the rewording this flip pended: {_served[9][:200]}")
-        assert "ya mshahara wa mfanyakazi kila mwezi" not in _served[9], (
-            f"{_d} row 9 still carries the SOURCE-ambiguous phrasing that invited eval_086's "
-            f"party inversion — the regen did not land, whatever the verdict says")
-    assert report["embedding_rows_match"] is True, report
-    assert report["built_rows"] == 184, report["built_rows"]
-    # ⛔ RE-POINTED ON THE SEVENTEENTH FLIP, AND NEITHER POLARITY OF THE OLD ASSERTION BELONGS
-    # HERE. The sixteenth flip asserted `stale_inputs` was NON-empty; my first attempt at
-    # re-pointing asserted it was EMPTY, and that went red — correctly — because the artifacts
-    # had been written to disk but not yet COMMITTED, so git still reported them older than the
-    # inputs. Both polarities are assertions about where the working tree sits relative to
-    # `git commit`, which flips twice during an ordinary R15 dual-commit and is not a property
-    # of the index at all. So what is asserted is the LABEL: this limb is provenance, the
-    # content limb is the verdict, and the two are separately reported. The planted sibling
-    # (`test_sha_staleness_is_still_REPORTED_but_no_longer_decides_the_verdict`) holds the
-    # demonstration that an input can move without changing a served row — on constructed
-    # state, which cannot evaporate when someone commits a file.
-    assert report["_stale_inputs_is_provenance_only"], (
-        "the provenance label is gone; without it a future reader will read stale_inputs as a "
-        "verdict again, which is exactly the conflation the 2026-10-08 redesign removed")
+        assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], _served[9][:200]
+    assert report["built_rows"] == 208, report["built_rows"]
+    assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
     assert report["artifacts_diverged"] is False, (
-        "the two index directories disagree -- a different defect from a pending regen, and "
-        "one the R15 dual-commit step exists to prevent")
+        "the two index directories disagree -- a different defect from a pending regen")
 
 
 # ── THE CONTENT LIMB, PLANTED IN EVERY DIRECTION (added 2026-10-08) ─────────────────────────
@@ -504,7 +480,7 @@ def _real_texts():
     spec.loader.exec_module(mod)
     texts, err = mod.built_fact_texts(REPO)
     assert err is None, f"the builder itself failed, so these arms cannot run: {err}"
-    assert texts and len(texts) == 184, f"unexpected builder output: {texts and len(texts)}"
+    assert texts and len(texts) == 208, f"unexpected builder output: {texts and len(texts)}"
     return texts
 
 
@@ -531,40 +507,27 @@ SERVED_TEXTS = _served_texts()
 
 
 def test_content_limb_passes_on_the_real_built_texts():
-    """⭐ SIXTEENTH FLIP, to `assert ok is False` — PENDING THE ROW-9 REWORDING REGEN.
+    """⭐ EIGHTEENTH FLIP, to PENDING -- THE 2026-11-13 THREE-PROFILE COVERAGE BATCH.
 
-    `nssf_employer_rate` was reworded on 2026-10-09 because its text INVITED the defect it
-    existed to prevent. It read "mwajiri analipa asilimia 10 YA MSHAHARA WA MFANYAKAZI" — true
-    as a statement of the BASE, and readable in Swahili as a statement of SOURCE, which is the
-    opposite of the employer's obligation. eval_086 then served "Kiasi kinachokatwa na mwajiri
-    KWENYE MSHAHARA wa mfanyakazi ... ni asilimia 10" live in the 2026-10-09 gate: the rate
-    right, the party inverted, close enough to the row's own phrasing to be an echo of it. An
-    employer following it deducts 10% from wages unlawfully, on top of the employee's own 10%.
+    24 NEW rows (employer / trader / bookkeeper questions that reached no fact) are appended AFTER the group passages, so no existing row
+    number moves, and FIVE existing rows are REWRITTEN Swahili-first so they surface (rows 1, 26, 58, 90, 95). The served index cannot
+    catch up until the Kaggle R15 regen runs, so the builder and the served files DISAGREE, and this test asserts exactly that and
+    exactly how: 208 built rows vs 184 served, and the first 184 differ ONLY at the five declared rewrites. Flip back to
+    `assert ok is True` (and 208) once the regen has run and the artifacts are dual-committed -- `ok is True` alone would not show
+    that the intended rows are the ones that moved, so the specifics are asserted then too.
 
-    EXACTLY ONE ROW CHANGES (9), 184 before and after, verified by this check's own diff. Flip
-    back to `assert ok is True` once the R15 regen has run on Kaggle and the artifacts are
-    dual-committed to kaggle/ and chike-inference/ — and re-assert the specifics then, because
-    `ok is True` alone does not establish that the intended row is the one that moved.
-
-    ⭐ SEVENTEENTH FLIP, back to `assert ok is True` — the dc8843e regen shipped and was
-    dual-committed. This arm is the one that matters for the REWORDING specifically, because it
-    compares the LIVE BUILDER's output against the served files rather than trusting either: the
-    served row must now be the built row, and the built row must still carry the BASE/SOURCE
-    separation. Both are asserted, so a future edit that quietly re-ambiguates the fact turns
-    this red even though the index and the builder would still agree with each other.
-    """
+    (Seventeenth flip, kept for provenance: back to True after the dc8843e regen; row 9 must still carry the BASE/SOURCE separation.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    assert ok is True, (
-        f"the real builder's output no longer matches the served index. If a fact or the builder "
-        f"has changed, an R15 regen is owed and THAT is the fix — not flipping this: {rep}")
-    assert rep["content_matches"] is True
-    assert rep["diverging"] == {}, rep["diverging"]
-    assert "HAIKATWI" in REAL_TEXTS[9] and "ikihesabiwa" in REAL_TEXTS[9], (
-        f"the BUILT row 9 no longer states that the employer's share is NOT deducted, which is "
-        f"the whole point of the rewording: {REAL_TEXTS[9][:200]}")
-    assert REAL_TEXTS[9] == SERVED_TEXTS[9], (
-        "built and served row 9 differ, which the verdict above should already have caught — if "
-        "this fires alone, the content limb's comparison has stopped covering row 9")
+    assert ok is False, (
+        "built and served now AGREE -- the coverage regen has landed. Flip this back to `ok is True` and 208 rows, remove the "
+        f"pending_r15 pins for the 24 new keys in scripts/check_facts_index_sync.py, and re-assert the specifics: {rep}")
+    assert rep["content_matches"] is False
+    assert len(REAL_TEXTS) == 208 and len(SERVED_TEXTS) == 184, (len(REAL_TEXTS), len(SERVED_TEXTS))
+    moved = [i for i in range(184) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
+    assert moved == [1, 26, 58, 90, 95], (
+        f"the rows that differ among the first 184 are not exactly the five declared rewrites: {moved}")
+    assert "HAIKATWI" in REAL_TEXTS[9] and "ikihesabiwa" in REAL_TEXTS[9], REAL_TEXTS[9][:200]
+    assert REAL_TEXTS[9] == SERVED_TEXTS[9]
 
 
 def test_content_limb_BLOCKS_a_single_changed_row():
@@ -572,9 +535,9 @@ def test_content_limb_BLOCKS_a_single_changed_row():
     ladder, with 600,000 swapped for the 290,000 the model wrongly served on 2026-10-08 -- and
     the check must go red and NAME the row. The old SHA limb could not see this at all if the
     change arrived in the same commit as the artifacts."""
-    tampered = list(REAL_TEXTS)
+    tampered = list(SERVED_TEXTS)             # the SERVED rows (immune to a pending regen: the live built rows differ in count)
     tampered[181] = tampered[181].replace("TZS 600,000", "TZS 290,000")
-    assert tampered != REAL_TEXTS, "the planted edit did not change anything — bad specimen"
+    assert tampered != SERVED_TEXTS, "the planted edit did not change anything — bad specimen"
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (tampered, None))
     assert ok is False, "a changed served row did not turn the check red"
     assert rep["content_matches"] is False

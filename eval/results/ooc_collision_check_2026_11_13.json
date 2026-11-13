@@ -1,0 +1,10 @@
+{
+ "in_scope_targets_refused": [],
+ "probes_refused": [],
+ "kept_refusals_not_refused": [],
+ "ooc_phrase_substring_hits_in_in_scope_questions": {},
+ "n_targets": 68,
+ "n_probes": 16,
+ "n_kept": 7,
+ "n_ooc_phrases": 135
+}

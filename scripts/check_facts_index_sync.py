@@ -433,6 +433,34 @@ PINNED = {
     # would silently match almost any row a future index edit introduces), so this is
     # kept as a fragment rather than a fragile present_elsewhere pin.
     "prohibited_business_activities_for_non_citizens_order_year": ("fragment", None),
+    # ---- 2026-11-13: THREE-PROFILE COVERAGE BATCH (employer / trader / bookkeeper) -------------------------------------
+    # 24 NEW facts, pending the R15 regen. They are in locked_facts.json and in precompute_rag_embeddings.CONCISE_BILINGUAL_FACTS
+    # but not in the served index, which only the Kaggle regen can rebuild. test_pending_r15_keys_are_still_pending starts failing
+    # the moment the regen lands -- THAT is the signal to delete this block.
+    "paye_remittance_deadline": ("pending_r15", None),
+    "employment_particulars_required": ("pending_r15", None),
+    "employment_particulars_keeping": ("pending_r15", None),
+    "termination_notice_period": ("pending_r15", None),
+    "severance_pay": ("pending_r15", None),
+    "annual_leave_days": ("pending_r15", None),
+    "overtime_pay_rate": ("pending_r15", None),
+    "working_hours_limits": ("pending_r15", None),
+    "maternity_leave_days": ("pending_r15", None),
+    "maternity_leave_premature_birth": ("pending_r15", None),
+    "paternity_leave_days": ("pending_r15", None),
+    "unfair_termination_compensation": ("pending_r15", None),
+    "domestic_worker_minimum_wage": ("pending_r15", None),
+    "tin_apply_deadline": ("pending_r15", None),
+    "individual_income_tax_return": ("pending_r15", None),
+    "dividend_withholding_rate": ("pending_r15", None),
+    "professional_service_fee_wht": ("pending_r15", None),
+    "vat_registration_who_must": ("pending_r15", None),
+    "vat_refund_when": ("pending_r15", None),
+    "vat_refund_deadline": ("pending_r15", None),
+    "vat_credit_sale_timing": ("pending_r15", None),
+    "record_keeping_period": ("pending_r15", None),
+    "input_vat_passenger_vehicle": ("pending_r15", None),
+    "late_return_penalty": ("pending_r15", None),
 }
 
 
