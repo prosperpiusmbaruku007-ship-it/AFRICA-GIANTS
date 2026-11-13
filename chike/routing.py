@@ -384,10 +384,19 @@ _WAGE_PAY_CONCORD = re.compile(
     + r"|\b(?:ni|tu|u)(?:na|me|li|ta|ki)lipwa"                 # passive + 1st/2nd person subject
     + r"|\bnalipwa|\bnimelipwa")                               # colloquial 1sg present/perfect
 
+# COLLOQUIAL FIRST-PERSON `nalipa` + A WORKER NOUN (2026-11-13, coverage survey): "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni
+# halali?" routed to `none` because bare `nalipa` is excluded above (it is a substring of `analipa` = "he PAYS", a levy question).
+# Word-bounded AND object-qualified: it only counts as a pay cue when the thing paid is a PERSON (a worker noun follows), so
+# "nalipa kodi 150,000" / "nalipa NSSF" never match. Its own named pattern so a sweep can subtract it.
+_WAGE_NALIPA_WORKER_PATTERN = (r"(?<![a-z])nalipa\s+(?:dada|mlinzi|walinzi|mfanyakazi|wafanyakazi|mpishi|dereva|msaidizi|"
+                               r"mhudumu|kijana)\b")
+_WAGE_NALIPA_WORKER = re.compile(_WAGE_NALIPA_WORKER_PATTERN)
+
 
 def _has_wage_pay_cue(ql: str) -> bool:
     """A pay cue in either direction — the employer paying, or the worker being paid."""
-    return any(c in ql for c in _WAGE_PAY_CUES) or bool(_WAGE_PAY_CONCORD.search(ql))
+    return (any(c in ql for c in _WAGE_PAY_CUES) or bool(_WAGE_PAY_CONCORD.search(ql))
+            or bool(_WAGE_NALIPA_WORKER.search(ql)))
 
 
 # WHO IS ASKING — needed because the clarification copy addresses somebody, and until the
@@ -476,7 +485,10 @@ _WAGE_VIOLATION_CUES = ["nakiuka", "ninakiuka", "unakiuka", "tunakiuka", "navunj
                         # future-tense siblings were not — the same class, half closed.
                         "tutaadhibiwa", "tutaazibiwa", "tutatozwa faini", "tutafungwa"]
 _WAGE_LAWFUL_CUES = ["ni halali", "si halali", "ni sawa", "iko sawa", "inaruhusiwa",
-                     "naruhusiwa", "ni sahihi kisheria", "nafuata sheria", "ni kihalali"]
+                     "naruhusiwa", "ni sahihi kisheria", "nafuata sheria", "ni kihalali",
+                     # 2026-11-13: "...analipwa 200,000 kwa mwezi, je INATOSHA KISHERIA?" is the same yes/no as "ni halali".
+                     # Multi-word only: a bare "inatosha" is ordinary Swahili ("pesa inatosha").
+                     "inatosha kisheria", "inatosha kwa sheria", "inakidhi sheria", "inakidhi kisheria"]
 
 
 def wage_question_frame(text: str) -> str:
@@ -1201,6 +1213,15 @@ _PRESUMPTIVE_ENTITY_VETO_PATTERN = (
     r"kampuni|shirika|\bcompany\b|\bltd\b|\bplc\b|ubia|ushirikiano\s+wa\s+kibiashara|"
     r"partnership")
 
+# A NAMED presumptive cue ("kodi ya makadirio") PLUS a turnover (`mauzo`, never `mapato`) with a figure, WITHOUT the first-person
+# ownership word (2026-11-13, coverage survey): "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?" and "Nina duka, mauzo milioni 80
+# kwa mwaka, kodi ya makadirio ni ngapi?" routed to `none` because the turnover list demands `mauzo yangu`. Only usable WITH an explicit
+# presumptive cue -- the bare `kodi ya mapato` path keeps requiring the ownership word, since there it is the only evidence the asker is
+# a trader. The same veto (schedule + entity) applies. Its own named pattern so a sweep can subtract it.
+_PRESUMPTIVE_NAMED_TURNOVER_PATTERN = (r"(?<![a-z])mauzo\s+(?:ya\s+|ni\s+|yaliyofikia\s+|yetu\s+|ya\s+mwaka\s+(?:ni\s+|ya\s+)?)?"
+                                       r"(?:(?:tzs|tsh|sh)\.?\s*)?(?:milioni|laki|elfu|\d)")
+_PRESUMPTIVE_NAMED_TURNOVER = re.compile(_PRESUMPTIVE_NAMED_TURNOVER_PATTERN)
+
 _PRESUMPTIVE_VETO = re.compile(
     _PRESUMPTIVE_SCHEDULE_VETO_PATTERN + r"|" + _PRESUMPTIVE_ENTITY_VETO_PATTERN)
 
@@ -1582,10 +1603,11 @@ def detect_intent(text: str) -> str:
     # definition question ("kodi ya makadirio ni nini?") has nothing to compute and keeps its
     # fact route.
     if (_has_money_magnitude(ql)
-            and any(c in ql for c in _PRESUMPTIVE_TURNOVER_CUES)
             and not _PRESUMPTIVE_VETO.search(ql)
-            and (any(c in ql for c in _PRESUMPTIVE_CUES)
-                 or any(c in ql for c in _BUSINESS_INCOME_TAX_CUES))):
+            and ((any(c in ql for c in _PRESUMPTIVE_TURNOVER_CUES)
+                  and (any(c in ql for c in _PRESUMPTIVE_CUES)
+                       or any(c in ql for c in _BUSINESS_INCOME_TAX_CUES)))
+                 or (any(c in ql for c in _PRESUMPTIVE_CUES) and _PRESUMPTIVE_NAMED_TURNOVER.search(ql)))):
         return "presumptive"
 
     # The NEW first-person cue does not fire on an APPROXIMATE figure ("karibu / takriban / kama milioni 200"):

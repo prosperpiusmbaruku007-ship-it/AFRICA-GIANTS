@@ -1,0 +1,142 @@
+{
+ "corpus_strings": 8153,
+ "changed": [
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya milioni 50 kwa mwaka ni kiasi gani?",
+   "old": "none",
+   "new": "presumptive"
+  },
+  {
+   "q": "Kwa mauzo ya milioni 20, unalipa kodi ya mapato kwa mfumo wa kawaida (normal progressive rates). Presumptive tax inatumika kwa mauzo chini ya milioni 10. Thibitisha na tra.go.tz.",
+   "old": "none",
+   "new": "presumptive"
+  },
+  {
+   "q": "Mfanyabiashara binafsi mwenye mauzo ya TZS 9,000,000 kwa mwaka, asiyetunza kumbukumbu, analipa kodi ya makadirio kiasi gani?",
+   "old": "none",
+   "new": "presumptive"
+  }
+ ],
+ "probes": [
+  {
+   "q": "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+   "want": "minimum_wage",
+   "got": "minimum_wage",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa mlinzi 120,000 kwa mwezi, ni halali?",
+   "want": "minimum_wage",
+   "got": "minimum_wage",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa mfanyakazi wa duka 200,000 kwa mwezi, je ni sawa?",
+   "want": "minimum_wage",
+   "got": "minimum_wage",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wa duka analipwa 200,000 kwa mwezi, je inatosha kisheria?",
+   "want": "minimum_wage",
+   "got": "minimum_wage",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+   "want": "presumptive",
+   "got": "presumptive",
+   "was": "none"
+  },
+  {
+   "q": "Nina duka, mauzo milioni 80 kwa mwaka, kodi ya makadirio ni ngapi?",
+   "want": "presumptive",
+   "got": "presumptive",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya TZS 25,000,000 ni shingapi?",
+   "want": "presumptive",
+   "got": "presumptive",
+   "was": "none"
+  },
+  {
+   "q": "Presumptive tax kwa mauzo ya mwaka ni milioni 60 ni kiasi gani?",
+   "want": "presumptive",
+   "got": "presumptive",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa kodi ya mapato 150,000 kwa mwezi, ni halali?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa NSSF 70,000 kila mwezi, ni halali?",
+   "want": "nssf",
+   "got": "nssf",
+   "was": "nssf"
+  },
+  {
+   "q": "Nalipa PAYE 80,000, ni sawa?",
+   "want": "paye",
+   "got": "paye",
+   "was": "paye"
+  },
+  {
+   "q": "Nalipa pango la duka 300,000 kwa mwezi, ni halali kukata kodi ya zuio?",
+   "want": "rent_wht",
+   "got": "rent_wht",
+   "was": "rent_wht"
+  },
+  {
+   "q": "Nalipa ada ya leseni 150,000, ni halali?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Pesa 200,000 inatosha kulipa umeme wa duka?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya makadirio ni nini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya makadirio kwa mapato ya milioni 40 ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya daladala ya milioni 40 ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kampuni ina mauzo ya milioni 80, kodi ya makadirio ni ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mauzo ya milioni 80, kodi gani nalipa?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nitumie kodi ya makadirio au mfumo wa kawaida? Mauzo ya milioni 40",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  }
+ ]
+}
