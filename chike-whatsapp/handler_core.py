@@ -1430,12 +1430,61 @@ AUTOSEND_AFTER_S = 900.0
 AUTOSEND_NAME = "AUTO-SEND (engine answer, no person read it)"
 AUTOSEND_PREFIX = ("Hii ni hesabu ya kiotomatiki ya mfumo — bado haijakaguliwa na mtu. "
                    "(Automated calculation, not yet checked by a person.)\n\n")
-# TRA's own contact page, fetched 2026-11-13 (tra.go.tz and /index.php/contact-us): toll-free call centres 0800 750 075,
-# 0800 780 078, 0800 110 016; call-centre hours 08:00-19:00 East African time, Monday-Friday. NO FIGURE OR RATE appears below
-# (asserted in tests): a holding message that carried a number would be a model-free answer nobody reviewed.
-HOLDING_TEXT = ("Jibu la swali lako bado linakaguliwa na mtu kabla ya kutumwa, kwa hiyo hatujalituma bado. "
-                "Tutakutumia mara litakapokaguliwa. Kwa jambo la dharura, wasiliana na TRA moja kwa moja: "
-                "piga bila malipo 0800 780 078 au 0800 750 075 (Jumatatu–Ijumaa, 08:00–19:00), au tembelea tra.go.tz.")
+# THE URGENT-CONTACT LINE FOLLOWS THE QUESTION'S TOPIC (founder, 2026-11-13: the first version always named TRA, even for a licence
+# question the answer itself sent to BRELA). Every contact below was READ FROM THE AUTHORITY'S OWN SITE on 2026-11-13 (R30: curl, not
+# a guess), and nothing else is ever put in this message: a holding message that carried a figure or a rate would be an answer nobody
+# reviewed (asserted in tests -- digits are allowed ONLY inside these registered contact strings).
+#   TRA    tra.go.tz  (home + /index.php/contact-us): toll-free 0800 750 075, 0800 780 078, 0800 110 016; call centre 08:00-19:00 EAT Mon-Fri
+#   BRELA  brela.go.tz (home + /pages/contact-us): Simu +255 (0) 22 2212800 / +255 (0) 22 2180113   -- no toll-free line is published
+#   NSSF   nssf.go.tz (home): 0800116773 (toll free), (255)(22) 2200037, customercare@nssf.go.tz
+#   WCF    wcf.go.tz (home): 0800110028, +255 222 926 108 / 107, working hours 2:00 asubuhi - 11:00 jioni (08:00-17:00)
+AUTHORITY_CONTACTS = {
+    "tra": "TRA: piga bila malipo 0800 780 078 au 0800 750 075 (Jumatatu–Ijumaa, 08:00–19:00), au tembelea tra.go.tz",
+    "brela": "BRELA: piga 022 2212800 au 022 2180113, au tembelea brela.go.tz",
+    "nssf": "NSSF: piga bila malipo 0800 116 773, au tembelea nssf.go.tz",
+    "wcf": "WCF: piga bila malipo 0800 110 028 (08:00–17:00), au tembelea wcf.go.tz",
+}
+_HOLDING_HEAD = ("Jibu la swali lako bado linakaguliwa na mtu kabla ya kutumwa, kwa hiyo hatujalituma bado. "
+                 "Tutakutumia mara litakapokaguliwa. Kwa jambo la dharura, wasiliana moja kwa moja na ")
+# The generic form, used when the topic is not known: NO number, because naming a wrong authority is worse than naming none.
+HOLDING_TEXT = _HOLDING_HEAD + "mamlaka husika."
+
+# Topic -> authority. Deterministic and CONSERVATIVE: question text and the engine route only -- never the model's draft.
+_WB = r"(?<![a-z0-9])"
+_WE = r"(?![a-z0-9])"
+_TOPIC_RES = {
+    "nssf": _re_tok.compile(_WB + r"(nssf|mfuko wa hifadhi|hifadhi ya jamii|michango ya nssf)" + _WE, _re_tok.I),
+    "wcf": _re_tok.compile(_WB + r"(wcf|mfuko wa fidia|fidia ya wafanyakazi|workers.? compensation)" + _WE, _re_tok.I),
+    "brela": _re_tok.compile(_WB + r"(brela|leseni|licen[cs]e|jina la biashara|business name|usajili wa (kampuni|biashara)|"
+                             r"kusajili (kampuni|biashara)|annual return|ritani ya mwaka)" + _WE, _re_tok.I),
+    "tra": _re_tok.compile(_WB + r"(vat|paye|sdl|efd|tra|tin|kodi|ushuru|risiti|withholding|wht|presumptive|makadirio|"
+                           r"income tax|skills development levy)" + _WE, _re_tok.I),
+}
+_PATH_TOPICS = {"nssf": "nssf", "wcf": "wcf", "sdl": "tra", "paye": "tra", "vat_registration": "tra", "efd_requirement": "tra",
+                "presumptive": "tra", "corporate_tax": "tra", "partnership_tax": "tra", "rent_wht": "tra"}
+
+
+def holding_authorities(item):
+    """Ordered list of authority keys for the holding message; [] when the topic is not known (or is more than two things)."""
+    found = []
+    for part in str(item.get("answer_path") or "").split("+"):
+        if part.startswith("engine:"):
+            k = _PATH_TOPICS.get(part.split(":")[1])
+            if k and k not in found:
+                found.append(k)
+    q = str(item.get("question") or "")
+    for k in ("nssf", "wcf", "brela", "tra"):
+        if _TOPIC_RES[k].search(q) and k not in found:
+            found.append(k)
+    return found if 1 <= len(found) <= 2 else []
+
+
+def holding_text(item):
+    """The ONE holding message for `item`: fixed text + the contact line of the topic's authority (or 'mamlaka husika')."""
+    keys = holding_authorities(item)
+    if not keys:
+        return HOLDING_TEXT
+    return _HOLDING_HEAD + " na ".join(AUTHORITY_CONTACTS[k] for k in keys) + "."
 
 
 def parse_autosend(flag, after_s):

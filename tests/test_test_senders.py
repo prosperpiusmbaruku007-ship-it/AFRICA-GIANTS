@@ -122,7 +122,7 @@ def test_no_handler_path_branches_on_test_sender_except_the_counts():
     reviewer authentication would be an exemption from review wearing the name of a statistic."""
     allowed = {"_blank_row", "review_item", "is_test_sender_hash", "_is_test_item", "review_summary", "parse_test_senders",
                "_participants_split", "_cohort_health",
-               "_do_auto_send", "seed_timeout_probe"}   # both only STAMP/COPY the flag onto a row; no verdict reads it
+               "_do_auto_send", "seed_timeout_probe", "review_act"}   # both only STAMP/COPY the flag onto a row; no verdict reads it
     for path in ("handler_core.py", "modal_whatsapp.py"):
         tree = ast.parse(open(os.path.join(_ROOT, "chike-whatsapp", path), encoding="utf-8").read())
         for fn in ast.walk(tree):

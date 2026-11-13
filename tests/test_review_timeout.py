@@ -304,13 +304,77 @@ def test_the_auto_send_text_is_the_plain_prefix_plus_the_stored_draft_and_nothin
     assert "bado haijakaguliwa na mtu" in core.AUTOSEND_PREFIX and "not yet checked by a person" in core.AUTOSEND_PREFIX
 
 
-def test_the_holding_message_carries_no_figure_no_rate_and_tras_verified_contact():
-    h = core.HOLDING_TEXT
-    assert "%" not in h and "TZS" not in h and "asilimia" not in h.lower() and "shilingi" not in h.lower()
-    stripped = re.sub(r"0800 780 078|0800 750 075|08:00–19:00", "", h)
-    assert not re.search(r"\d", stripped), f"a digit outside TRA's phone numbers and hours: {stripped!r}"
-    assert "0800 780 078" in h and "0800 750 075" in h and "tra.go.tz" in h          # fetched from tra.go.tz 2026-11-13
-    assert "inakaguliwa na mtu" in h
+def _is_holding(text):
+    return text.startswith(core._HOLDING_HEAD)
+
+
+def _all_holding_texts():
+    import itertools
+    keys = sorted(core.AUTHORITY_CONTACTS)
+    out = [core.HOLDING_TEXT] + [core._HOLDING_HEAD + core.AUTHORITY_CONTACTS[k] + "." for k in keys]
+    out += [core._HOLDING_HEAD + core.AUTHORITY_CONTACTS[a] + " na " + core.AUTHORITY_CONTACTS[b] + "."
+            for a, b in itertools.permutations(keys, 2)]
+    return out
+
+
+@pytest.mark.parametrize("text", _all_holding_texts())
+def test_every_holding_message_carries_no_figure_no_rate_only_registered_contacts(text):
+    assert "%" not in text and "TZS" not in text and "asilimia" not in text.lower() and "shilingi" not in text.lower()
+    stripped = text
+    for contact in core.AUTHORITY_CONTACTS.values():
+        stripped = stripped.replace(contact, "")
+    assert not re.search(r"\d", stripped), f"a digit outside the registered contact strings: {stripped!r}"
+    assert "inakaguliwa na mtu" in text and "hatujalituma bado" in text
+
+
+def test_the_registered_contacts_are_the_ones_read_from_each_authoritys_own_site_on_2026_11_13():
+    c = core.AUTHORITY_CONTACTS
+    assert "0800 780 078" in c["tra"] and "0800 750 075" in c["tra"] and "tra.go.tz" in c["tra"]
+    assert "022 2212800" in c["brela"] and "brela.go.tz" in c["brela"] and "0800" not in c["brela"], "BRELA publishes no toll-free line"
+    assert "0800 116 773" in c["nssf"] and "nssf.go.tz" in c["nssf"]
+    assert "0800 110 028" in c["wcf"] and "wcf.go.tz" in c["wcf"]
+    assert set(c) == {"tra", "brela", "nssf", "wcf"}
+
+
+@pytest.mark.parametrize("question,path,want", [
+    ("Leseni ya biashara inaisha lini?", "fact", ["brela"]),                          # the founder's own example
+    ("Nataka kusajili kampuni, ada ni kiasi gani?", "fact", ["brela"]),
+    ("Jina la biashara linasajiliwa wapi?", None, ["brela"]),
+    ("Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT?", "engine:vat_registration", ["tra"]),
+    ("Faini ya kuchelewa kuwasilisha return ya PAYE ni kiasi gani?", "fact", ["tra"]),
+    ("Mashine ya risiti EFD ni lazima?", None, ["tra"]),
+    ("Mfanyakazi analipa NSSF kiasi gani?", "engine:nssf", ["nssf"]),
+    ("Mchango wa kila mwezi ni kiasi gani?", "engine:nssf", ["nssf"]),                # topic from the ROUTE when the words do not say
+    ("WCF inalipwa na nani?", "fact", ["wcf"]),
+    ("Mfuko wa fidia ya wafanyakazi unalipa nini?", None, ["wcf"]),
+    ("Nahitaji leseni na pia VAT", None, ["brela", "tra"]),                           # two topics: both, in the order found
+    ("NSSF na WCF zote zinalipwa lini?", None, ["nssf", "wcf"]),
+    ("leseni, VAT na NSSF zote", None, []),                                           # three: too many to name, so none
+    ("Nimeajiri watu 5, nifanye nini kuhusu bima?", None, []),                        # not a topic we know
+    ("Tina anauliza kuhusu mtindo wa biashara", None, []),                            # 'tin' inside a word is not TIN
+    ("Martin ananiuliza kuhusu duka lake", None, []),                                 # ...at the END of a word either
+    ("Mkataba wa kazi unaandikwaje?", "fact", []),
+    ("", None, []), (None, None, []),
+])
+def test_the_urgent_contact_follows_the_questions_topic(question, path, want):
+    assert core.holding_authorities({"question": question, "answer_path": path}) == want
+    text = core.holding_text({"question": question, "answer_path": path})
+    if not want:
+        assert text == core.HOLDING_TEXT and text.endswith("mamlaka husika.") and not re.search(r"\d", text),             "an unknown topic falls back to 'the relevant authority' with NO number: a wrong authority is worse than none"
+    else:
+        for k in want:
+            assert core.AUTHORITY_CONTACTS[k] in text
+        for k in set(core.AUTHORITY_CONTACTS) - set(want):
+            assert core.AUTHORITY_CONTACTS[k] not in text, f"{k} contact leaked into a {want} message"
+
+
+def test_the_topic_is_read_from_the_question_and_the_route_never_from_the_models_draft():
+    """A draft that says 'Thibitisha na TRA' must not steer the contact: the draft is model text and may be wrong."""
+    it = {"question": "Leseni ya biashara inaisha lini?", "answer_path": "fact",
+          "draft": "Thibitisha na TRA (tra.go.tz). VAT, PAYE, NSSF"}
+    assert core.holding_authorities(it) == ["brela"]
+    import inspect
+    assert "draft" not in inspect.getsource(core.holding_authorities)
 
 
 # ── the handler: the sweep, with stubbed stores and sender ───────────────────────────────────────
@@ -401,7 +465,8 @@ def test_a_model_answer_is_NEVER_sent_it_gets_one_holding_message_and_stays_in_r
                draft="Ndiyo, unapaswa kujiandikisha kwa ajili ya VAT.")
     out = _sweep(mw)
     assert out["auto_sent"] == 0 and out["holding_notices"] == 1
-    assert [t for _, t in sent] == [core.HOLDING_TEXT], "the participant gets the holding message and NOT the draft"
+    assert [t for _, t in sent] == [core.holding_text(it)], "the participant gets the holding message and NOT the draft"
+    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_authority"] == ["tra"], "the VAT question's topic is recorded"
     assert it["draft"] not in sent[0][1]
     stored = mw.REVIEW_QUEUE[it["review_id"]]
     assert stored["status"] == "pending" and stored["holding_notice_ts"] and stored["holding_notice_ok"] is True
@@ -429,7 +494,7 @@ def test_VOID_LIST_nothing_that_is_not_a_model_free_engine_answer_is_ever_auto_s
     _sweep(mw)
     stored = mw.REVIEW_QUEUE[it["review_id"]]
     assert stored["status"] == "pending", change
-    assert all(t == core.HOLDING_TEXT for _, t in sent), f"something other than the holding message reached a participant: {change}"
+    assert all(_is_holding(t) for _, t in sent), f"something other than the holding message reached a participant: {change}"
 
 
 def test_a_young_or_claimed_draft_is_left_alone(monkeypatch):
@@ -523,7 +588,7 @@ def test_do_auto_send_sends_only_the_cores_autosend_text_after_the_cores_verdict
 def test_do_holding_notice_sends_only_the_fixed_holding_text():
     fn = _fn("_do_holding_notice")
     send_calls = [n for n in ast.walk(fn) if isinstance(n, ast.Call) and getattr(n.func, "id", None) == "_send_once"]
-    assert len(send_calls) == 1 and ast.unparse(send_calls[0].args[1]) == "core.HOLDING_TEXT"
+    assert len(send_calls) == 1 and ast.unparse(send_calls[0].args[1]) == "core.holding_text(cur)"
     assert "autosend_verdict" in _calls(fn)
 
 
@@ -747,7 +812,7 @@ def test_the_seeded_engine_probe_is_auto_sent_to_the_reviewers_own_phone_and_the
     assert {to for to, _ in sent} == {roster0}, "both went ONLY to the reviewer's own phone"
     by = [t for _, t in sent]
     assert any(t.startswith(core.AUTOSEND_PREFIX) and "Jibu la injini" in t for t in by)
-    assert core.HOLDING_TEXT in by and not any("HALIPASWI" in t for t in by), "the model draft itself was never sent"
+    assert any(_is_holding(t) for t in by) and not any("HALIPASWI" in t for t in by), "the model draft itself was never sent"
     assert mw.REVIEW_QUEUE[rid_e]["status"] == "auto_sent" and mw.REVIEW_QUEUE[rid_m]["status"] == "pending"
     assert core.is_seeded_test(mw.REVIEW_QUEUE[rid_e]), "TEST- items stay out of every statistic"
 
@@ -804,7 +869,7 @@ def test_the_holding_notice_record_survives_a_concurrent_renotify_sweep(monkeypa
     assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_ts"]
     mw._mark_notified(stale, 1, renotify=True)                            # the re-notify sweep finishes late with its old copy
     assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_ts"], "the record of the holding message must not be erased"
-    assert _sweep(mw)["holding_notices"] == 0 and len([1 for _, t in sent if t == core.HOLDING_TEXT]) == 1
+    assert _sweep(mw)["holding_notices"] == 0 and len([1 for _, t in sent if _is_holding(t)]) == 1
 
 
 def test_health_says_whether_TEST_SENDERS_reached_the_app_without_showing_it(monkeypatch):
@@ -829,3 +894,16 @@ def test_CONTROL_the_same_sweep_does_renotify_a_draft_that_is_still_pending(monk
     monkeypatch.setattr(mw, "_notify_reviewers", fake_notify)
     _run(mw.sweep_review_queue.get_raw_f()())
     assert notified == [it["review_id"]]
+
+
+def test_a_licence_question_gets_BRELA_in_the_holding_message_not_TRA(monkeypatch):
+    """The founder's 2026-11-13 live finding: the holding message named TRA for a licence question the answer sent to BRELA."""
+    mw, sent = _load_mw(monkeypatch)
+    it = _aged(mw, 16, question="Leseni ya biashara inaisha lini?", answer_path="fact", engine_working=None, facts=["f"],
+               model_calls=1, draft="Kila leseni ya biashara nchini Tanzania huisha ifikapo tarehe 30 Juni ya kila mwaka. Thibitisha na BRELA.")
+    _sweep(mw)
+    assert len(sent) == 1
+    text = sent[0][1]
+    assert core.AUTHORITY_CONTACTS["brela"] in text and "TRA" not in text and "0800 780 078" not in text
+    assert "30 Juni" not in text, "the draft is never in the holding message"
+    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_authority"] == ["brela"]

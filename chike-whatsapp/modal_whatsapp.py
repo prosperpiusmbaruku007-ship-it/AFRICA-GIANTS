@@ -1759,6 +1759,7 @@ async def review_act(request: Request):
         # purged. Per-reviewer corrections are the signal that shows one reviewer approving
         # what another would have caught, and it cannot be recovered later.
         "decided_by_name": updated.get("decided_by_name"),
+        "test_sender": bool(updated.get("test_sender")),
         "claim_count": updated.get("claim_count"),
         "release_count": updated.get("release_count"),
         "notify_count": updated.get("notify_count"),
@@ -1998,8 +1999,10 @@ async def _do_holding_notice(it, settings):
         except Exception:                                            # noqa: BLE001
             pass
         return False
-    ok, err = await _send_once(cur["sender"], core.HOLDING_TEXT)
+    keys = core.holding_authorities(cur)
+    ok, err = await _send_once(cur["sender"], core.holding_text(cur))
     cur = _fresh_item(cur)                     # the send took seconds: write onto what is stored NOW, not what we read before it
+    cur["holding_notice_authority"] = keys or None          # which contact line the participant was given (None = generic)
     cur["holding_notice_ts"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cur["holding_notice_ok"] = bool(ok or core.is_pending_receipt(err))
     cur["holding_notice_error"] = None if cur["holding_notice_ok"] else str(err)[:120]
