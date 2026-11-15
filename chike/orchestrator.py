@@ -336,6 +336,10 @@ class Orchestrator:
             return self._answer_partnership_tax(sq)
         if sq.computation_type == "rent_wht":
             return self._answer_rent_wht(sq)
+        # FIXED STATUTORY STATEMENTS (2026-11-16) -- model-free, all limbs, never a picked one. NOT auto-send
+        # eligible (handler_core.engine_only_verdict allowlist): reviewed like a model answer, with a correct draft.
+        if sq.computation_type == "fixed_statement":
+            return self._answer_fixed_statement(sq)
         # 'ambiguous_multi' (or any type the rules engine doesn't define) is compute-intent
         # with an unresolved levy — never guess which one; clarify.
         required = REQUIRED_FIELDS.get(sq.computation_type)
@@ -826,6 +830,17 @@ class Orchestrator:
         return self._deterministic_answer(
             sq, rules_engine.partnership_tax_statement())
 
+    def _answer_fixed_statement(self, sq: SubQuestion) -> SubAnswer:
+        """The whole verified statement for the topic the question asks about -- deterministic, no model.
+
+        The topic is re-derived here from the same text rather than carried on the SubQuestion: a sub-question that
+        reaches this branch with no resolvable topic (a split that separated the topic word from the ask) must not
+        guess one, so it falls back to the fact path's honest behaviour -- a clarification."""
+        topic = routing.fixed_statement_topic(sq.text)
+        if topic is None:
+            return SubAnswer(sub_question=sq, text=clarification.FIXED_STATEMENT_NO_TOPIC, needs_clarification=True)
+        return self._deterministic_answer(sq, rules_engine.fixed_statement(topic))
+
     def _answer_rent_wht(self, sq: SubQuestion) -> SubAnswer:
         """Rent WHT is 10% for BOTH residencies (Cap.332 First Schedule para 4(b)(ii)) —
         deterministic, no model.
@@ -1115,6 +1130,18 @@ class Orchestrator:
             return dataclasses.replace(
                 sub, text=clarification.headcount_contradiction(stated),
                 raw_text=sub.text, needs_clarification=True, guard="replaced")
+        elif sub.computation is None and fidelity.body_contradicts_fixed_figure(
+                sub.sub_question.text, cleaned):
+            # D-FIDELITY-10 (built and wired 2026-11-16). A FIXED STATUTORY FIGURE the model contradicted although the
+            # correct fact was at rank 1: notice 4 days for a monthly employee, severance "+25%", overtime 25%, an annual
+            # leave answer that never states 28 days, VAT "kidogo kidogo". REPLACED, not blanked (the fact path returns the
+            # body alone, so blanking ships silence), and replaced with the SAME whole statement the model-free route gives:
+            # every limb, none selected, no amount computed -- so unlike D-FIDELITY-7 it hands over the right answer.
+            # The reply is still a model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
+            topic = fidelity.fixed_figure_violations(sub.sub_question.text, cleaned)[0][0]
+            return dataclasses.replace(
+                sub, text=rules_engine.fixed_statement(topic).working,
+                raw_text=sub.text, needs_clarification=False, guard="replaced")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)
 
     @staticmethod

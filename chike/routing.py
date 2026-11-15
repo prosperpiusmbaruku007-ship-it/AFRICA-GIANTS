@@ -39,7 +39,7 @@ from . import swahili_numbers as swn
 # in detect_intent and chike/rules_engine/minimum_wage.py. 'corporate_tax'/'partnership_tax'
 # are rate statements, not levies — see path 1b below and chike/rules_engine/corporate_tax.py.
 COMPUTE_TYPES = ("sdl", "nssf", "paye", "wcf", "minimum_wage", "corporate_tax",
-                 "partnership_tax", "rent_wht")
+                 "partnership_tax", "rent_wht", "fixed_statement")
 
 # --- explicit identifiers (path 1) ------------------------------------------
 _EXPLICIT = {
@@ -1660,6 +1660,13 @@ def detect_intent(text: str) -> str:
     if explicit in _STATEMENT_LEVIES and asks_levy_statement(text):
         return explicit
 
+    # ── PATH 10 — FIXED STATUTORY STATEMENTS (2026-11-16): notice, severance, overtime, annual leave, VAT time of
+    # supply. Five questions whose answer is a constant that the model was handed at rank 1 and contradicted live.
+    # PLACED LAST, so it can only capture what every route above has declined (nothing that routes today changes
+    # route). Gated on the TOPIC *and* the ASK (R31's converse: a topic word is a signal, not a question).
+    if fixed_statement_topic(text) is not None:
+        return "fixed_statement"
+
     return "none"
 
 
@@ -2368,3 +2375,61 @@ def is_uncomputable_payroll_amount(text: str) -> bool:
     has_payroll = any(c in ql for c in _PAYROLL_CTX)
     has_levy = bool(_explicit_levy(ql) or _natural_levy(ql))   # named levy OR generic 'makato'
     return has_payroll and has_levy and _has_money_ask(ql)
+
+
+# ── FIXED STATUTORY STATEMENTS (2026-11-16) ─────────────────────────────────────────────────────────────────────────
+# Five topics whose answer is a CONSTANT: notice, severance, overtime, annual leave, VAT time of supply. The route needs
+# BOTH a topic and an ASK (R31's converse: a topic word is a signal, not a question), declines when another levy is named
+# (a different question), and DECLINES WHEN TWO TOPICS MATCH -- one statement would silently drop the other.
+# Raw strings throughout: a non-raw `\b` is a backspace (R39).
+_FS_ASK = re.compile(
+    r"(?<![a-z])(?:ngapi|shingapi|kiasi\s+gani|kiasi\s+gani|inalipwa|analipwa|hulipwa|inalipwaje|analipwaje|hulipwaje|"
+    r"inahesabiwaje|huhesabiwaje|inahesabiwa\s+vipi|lini|muda\s+gani|kiwango|ni\s+nini|vipi|"
+    r"anastahili|ananistahili|astahili|nastahili|inadaiwa|how\s+(?:many|much|long)|what\s+is)")
+_FS_OTHER_LEVY = re.compile(
+    r"(?<![a-z])(?:nssf|paye|sdl|wcf|zuio|makato|michango|makadirio|presumptive|kodi\s+ya\s+mapato)")
+_FS_TOPICS = (
+    ("notice",
+     re.compile(r"(?<![a-z])(?:notisi|notice)(?![a-z])"),
+     re.compile(r"kuachisha|kuachishwa|kuacha\s+kazi|kusitisha|kufukuza|kufukuzwa|kumfukuza|kuondoka|mfanyakazi|wafanyakazi|ajira|mkataba\s+wa\s+kazi|employee|employer"),
+     re.compile(r"(?<![a-z])(?:tra|cg|kamishna|mahakama|korti)(?![a-z])")),
+    ("severance",
+     re.compile(r"severance|malipo\s+ya\s+kuachishwa"),
+     None, None),
+    ("overtime",
+     re.compile(r"overtime|(?:saa|masaa)\s+(?:za|ya)\s+(?:ziada|nyongeza)"),
+     None, None),
+    ("annual_leave",
+     re.compile(r"likizo\s+ya\s+(?:kila\s+)?mwaka|annual\s+leave"),
+     None,
+     re.compile(r"uzazi|ugonjwa|baba|paternity|maternity|bila\s+malipo|unpaid")),
+    ("vat_time_of_supply",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"kwa\s+mkopo|mkopo|credit\s+sale|bado\s+hajalipa|hajalipa|hawajalipa|nimetoa\s+(?:invoice|ankara)|deni"),
+     re.compile(r"usajili|kujisajili|register|kizingiti|threshold|refund|rejesho|zero|msamaha|exempt|adhabu|faini|penalty|riba|chelewa|kuchelewa|withhold|zuia|zuiw|kuzuia|tofauti|difference|risk|hatari|procedure|msambazaji|supplier")),
+)
+
+
+def fixed_statement_topics(text: str):
+    """Every fixed-statement topic the text MENTIONS (no ask required, no other-levy veto). Pure.
+
+    The route needs an ask and declines on another levy; the fidelity guard (chike.fidelity D-FIDELITY-10) needs only to know what
+    the QUESTION is about, so the topic cues live in one place and both read them."""
+    ql = text.lower()
+    hits = []
+    for name, cue, need, veto in _FS_TOPICS:
+        if cue.search(ql) and (need is None or need.search(ql)) and not (veto is not None and veto.search(ql)):
+            hits.append(name)
+    return hits
+
+
+def fixed_statement_topic(text: str):
+    """The ONE fixed-statement topic a question asks about, or None. Pure, no model.
+
+    None when: no ask cue; another levy is named (a different question); zero topics; or MORE THAN ONE topic matched
+    (declining beats stating one limb of a two-part question)."""
+    ql = text.lower()
+    if not _FS_ASK.search(ql) or _FS_OTHER_LEVY.search(ql):
+        return None
+    hits = fixed_statement_topics(text)
+    return hits[0] if len(hits) == 1 else None

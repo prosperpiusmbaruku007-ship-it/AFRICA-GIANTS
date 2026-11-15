@@ -1361,6 +1361,13 @@ widen it.** Any one of these ends it and puts the cohort back under R7 as a laun
    model wrote (`model_calls > 0`), any fact, clarification or refusal path, a fallback, and any reply whose model-call count is
    missing or unknown;
 2b. **any engine answer sending unreviewed when a guard fired or the evidence block is empty** (added 2026-11-13);
+2c. **an engine route that is not on the auto-send allowlist sending unreviewed** (added 2026-11-16 — a **NARROWING** of the 2026-11-13
+   amendment, not a widening): `handler_core.AUTOSEND_ELIGIBLE_ENGINE_ROUTES` names the routes whose model-free answers may send after 15
+   minutes; **an unknown route is not eligible (fails closed)**, and `engine:fixed_statement` — the five model-free statutory statements
+   (termination notice, severance, overtime, annual leave, VAT time of supply) — is named in `AUTOSEND_EXCLUDED_ENGINE_ROUTES` so deleting an
+   allowlist entry alone cannot re-admit it. `model_calls == 0` says no model wrote a word; it does not say a route's content has earned an
+   unreviewed send. These answers reach a reviewer like a model answer, but with a correct draft (founder's decision, 2026-11-16; tested with
+   a positive control in `tests/test_fixed_statements.py`);
 3. **a reviewer added to the roster without being told the review standard** — a seat on the
    roster is authority to approve a compliance answer that a Tanzanian employer will act on;
    an untrained reviewer is an unreviewed reply with a name attached, which is worse than an

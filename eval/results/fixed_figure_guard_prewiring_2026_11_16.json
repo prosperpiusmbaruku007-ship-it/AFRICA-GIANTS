@@ -1,0 +1,14 @@
+{
+ "population": {
+  "GOLD": 428,
+  "PAIRED": 4400,
+  "STORED": 2034
+ },
+ "on_topic": {
+  "PAIRED|overtime": 10,
+  "PAIRED|severance": 2,
+  "PAIRED|notice": 1
+ },
+ "founding_specimens_flagged": 5,
+ "flags": []
+}

@@ -28,6 +28,11 @@ AMBIGUOUS_LEVY = (
     "tozo gani hasa — PAYE, NSSF, SDL, au WCF — pamoja na kiasi cha mshahara kwa mwezi."
 )
 
+FIXED_STATEMENT_NO_TOPIC = (
+    "Sijaelewa swali lako linahusu jambo gani hasa. Niambie kama ni notisi ya kuachishwa kazi, malipo ya kuachishwa kazi, "
+    "overtime, likizo ya mwaka, au VAT kwa mauzo ya mkopo."
+)
+
 _LEVY_NAME = {"paye": "PAYE", "sdl": "SDL", "nssf": "NSSF", "wcf": "WCF"}
 
 

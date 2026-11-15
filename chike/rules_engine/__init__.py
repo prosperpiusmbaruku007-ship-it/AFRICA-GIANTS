@@ -33,6 +33,7 @@ from .registration_thresholds import vat_registration, efd_required
 from .presumptive import compute_presumptive, records_status_matters
 from .corporate_tax import corporate_tax_rate_statement, partnership_tax_statement
 from .rent_wht import rent_wht_statement
+from .fixed_statements import fixed_statement
 from . import wage_schedule
 from . import registration_thresholds
 
@@ -107,4 +108,5 @@ __all__ = [
     "corporate_tax_rate_statement",
     "partnership_tax_statement",
     "rent_wht_statement",
+    "fixed_statement",
 ]

@@ -1,11 +1,11 @@
 {
-  "audited": "2026-10-10",
+  "audited": "2026-11-16",
   "first_audited": "2026-08-24",
   "harness": "eval/controls/audit_control_fires.py",
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 24,
+    "FIRES": 26,
     "DISABLED": 1,
     "OBSERVED": 3
   },
@@ -48,8 +48,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -66,8 +66,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -75,8 +75,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -84,8 +84,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -93,8 +93,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -102,7 +102,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp3d7x52pk\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -212,7 +212,7 @@
       "verdict": "FIRES",
       "positive_specimen": "nonexistent index paths",
       "negative_specimen": "the real kaggle/ index",
-      "note": "missing index raises: True; real index loads 184 facts"
+      "note": "missing index raises: True; real index loads 208 facts"
     },
     {
       "id": "retrieval.preflight[expected_fact_count]",
@@ -276,6 +276,24 @@
       "positive_specimen": "th_22 verbatim, and the Swahili \"milioni 1\" notation",
       "negative_specimen": "the per-head breakdown and the net-pay answer, both flagged by the loose rule, plus a negated mention of the fabricated figure",
       "note": "planted th_22(TZS 50,000, no figure in question) flagged: True; SWAHILI WORD ORDER \"milioni 1\" flagged: True — my first pattern was English-order \"1 milioni\" and matched NOTHING on the notation it was added for (R39, caught by a probe not by reading); negated MENTION flagged: False; per-head breakdown flagged: False; NET PAY flagged: False — the last two are flagged by the LOOSE rule and are the only limbs that tell the two rules apart. COMPUTE PATH ONLY; the fact-path widening is HELD with a dated specimen (ufp_11, a correct GN 605A constant the rule DOES flag)."
+    },
+    {
+      "id": "D-FIDELITY-10 (fixed statutory figure guard)",
+      "layer": "fidelity",
+      "claims_to_block": "a fixed statutory figure the model contradicted although the correct fact was at rank 1 (notice, severance, overtime, annual leave, VAT time of supply)",
+      "verdict": "FIRES",
+      "positive_specimen": "the five live wrong replies of 2026-11-13",
+      "negative_specimen": "a whole-table notice answer, a negated mention, an NSSF split",
+      "note": "founding specimens flagged: {'notice': True, 'severance': True, 'overtime': True, 'annual_leave': True, 'vat': True}; clean limbs flagged (must all be empty): [False, False, False, False]; wired in orchestrator code (comments stripped): True. REPLACES with the whole model-free statement (not blanking: the fact path returns the body alone). Priced over 6,932 stored rows before wiring: 0 GOLD flags, but only 13 on-topic rows exist anywhere -- the corpora barely contain these topics, which is why they were gaps; a lower bound (R21), eval/results/fixed_figure_guard_prewiring_2026_11_16.json."
+    },
+    {
+      "id": "AUTO-SEND route allowlist",
+      "layer": "autosend",
+      "claims_to_block": "a model-free engine route not explicitly allowed (the fixed statutory statements, or any new route) sending unreviewed",
+      "verdict": "FIRES",
+      "positive_specimen": "engine:fixed_statement with every other condition satisfied",
+      "negative_specimen": "engine:vat_registration, same item",
+      "note": "a model-free allowed engine route is eligible: True (positive control); the fixed-statement route is eligible: False (must be False); an unknown engine route is eligible: False (must be False, fail closed)."
     },
     {
       "id": "premise resolver (yes/no lead vs asserted premise)",

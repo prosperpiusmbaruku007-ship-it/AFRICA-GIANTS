@@ -24,6 +24,8 @@ REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 sys.path.insert(0, REPO)
 GENERIC_ROW = re.compile(r"Mauzo yangu ya mwaka ni milioni 15", re.I)
 
+# 2026-11-16: the `want` patterns for the REWRITTEN rows now match the Swahili text the index serves since 2026-11-13 (they matched the old
+# English row text, so those rows read ">30" -- an artifact, not a regression).
 # (kind, profile, question, want-regex or None)   `want` names the existing row a question needs (None = no row exists / unknown yet)
 E, T, B = "1 EMPLOYER 3-15", "2 TRADER 11M-200M", "3 BOOKKEEPER MIXED"
 EXTRA = [
@@ -32,7 +34,7 @@ EXTRA = [
     ("A", E, "Nalipa mfanyakazi wa nyumbani 150,000 kwa mwezi, je ni sawa?", None),
     ("A", E, "Mfanyakazi wa duka analipwa 200,000 kwa mwezi, je inatosha kisheria?", None),
     ("A", E, "Nalipa mlinzi 120,000 kwa mwezi, ni halali?", None),
-    ("A", E, "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?", r"GN605A rate range|domestic"),
+    ("A", E, "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?", r"mfanyakazi wa nyumbani \(kwa mwezi, GN 605A|Kima cha chini cha mshahara kwa dada wa kazi"),
     ("A", E, "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?", r"GN 605A|GN605A"),
     ("A", E, "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?", r"GN 605A|GN605A"),
     # ── A. ROUTING: presumptive ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -40,6 +42,16 @@ EXTRA = [
     ("A", T, "Nina duka, mauzo milioni 80 kwa mwaka, kodi ya makadirio ni ngapi?", None),
     ("A", T, "Kodi ya duka la rejareja la milioni 80 kwa mwaka?", None),
     ("A", T, "Mauzo ya mwaka ni milioni 150, nalipa kodi gani?", None),
+    # ── F. 2026-11-16 FIXED STATEMENTS: model-free routes for the five live wrong answers, and phrasings that MISS the routes ──
+    ("F", E, "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?", None),
+    ("F", E, "Severance pay inahesabiwaje?", None),
+    ("F", E, "Overtime inalipwa kiasi gani?", None),
+    ("F", E, "Likizo ya mwaka ni siku ngapi?", None),
+    ("F", T, "Nimeuza kwa mkopo, VAT inalipwa lini?", None),
+    ("F", E, "Mfanyakazi wa kila mwezi nikimwachisha, notisi ni ya siku zipi?", None),
+    ("F", E, "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.", None),
+    ("F", E, "Likizo ya mwaka na overtime ni siku ngapi?", None),
+    ("F", T, "Nimeuza kwa mkopo, naomba kujua kuhusu VAT.", None),
     # ── controls that must stay where they are ───────────────────────────────────────────────────────────────────────────────
     ("ctl", E, "Mshahara wa mfanyakazi ni 800,000 kwa mwezi, PAYE ni kiasi gani?", None),
     ("ctl", E, "Je, ni halali kumfukuza mfanyakazi bila notisi?", None),
@@ -48,12 +60,12 @@ EXTRA = [
     ("ctl", T, "Mauzo yangu ni milioni 40 kwa mwaka, nalipa kodi ya makadirio kiasi gani?", None),
     ("ctl", B, "Kampuni ina mapato ya milioni 300, kodi ya mapato ya kampuni ni asilimia ngapi?", None),
     # ── B. EXISTING ROWS THAT DO NOT SURFACE ─────────────────────────────────────────────────────────────────────────────────
-    ("B", E, "Nikichelewa kulipa PAYE kuna adhabu gani?", r"Late PAYE remittance penalty"),
-    ("B", T, "Nikikosa kutoa risiti ya EFD adhabu ni nini?", r"efd tra closure authority"),
-    ("B", B, "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?", r"vat late (return|filing)"),
+    ("B", E, "Nikichelewa kulipa PAYE kuna adhabu gani?", r"Nikichelewa kulipa PAYE adhabu ni nini"),
+    ("B", T, "Nikikosa kutoa risiti ya EFD adhabu ni nini?", r"Nikikosa kutoa risiti ya EFD adhabu ni nini"),
+    ("B", B, "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?", r"Adhabu ya kuchelewa kuwasilisha return ya VAT"),
     ("B", T, "Naweza kudai VAT niliyolipa nikinunua bidhaa za biashara?", r"input VAT"),
-    ("B", B, "Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?", r"provisional tax instalments"),
-    ("B", E, "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?", r"GN605A rate range"),
+    ("B", B, "Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?", r"provisional tax, instalment"),
+    ("B", E, "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?", r"Kima cha chini cha mshahara kwa dada wa kazi"),
     ("B", E, "Je, ni lazima nijisajili WCF nikiwa na wafanyakazi 5?", r"wcf (employer )?registration|WCF.{0,60}(sajili|regist)"),
     ("B", E, "OSHA inahitaji nini kwa duka lenye wafanyakazi 10?", r"OSHA Tanzania: kila mwajiri"),
     # ── C. NEW FACTS: no row exists today (wants are filled in once the facts do) ─────────────────────────────────────────────

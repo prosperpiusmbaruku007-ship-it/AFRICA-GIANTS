@@ -42,6 +42,7 @@ cleaner result than it earned**, which is the defect this whole family keeps pro
 R18: committed before it runs.
 Artifact: eval/results/control_fire_audit.json
 """
+import importlib.util
 import json
 import os
 import subprocess
@@ -974,6 +975,62 @@ def audit_unexercisable():
            'the per-head breakdown and the net-pay answer, both flagged by the loose rule, '
            'plus a negated mention of the fabricated figure',
            _note)
+
+    # ── D-FIDELITY-10, WIRED 2026-11-16 ─────────────────────────────────────────────────
+    # Five founding specimens (the live wrong replies of 2026-11-13) AND the clean limbs that tell a constant comparison from a keyword
+    # match: a correct whole-table notice answer, a negated mention, an NSSF split under an NSSF question, and a correct VAT body.
+    try:
+        from chike import fidelity as _f10
+        _spec10 = {
+            'notice': ('Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?',
+                       'Kwa mfanyakazi wa kila mwezi, notisi ni siku 4.'),
+            'severance': ('Severance pay inahesabiwaje?', 'Anapata mshahara wake wa mwisho + asilimia 25% ya mshahara.'),
+            'overtime': ('Overtime inalipwa kiasi gani?', 'Kiwango cha chini cha overtime ni asilimia 25% ya mshahara wa msingi.'),
+            'annual_leave': ('Likizo ya mwaka ni siku ngapi?', 'Ndiyo, unatakiwa kulipa mshahara kamili wakati wa likizo.'),
+            'vat': ('Nimeuza kwa mkopo, VAT inalipwa lini?', 'Unaweza kuomba kulipa VAT kidogo kidogo.')}
+        _hit10 = {k: bool(_f10.fixed_figure_violations(q, b)) for k, (q, b) in _spec10.items()}
+        _clean10 = [
+            _f10.fixed_figure_violations('Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?',
+                                         'Mwezi wa kwanza siku 7; kisha siku 4 kwa wa kila wiki, siku 28 kwa wa kila mwezi.'),
+            _f10.fixed_figure_violations('Overtime inalipwa kiasi gani?', 'Angalau mara 1.5 ya mshahara wa msingi.'),
+            _f10.fixed_figure_violations('Severance pay inahesabiwaje?', 'Si asilimia 25; ni siku 7 kwa kila mwaka kamili.'),
+            _f10.fixed_figure_violations('NSSF inahesabiwaje kwa wafanyakazi wanaopata overtime?', 'Mwajiri 10% + mfanyakazi 10%.')]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code10 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired10 = 'fidelity.body_contradicts_fixed_figure(' in _code10
+        _v = ('FIRES' if (all(_hit10.values()) and not any(_clean10) and _wired10) else
+              'NOT_WIRED' if (all(_hit10.values()) and not any(_clean10)) else 'ERROR')
+        _note = (f'founding specimens flagged: {_hit10}; clean limbs flagged (must all be empty): {[bool(c) for c in _clean10]}; '
+                 f'wired in orchestrator code (comments stripped): {_wired10}. REPLACES with the whole model-free statement '
+                 f'(not blanking: the fact path returns the body alone). Priced over 6,932 stored rows before wiring: 0 GOLD flags, '
+                 f'but only 13 on-topic rows exist anywhere -- the corpora barely contain these topics, which is why they were gaps; '
+                 f'a lower bound (R21), eval/results/fixed_figure_guard_prewiring_2026_11_16.json.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('D-FIDELITY-10 (fixed statutory figure guard)', 'fidelity',
+           'a fixed statutory figure the model contradicted although the correct fact was at rank 1 (notice, severance, overtime, '
+           'annual leave, VAT time of supply)',
+           _v, 'the five live wrong replies of 2026-11-13', 'a whole-table notice answer, a negated mention, an NSSF split',
+           _note)
+
+    # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
+    try:
+        _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))
+        _hc = importlib.util.module_from_spec(_spec)
+        _spec.loader.exec_module(_hc)
+        _base = {'status': 'pending', 'draft': 'x', 'engine_working': 'w', 'facts': [], 'model_calls': 0, 'guards': [],
+                 'fallback': False}
+        _ok = _hc.engine_only_verdict(dict(_base, answer_path='engine:vat_registration'))[0]
+        _fixed = _hc.engine_only_verdict(dict(_base, answer_path='engine:fixed_statement'))[0]
+        _unknown = _hc.engine_only_verdict(dict(_base, answer_path='engine:brand_new_route'))[0]
+        _v = 'FIRES' if (_ok and not _fixed and not _unknown) else ('OVERBROAD' if not _ok else 'INERT')
+        _note = (f'a model-free allowed engine route is eligible: {_ok} (positive control); the fixed-statement route is eligible: '
+                 f'{_fixed} (must be False); an unknown engine route is eligible: {_unknown} (must be False, fail closed).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('AUTO-SEND route allowlist', 'autosend',
+           'a model-free engine route not explicitly allowed (the fixed statutory statements, or any new route) sending unreviewed',
+           _v, 'engine:fixed_statement with every other condition satisfied', 'engine:vat_registration, same item', _note)
 
     # ── THE PREMISE RESOLVER (2026-10-10) ────────────────────────────────────────────────
     # ⚠️ NOT A FIDELITY GUARD. It does not flag or blank anything — it CORRECTS a lead, and on

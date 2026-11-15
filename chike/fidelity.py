@@ -1146,3 +1146,201 @@ def unsupported_body_figures(question: str, body: str, working: str):
 def body_states_unsupported_figure(question: str, body: str, working: str) -> bool:
     """True iff the body asserts a money figure nothing in the exchange can support."""
     return bool(unsupported_body_figures(question, body, working))
+
+
+# ─── D-FIDELITY-10 — A FIXED STATUTORY FIGURE CONTRADICTED ON THE MODEL PATH ─────────────────────
+# Built 2026-11-16, from the five live answers of the 2026-11-13 coverage deploy, each wrong with the CORRECT fact at RANK 1:
+#
+#     notice         "Kwa mfanyakazi wa kila mwezi, notisi ni siku 4."            (monthly-paid: 28; 4 is the daily/weekly limb)
+#     severance      "...mshahara wake wa mwisho + asilimia 25% ya mshahara..."   (7 days' basic wage per completed year)
+#     overtime       "Kiwango cha chini cha overtime ni asilimia 25% ..."          (not less than 1.5 times basic wage)
+#     annual leave   "Ndiyo, unatakiwa kulipa mshahara kamili wakati wa likizo."   (a non-answer: the figure is at least 28 days)
+#     VAT credit     "...unaweza kuomba kulipa VAT kidogo kidogo..."               (earliest of invoice / payment / supply)
+#
+# R19 SAYS BUILDABLE, by the prescribed test: write the claim the guard would reject ("monthly notice is 4 days", "severance carries a
+# percentage", "overtime is 25%") and ask whether a lawful transformation of the user's own numbers could make it true. None can: these are
+# lookups against fixed statutory constants, and the question supplies at most the LIMB (pay period), never a figure to derive from. The same
+# side of R19 as D-FIDELITY-7/8, and like them it needs no ComputationResult, so it reaches the FACT path.
+#
+# THE TOPIC COMES FROM THE QUESTION (D-FIDELITY-8's N2, provenance). Severance's live body never says "severance" ("Mfanyakazi aliyetimiza
+# miezi 12+ anapata..."); only the question does. A question about ONE topic scans the whole body; a question about SEVERAL scans only the
+# sentences that name the subject, so a correct overtime sentence is never judged by the severance rule.
+#
+# SIX RULES, one per failure shape, and each is a COMPARISON AGAINST A CONSTANT:
+#   notice/limb     the question states the pay period and the body states a notice length for a DIFFERENT limb and never the right one
+#   notice/value    a stated notice length that is no limb of the table and is under 28 (longer may be a contractual extension)
+#   severance       a percentage; a 'siku N' per year with N != 7; a ceiling in years that is not 10; 'months of pay per year'
+#   overtime        a percentage that is not >=150 (or >=50 with a premium word); a multiplier under 1.5
+#   annual leave    a stated 'siku N' under 28 for leave of this kind; and (omission) asked how many days, the body never states 28
+#   vat/time        'only when paid' / instalments / a due date other than the 20th, for a credit-sale VAT question
+#
+# REPLACEMENT, NOT BLANKING -- the fact path returns the body alone, so blanking ships silence. The replacement is the SAME whole statement
+# the model-free route (`rules_engine.fixed_statements`) gives: all limbs, no limb selected, no amount computed. It is therefore safe by the
+# argument D-FIDELITY-8's table copy makes: it performs no selection, so it cannot reproduce a wrong-limb error. UNLIKE D-FIDELITY-7 this one
+# DOES hand the user the right answer, not only a withheld one -- so it moves A2 on these five topics as well as A1. It is still a reply a model
+# path produced (model_calls > 0, guard 'replaced'), so it is never auto-send eligible and always reaches a reviewer.
+#
+# FAILS TOWARD SILENCE: each rule is word-bounded, a figure under a negation ('si 25%') is a MENTION, a sentence naming another levy is skipped
+# (an NSSF "asilimia 10" in an overtime answer is not an overtime rate), and a rule with no clear subject does not fire.
+_FD10_NEG = re.compile(r"(?<![a-z])(?:si|sio|siyo|not|never|badala\s+ya|tofauti\s+na|sivyo)\s*$", re.IGNORECASE)
+_FD10_OTHER_LEVY = re.compile(r"(?<![a-z])(?:nssf|paye|sdl|wcf|zuio|kodi\s+ya\s+mapato|makadirio)", re.IGNORECASE)
+_FD10_PERCENT = re.compile(r"(\d+(?:[.,]\d+)?)\s*%|asilimia\s+(\d+(?:[.,]\d+)?)", re.IGNORECASE)
+_FD10_SIKU = re.compile(r"siku\s+(\d+)|(\d+)\s*(?:days?|siku)", re.IGNORECASE)
+_FD10_PREMIUM = re.compile(r"zaidi|ziada|juu\s+ya|nyongeza|extra|premium|additional", re.IGNORECASE)
+_FD10_TIMES = re.compile(r"mara\s+(\d+(?:[.,]\d+)?)|(\d+(?:[.,]\d+)?)\s*(?:x|×|times)(?![a-z])", re.IGNORECASE)
+_FD10_MONTHLY = re.compile(r"kila\s+mwezi|wa\s+mwezi|mshahara\s+wa\s+mwezi|monthly", re.IGNORECASE)
+_FD10_SHORT = re.compile(r"kila\s+wiki|wa\s+wiki|kila\s+siku|wa\s+siku|daily|weekly", re.IGNORECASE)
+_FD10_FIRST_MONTH = re.compile(r"mwezi\s+wa\s+kwanza|first\s+month|miezi\s+ya\s+kwanza", re.IGNORECASE)
+_FD10_OTHER_LEAVE = re.compile(r"uzazi|ugonjwa|baba|paternity|maternity|sick|msiba|compassionate|mafunzo|bila\s+malipo|unpaid",
+                               re.IGNORECASE)
+_FD10_ASK_COUNT = re.compile(r"ngapi|shingapi|how\s+many|muda\s+gani", re.IGNORECASE)
+_FD10_VAT_ONLY_WHEN_PAID = re.compile(
+    r"baada\s+ya\s+(?:kupokea\s+malipo|mteja\s+kulipa|malipo\s+kupokelewa)|mteja\s+akilipa|malipo\s+yakipokelewa|"
+    r"pale\s+mteja\s+atakapolipa|only\s+(?:when|after)\s+(?:you\s+are\s+|the\s+customer\s+)?paid", re.IGNORECASE)
+_FD10_VAT_INSTALMENT = re.compile(r"kidogo\s+kidogo|kwa\s+awamu|instal+ments?|awamu", re.IGNORECASE)
+_FD10_VAT_EARLIEST = re.compile(r"mapema|earliest|invoice|ankara|usambazaji|supply", re.IGNORECASE)
+_FD10_DATE = re.compile(r"tarehe\s+(\d+)", re.IGNORECASE)
+_FD10_SUBJECT_WORDS = {
+    "notice": re.compile(r"(?<![a-z])(?:notisi|notice)(?![a-z])", re.IGNORECASE),
+    "severance": re.compile(r"severance|malipo\s+ya\s+kuachishwa", re.IGNORECASE),
+    "overtime": re.compile(r"overtime|(?:saa|masaa)\s+(?:za|ya)\s+(?:ziada|nyongeza)", re.IGNORECASE),
+    "annual_leave": re.compile(r"likizo|annual\s+leave", re.IGNORECASE),
+    "vat_time_of_supply": re.compile(r"(?<![a-z])vat(?![a-z])", re.IGNORECASE),
+}
+
+
+def _fd10_num(s):
+    return float(s.replace(",", "."))
+
+
+def _fd10_negated(sentence, pos):
+    return bool(_FD10_NEG.search(sentence[max(0, pos - 24):pos]))
+
+
+def _fd10_scope(topic, question_topics, body):
+    """The sentences of `body` the rule for `topic` may judge. One question topic -> the whole body; several -> only sentences naming the subject."""
+    sentences = [s for s in _SENTENCE_SPLIT.split(body) if s and s.strip()]
+    sentences = [s for s in sentences if not _FD10_OTHER_LEVY.search(s)]
+    if len(question_topics) == 1:
+        return sentences
+    return [s for s in sentences if _FD10_SUBJECT_WORDS[topic].search(s)]
+
+
+def _fd10_notice(question, scope):
+    ql = question.lower()
+    monthly, short, first = (bool(_FD10_MONTHLY.search(ql)), bool(_FD10_SHORT.search(ql)), bool(_FD10_FIRST_MONTH.search(ql)))
+    expected = None
+    if sum((monthly, short, first)) == 1:
+        expected = 28 if monthly else (4 if short else 7)
+    stated = []
+    for s in scope:
+        for m in _FD10_SIKU.finditer(s):
+            if _fd10_negated(s, m.start()):
+                continue
+            stated.append(int(m.group(1) or m.group(2)))
+    out = []
+    for n in stated:
+        if n not in (4, 7, 28) and n < 28:
+            out.append(f"notice/value:{n}")
+    if expected is not None and stated and expected not in stated and any(n in (4, 7, 28) for n in stated):
+        out.append(f"notice/limb:expected {expected}, stated {sorted(set(stated))}")
+    return out
+
+
+def _fd10_severance(scope):
+    out = []
+    for s in scope:
+        for m in _FD10_PERCENT.finditer(s):
+            if not _fd10_negated(s, m.start()):
+                out.append(f"severance/percent:{m.group(0).strip()}")
+        for m in _FD10_SIKU.finditer(s):
+            n = int(m.group(1) or m.group(2))
+            if n != 7 and re.search(r"kila\s+mwaka|kwa\s+mwaka|per\s+year|each\s+year", s, re.IGNORECASE) \
+                    and not _fd10_negated(s, m.start()):
+                out.append(f"severance/days-per-year:{n}")
+        for m in re.finditer(r"(?:hadi|isizidi|kikomo|max(?:imum)?|up\s+to)\s+(?:cha\s+)?(?:miaka\s+)?(\d+)\s*(?:miaka|years)?", s, re.IGNORECASE):
+            if int(m.group(1)) != 10 and re.search(r"miaka|years", m.group(0), re.IGNORECASE) \
+                    and not _fd10_negated(s, m.start()):
+                out.append(f"severance/ceiling:{m.group(1)}")
+        if re.search(r"(?:\d+|mmoja|miwili|mitatu)\s+(?:mwezi|miezi)\s+(?:wa\s+mshahara\s+)?kwa\s+kila\s+mwaka", s, re.IGNORECASE):
+            out.append("severance/months-per-year")
+    return out
+
+
+def _fd10_overtime(scope):
+    out = []
+    for s in scope:
+        premium = bool(_FD10_PREMIUM.search(s))
+        for m in _FD10_PERCENT.finditer(s):
+            p = _fd10_num(m.group(1) or m.group(2))
+            lawful = p >= (50 if premium else 150)
+            if not lawful and not _fd10_negated(s, m.start()):
+                out.append(f"overtime/percent:{m.group(0).strip()}")
+        for m in _FD10_TIMES.finditer(s):
+            x = _fd10_num(m.group(1) or m.group(2))
+            if x < 1.5 and not _fd10_negated(s, m.start()):
+                out.append(f"overtime/multiplier:{m.group(0).strip()}")
+    return out
+
+
+def _fd10_annual_leave(question, scope):
+    out, stated_28 = [], False
+    for s in scope:
+        if _FD10_OTHER_LEAVE.search(s):
+            continue
+        for m in _FD10_SIKU.finditer(s):
+            n = int(m.group(1) or m.group(2))
+            if n >= 28:
+                stated_28 = stated_28 or n == 28
+            elif re.search(r"likizo|leave", s, re.IGNORECASE) and not _fd10_negated(s, m.start()):
+                out.append(f"annual_leave/value:{n}")
+        if re.search(r"wiki\s+(?:4|nne)(?![\d])|(?<!\d)28(?!\d)", s):
+            stated_28 = True
+    if not out and not stated_28 and _FD10_ASK_COUNT.search(question) and not _FD10_OTHER_LEAVE.search(question):
+        out.append("annual_leave/omission:28 not stated")
+    return out
+
+
+def _fd10_vat(scope):
+    out = []
+    for s in scope:
+        if any(not _fd10_negated(s, m.start()) for m in _FD10_VAT_INSTALMENT.finditer(s)):
+            out.append("vat/instalments")
+        if any(not _fd10_negated(s, m.start()) for m in _FD10_VAT_ONLY_WHEN_PAID.finditer(s))                 and not _FD10_VAT_EARLIEST.search(s):
+            out.append("vat/only-when-paid")
+        for m in _FD10_DATE.finditer(s):
+            if int(m.group(1)) != 20 and re.search(r"(?<![a-z])vat(?![a-z])", s, re.IGNORECASE) and not _fd10_negated(s, m.start()):
+                out.append(f"vat/date:{m.group(1)}")
+    return out
+
+
+def fixed_figure_violations(question: str, body: str):
+    """[(topic, reason)] for every fixed statutory figure the body contradicts. Empty when the question is not about a fixed-statement topic."""
+    if not body or not question:
+        return []
+    if _FD10_OTHER_LEVY.search(question):
+        return []                  # another levy is named: a different question (priced: an NSSF-on-overtime answer was flagged on its "10%")
+    from .routing import fixed_statement_topics
+    topics = fixed_statement_topics(question)
+    out = []
+    for topic in topics:
+        scope = _fd10_scope(topic, topics, body)
+        if not scope:
+            continue
+        if topic == "notice":
+            reasons = _fd10_notice(question, scope)
+        elif topic == "severance":
+            reasons = _fd10_severance(scope)
+        elif topic == "overtime":
+            reasons = _fd10_overtime(scope)
+        elif topic == "annual_leave":
+            reasons = _fd10_annual_leave(question, scope)
+        else:
+            reasons = _fd10_vat(scope)
+        out += [(topic, r) for r in reasons]
+    return out
+
+
+def body_contradicts_fixed_figure(question: str, body: str) -> bool:
+    """True iff the body contradicts a fixed statutory figure for a topic the QUESTION is about."""
+    return bool(fixed_figure_violations(question, body))

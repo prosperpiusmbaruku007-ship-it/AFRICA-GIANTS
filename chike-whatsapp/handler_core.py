@@ -1501,6 +1501,18 @@ def parse_autosend(flag, after_s):
     return on, secs
 
 
+# ⛔ ROUTE ALLOWLIST for the unreviewed send (2026-11-16, founder's decision, a NARROWING of the R7 amendment). `model_calls == 0` says
+# no model wrote a word; it does not say the route's content has earned an unreviewed send. A route is eligible ONLY if named here,
+# so a NEW engine route is not eligible until someone adds it on purpose -- unknown = not eligible (fails closed). The fixed statutory
+# statements (notice, severance, overtime, annual leave, VAT time of supply) are model-free and DELIBERATELY ABSENT: during the pilot
+# they go to review like a model answer, but with a correct draft. They are also named in the exclusion set so the refusal reason
+# says why, and so deleting the allowlist entry alone cannot re-admit them.
+AUTOSEND_ELIGIBLE_ENGINE_ROUTES = frozenset({
+    "engine:sdl", "engine:nssf", "engine:paye", "engine:wcf", "engine:minimum_wage", "engine:vat_registration",
+    "engine:efd_requirement", "engine:presumptive", "engine:corporate_tax", "engine:partnership_tax", "engine:rent_wht"})
+AUTOSEND_EXCLUDED_ENGINE_ROUTES = frozenset({"engine:fixed_statement"})
+
+
 def engine_only_verdict(item):
     """(bool, reason). True ONLY for a reply with no model-written word in it.
 
@@ -1514,6 +1526,10 @@ def engine_only_verdict(item):
     for part in path.split("+"):
         if not part.startswith("engine:") or part.endswith(":ask"):
             return False, f"path {path!r} is not engine-only"
+        if part in AUTOSEND_EXCLUDED_ENGINE_ROUTES:
+            return False, f"route {part!r} is excluded from unreviewed sending during the pilot (reviewed like a model answer)"
+        if part not in AUTOSEND_ELIGIBLE_ENGINE_ROUTES:
+            return False, f"route {part!r} is not on the auto-send allowlist (unknown route: fails closed)"
     if not str(item.get("engine_working") or "").strip():
         return False, "no deterministic working"
     if evidence_is_loud(item):
@@ -1590,6 +1606,9 @@ def autosend_note(item, now=None, after_s=AUTOSEND_AFTER_S, enabled=True):
     if ok:
         return (f"⏱️ AUTO-SEND: jibu hili la injini (halina maneno ya modeli) litatumwa lenyewe saa {when} usipoliangalia.",
                 f"AUTO-SEND: this model-free engine answer SENDS ITSELF at {when} unless you act.")
+    if any(part in AUTOSEND_EXCLUDED_ENGINE_ROUTES for part in str(item.get("answer_path") or "").split("+")):
+        return (f"⏱️ JIBU LA SHERIA (halina modeli): halitatumwa lenyewe — linahitaji mtu aliyekagua. Saa {when} mteja atapata ujumbe wa kusubiri tu.",
+                f"FIXED STATEMENT (model-free, a correct draft): reviewed like a model answer, never auto-sent. At {when} the participant gets a holding message only.")
     return (f"⏱️ JIBU LA MODELI: halitatumwa bila kukaguliwa. Saa {when} mteja atapata ujumbe wa kusubiri tu.",
             f"MODEL ANSWER: never auto-sent. At {when} the participant gets a holding message only ({why}).")
 

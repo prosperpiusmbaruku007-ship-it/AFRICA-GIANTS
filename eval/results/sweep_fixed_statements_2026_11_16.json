@@ -1,0 +1,198 @@
+{
+ "corpus_strings": 8154,
+ "changed": [],
+ "probes": [
+  {
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Severance pay inahesabiwaje?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Overtime inalipwa kiasi gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nikitaka kumfukuza mfanyakazi, notisi ni ya siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi anataka kuacha kazi, anatakiwa kutoa notisi ya muda gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Malipo ya kuachishwa kazi ni kiasi gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi aliyeachishwa anastahili severance?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Saa za ziada nalipa vipi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Annual leave ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi anastahili likizo ya mwaka kwa siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nimetoa invoice, mteja hajalipa bado, VAT inadaiwa lini?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "How many days notice must I give an employee?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nimemfukuza mfanyakazi, mshahara wake 500,000, notisi ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya ugonjwa ni siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya mwaka ni bila malipo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Overtime inakatwa NSSF kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi alifanya overtime masaa 10, mshahara 800,000, PAYE ni kiasi gani?",
+   "want": "paye",
+   "got": "paye",
+   "was": "paye"
+  },
+  {
+   "q": "Severance inaingia kwenye hesabu ya SDL?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Notisi ya TRA ya ukaguzi ni siku ngapi kujibu?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Notisi ya kupandisha kodi ya pango ni siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa overtime na severance kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT return nawasilisha lini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT inalipwa lini kwenye mauzo ya nje?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kiasi gani kitatozwa nikichelewa kulipa VAT ya invoice?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nimeuza kwa mkopo, nahitaji mashine ya EFD?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nimeuza kwa mkopo mauzo milioni 250 kwa mwaka, je nijisajili VAT?",
+   "want": "vat_registration",
+   "got": "vat_registration",
+   "was": "vat_registration"
+  },
+  {
+   "q": "Mfanyakazi akikataa kuchukua likizo ya mwaka je?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mkataba wa kazi ni lazima uandikwe?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nalipa mfanyakazi wa duka 200,000 kwa mwezi, ni halali?",
+   "want": "minimum_wage",
+   "got": "minimum_wage",
+   "was": "minimum_wage"
+  }
+ ]
+}
