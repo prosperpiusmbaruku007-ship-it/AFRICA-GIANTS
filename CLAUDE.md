@@ -1352,7 +1352,7 @@ decays the same way):
 **⚠️ WHAT WOULD MAKE THIS READING STOP APPLYING — stated so a later session cannot quietly
 widen it.** Any one of these ends it and puts the cohort back under R7 as a launch:
 
-1. **auto-sending any class of reply**, however safe it looks;
+1. **auto-sending any reply that is not a model-free engine answer on the allowlist**, however safe it looks. *(Reworded 2026-11-16 to say what the 2026-11-13 amendment already allowed; the original read "auto-sending any class of reply, however safe it looks", which on its face banned what the amendment permits and left the list disagreeing with the code. Nothing is weakened: the one permitted class is a reply with `model_calls == 0`, no guard fired, the engine's working and a non-empty evidence block present, on a route named in `handler_core.AUTOSEND_ELIGIBLE_ENGINE_ROUTES`, sent after 15 minutes only when `AUTOSEND_ENGINE` is on and prefixed as an unchecked automated calculation; every other class — a fact, a clarification, a refusal, a fallback, a model-path reply of any kind, a fixed statement, an unknown route — may not send unreviewed, and items 2, 2a, 2b and 2c still say so.)*;
 2. **a MODEL-WRITTEN draft sending because a timeout expired** — *amended 2026-11-13: this line used to read "a draft
    sending because a timeout expired" and now excepts the model-free engine answers the amendment above permits.* Named
    separately from (1) because it is the form that arrives as an operational convenience rather than a product decision, and

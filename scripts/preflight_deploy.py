@@ -183,13 +183,16 @@ def check_whatsapp_health(h, today=None):
             f"env var baked into the image — a deploy without it silently reverts to 0 "
             f"(monitor-only) and the pilot loses its over-capacity signal.")
     rt = (h or {}).get("review_timeout")
-    if isinstance(rt, dict) and rt.get("enabled") is not True:
-        # 2026-11-13: AUTOSEND_ENGINE / AUTOSEND_AFTER_S are deploy-time env like COHORT_SIZE. Omitting them silently turns
-        # the 15-minute rule OFF -- the SAFE direction (every draft waits for a human, no holding message goes out), so
-        # a loud warning rather than a refusal, but the founder must not believe the timeout is running.
-        WARNINGS.append(
-            f"THE REVIEW TIMEOUT IS OFF (raw flag {rt.get('raw_flag')!r}, raw after_s {rt.get('raw_after_s')!r}). "
-            f"Engine answers will NOT auto-send and no holding message will be sent; every draft waits for a human.")
+    if not isinstance(rt, dict) or rt.get("enabled") is not True:
+        # 2026-11-13 this was a loud WARNING ("the SAFE direction: every draft waits for a human"). 2026-11-16, founder: REFUSE.
+        # It is safe for R7 and it is not safe for the pilot: with it off no holding message is ever sent either, so a participant
+        # whose question is not reviewed within 15 minutes gets SILENCE, and the 2026-11-15 deploy shipped exactly that while every
+        # gate was green. No override: an override for 'send nothing, tell nobody' is the setting nobody should reach by habit.
+        fails.append(
+            f"review_timeout.enabled is {(rt or {}).get('enabled')!r} (raw flag {(rt or {}).get('raw_flag')!r}, raw after_s "
+            f"{(rt or {}).get('raw_after_s')!r}); auto-send / the holding message must be ON. AUTOSEND_ENGINE and AUTOSEND_AFTER_S "
+            f"come from chike-whatsapp/deploy_tunables.json. Off means no holding message is ever sent: an unreviewed question "
+            f"gets silence.")
     roster = (h or {}).get("roster") or {}
     if roster.get("can_issue_links") is not True:
         fails.append(
@@ -253,6 +256,48 @@ def check_whatsapp_health(h, today=None):
     return fails
 
 
+def _tunables_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("deploy_tunables", os.path.join(REPO, "chike-whatsapp", "deploy_tunables.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def check_tunables(image_h, live_h, committed, live_err=None, override=None):
+    """Pure. (fails, warnings) comparing the image the pre-flight built with the COMMITTED file and with the LIVE app (2026-11-16).
+
+    (a) image vs committed file: ALWAYS a refusal. The image is built from that file, so a difference means the env reached the image some
+        other way or a value failed to bake -- the deploy would not ship what the repo says it ships.
+    (b) image vs live /health: a refusal on ANY difference, unless `override` (a written reason, CHIKE_TUNABLES_OVERRIDE) says the
+        difference is intended; then it is listed as a loud warning. A live app that cannot be read is also a refusal (cannot evaluate is
+        not a pass) -- also overridable, because a first-ever deploy has no live app to compare with.
+    A missing field on either side is a difference: it never equals a value."""
+    dt = _tunables_module()
+    fails, warns = [], []
+    iv = dt.health_view(image_h)
+    d_file = dt.diff_views(dt.expected_view(committed), iv, "committed", "image")
+    if d_file:
+        fails.append("the built image does not carry what deploy_tunables.json says: " + "; ".join(d_file))
+    if live_h is None:
+        msg = (f"the LIVE app's /health could not be read ({live_err}), so the tunables could not be compared with what is serving. "
+               f"Cannot evaluate, which is NOT a pass.")
+        if override:
+            warns.append(msg + f" OVERRIDDEN: {override}")
+        else:
+            fails.append(msg + " Set CHIKE_TUNABLES_OVERRIDE to a written reason only for a first-ever deploy.")
+        return fails, warns
+    d_live = dt.diff_views(dt.health_view(live_h), iv, "live", "image")
+    if d_live:
+        msg = "tunables differ from the LIVE app: " + "; ".join(d_live)
+        if override:
+            warns.append(f"{msg}. OVERRIDDEN (CHIKE_TUNABLES_OVERRIDE): {override}")
+        else:
+            fails.append(f"{msg}. If this change is intended, set CHIKE_TUNABLES_OVERRIDE to a written reason (and commit the new "
+                         f"value in deploy_tunables.json); if it is not, the deploy would silently change the pilot's settings.")
+    return fails, warns
+
+
 _HEALTH_URL = re.compile(r"https://[A-Za-z0-9.-]+--[A-Za-z0-9-]*health[A-Za-z0-9.-]*\.modal\.run")
 
 
@@ -276,7 +321,13 @@ def _fetch_health(url, attempts=4):
 
 
 # ── GATE 3 ───────────────────────────────────────────────────────────────────────
-def gate_real_build(path, app_name):
+def _live_health_url(preview_url):
+    """The live app's /health URL, derived from the throwaway app's (`chike-whatsapp-preflight-health` -> `chike-whatsapp-health`)."""
+    live = (preview_url or "").replace("-preflight-", "-", 1)
+    return live if live and live != preview_url else None
+
+
+def gate_real_build(path, app_name, tunables_file=None):
     """Deploy the SAME FILE under a throwaway app name, then stop it.
 
     This is the only gate that catches a build failure nobody anticipated — the category both
@@ -289,6 +340,8 @@ def gate_real_build(path, app_name):
     # Only the THROWAWAY build drops cron metadata (workspace limit: 5 scheduled functions; see
     # _sched() in modal_whatsapp.py). The stop/deploy commands below this function never get it.
     build_env = dict(env, CHIKE_PREFLIGHT_NO_SCHEDULE="1")
+    if tunables_file:
+        build_env["CHIKE_TUNABLES_FILE"] = os.path.abspath(tunables_file)         # a test seam: honoured only in this throwaway build
     p = subprocess.run([sys.executable, "-m", "modal", "deploy", "--name", pre, path],
                        cwd=REPO, capture_output=True, text=True, encoding="utf-8",
                        errors="replace", env=build_env)
@@ -308,6 +361,17 @@ def gate_real_build(path, app_name):
                              f"which is NOT a pass.")
             else:
                 extra += [f"GATE 3b: {f}" for f in check_whatsapp_health(h)]
+                try:
+                    committed = _tunables_module().load(tunables_file)
+                except Exception as e:                                               # noqa: BLE001
+                    extra.append(f"GATE 3b: the committed tunables could not be loaded ({e}). Cannot evaluate, which is NOT a pass.")
+                    committed = None
+                if committed is not None:
+                    live_url = _live_health_url(url)
+                    live_h, live_err = _fetch_health(live_url) if live_url else (None, "could not derive the live /health URL")
+                    f2, w2 = check_tunables(h, live_h, committed, live_err, os.environ.get("CHIKE_TUNABLES_OVERRIDE") or None)
+                    extra += [f"GATE 3b: {f}" for f in f2]
+                    WARNINGS.extend(w2)
     # Stop the preflight app whatever happened, so a failed run does not leave one behind.
     subprocess.run([sys.executable, "-m", "modal", "app", "stop", pre, "--yes"],
                    cwd=REPO, capture_output=True, text=True, env=env)
@@ -324,6 +388,9 @@ def main():
                     default="chike-inference/modal_app.py")
     ap.add_argument("--app-name", default=None,
                     help="live app name; defaults to the modal.App(...) literal in the file")
+    ap.add_argument("--tunables-file", default=None,
+                    help="TEST SEAM: build the throwaway app from this tunables file instead of the committed one (to plant a missing "
+                         "or changed value). Never carried to the real deploy.")
     ap.add_argument("--no-build", action="store_true",
                     help="gates 1-2 only (offline). NOT a full pre-flight.")
     args = ap.parse_args()
@@ -374,7 +441,7 @@ def main():
     elif all_fails:
         print("  GATE 3 real build   : SKIPPED — earlier gates already failed")
     else:
-        build, pre = gate_real_build(args.app_file, app_name)
+        build, pre = gate_real_build(args.app_file, app_name, args.tunables_file)
         print(f"  GATE 3 real build   : {'OK' if not build else 'FAIL'}  (as {pre}, stopped)")
         all_fails += build
 
@@ -396,10 +463,9 @@ def main():
           f"    python -m modal deploy {args.app_file}\n"
           "  then verify: GET /health (build == the SHA), and ?deep=1 for the served digest.")
     if app_name == WHATSAPP_APP:
-        print("\n  ⚠️ GATE 3b validated the image built with THIS shell's env "
-              "(COHORT_SIZE, REVIEW_*_URL, ...). The deploy must carry the SAME values — "
-              "export them once and run both commands in this shell, or the check certified "
-              "a different image from the one that ships.")
+        print("\n  GATE 3b compared the image with chike-whatsapp/deploy_tunables.json AND with the live app's /health. The deploy "
+              "reads the same committed file itself, so no env vars need to be exported for it (a shell value that differs from the "
+              "file aborts the deploy). Afterwards, read /health once more: build == HEAD and every tunable unchanged.")
     return 0
 
 

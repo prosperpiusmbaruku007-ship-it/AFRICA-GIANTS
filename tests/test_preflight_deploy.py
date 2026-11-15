@@ -382,13 +382,14 @@ def test_configured_but_the_last_ping_failed_warns_loudly_and_does_not_refuse():
     assert pf.WARNINGS == []
 
 
-def test_a_deploy_that_silently_drops_the_review_timeout_warns_loudly_and_does_not_refuse():
+def test_a_deploy_that_silently_drops_the_review_timeout_is_now_REFUSED():
+    """History: until 2026-11-16 this asserted the OPPOSITE (a loud warning, 'the safe direction'). Founder's decision: refuse -- with the
+    timeout off no holding message is ever sent. The full planted set lives in tests/test_deploy_tunables.py."""
     import copy
     del pf.WARNINGS[:]
     h = copy.deepcopy(_GOOD_WA)
     h["review_timeout"] = {"enabled": False, "raw_flag": None, "raw_after_s": None}
-    assert pf.check_whatsapp_health(h, today="2026-11-14") == []
-    assert "THE REVIEW TIMEOUT IS OFF" in " ".join(pf.WARNINGS)
+    assert any("review_timeout.enabled" in f for f in pf.check_whatsapp_health(h, today="2026-11-14"))
     del pf.WARNINGS[:]
     pf.check_whatsapp_health(_GOOD_WA, today="2026-11-14")
     assert pf.WARNINGS == []

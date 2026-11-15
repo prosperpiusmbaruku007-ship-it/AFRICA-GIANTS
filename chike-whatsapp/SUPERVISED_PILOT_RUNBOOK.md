@@ -75,16 +75,16 @@ would become a seat that can never be notified and never acts, quietly lowering 
 
 ### 1b. The deploy
 
+**Since 2026-11-16 the tunables are NOT in your shell.** They live in `chike-whatsapp/deploy_tunables.json` (committed, secret-free) and
+`modal_whatsapp.py` reads that file itself, so the command below cannot go out without them. A shell value that DIFFERS from the file aborts
+the deploy (`DEPLOY REFUSED`) unless `CHIKE_TUNABLES_OVERRIDE` carries a written reason. To change a tunable: edit the file, commit, push, and
+run the pre-flight with `CHIKE_TUNABLES_OVERRIDE="<why>"` -- the pre-flight otherwise REFUSES any difference between the image it builds and the
+LIVE app's /health (and refuses outright if auto-send is off).
+
 ```bash
 python scripts/preflight_deploy.py chike-whatsapp/modal_whatsapp.py   # must exit 0 FIRST
 python -m modal app stop chike-whatsapp --yes
-CHIKE_BUILD=$(git rev-parse --short HEAD) \
-  REVIEW_D_URL=https://<ws>--chike-whatsapp-d.modal.run \
-  REVIEW_CLAIM_URL=https://<ws>--chike-whatsapp-review-claim.modal.run \
-  REVIEW_ACT_URL=https://<ws>--chike-whatsapp-review-act.modal.run \
-  COHORT_SIZE=15 CLAIM_TTL_S=900 RENOTIFY_AFTER_S=420 MAX_RENOTIFIES=0 \
-  AUTOSEND_ENGINE=1 AUTOSEND_AFTER_S=900 \
-  PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
+CHIKE_BUILD=$(git rev-parse --short HEAD) PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \
   python -m modal deploy chike-whatsapp/modal_whatsapp.py
 ```
 

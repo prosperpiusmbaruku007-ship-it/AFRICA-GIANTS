@@ -100,11 +100,42 @@ _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLA
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
                     "INFERENCE_HEALTH_URL")
 
+def _committed_tunables():
+    """The deploy-time tunables from the COMMITTED, secret-free `deploy_tunables.json` (2026-11-16), applied whatever the deploying shell holds.
+
+    Twice a deploy shipped the wrong settings because the values lived in the deploying shell's environment (2026-11-10 bare deploy;
+    2026-11-15 exports that did not persist between shell calls). Now the deploy command CANNOT go out without them. A shell value that
+    DIFFERS from the file aborts the deploy here, before anything is built, unless CHIKE_TUNABLES_OVERRIDE (a written reason) is set; the
+    override makes the shell value win and scripts/preflight_deploy.py then reports the difference from the live app loudly.
+    LOCAL ONLY: inside the container the values are already baked, and the sibling module is not guaranteed importable there.
+    CHIKE_TUNABLES_FILE is honoured ONLY in the pre-flight's throwaway build (the same switch as _sched), so it is a test seam for planting
+    a missing or changed value and can never redirect a real deploy.
+    """
+    if not modal.is_local():
+        return {}
+    import sys
+    sys.path.insert(0, _HERE)
+    import deploy_tunables as dt
+    path = os.environ.get("CHIKE_TUNABLES_FILE") if os.environ.get("CHIKE_PREFLIGHT_NO_SCHEDULE") == "1" else None
+    committed = dt.load(path)
+    assert set(committed) <= set(_DEPLOY_TUNABLES), "deploy_tunables.json names a key modal_whatsapp does not bake"
+    conflicts = dt.env_conflicts(committed, os.environ)
+    if conflicts and not os.environ.get("CHIKE_TUNABLES_OVERRIDE"):
+        raise RuntimeError(
+            "DEPLOY REFUSED: the shell sets tunables that differ from the committed deploy_tunables.json: "
+            + "; ".join(f"{k}: shell {a!r} != committed {b!r}" for k, (a, b) in sorted(conflicts.items()))
+            + ". Edit and commit the file, or set CHIKE_TUNABLES_OVERRIDE to a written reason.")
+    return {**committed, **{k: a for k, (a, _b) in conflicts.items()}}
+
+
+_TUNABLES = _committed_tunables()
+
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install("fastapi[standard]", "httpx")
     .env({"CHIKE_BUILD": BUILD,
-          **{k: os.environ[k] for k in _DEPLOY_TUNABLES if os.environ.get(k)}})
+          **{k: os.environ[k] for k in _DEPLOY_TUNABLES if os.environ.get(k)},
+          **_TUNABLES})
     .add_local_dir(_HERE, "/root/chike_whatsapp")
 )
 

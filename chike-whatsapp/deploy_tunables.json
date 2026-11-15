@@ -1,0 +1,17 @@
+{
+  "_note": "THE ONE COMMITTED, SECRET-FREE SOURCE of the chike-whatsapp deploy-time tunables (2026-11-16). modal_whatsapp.py bakes these into the image whatever the deploying shell holds, so a deploy command cannot go out without them. Values equal the live /health of 2026-11-15 (build 00516ec). Credentials (roster, signing key, tokens) are NEVER here: they live in the Modal Secret. Change a value here, commit it, and the pre-flight will refuse until CHIKE_TUNABLES_OVERRIDE records why live is meant to differ.",
+  "COHORT_SIZE": "15",
+  "CLAIM_TTL_S": "900",
+  "RENOTIFY_AFTER_S": "420",
+  "MAX_RENOTIFIES": "0",
+  "AUTOSEND_ENGINE": "1",
+  "AUTOSEND_AFTER_S": "900",
+  "SUPERVISED": "1",
+  "MODEL_TIMEOUT_S": "240",
+  "SUPERVISED_MODEL_TIMEOUT_S": "1800",
+  "SLOW_ACK_AFTER_S": "12",
+  "SECOND_ACK_AFTER_S": "45",
+  "REVIEW_D_URL": "https://prosperpiusmbaruku007--chike-whatsapp-d.modal.run",
+  "REVIEW_CLAIM_URL": "https://prosperpiusmbaruku007--chike-whatsapp-review-claim.modal.run",
+  "REVIEW_ACT_URL": "https://prosperpiusmbaruku007--chike-whatsapp-review-act.modal.run"
+}
