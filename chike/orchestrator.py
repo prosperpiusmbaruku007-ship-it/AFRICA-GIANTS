@@ -1138,9 +1138,11 @@ class Orchestrator:
             # body alone, so blanking ships silence), and replaced with the SAME whole statement the model-free route gives:
             # every limb, none selected, no amount computed -- so unlike D-FIDELITY-7 it hands over the right answer.
             # The reply is still a model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
-            topic = fidelity.fixed_figure_violations(sub.sub_question.text, cleaned)[0][0]
+            # The WHOLE body is replaced, so the replacement answers EVERY fixed-statement topic the question names (a two-part
+            # question must not lose its second limb), each as its own whole statement.
+            topics = routing.fixed_statement_topics(sub.sub_question.text)
             return dataclasses.replace(
-                sub, text=rules_engine.fixed_statement(topic).working,
+                sub, text="\n\n".join(rules_engine.fixed_statement(t).working for t in topics),
                 raw_text=sub.text, needs_clarification=False, guard="replaced")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)
 

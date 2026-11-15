@@ -1258,6 +1258,10 @@ def _fd10_severance(scope):
             if n != 7 and re.search(r"kila\s+mwaka|kwa\s+mwaka|per\s+year|each\s+year", s, re.IGNORECASE) \
                     and not _fd10_negated(s, m.start()):
                 out.append(f"severance/days-per-year:{n}")
+            elif n not in (4, 7, 28) and not _fd10_negated(s, m.start()):
+                # live 2026-11-16: "yanatakiwa kulipwa ndani ya siku 30 baada ya kumaliza huduma" -- a payment deadline the fact does
+                # not contain. 4/7/28 are the notice-table limbs and 7 is the severance figure; any other day count is invented.
+                out.append(f"severance/days:{n}")
         for m in re.finditer(r"(?:hadi|isizidi|kikomo|max(?:imum)?|up\s+to)\s+(?:cha\s+)?(?:miaka\s+)?(\d+)\s*(?:miaka|years)?", s, re.IGNORECASE):
             if int(m.group(1)) != 10 and re.search(r"miaka|years", m.group(0), re.IGNORECASE) \
                     and not _fd10_negated(s, m.start()):
@@ -1283,9 +1287,9 @@ def _fd10_overtime(scope):
     return out
 
 
-def _fd10_annual_leave(question, scope):
+def _fd10_annual_leave(question, scope, whole=()):
     out, stated_28 = [], False
-    for s in scope:
+    for s in list(scope) + [w for w in whole if w not in scope]:
         if _FD10_OTHER_LEAVE.search(s):
             continue
         for m in _FD10_SIKU.finditer(s):
@@ -1325,8 +1329,8 @@ def fixed_figure_violations(question: str, body: str):
     out = []
     for topic in topics:
         scope = _fd10_scope(topic, topics, body)
-        if not scope:
-            continue
+        if not scope and topic != "annual_leave":
+            continue                # annual leave's OMISSION rule must still run on a body that never mentions leave at all
         if topic == "notice":
             reasons = _fd10_notice(question, scope)
         elif topic == "severance":
@@ -1334,7 +1338,8 @@ def fixed_figure_violations(question: str, body: str):
         elif topic == "overtime":
             reasons = _fd10_overtime(scope)
         elif topic == "annual_leave":
-            reasons = _fd10_annual_leave(question, scope)
+            reasons = _fd10_annual_leave(question, scope, [x for x in _SENTENCE_SPLIT.split(body) if x and x.strip()
+                                                           and not _FD10_OTHER_LEVY.search(x)])
         else:
             reasons = _fd10_vat(scope)
         out += [(topic, r) for r in reasons]

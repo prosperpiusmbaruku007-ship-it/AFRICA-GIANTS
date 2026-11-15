@@ -1,96 +1,96 @@
 {
- "corpus_strings": 8154,
+ "corpus_strings": 8156,
  "changed": [],
  "probes": [
   {
    "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Severance pay inahesabiwaje?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Overtime inalipwa kiasi gani?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Likizo ya mwaka ni siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Nikitaka kumfukuza mfanyakazi, notisi ni ya siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Mfanyakazi anataka kuacha kazi, anatakiwa kutoa notisi ya muda gani?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Malipo ya kuachishwa kazi ni kiasi gani?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Mfanyakazi aliyeachishwa anastahili severance?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Saa za ziada nalipa vipi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Annual leave ni siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Mfanyakazi anastahili likizo ya mwaka kwa siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Nimetoa invoice, mteja hajalipa bado, VAT inadaiwa lini?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "How many days notice must I give an employee?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Nimemfukuza mfanyakazi, mshahara wake 500,000, notisi ni siku ngapi?",
    "want": "fixed_statement",
    "got": "fixed_statement",
-   "was": "none"
+   "was": "fixed_statement"
   },
   {
    "q": "Likizo ya uzazi ni siku ngapi?",

@@ -2,13 +2,43 @@
  "population": {
   "GOLD": 428,
   "PAIRED": 4400,
-  "STORED": 2034
+  "STORED": 2060
  },
  "on_topic": {
   "PAIRED|overtime": 10,
   "PAIRED|severance": 2,
-  "PAIRED|notice": 1
+  "PAIRED|notice": 1,
+  "STORED|vat_time_of_supply": 3,
+  "STORED|notice": 2,
+  "STORED|severance": 3,
+  "STORED|overtime": 3,
+  "STORED|annual_leave": 2
  },
  "founding_specimens_flagged": 5,
- "flags": []
+ "flags": [
+  {
+   "population": "STORED",
+   "id": "fixed_statements_deploy_live_2026_11_16.json:?",
+   "question": "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+   "violations": [
+    [
+     "severance",
+     "severance/days:30"
+    ]
+   ],
+   "body": "Malipo ya severance pay kwa mfanyakazi aliyeachishwa kazi yanatakiwa kulipwa ndani ya siku 30 baada ya kumaliza huduma. Thibitisha na Sheria ya Ajira na Mahusiano Kazini (ELRA)."
+  },
+  {
+   "population": "STORED",
+   "id": "fixed_statements_deploy_live_2026_11_16.json:?",
+   "question": "Likizo ya mwaka na overtime ni siku ngapi?",
+   "violations": [
+    [
+     "annual_leave",
+     "annual_leave/omission:28 not stated"
+    ]
+   ],
+   "body": "Thibitisha na ELRA (elra.go.tz)."
+  }
+ ]
 }

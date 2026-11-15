@@ -296,6 +296,31 @@ def test_plant_the_negation_check_removed_is_caught(monkeypatch):
     assert any(fidelity.fixed_figure_violations(q, b) for q, b in CORRECT)
 
 
+# Two more LIVE wrong replies, from the first deploy's fall-through arm (eval/results/fixed_statements_deploy_live_2026_11_16_firstdeploy.json):
+LIVE_FALLTHROUGH_2 = [
+    ("Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+     "Malipo ya severance pay kwa mfanyakazi aliyeachishwa kazi yanatakiwa kulipwa ndani ya siku 30 baada ya kumaliza huduma. "
+     "Thibitisha na Sheria ya Ajira na Mahusiano Kazini (ELRA)."),
+    ("Likizo ya mwaka na overtime ni siku ngapi?", "Thibitisha na ELRA (elra.go.tz)."),
+]
+
+
+@pytest.mark.parametrize("q,body", LIVE_FALLTHROUGH_2)
+def test_the_second_live_gaps_are_flagged(q, body):
+    assert fidelity.fixed_figure_violations(q, body), (q, body)
+
+
+def test_a_two_topic_replacement_answers_both_topics_whole():
+    o, _ = _orch(reply="Thibitisha na ELRA (elra.go.tz).")
+    text = o.answer("Likizo ya mwaka na overtime ni siku ngapi?").text
+    assert fs.fixed_statement("annual_leave").working in text and fs.fixed_statement("overtime").working in text
+
+
+def test_a_correct_two_topic_body_is_left_alone():
+    assert fidelity.fixed_figure_violations("Likizo ya mwaka na overtime ni siku ngapi?",
+                                            "Likizo ya mwaka ni siku 28. Overtime ni angalau mara 1.5.") == []
+
+
 # ── wired end to end: PHRASINGS THAT MISS THE ROUTES -- the guard is the fallthrough's safety net ─
 FALLTHROUGH = [
     ("notice", "Mfanyakazi wa kila mwezi nikimwachisha, notisi ni ya siku zipi?", LIVE["notice"][1]),
