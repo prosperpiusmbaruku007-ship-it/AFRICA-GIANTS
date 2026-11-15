@@ -24,6 +24,13 @@ passing test to FAILED if any violation was recorded during it.
 
 Proved to fire by tests/test_offline_guard.py (R26: plant the violation, watch it block).
 """
+# 2026-11-16: importing chike-whatsapp/modal_whatsapp.py now REFUSES a shell whose deploy tunables differ from chike-whatsapp/deploy_tunables.json
+# (that is the gate). Many tests deliberately set their own fixture values (fake REVIEW_*_URL hosts, a small COHORT_SIZE) before importing it, so
+# the suite carries the explicit override. The refusal itself, the override and the committed values are tested in tests/test_deploy_tunables.py,
+# whose subprocesses STRIP this variable.
+import os as _os_tun
+_os_tun.environ.setdefault("CHIKE_TUNABLES_OVERRIDE", "test suite: fixtures set their own tunables")
+
 import socket
 
 import pytest
