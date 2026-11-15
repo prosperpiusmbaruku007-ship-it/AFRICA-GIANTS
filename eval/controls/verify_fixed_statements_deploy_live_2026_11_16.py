@@ -21,6 +21,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
+sys.path.insert(0, REPO)
 import verify_coverage_deploy_live_2026_11_13 as prior          # noqa: E402
 
 OUT = os.path.join(REPO, "eval", "results", "fixed_statements_deploy_live_2026_11_16.json")
