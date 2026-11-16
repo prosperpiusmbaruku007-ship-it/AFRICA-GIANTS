@@ -1,0 +1,92 @@
+{
+ "rows": [
+  {
+   "kind": "nonwage",
+   "q": "Nina amana ya shilingi 800 elfu, NSSF ni ngapi?",
+   "reply": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Nimekopa shilingi elfu 800 benki, WCF ni ngapi?",
+   "reply": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Mteja amenilipa sh. 800.000/= kwa oda, PAYE ni ngapi?",
+   "reply": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Nina akiba ya 800,000/- , NSSF ni ngapi?",
+   "reply": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 800,000) si mshahara, hivyo hakitumiki kukokotoa NSSF. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz).",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Mapato ya biashara yangu yalikuwa Tsh800000 mwezi jana, NSSF ni ngapi?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "GENERIC_ASK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Biashara imepata pato la shilingi laki 8 na nusu mwezi huu, WCF yake ni ngapi?",
+   "reply": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Mkopo wangu wa benki ni mil 12 na laki 3, NSSF ni ngapi?",
+   "reply": "Ili nihesabu NSSF, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "OTHER"
+  },
+  {
+   "kind": "nonwage",
+   "q": "Pesa za amana ni 2.5m, PAYE ni ngapi?",
+   "reply": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "BASE_CHECK"
+  },
+  {
+   "kind": "wage_control",
+   "q": "Mshahara wake ni shilingi 800 elfu kwa mwezi, NSSF ni ngapi?",
+   "reply": "NSSF ni asilimia 10 ya mshahara ghafi, mwajiri analipa asilimia 5 na mfanyakazi anachangia asilimia 5. Thibisha na NSSF (nssf.go.tz).\nNSSF = 20% × TZS 800,000 = TZS 160,000 (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+   "path": null,
+   "model_calls": 2,
+   "cls": "COMPUTED"
+  },
+  {
+   "kind": "wage_control",
+   "q": "Mfanyakazi analipwa sh. 800.000/= kwa mwezi, PAYE ni ngapi?",
+   "reply": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": null,
+   "model_calls": 2,
+   "cls": "COMPUTED"
+  },
+  {
+   "kind": "wage_control",
+   "q": "Mshahara wa mfanyakazi ni Tsh800000 kwa mwezi, WCF ni ngapi?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": null,
+   "model_calls": 1,
+   "cls": "GENERIC_ASK"
+  }
+ ]
+}
