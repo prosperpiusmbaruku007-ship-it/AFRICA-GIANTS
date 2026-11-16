@@ -46,3 +46,11 @@ Note examples 1 and 3: both use "Je, si kweli kwamba …", one is YES and one is
 ## What happens next (not before)
 
 The assistant writes the measurement harness **after** the file is frozen and commits it (R18), runs the questions against production (live, not offline: the offline orchestrator generates nothing), and reports: opener-inversion rate for negated vs plain rows, split by `premise_label` and `negation_form`; the replies for every inverted row **read by hand** (an inverted opener with right content is a different defect from right opener with wrong content); and whether the rate clears the ~30% line you set. Only then is a polarity mechanism proposed.
+
+## Amendments of 2026-11-16 (founder) — these supersede the text above where they differ
+
+- **Authorship.** `authored_by` may also be `external_model`: a question written by an AI model in a *different* session (e.g. Claude in the claude.ai advisor session, or another named model) and reviewed by the founder. Each such row records `author_model`, `author_session` ("not recorded" is an honest value), `author_source`, `reviewed_by` and `independence: weaker`, and is **reported separately** from human-authored rows. **The hard rule stays: no row may be authored by Claude Code** (the assistant that builds and measures Chike). Every row, whatever its class, records `author_source`. The sentence above saying "the assistant does not write ... this file" still describes Claude Code, and still holds.
+- **OPEN rows.** A question that is not yes/no has `correct_polarity: OPEN`, `premise_label: not_applicable`, `negation_form: none`, `answer_kind: open`. The measure for such a row is whether the reply opens with Ndiyo/Hapana anyway (it should not).
+- **Negation forms.** `belief_check` is a fourth negated form: a belief is stated, then checked ("Nilikuwa nafikiri … Nimeelewa vizuri?"). Rows are labelled by what the question honestly contains, not by the group they were authored for.
+- **Topics.** Added `labour`, `licence`, `tin`, `records`, `income_tax`. Per-topic caps: default 4, `vat` 5, `labour` 6 (six labour-law rows, three of them a deliberate notice pair).
+- **np_24 was dropped** before freezing (ambiguous polarity); the reason is in `DROPPED.json`. The file's ids therefore run np_01 to np_30 with no np_24.

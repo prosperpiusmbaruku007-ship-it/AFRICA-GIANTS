@@ -1,0 +1,20 @@
+[
+ {
+  "id": "np_24",
+  "question": "Mimi nalipa mishahara ya wafanyakazi kila mwezi. Hiyo WCF siyo pesa ya kukata kwenye mshahara wao? Maana nimekuwa nikiona ni asilimia ya payroll.",
+  "author_label_raw": "NEGATED / premise FALSE: WCF is paid entirely by the employer, not deducted from wages",
+  "premise_label_as_authored": "false_premise",
+  "correct_polarity_as_authored": "NO",
+  "label_flag": {
+   "kind": "LABEL_DISAGREES_WITH_SOURCED_RULE",
+   "author_premise_label": "false_premise",
+   "author_correct_polarity": "NO",
+   "sourced_premise_label": "true_premise",
+   "sourced_correct_polarity": "YES",
+   "why": "The claim embedded in the question -- 'WCF is NOT money to deduct from their wages' -- is TRUE under the sourced rule (employer-only; deducting it from an employee is an offence). Read literally, 'Hiyo WCF siyo pesa ya kukata kwenye mshahara wao?' is answered YES ('siyo, haikatwi'), and the asker's own reasoning ('nimekuwa nikiona ni asilimia ya payroll') shows they already hold the TRUE belief. The author's short answer ('No. WCF is paid entirely by the employer, not deducted from wages') states the CONTENT correctly but attaches a NO that only fits the opposite reading (asker believes it IS deducted). The author's label is kept in premise_label / correct_polarity as instructed; the gold text carries the content with no Ndiyo/Hapana opener. DECISION NEEDED before freezing: relabel to true_premise / YES, reword the question (not by me), or drop the row."
+  },
+  "decided_by": "founder",
+  "date": "2026-11-16",
+  "reason": "AMBIGUOUS POLARITY. 'Hiyo WCF siyo pesa ya kukata kwenye mshahara wao?' reads both ways: 'isn't WCF NOT something you deduct?' (literal answer YES) and 'isn't WCF something you deduct?' (the author's NO). A row whose correct polarity depends on the reading cannot measure a polarity FLIP. The author labelled it false_premise / NO; the sourced rule (WCF is employer-only, deducting it is an offence) makes the embedded claim TRUE. Dropped rather than relabelled so the set contains no row the assistant or the founder had to re-decide."
+ }
+]

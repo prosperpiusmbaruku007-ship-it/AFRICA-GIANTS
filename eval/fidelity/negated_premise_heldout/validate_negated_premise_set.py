@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
-"""VALIDATE (and, once, FREEZE) the founder-authored negated-premise probe set. SHAPE AND PROVENANCE ONLY: it never reads a question for meaning, never writes one, and never checks that a polarity is right (that is the
-author's `source` field's job and a human's).
+"""VALIDATE (and, once, FREEZE) the negated-premise probe set. SHAPE AND PROVENANCE ONLY: it never reads a question for meaning, never writes one, and never checks that a polarity is right (that is the `source` field's job
+and a human's).
 
     python eval/fidelity/negated_premise_heldout/validate_negated_premise_set.py [--file PATH]    validate; exit 1 on any problem
-    python eval/fidelity/negated_premise_heldout/validate_negated_premise_set.py --freeze         validate, then write FROZEN.json (the file's sha256) -- commit both ALONE, before any measurement
+    python eval/fidelity/negated_premise_heldout/validate_negated_premise_set.py --freeze         validate, then write FROZEN.json (the file's sha256) -- commit it with the authored set ALONE, before any measurement
     python eval/fidelity/negated_premise_heldout/validate_negated_premise_set.py --check-frozen   exit 1 if the authored file's bytes differ from FROZEN.json
 
-Rules (AUTHORING_INSTRUCTIONS.md): >= 20 rows; >= 14 negated and >= 6 plain (`none`); among negated >= 6 true_premise and >= 6 false_premise and >= 3 negation forms; <= 4 rows per topic; no placeholders; no duplicates;
-every row has a `source`; `authored_by` is founder / pilot_participant / other_person and NEVER the assistant.
+AUTHORSHIP (founder's decision, 2026-11-16 -- supersedes the original "founder / pilot_participant / other_person only"):
+  * `authored_by` is one of founder / pilot_participant / other_person / external_model.
+  * `external_model` rows MUST also record `author_model` (the model's name), `author_session` (where it was written; "not recorded" is an honest value), `author_source` (free text), `reviewed_by`, and
+    `independence: "weaker"` -- they are reported SEPARATELY and labelled weaker independence, never pooled silently with human-authored rows.
+  * THE HARD RULE, unchanged in force: NO row may be authored by Claude Code (the assistant that builds and measures Chike). Any `authored_by` or `author_model` matching /claude code/ is refused. Claude as a model in a
+    DIFFERENT session (e.g. the claude.ai advisor) is an external_model; Claude Code is not.
+  * every row records `author_source`, whatever its class.
+Other rules (AUTHORING_INSTRUCTIONS.md): >= 20 rows; >= 14 negated and >= 6 plain (`none`); among negated >= 6 true_premise and >= 6 false_premise and >= 3 negation forms; per-topic caps (default 4, VAT 5, labour 6 --
+see TOPIC_CAPS); no placeholders; no duplicates; every row has a `source`. `correct_polarity` is YES / NO, or OPEN for a question that is not yes/no (then premise_label is `not_applicable`, negation_form `none` and
+answer_kind `open`; the measure for such a row is whether the reply opens with Ndiyo/Hapana anyway).
 """
 import argparse
 import collections
@@ -21,12 +29,15 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUTHORED = os.path.join(HERE, "negated_premise_AUTHORED.jsonl")
 FROZEN = os.path.join(HERE, "FROZEN.json")
-FORMS = ("si_kweli", "negative_verb", "tag_question", "double_negative", "none")
-TOPICS = ("vat", "paye", "sdl", "nssf", "wcf", "efd", "brela", "osha", "gn487a", "gn605a", "other")
-AUTHORS = ("founder", "pilot_participant", "other_person")
-FORBIDDEN_AUTHORS = re.compile(r"assistant|claude|ai\b|model|gpt|bot", re.IGNORECASE)
-MIN_ROWS, MIN_NEG, MIN_PLAIN, MIN_PER_LABEL, MIN_FORMS, MAX_PER_TOPIC = 20, 14, 6, 6, 3, 4
-KEYS = ("id", "question", "negation_form", "premise_label", "correct_polarity", "topic", "correct_answer_sw", "source", "authored_by", "author_note", "seen_system_output")
+FORMS = ("si_kweli", "negative_verb", "tag_question", "double_negative", "belief_check", "none")
+TOPICS = ("vat", "paye", "sdl", "nssf", "wcf", "efd", "brela", "osha", "gn487a", "gn605a", "labour", "licence", "tin", "records", "income_tax", "other")
+AUTHORS = ("founder", "pilot_participant", "other_person", "external_model")
+CLAUDE_CODE = re.compile(r"claude[\s_\-]*code", re.IGNORECASE)
+MIN_ROWS, MIN_NEG, MIN_PLAIN, MIN_PER_LABEL, MIN_FORMS = 20, 14, 6, 6, 3
+DEFAULT_TOPIC_CAP = 4
+TOPIC_CAPS = {"vat": 5, "labour": 6}          # founder 2026-11-16: VAT 5. LABOUR 6 is the arithmetic consequence of re-filing ten `other` rows under real topics (six are labour-law rows, three of them a deliberate notice pair) -- flagged
+KEYS = ("id", "question", "negation_form", "premise_label", "correct_polarity", "topic", "correct_answer_sw", "source", "authored_by", "author_note", "seen_system_output", "author_source")
+EXTERNAL_KEYS = ("author_model", "author_session", "reviewed_by", "independence")
 
 
 def sha(path):
@@ -51,23 +62,38 @@ def validate(path):
             problems.append(f"{r.get('id', n)}: missing {miss}")
             continue
         rid = r["id"]
-        for k in ("question", "correct_answer_sw", "source", "topic", "negation_form", "premise_label", "correct_polarity"):
+        for k in ("question", "correct_answer_sw", "source", "topic", "negation_form", "premise_label", "correct_polarity", "author_source"):
             if "<<" in str(r[k]) or ">>" in str(r[k]):
                 problems.append(f"{rid}: {k} is a placeholder")
         if len(str(r["question"]).strip()) < 8:
             problems.append(f"{rid}: question is empty or too short")
-        if not str(r["source"]).strip() or len(str(r["source"]).strip()) < 6:
+        if len(str(r["source"]).strip()) < 6:
             problems.append(f"{rid}: no source -- a key without a primary source is not usable (R12b)")
+        if len(str(r["author_source"]).strip()) < 6:
+            problems.append(f"{rid}: no author_source -- every row must record where its question came from")
         if r["negation_form"] not in FORMS:
             problems.append(f"{rid}: negation_form must be one of {FORMS}")
-        if r["premise_label"] not in ("true_premise", "false_premise"):
-            problems.append(f"{rid}: premise_label must be true_premise or false_premise")
-        if r["correct_polarity"] not in ("YES", "NO"):
-            problems.append(f"{rid}: correct_polarity must be YES or NO")
         if r["topic"] not in TOPICS:
             problems.append(f"{rid}: topic must be one of {TOPICS}")
-        if r["authored_by"] not in AUTHORS or FORBIDDEN_AUTHORS.search(str(r["authored_by"])):
-            problems.append(f"{rid}: authored_by {r['authored_by']!r} -- must be one of {AUTHORS}; the assistant may not author this set")
+        if r["correct_polarity"] not in ("YES", "NO", "OPEN"):
+            problems.append(f"{rid}: correct_polarity must be YES, NO or OPEN")
+        if r["correct_polarity"] == "OPEN":
+            if r["premise_label"] != "not_applicable" or r["negation_form"] != "none" or r.get("answer_kind") != "open":
+                problems.append(f"{rid}: an OPEN row needs premise_label not_applicable, negation_form none and answer_kind open")
+        else:
+            if r["premise_label"] not in ("true_premise", "false_premise"):
+                problems.append(f"{rid}: premise_label must be true_premise or false_premise (not_applicable is only for OPEN rows)")
+        a = r["authored_by"]
+        if a not in AUTHORS:
+            problems.append(f"{rid}: authored_by {a!r} must be one of {AUTHORS}")
+        if CLAUDE_CODE.search(str(a)) or CLAUDE_CODE.search(str(r.get("author_model", ""))) or CLAUDE_CODE.search(str(r.get("author_session", ""))):
+            problems.append(f"{rid}: HARD RULE -- no row may be authored by Claude Code (the assistant that builds and measures Chike)")
+        if a == "external_model":
+            for k in EXTERNAL_KEYS:
+                if not str(r.get(k, "")).strip():
+                    problems.append(f"{rid}: an external_model row must record {k}")
+            if r.get("independence") != "weaker":
+                problems.append(f"{rid}: an external_model row must be labelled independence: weaker")
         if not isinstance(r["seen_system_output"], bool):
             problems.append(f"{rid}: seen_system_output must be true or false")
     ids = [r.get("id") for r in rows]
@@ -91,8 +117,9 @@ def validate(path):
     if len({r.get("negation_form") for r in neg}) < MIN_FORMS:
         problems.append(f"fewer than {MIN_FORMS} different negation forms among the negated rows")
     for t, c in collections.Counter(r.get("topic") for r in rows).items():
-        if t and c > MAX_PER_TOPIC:
-            problems.append(f"topic {t!r}: {c} rows, at most {MAX_PER_TOPIC}")
+        cap = TOPIC_CAPS.get(t, DEFAULT_TOPIC_CAP)
+        if t and c > cap:
+            problems.append(f"topic {t!r}: {c} rows, at most {cap}")
     return problems, rows
 
 
@@ -127,7 +154,8 @@ def main(argv=None):
             return 1
         rec = {"file": os.path.basename(a.file), "sha256": sha(a.file), "rows": len(rows), "frozen_utc": __import__("datetime").datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                "validator_sha256": sha(os.path.abspath(__file__)), "authors": sorted({r["authored_by"] for r in rows}),
-               "seen_system_output_true": sum(1 for r in rows if r["seen_system_output"]),
+               "author_models": sorted({str(r.get("author_model", "")) for r in rows if r["authored_by"] == "external_model"}),
+               "external_model_rows": sum(1 for r in rows if r["authored_by"] == "external_model"), "seen_system_output_true": sum(1 for r in rows if r["seen_system_output"]),
                "_rule": "Commit this file and the authored set ALONE, before any measurement. Never edit the set; a second iteration needs a new set."}
         io.open(FROZEN, "w", encoding="utf-8", newline="\n").write(json.dumps(rec, ensure_ascii=False, indent=1) + "\n")
         print("frozen:", rec["sha256"][:16])
