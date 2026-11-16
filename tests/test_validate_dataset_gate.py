@@ -202,7 +202,11 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     # sft_shaped_pairs/ and raw_sources/, which this count does not cover -- which is why the
     # arithmetic is written out: a bare "-1" would hide that nine rows moved, not one.
     # 1716 -> 1714 on 2026-11-16: the two cleaned_pairs rows of the WCF accident-trigger quarantine (batch_004:179 and :295), moved to rejected/ with their reason.
-    assert "schema-shaped: 1714 pairs, 0 errors" in r.stdout, (
+    # 1714 -> 1712 on 2026-11-16, re-derived: the voluntary-VAT quarantine (founder: mark, don't delete) removed the two cleaned_pairs rows that asserted an unconditional "Ndiyo"
+    #   -1  batch_003_cleaned        line 148  "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000"
+    #   -1  batch_007_replacements   line 2    "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari"
+    # (the other six removals are in sft_shaped_pairs/ and sft/, which this count does not cover; the 4 raw_sources rows are marked, not removed).
+    assert "schema-shaped: 1712 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 

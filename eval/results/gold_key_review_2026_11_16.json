@@ -1,0 +1,204 @@
+{
+ "n_rows": 30,
+ "verdicts": {
+  "eval_013": {
+   "verdict": "KEY_CHANGE_PROPOSED",
+   "why": "the key asserts 'Ndiyo. Usajilishaji wa hiari wa VAT unaruhusiwa' citing a KPMG URL that 404s and was never read. Primary text names no voluntary route for an existing below-threshold trader (VAT Act R.E.2023, 0 hits); the TRA FAQ allows it for unnamed activities. A yes/no key cannot be Ndiyo or Hapana; re-key as the hedged statement (proposed_keys). ALSO: the gate-run reply 'Ndiyo, sheria inamruhusu ... hata kabla ya kufikia kizingiti' PASSED on this stale key and was credited by the judge -- an unflagged confident wrong inside the 319 (the yes_no scorer defaults to affirmative, so the stale key passes any non-negative reply)"
+  },
+  "eval_028": {
+   "verdict": "KEY_CHANGE_PROPOSED",
+   "why": "the 4-step procedure (BRELA certificate, TIN, TRA reviews, VAT number) is the same unread KPMG claim. The only documented route is s.29(3): evidence of intention to commence, taxable supplies, a stated commencement period, at the Commissioner General's discretion"
+  },
+  "eval_029": {
+   "verdict": "RECLASSIFY",
+   "why": "reply says 'Utapata marejesho ya VAT' (a definite refund) and omits carry-forward, which the key and the VAT Act both give. NOT acceptable: move from GOLD to MODEL (partial). Key unchanged"
+  },
+  "eval_051": {
+   "verdict": "KEY_OK",
+   "why": "key: no minimum transaction value for an EFD receipt (TAA Cap.438 R.E.2023 s.44 default for everyone; locked fact efd_threshold_tzs_11m correction). Reply 'TZS 0' is acceptable; regex answer_type=number expects the words"
+  },
+  "eval_069": {
+   "verdict": "KEY_OK",
+   "why": "reply lists actions that index row 95 states (inspection, penalty, suspending the device, closing premises); judge correct"
+  },
+  "eval_094": {
+   "verdict": "KEY_OK",
+   "why": "NSSF not TRA (NSSF Act Cap.50 R.E.2023: contributions, interest, offences; edition asserted in the manifest); reply right"
+  },
+  "eval_144": {
+   "verdict": "KEY_OK",
+   "why": "'La' -- marriage to a Tanzanian does not change non-citizen status under GN 487A (locked facts gn487a_*, read from the gazette 2026-07-01); reply right, the scorer wants the 'La' opener"
+  },
+  "eval_218": {
+   "verdict": "KEY_CHANGE_PROPOSED",
+   "why": "the key says the non-resident rent rate is 'not confirmed'. ITA First Schedule para 4(b)(ii), read 2026-11-16: ten percent for rent paid to a non-resident withholdee. The reply (10%, one rate for both) is right. Scores True under the old AND new key by regex (number scorer), so the change moves no number and removes a wrong claim"
+  },
+  "eval_228": {
+   "verdict": "KEY_NEEDS_DECISION",
+   "why": "the key hedges ('10,000 is often cited, not confirmed') while stamp duty is on the OOC list (CLAUDE.md R11), so production refuses by design. Not a primary-source question (the Stamp Duty Act is not whitelisted). Options: (a) re-key as an expected out-of-scope redirect and move the row to the refusal population, (b) keep the hedge key and accept a design conflict, (c) retire the row. A person must choose"
+  },
+  "eval_260": {
+   "verdict": "KEY_OK",
+   "why": "savings are not an NSSF base; reply right"
+  },
+  "eval_267": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_270": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_271": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_272": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_273": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_275": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_276": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_277": {
+   "verdict": "KEY_OK",
+   "why": "defensible both ways: the key gives the conditional computation (3.5% x 900,000 = 31,500 when 10+ staff), the reply asks the headcount (SDL applies only from 10 employees). Stays a miss under policy 2a because the key computes"
+  },
+  "eval_291": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_292": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_294": {
+   "verdict": "KEY_OK",
+   "why": "defensible: the key computes 80,000 x 15 and asks the headcount; the reply asks both. Stays a miss under policy 2a because the key computes"
+  },
+  "eval_295": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_297": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_298": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_299": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_300": {
+   "verdict": "KEY_OK",
+   "why": "KEY_OK -- the key asks for the missing input; the miss is the harness rule `clarified => FAIL` (policy 2a promotes it when the reply asks for the same piece)"
+  },
+  "eval_317": {
+   "verdict": "KEY_OK",
+   "why": "GN 487A lists saloon business among the 15 prohibited activities (locked fact); reply conveys it without the 'Hapana' opener the scorer wants"
+  },
+  "eval_347": {
+   "verdict": "KEY_OK",
+   "why": "key: EFD has no turnover threshold, exemption only by Commissioner General notice (TAA Cap.438 s.44). The reply states exactly that via D-FIDELITY-7 replacement copy; scored FAIL because clarified and the gold is not a clarification. A scorer decision (score replacement copy by its content), not a key change"
+  },
+  "eval_364": {
+   "verdict": "KEY_OK",
+   "why": "WCF from the first employee (wcf.go.tz, confirmed Jun 2026; registration within 30 days of the first hire); reply right; row already marked unreliable (yes_no_ground_truth_ambiguous)"
+  },
+  "eval_365": {
+   "verdict": "KEY_OK",
+   "why": "NSSF has no headcount threshold (Cap.50 R.E.2023 / locked fact); reply right"
+  }
+ },
+ "tally": {
+  "KEY_CHANGE_PROPOSED": 3,
+  "KEY_NEEDS_DECISION": 1,
+  "RECLASSIFY": 1,
+  "KEY_OK": 25
+ },
+ "proposed_keys_NOT_APPLIED": {
+  "eval_013": {
+   "answer_type": "definition",
+   "correct_answer_sw": "Sheria ya VAT haitaji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kizingiti. Njia ilizotaja ni: kufikia kiwango, watoa huduma za kitaalamu, taasisi za Serikali, na anayetarajia kuanza biashara (kwa uamuzi wa Kamishna Mkuu). TRA inasema usajili wa hiari unaruhusiwa kwa shughuli maalum za kiuchumi bila kuzitaja. Thibitisha na TRA (tra.go.tz) kabla ya kuomba.",
+   "source": "VAT Act Cap.148 R.E.2023 (0 occurrences of 'voluntar*'; ss.28, 29(1)-(3)); TRA FAQ tra_faq_57_2026_11_16.html; locked fact vat_voluntary_registration"
+  },
+  "eval_028": {
+   "answer_type": "definition",
+   "correct_answer_sw": "Hakuna utaratibu wa usajili wa hiari ulioandikwa kwa mfanyabiashara aliyepo aliye chini ya kizingiti. Njia pekee iliyoandikwa ni mfanyabiashara anayetarajia kuanza shughuli: anawasilisha ushahidi (mikataba, zabuni, ramani za jengo, mpango wa biashara, ufadhili wa benki) na kutaja muda ambao uzalishaji wa bidhaa zinazotozwa VAT utaanza; Kamishna Mkuu ndiye anayeamua. Wasiliana na TRA kuthibitisha.",
+   "source": "VAT Act Cap.148 R.E.2023 s.29(3), read 2026-11-16 (edition asserted); TRA FAQ"
+  },
+  "eval_218": {
+   "answer_type": "number",
+   "correct_answer_sw": "Asilimia 10 — kiwango kimoja kwa wakazi na wasio wakazi kwenye pango la kibiashara. Mlipaji lazima awe wakala wa kuzuia kodi. Thibitisha na TRA (tra.go.tz).",
+   "source": "ITA Cap.332 R.E.2023 First Schedule para 4(b)(ii), read 2026-11-16 (edition asserted); TRA withholding page 'Rental income (commercial) 10% | 10%'; locked fact rent_wht_rate"
+  }
+ },
+ "voluntary_vat_training_pairs_NOT_QUARANTINED": {
+  "QUARANTINE (unconditional 'Ndiyo ... hata kama mauzo yako hayajafika kizingiti')": [
+   {
+    "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+    "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?",
+    "head": "Ndiyo. Usajili wa hiari wa VAT unawezekana hata kama mauzo yako yako chini ya kizingiti cha lazima. Faida ya usajili wa hiari ni kwamba unaw"
+   },
+   {
+    "src": "datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl",
+    "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+    "head": "Ndiyo — unaweza kusajili VAT kwa hiari hata kama mauzo yako hayajafika kizingiti cha lazima cha TZS 200,000,000 kwa miezi 12 (au TZS 100,000"
+   },
+   {
+    "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+    "q": "Biashara yangu ya mpya inatazamia mapato ya TZS 300M kwa mwaka wa kwanza — ninaweza kusajili VAT mapema (voluntary registration)?",
+    "head": "Ndiyo — TRA inaruhusu usajili wa hiari wa VAT (voluntary registration) hata kabla ya kufika kizingiti. Faida za usajili wa mapema: (1) Unawe"
+   },
+   {
+    "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+    "q": "Mauzo yangu bado madogo, lakini naweza kujisajili VAT kwa hiari?",
+    "head": "Ndiyo — unaruhusiwa kujisajili VAT kwa hiari hata kama mauzo yako hayajafikia kizingiti cha TZS 200M/miezi 12 au 100M/miezi 6. Usajili wa hi"
+   },
+   {
+    "src": "datasets/tier1a/sft/train_sft.jsonl",
+    "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+    "head": "Ndiyo — unaweza kusajili VAT kwa hiari hata kama mauzo yako hayajafika kizingiti cha lazima cha TZS 200,000,000 kwa miezi 12 (au TZS 100,000"
+   },
+   {
+    "src": "datasets/tier1a/sft/train_sft.jsonl",
+    "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?",
+    "head": "Ndiyo. Usajili wa hiari wa VAT unawezekana hata kama mauzo yako yako chini ya kizingiti cha lazima. Faida ya usajili wa hiari ni kwamba unaw"
+   },
+   {
+    "src": "datasets/tier1a/sft/train_sft.jsonl",
+    "q": "Mauzo yangu bado madogo, lakini naweza kujisajili VAT kwa hiari?",
+    "head": "Ndiyo — unaruhusiwa kujisajili VAT kwa hiari hata kama mauzo yako hayajafikia kizingiti cha TZS 200M/miezi 12 au 100M/miezi 6. Usajili wa hi"
+   },
+   {
+    "src": "datasets/tier1a/sft/val_sft.jsonl",
+    "q": "Biashara yangu ya mpya inatazamia mapato ya TZS 300M kwa mwaka wa kwanza — ninaweza kusajili VAT mapema (voluntary registration)?",
+    "head": "Ndiyo — TRA inaruhusu usajili wa hiari wa VAT (voluntary registration) hata kabla ya kufika kizingiti. Faida za usajili wa mapema: (1) Unawe"
+   }
+  ],
+  "BORDERLINE (says 'Ndiyo' but routes the application to the Commissioner; recommended: leave, founder's call)": [
+   {
+    "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+    "q": "Ninaweza kusajiliwa VAT hiari (voluntarily) kabla sijafika kizingiti?",
+    "head": "Ndiyo. Unaweza kuomba usajilishaji wa hiari wa VAT hata kama mauzo yako hayajafika kizingiti. Hii inakufaa kama unauza kwa biashara zilizosa"
+   },
+   {
+    "src": "datasets/tier1a/sft/train_sft.jsonl",
+    "q": "Ninaweza kusajiliwa VAT hiari (voluntarily) kabla sijafika kizingiti?",
+    "head": "Ndiyo. Unaweza kuomba usajilishaji wa hiari wa VAT hata kama mauzo yako hayajafika kizingiti. Hii inakufaa kama unauza kwa biashara zilizosa"
+   }
+  ]
+ }
+}

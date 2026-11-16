@@ -1,0 +1,147 @@
+{
+ "date": "2026-11-16",
+ "applied": {
+  "eval_013": "applied",
+  "eval_028": "applied",
+  "eval_218": "applied",
+  "eval_228": "applied"
+ },
+ "rows": {
+  "eval_013": {
+   "old_key": {
+    "subdomain": "vat_registration",
+    "answer_type": "yes_no",
+    "correct_answer_sw": "Ndiyo. Usajilishaji wa hiari wa VAT unaruhusiwa. Faida kuu ni uwezo wa kudai VAT ya pembejeo kwenye manunuzi ya biashara. Wasiliana na TRA kwa maelezo ya mchakato wa usajilishaji wa hiari.",
+    "correct_answer_en": "Yes. Voluntary VAT registration is permitted. The main advantage is the ability to claim input VAT credits on business purchases. Contact TRA for details on the voluntary registration process."
+   },
+   "new_key": {
+    "subdomain": "vat_registration",
+    "answer_type": "definition",
+    "correct_answer_sw": "Sheria ya VAT haitaji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kizingiti. Njia ilizotaja ni: kufikia kiwango, watoa huduma za kitaalamu, taasisi za Serikali, na anayetarajia kuanza biashara (kwa uamuzi wa Kamishna Mkuu). TRA inasema usajili wa hiari unaruhusiwa kwa shughuli maalum za kiuchumi bila kuzitaja. Thibitisha na TRA (tra.go.tz) kabla ya kuomba.",
+    "correct_answer_en": "The VAT Act names no voluntary registration route for an existing trader below the threshold. The routes it names are: reaching the threshold, professional service providers, Government entities, and an intending trader (at the Commissioner General's discretion). TRA states voluntary registration is allowed for certain specific economic activities without naming them. Confirm with TRA (tra.go.tz) before applying."
+   },
+   "scores": {
+    "c2143c0": {
+     "reply": "Ndiyo, sheria inamruhusu mfanyabiashara kujisajilisha VAT kwa hiari hata kabla ya kufikia kizingiti. Thibitisha na tra.go.tz.",
+     "old_key": true,
+     "new_key": true,
+     "harness_pass_under_old_key": "True"
+    },
+    "0e11c3d": {
+     "reply": "Ndiyo, unaweza kujiandikisha kwa hiari kabla ya kufikia kizingiti. Thibitisha na TRA (tra.go.tz).",
+     "old_key": true,
+     "new_key": true,
+     "harness_pass_under_old_key": "True"
+    }
+   }
+  },
+  "eval_028": {
+   "old_key": {
+    "subdomain": "vat_registration",
+    "answer_type": "procedure",
+    "correct_answer_sw": "1) Wasiliana na TRA kupitia tra.go.tz au ofisi ya karibu. 2) Wasilisha ombi la usajilishaji wa hiari pamoja na BRELA certificate, TIN, na hati za biashara. 3) TRA itakagua ombi. 4) Ukipitishwa, utapata nambari ya VAT na unaweza kutoa invoice za VAT na kudai VAT ya pembejeo. Thibitisha nyaraka zinazohitajika na TRA.",
+    "correct_answer_en": "1) Contact TRA via tra.go.tz or nearest office. 2) Submit voluntary registration application with BRELA certificate, TIN, and business records. 3) TRA reviews your application. 4) If approved, you receive a VAT number and can issue VAT invoices and claim input VAT. Confirm required documents with TRA."
+   },
+   "new_key": {
+    "subdomain": "vat_registration",
+    "answer_type": "definition",
+    "correct_answer_sw": "Hakuna utaratibu wa usajili wa hiari ulioandikwa kwa mfanyabiashara aliyepo aliye chini ya kizingiti. Njia pekee iliyoandikwa ni mfanyabiashara anayetarajia kuanza shughuli: anawasilisha ushahidi (mikataba, zabuni, ramani za jengo, mpango wa biashara, ufadhili wa benki) na kutaja muda ambao uzalishaji wa bidhaa zinazotozwa VAT utaanza; Kamishna Mkuu ndiye anayeamua. Thibitisha na TRA (tra.go.tz).",
+    "correct_answer_en": "No application procedure for voluntary registration is written for an existing trader below the threshold. The only written route is an intending trader about to commence activity: they submit evidence (contracts, tenders, building plans, a business plan, bank financing) and state the period within which taxable production will start; the Commissioner General decides. Confirm with TRA (tra.go.tz)."
+   },
+   "scores": {
+    "c2143c0": {
+     "reply": "Kwa mujibu wa sheria, unapaswa kuwasiliana na Kamishna wa TRA ili kupata idhini ya kujisajilisha VAT kwa hiari. Thibitisha na TRA (tra.go.tz).",
+     "old_key": false,
+     "new_key": false,
+     "harness_pass_under_old_key": "False"
+    },
+    "0e11c3d": {
+     "reply": "Kuna utaratibu maalum wa kujiandikisha kwa hiari. Thibitisha na TRA (tra.go.tz).",
+     "old_key": false,
+     "new_key": false,
+     "harness_pass_under_old_key": "False"
+    }
+   }
+  },
+  "eval_218": {
+   "old_key": {
+    "subdomain": "vat_withholding",
+    "answer_type": "number",
+    "correct_answer_sw": "Kiwango cha wakazi ni asilimia 10, lakini kiwango kamili kwa wasio wakazi kwenye pango la biashara hakijathibitishwa kikamilifu katika vyanzo vyetu. Usinukuu namba bila uhakika — thibitisha na TRA (tra.go.tz) kwenye jedwali la withholding tax.",
+    "correct_answer_en": "The resident rate is 10%, but the exact non-resident rate on commercial rent is not fully confirmed in our sources. Do not quote a figure without certainty — confirm with TRA on the withholding tax schedule."
+   },
+   "new_key": {
+    "subdomain": "vat_withholding",
+    "answer_type": "number",
+    "correct_answer_sw": "Asilimia 10 — kiwango kimoja kwa wakazi na wasio wakazi kwenye pango la kibiashara. Mlipaji lazima awe wakala wa kuzuia kodi. Thibitisha na TRA (tra.go.tz).",
+    "correct_answer_en": "10% -- one rate for residents and non-residents on commercial rent. The payer must be a withholding agent. Confirm with TRA (tra.go.tz)."
+   },
+   "scores": {
+    "c2143c0": {
+     "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilim",
+     "old_key": true,
+     "new_key": true,
+     "harness_pass_under_old_key": "True"
+    },
+    "0e11c3d": {
+     "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilim",
+     "old_key": true,
+     "new_key": true,
+     "harness_pass_under_old_key": "True"
+    }
+   }
+  },
+  "eval_228": {
+   "old_key": {
+    "subdomain": "brela_registration",
+    "answer_type": "number",
+    "correct_answer_sw": "Namba inayotajwa mara nyingi ni TZS 10,000, lakini haijathibitishwa kikamilifu katika ratiba ya sasa ya Sheria ya Ushuru wa Stempu. Usinukuu bila uhakika — thibitisha na TRA (tra.go.tz).",
+    "correct_answer_en": "The figure commonly cited is TZS 10,000, but it is not fully confirmed against the current Stamp Duty Act schedule. Do not quote it without certainty — confirm with TRA."
+   },
+   "new_key": {
+    "subdomain": "out_of_corpus",
+    "answer_type": "out_of_corpus_refusal",
+    "correct_answer_sw": "Samahani, ushuru wa stempu (stamp duty) kwa Hati ya Makubaliano (Memorandum of Association) uko nje ya mada yangu na huduma yangu. Tafadhali thibitisha na TRA (tra.go.tz).",
+    "correct_answer_en": "Sorry, stamp duty on a Memorandum of Association is outside my scope. Please confirm with TRA."
+   },
+   "scores": {
+    "c2143c0": {
+     "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+     "old_key": false,
+     "new_key": true,
+     "harness_pass_under_old_key": "False"
+    },
+    "0e11c3d": {
+     "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+     "old_key": false,
+     "new_key": true,
+     "harness_pass_under_old_key": "False"
+    }
+   }
+  }
+ },
+ "eval_228_both_placements": {
+  "as_it_was_in_corpus": {
+   "gate1_raw": "319/384 = 83.1%",
+   "gate1_confirmed_false_passes_removed": "308/384 = 80.2%",
+   "gate1_with_partials_removed": "300/384 = 78.1%",
+   "gate1_raw_matching_clarification_policy": "333/384 = 86.7%",
+   "gate2_refusal": "16/16"
+  },
+  "moved_out_of_scope": {
+   "gate1_raw": "319/383 = 83.3%",
+   "gate1_confirmed_false_passes_removed": "308/383 = 80.4%",
+   "gate1_with_partials_removed": "300/383 = 78.3%",
+   "gate1_raw_matching_clarification_policy": "333/383 = 86.9%",
+   "gate2_refusal": "17/17",
+   "eval_228_refusal_reply_passes": true,
+   "eval_228_reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN48"
+  },
+  "note": "228 was a regex FAIL in corpus (the reply refused, the old key wanted 10,000); moved out of scope it is a refusal PASS. Gate 1 loses one miss and Gate 2 gains one pass: the in-corpus denominator shrinks 384 -> 383."
+ },
+ "eval_013_as_served_now": {
+  "reply": "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa",
+  "old_key": true,
+  "new_key": true
+ }
+}

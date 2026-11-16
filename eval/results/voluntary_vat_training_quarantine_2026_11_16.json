@@ -1,0 +1,30 @@
+{
+  "measured": "2026-11-16",
+  "defect_class": "VOLUNTARY_VAT_REGISTRATION_ASSERTED_UNCONDITIONALLY",
+  "rows_removed_from_live": 8,
+  "rows_marked_raw": 4,
+  "lines_removed": {
+    "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl": [
+      148
+    ],
+    "datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl": [
+      2
+    ],
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl": [
+      180
+    ],
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl": [
+      102
+    ],
+    "datasets/tier1a/sft/train_sft.jsonl": [
+      467,
+      541,
+      2802
+    ],
+    "datasets/tier1a/sft/val_sft.jsonl": [
+      280
+    ]
+  },
+  "borderline_kept_live_occurrences": 2,
+  "quarantine_file": "datasets/tier1a/rejected/voluntary_vat_unconditional_yes_quarantine_2026_11_16.jsonl"
+}
