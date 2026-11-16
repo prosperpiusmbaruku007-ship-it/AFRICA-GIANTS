@@ -1,0 +1,3 @@
+# frozen artifacts are hashed on their exact bytes: never let a checkout rewrite their line endings
+eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl text eol=lf
+eval/fidelity/negated_premise_heldout/FROZEN.json text eol=lf
