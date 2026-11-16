@@ -1509,8 +1509,11 @@ def parse_autosend(flag, after_s):
 # says why, and so deleting the allowlist entry alone cannot re-admit them.
 AUTOSEND_ELIGIBLE_ENGINE_ROUTES = frozenset({
     "engine:sdl", "engine:nssf", "engine:paye", "engine:wcf", "engine:minimum_wage", "engine:vat_registration",
-    "engine:efd_requirement", "engine:presumptive", "engine:corporate_tax", "engine:partnership_tax", "engine:rent_wht"})
-AUTOSEND_EXCLUDED_ENGINE_ROUTES = frozenset({"engine:fixed_statement"})
+    "engine:efd_requirement", "engine:presumptive", "engine:partnership_tax", "engine:rent_wht"})
+# 2026-11-17 (founder, FAIL CLOSED): "engine:corporate_tax" was REMOVED from the allowlist. Set #2's two dividend-withholding questions (s2_15, s2_18) were answered model-free by this engine with the CORPORATE
+# INCOME TAX rate -- a wrong-topic reply that was eligible to auto-send. It returns only on the founder's explicit word, after the wrong-topic audit clears it (PROGRESS 4ai). Listing it in the EXCLUDED set (as
+# fixed_statement is) would make a bare re-add of the entry fail a test; see tests/test_autosend_wrong_topic.py.
+AUTOSEND_EXCLUDED_ENGINE_ROUTES = frozenset({"engine:fixed_statement", "engine:corporate_tax"})
 
 
 def engine_only_verdict(item):
