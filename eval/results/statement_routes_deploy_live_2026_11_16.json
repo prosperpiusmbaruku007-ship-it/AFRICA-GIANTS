@@ -1,0 +1,241 @@
+{
+ "identity": {
+  "served": {
+   "build": "95640aa",
+   "rag_rows_loaded": 211,
+   "rag_embeddings_shape": [
+    211,
+    768
+   ],
+   "rag_facts_text_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+   "config_rag_fact_count": 211,
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+   "coldstart": {
+    "container_import_ts": 1794847365.243,
+    "enter_started_ts": 1794847365.283,
+    "enter_done_ts": 1794847402.029,
+    "import_to_enter_s": 0.0,
+    "load_s": 36.7,
+    "gpu": "Tesla T4"
+   }
+  },
+  "committed_rows": 211,
+  "committed_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+  "took_s": 52.8
+ },
+ "rows": [
+  {
+   "arm": "ROUTE",
+   "q": "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?",
+   "reply": "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.2
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+   "reply": "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+   "reply": "Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?",
+   "reply": "Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.7
+  },
+  {
+   "arm": "ROUTE",
+   "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "reply": "VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "reply": "VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "NEAR",
+   "q": "Kizingiti cha kusajili VAT ni kiasi gani?",
+   "reply": "Kizingiti cha kusajili VAT ni TZS 200,000,000 (milioni mia mbili) kwa miezi 12, au TZS 100,000,000 (milioni mia moja) kwa miezi 6. Ukifikia mojawapo ya viwango hivi, lazima ujisajili kwa VAT na TRA ndani ya siku 30. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 16.1
+  },
+  {
+   "arm": "NEAR",
+   "q": "Je, NSSF ni ya hiari?",
+   "reply": "Hapana. NSSF si ya hiari kwa mwajiri anayestahili — ni LAZIMA kisheria. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "NEAR",
+   "q": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+   "reply": "Magonjwa ya kazini yanatakiwa kuripotiwa WCF ndani ya siku 14 za kazi tangu kugunduliwa. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 5.5
+  },
+  {
+   "arm": "NEAR",
+   "q": "VAT ya zuio kwa bidhaa ni asilimia ngapi?",
+   "reply": "Kiwango cha VAT ya zuio kwa bidhaa ni asilimia 3, kulingana na Sheria ya Fedha ya 2026. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 5.0
+  },
+  {
+   "arm": "NEAR",
+   "q": "Naomba kufuta usajili wa VAT nikifunga biashara, nafanyaje?",
+   "reply": "Kufuta usajili wa VAT unapaswa kumjulisha Kamishna wa TRA kwa maandishi ndani ya siku 14 kabla ya kufuta usajili. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 5.7
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Overtime inalipwa kiasi gani?",
+   "reply": "Overtime (saa za ziada) inalipwa angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "SDL ni asilimia ngapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 1.3
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mshahara wa mfanyakazi ni TZS 760,000 kwa mwezi. PAYE ni kiasi gani?",
+   "reply": "Hesabu:\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000)\n= TZS 20,000 + 20% × TZS 240,000\n= TZS 20,000 + TZS 48,000\n= TZS 68,000\nKumbuka: Sehemu ya pili (20%) inalipwa kwenye kipato kinachozidi TZS 520,000 tu. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 760,000 − TZS 520,000) = TZS 68,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 21.1
+  }
+ ]
+}
