@@ -1,0 +1,16 @@
+{
+ "file": "negated_premise_set2_AUTHORED.jsonl",
+ "sha256": "17f301bea0b1e5ad9c03f3133088fce92f88c8b95791d498fd986e1516ac2259",
+ "rows": 20,
+ "frozen_utc": "2026-11-16T21:29:39Z",
+ "validator_sha256": "890e435776aad11624de93432314a84d46e405287a8fe4eb7dc3d9f8e46eecf3",
+ "authors": [
+  "external_model"
+ ],
+ "author_models": [
+  "ChatGPT"
+ ],
+ "external_model_rows": 20,
+ "seen_system_output_true": 0,
+ "_rule": "Commit this file and the authored set ALONE, before any measurement. Never edit the set; a second iteration needs a new set."
+}
