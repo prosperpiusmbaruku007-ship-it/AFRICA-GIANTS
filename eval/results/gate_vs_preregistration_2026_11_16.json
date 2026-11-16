@@ -1,0 +1,632 @@
+{
+ "P1_control": {
+  "rows": 220,
+  "verdict_flips": [],
+  "reply_text_differs": 1,
+  "falsified": false
+ },
+ "P2_model_free": {
+  "eval_086": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_087": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_111": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_112": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_130": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_209": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_233": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_305": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_314": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  },
+  "eval_364": {
+   "baseline": false,
+   "now": false,
+   "judge_now": "correct"
+  },
+  "eval_394": {
+   "baseline": true,
+   "now": true,
+   "judge_now": "correct"
+  }
+ },
+ "P3_prompt_only": {
+  "rows": 169,
+  "gains": [
+   "eval_018",
+   "eval_039",
+   "eval_043",
+   "eval_063",
+   "eval_107",
+   "eval_132",
+   "eval_184",
+   "eval_328"
+  ],
+  "losses": [
+   "eval_127",
+   "eval_239",
+   "eval_278",
+   "eval_317",
+   "eval_355"
+  ]
+ },
+ "baseline_all": {
+  "n": 384,
+  "A2_right": 316,
+  "A2": 0.8229,
+  "no_answer_or_clarified": 24,
+  "guard_rows": 15
+ },
+ "now_all": {
+  "n": 384,
+  "A2_right": 319,
+  "A2": 0.8307,
+  "no_answer_or_clarified": 23,
+  "guard_rows": 14
+ },
+ "gate2_16_rows": {
+  "n": 16,
+  "pass": 16
+ },
+ "misses": [
+  {
+   "id": "eval_025",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_026",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_028",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_029",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_044",
+   "subdomain": "vat_withholding",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_048",
+   "subdomain": "vat_withholding",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_051",
+   "subdomain": "efd_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_069",
+   "subdomain": "efd_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_071",
+   "subdomain": "brela_registration",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_074",
+   "subdomain": "brela_registration",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_094",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_106",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_108",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_127",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": true,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_131",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_144",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_155",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_163",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_174",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_183",
+   "subdomain": "osha_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_187",
+   "subdomain": "osha_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_205",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_208",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_220",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_224",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_228",
+   "subdomain": "brela_registration",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_229",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_236",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_239",
+   "subdomain": "osha_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": true,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_257",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_260",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_267",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_270",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_271",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_272",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_273",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_275",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_276",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_277",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_278",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": true,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_281",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_291",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_292",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_294",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_295",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_297",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_298",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_299",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_300",
+   "subdomain": "wcf_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_301",
+   "subdomain": "brela_registration",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_302",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_317",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": true,
+   "baseline_pass": true,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_326",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_332",
+   "subdomain": "gn487a",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_334",
+   "subdomain": "paye_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_347",
+   "subdomain": "efd_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": [
+    {
+     "guard": "D-FIDELITY-7",
+     "mode": "replaced",
+     "pre_guard_body": "Hapana. Kizingiti cha kuanza kutumia EFD ni mauzo ya TZS 11,000,000 (TZS 10M +). Si TZS 200,000,000. Thibitisha na TRA (tra.go.tz).",
+     "post_guard_text": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz)."
+    }
+   ]
+  },
+  {
+   "id": "eval_348",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_355",
+   "subdomain": "efd_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": true,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_364",
+   "subdomain": "wcf_compliance",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_365",
+   "subdomain": "nssf_contributions",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_375",
+   "subdomain": "vat_withholding",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_376",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": null,
+   "guards": []
+  },
+  {
+   "id": "eval_383",
+   "subdomain": "brela_registration",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "wrong",
+   "guards": []
+  },
+  {
+   "id": "eval_388",
+   "subdomain": "sdl_compliance",
+   "changed_by_enumeration": false,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  },
+  {
+   "id": "eval_390",
+   "subdomain": "vat_registration",
+   "changed_by_enumeration": true,
+   "baseline_pass": false,
+   "judge": "correct",
+   "guards": []
+  }
+ ]
+}

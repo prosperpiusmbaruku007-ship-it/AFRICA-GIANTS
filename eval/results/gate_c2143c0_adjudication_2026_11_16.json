@@ -1,0 +1,718 @@
+{
+ "gate": "gate_production_c2143c0.json",
+ "tally_false_pass_queue": {
+  "FALSE_PASS": 11,
+  "PARTIAL": 8,
+  "FALSE_ALARM": 3,
+  "WRONG_GOLD": 1
+ },
+ "tally_false_fail_queue": {
+  "UPHELD": 2,
+  "PARTIAL": 2,
+  "REJECTED": 2
+ },
+ "false_pass": {
+  "eval_065": {
+   "verdict": "PARTIAL",
+   "why": "core right (approved supplier); adds a VFD route from TRA that index row 85 only half supports"
+  },
+  "eval_085": {
+   "verdict": "FALSE_PASS",
+   "why": "TZS 22,000/month late penalty (and 264,000/yr) -- 22,000 is the filing FEE, the penalty is 2,500/month (rows 99,100). Baseline text had 2,500: A NEW REGRESSION"
+  },
+  "eval_120": {
+   "verdict": "PARTIAL",
+   "why": "765,900/energy right; then calls it 'not the highest' -- contradicts row 74. Baseline text was right"
+  },
+  "eval_126": {
+   "verdict": "FALSE_PASS",
+   "why": "'Hapana' right; invents a 31 Jul speech, a PM attribution and 'not yet official'. No served row on the 500,000 public-sector figure. Baseline text was right"
+  },
+  "eval_129": {
+   "verdict": "FALSE_PASS",
+   "why": "garbled order ('nyumba na gari', everything due on the 7th). Baseline text was acceptable"
+  },
+  "eval_132": {
+   "verdict": "PARTIAL",
+   "why": "omits backpay, the central instruction; no wrong figure; labour.go.tz domain unverified. Regex flipped FAIL->PASS"
+  },
+  "eval_145": {
+   "verdict": "PARTIAL",
+   "why": "Hapana right; gives the non-citizen penalty to the user, never states the citizen's 5M/3m (rows 22,92 have it). Same text as baseline"
+  },
+  "eval_162": {
+   "verdict": "FALSE_PASS",
+   "why": "invents criteria that make a citizen a 'mgeni' -- row 91 says the opposite. Same text as baseline"
+  },
+  "eval_171": {
+   "verdict": "FALSE_PASS",
+   "why": "advises restructuring ownership with a Tanzanian -- i.e. the facilitation GN487A prohibits. No served row on grandfathered licences. Same text as baseline"
+  },
+  "eval_185": {
+   "verdict": "PARTIAL",
+   "why": "distinction right; never answers 'which first'; says OSHA before starting. Baseline text identical in substance"
+  },
+  "eval_186": {
+   "verdict": "PARTIAL",
+   "why": "never answers 'do I hire an officer' (row 87: no); asserts >=2 reps, unsupported at 60 staff office-side"
+  },
+  "eval_206": {
+   "verdict": "FALSE_ALARM",
+   "why": "reply matches gold exactly; judge 5/5 wrong"
+  },
+  "eval_210": {
+   "verdict": "PARTIAL",
+   "why": "Hapana + GN605A right; says the 2022 rates ended 31 Dec 2022 -- row 72: no force after 31 Dec 2025. Baseline text was right"
+  },
+  "eval_218": {
+   "verdict": "WRONG_GOLD",
+   "why": "ITA First Schedule para 4(b)(ii) (locked fact rent_wht_rate, read from the Act 2026-09-26) gives 10% to residents AND non-residents; the reply says exactly that, the gold says 'not verified'. Gold is the stale claim (R28 direction)"
+  },
+  "eval_223": {
+   "verdict": "FALSE_PASS",
+   "why": "SCO, SCD, CET, 'verification' -- two of four invented; NO STR row in the served index (tier 1B unbuilt). Same defect as baseline"
+  },
+  "eval_230": {
+   "verdict": "FALSE_ALARM",
+   "why": "no separate personal relief; 0% to 270,000 -- matches gold; the 26,000/27,000 appear only to be denied"
+  },
+  "eval_237": {
+   "verdict": "FALSE_PASS",
+   "why": "'siku 7 baada ya mwisho wa mwezi UNAOFUATA' is a month late; row 37 says 7 days after the end of the calendar month. Text differs from baseline, same defect"
+  },
+  "eval_304": {
+   "verdict": "FALSE_PASS",
+   "why": "invents a 20-employee / TZS 100M rule; row 82 says the choice does not depend on either. Same text as baseline"
+  },
+  "eval_315": {
+   "verdict": "FALSE_ALARM",
+   "why": "6%, 180,000 on 3,000,000 -- exactly the gold; 540,000 is the VAT, also correct (row 65)"
+  },
+  "eval_318": {
+   "verdict": "FALSE_PASS",
+   "why": "SDL/NSSF right (engine) but TELLS A TZS 205,000,000 BUSINESS IT NEED NOT REGISTER FOR VAT. Baseline text said Ndiyo. VAT limb unrouted"
+  },
+  "eval_324": {
+   "verdict": "FALSE_PASS",
+   "why": "SDL 168,000 right; then invents NSSF/WCF totals ('jumla 252,000' = 168+960+24 is 1,152,000) and a 'faida 760,000'. Added fabrication on a correct core"
+  },
+  "eval_338": {
+   "verdict": "PARTIAL",
+   "why": "'Hapana' right; never states the 6%/3% asked about (rows 17,65). Same text as baseline"
+  },
+  "eval_398": {
+   "verdict": "FALSE_PASS",
+   "why": "5% of 700,000 stated as 70,000 (35,000); total 175,000. Question names no levy so the NSSF engine is not reached"
+  }
+ },
+ "false_fail": {
+  "eval_026": {
+   "verdict": "REJECTED",
+   "why": "reply says register within 14 days; the applicant's own deadline is 30 (row 106 states 14 only for the notification AFTER the Commissioner registers someone). Judge wrong"
+  },
+  "eval_069": {
+   "verdict": "UPHELD",
+   "why": "row 95 names every action listed incl. closing premises and suspending the device"
+  },
+  "eval_094": {
+   "verdict": "UPHELD",
+   "why": "NSSF, with interest and penalties -- matches gold"
+  },
+  "eval_187": {
+   "verdict": "PARTIAL",
+   "why": "says contact OSHA; never says register"
+  },
+  "eval_332": {
+   "verdict": "PARTIAL",
+   "why": "content right (prohibited; 10M or 6m; helper 5M/3m) but opens 'Ndiyo' on a can-I question"
+  },
+  "eval_390": {
+   "verdict": "REJECTED",
+   "why": "opens 'Hapana, si sahihi' on a negated premise whose answer is yes, then states the right content -- self-contradictory (same class as eval_388, eval_394)"
+  }
+ },
+ "impact": {
+  "ALL_400_like_for_like_with_0e11c3d_adjudication": {
+   "as_published": {
+    "right": 319,
+    "n": 384,
+    "rate": 0.8307
+   },
+   "confirmed_removed": {
+    "right": 308,
+    "n": 384,
+    "rate": 0.8021
+   },
+   "confirmed_and_partial_removed": {
+    "right": 300,
+    "n": 384,
+    "rate": 0.7812
+   },
+   "baseline_0e11c3d_same_convention": {
+    "as_published": 0.8229,
+    "confirmed_removed": 0.7969,
+    "confirmed_and_partial_removed": 0.7839
+   }
+  },
+  "judge_bracket_closed_by_hand": {
+   "upper_judge_augmented": {
+    "right": 310,
+    "n": 379,
+    "rate": 0.8179
+   },
+   "lower_queue_fully_upheld": {
+    "pass": 287,
+    "total": 379,
+    "acc": 0.7572559366754618,
+    "assumes": "every queued false-pass candidate is a real defect"
+   },
+   "adjudicated_confirmed_removed": {
+    "right": 299,
+    "n": 379,
+    "rate": 0.7889
+   },
+   "adjudicated_confirmed_and_partial_removed": {
+    "right": 291,
+    "n": 379,
+    "rate": 0.7678
+   }
+  },
+  "false_fail_direction_NOT_APPLIED": {
+   "would_add_if_upheld": 2,
+   "per_R12b": "reported, applied to neither bound"
+  }
+ },
+ "miss_classes": {
+  "CORPUS": {
+   "n": 12,
+   "ids": [
+    "eval_026",
+    "eval_074",
+    "eval_106",
+    "eval_131",
+    "eval_205",
+    "eval_220",
+    "eval_224",
+    "eval_236",
+    "eval_126",
+    "eval_129",
+    "eval_171",
+    "eval_223"
+   ]
+  },
+  "GOLD": {
+   "n": 28,
+   "ids": [
+    "eval_028",
+    "eval_029",
+    "eval_051",
+    "eval_069",
+    "eval_094",
+    "eval_144",
+    "eval_228",
+    "eval_260",
+    "eval_267",
+    "eval_270",
+    "eval_271",
+    "eval_272",
+    "eval_273",
+    "eval_275",
+    "eval_276",
+    "eval_277",
+    "eval_291",
+    "eval_292",
+    "eval_294",
+    "eval_295",
+    "eval_297",
+    "eval_298",
+    "eval_299",
+    "eval_300",
+    "eval_317",
+    "eval_347",
+    "eval_364",
+    "eval_365"
+   ]
+  },
+  "MODEL": {
+   "n": 26,
+   "ids": [
+    "eval_025",
+    "eval_044",
+    "eval_048",
+    "eval_071",
+    "eval_127",
+    "eval_155",
+    "eval_163",
+    "eval_174",
+    "eval_183",
+    "eval_187",
+    "eval_229",
+    "eval_239",
+    "eval_301",
+    "eval_302",
+    "eval_332",
+    "eval_348",
+    "eval_355",
+    "eval_375",
+    "eval_383",
+    "eval_388",
+    "eval_390",
+    "eval_085",
+    "eval_162",
+    "eval_237",
+    "eval_304",
+    "eval_324"
+   ]
+  },
+  "ROUTE": {
+   "n": 10,
+   "ids": [
+    "eval_108",
+    "eval_208",
+    "eval_257",
+    "eval_278",
+    "eval_281",
+    "eval_326",
+    "eval_334",
+    "eval_376",
+    "eval_318",
+    "eval_398"
+   ]
+  }
+ },
+ "per_row_class": {
+  "eval_025": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "wrong reason given; row 208 names professional service providers"
+  },
+  "eval_026": {
+   "class": "CORPUS",
+   "idx_checked": "neg-only",
+   "note": "30-day own-application deadline appears only inside a negation in row 106"
+  },
+  "eval_028": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "gold's 4-step voluntary procedure is the unread-KPMG claim (4y); reply defers to the Commissioner"
+  },
+  "eval_029": {
+   "class": "GOLD",
+   "idx_checked": "?",
+   "note": "reply right but omits carry-forward; acceptable"
+  },
+  "eval_044": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "3% for IT services; rows 17,65"
+  },
+  "eval_048": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "supplier/TRA shares inverted; judge said correct and was wrong"
+  },
+  "eval_051": {
+   "class": "GOLD",
+   "idx_checked": "?",
+   "note": "'TZS 0' = no minimum; acceptable"
+  },
+  "eval_069": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply acceptable (row 95)"
+  },
+  "eval_071": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "'KUMI' forms; row 82 says three"
+  },
+  "eval_074": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "no BRELA-cert + TIN minimum row; reply lists five bodies"
+  },
+  "eval_085": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS; regression"
+  },
+  "eval_094": {
+   "class": "GOLD",
+   "idx_checked": "?",
+   "note": "reply acceptable"
+  },
+  "eval_106": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "what NSSF issues on registration is not in the index"
+  },
+  "eval_108": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "a penalty question diverted to the compute clarification; nssf_penalty exists"
+  },
+  "eval_126": {
+   "class": "CORPUS",
+   "idx_checked": "no",
+   "note": "FALSE_PASS"
+  },
+  "eval_127": {
+   "class": "MODEL",
+   "idx_checked": "?",
+   "note": "SDL 'not necessarily the 7th'; prompt-only LOSS"
+  },
+  "eval_129": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "FALSE_PASS"
+  },
+  "eval_131": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "no 'find your sector' row; reply names PKF at a wrong domain"
+  },
+  "eval_144": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply right; scorer wants the 'La' opener"
+  },
+  "eval_155": {
+   "class": "MODEL",
+   "idx_checked": "?",
+   "note": "enforcement 'ongoing'; exercise ended 8 Oct 2025"
+  },
+  "eval_162": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS"
+  },
+  "eval_163": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "states no penalty; row 92 has 5M/3m"
+  },
+  "eval_171": {
+   "class": "CORPUS",
+   "idx_checked": "no",
+   "note": "FALSE_PASS; advises the prohibited act -- guardable"
+  },
+  "eval_174": {
+   "class": "MODEL",
+   "idx_checked": "?",
+   "note": "invents a prosecution and conviction"
+  },
+  "eval_183": {
+   "class": "MODEL",
+   "idx_checked": "?",
+   "note": "asserts OSHA closure power; gold says none"
+  },
+  "eval_187": {
+   "class": "MODEL",
+   "idx_checked": "?",
+   "note": "thin: never says register"
+  },
+  "eval_205": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "objection prerequisite (undisputed / one-third, 15 days) not served"
+  },
+  "eval_208": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "'milioni 95 katika miezi 6' not extracted; the VAT engine answers it correctly. A1"
+  },
+  "eval_220": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "residence-permit classes unserved; invents TZS 10M. A1"
+  },
+  "eval_223": {
+   "class": "CORPUS",
+   "idx_checked": "no",
+   "note": "FALSE_PASS; tier 1B unbuilt"
+  },
+  "eval_224": {
+   "class": "CORPUS",
+   "idx_checked": "neg-only",
+   "note": "same as eval_026; invents '14 working days / first Monday'. A1"
+  },
+  "eval_228": {
+   "class": "GOLD",
+   "idx_checked": "n/a",
+   "note": "gold wants a hedged number; stamp duty is on the OOC list (R11) and is refused by design"
+  },
+  "eval_229": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "invents 8 PAYE bands; the band row is served. A1; routable as a statement"
+  },
+  "eval_236": {
+   "class": "CORPUS",
+   "idx_checked": "?",
+   "note": "90 days vs 6 months; objection-decision period unserved. A1"
+  },
+  "eval_237": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS"
+  },
+  "eval_239": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "collapses the two-stage chain (row 46) to 14 working days; prompt-only LOSS"
+  },
+  "eval_257": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "engine reads 'mapato' as a wage and computes 20% of business income. A1 from an ENGINE"
+  },
+  "eval_260": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply right"
+  },
+  "eval_267": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "clarification matches the gold's own clarification; harness hard-codes clarified => FAIL"
+  },
+  "eval_270": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_271": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_272": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_273": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_275": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_276": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_277": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "defensible: asks headcount, gold is conditional"
+  },
+  "eval_278": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "KES figure; invents a 'reverse charge'; not routed. A1"
+  },
+  "eval_281": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "'TZS 920,000 hivi' not extracted; gold computes 108,000"
+  },
+  "eval_291": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_292": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_294": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "defensible"
+  },
+  "eval_295": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_297": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_298": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_299": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_300": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "same"
+  },
+  "eval_301": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "invents a 10-employee BRELA rule; row 82. A1"
+  },
+  "eval_302": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "invents a TZS 10M wage threshold for VAT. A1"
+  },
+  "eval_304": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS"
+  },
+  "eval_317": {
+   "class": "GOLD",
+   "idx_checked": "n/a",
+   "note": "right substance, no 'Hapana'; judge correct"
+  },
+  "eval_318": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS; VAT limb unrouted (4 phrasings tried)"
+  },
+  "eval_324": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS; added fabrication"
+  },
+  "eval_326": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "both salaries given; clarified instead of computing 158,000 / 165,000"
+  },
+  "eval_332": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "'Ndiyo' opener on a compound can-I question (polarity)"
+  },
+  "eval_334": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "allowance + bonus; clarified instead of computing 115,500"
+  },
+  "eval_347": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply states the right answer via D-FIDELITY-7 replacement copy; scored FAIL because clarified. The owed answer was delivered"
+  },
+  "eval_348": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "negated premise answered 'Ndiyo, no other split' -- row 78. A1; routable as a statement"
+  },
+  "eval_355": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "'chini ya kizingiti cha TZS 11M' -- the fabricated EFD threshold. D-FIDELITY-7 did NOT fire: it keys on a subject named in the BODY and the body never says EFD. A1. prompt-only LOSS"
+  },
+  "eval_364": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply right; row marked unreliable"
+  },
+  "eval_365": {
+   "class": "GOLD",
+   "idx_checked": "yes",
+   "note": "reply right"
+  },
+  "eval_375": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "says withholding still applies for an unregistered supplier. A1"
+  },
+  "eval_376": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "no employees => TZS 0; clarified"
+  },
+  "eval_383": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "row 181 states 500,000 for a company with no share capital; reply says 95,000. A1"
+  },
+  "eval_388": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "negated-premise polarity, same class as 390/394"
+  },
+  "eval_390": {
+   "class": "MODEL",
+   "idx_checked": "yes",
+   "note": "negated-premise polarity"
+  },
+  "eval_398": {
+   "class": "ROUTE",
+   "idx_checked": "yes",
+   "note": "FALSE_PASS; no levy named"
+  }
+ },
+ "clarified_rows": {
+  "n": 22,
+  "ids": [
+   "eval_108",
+   "eval_267",
+   "eval_270",
+   "eval_271",
+   "eval_272",
+   "eval_273",
+   "eval_275",
+   "eval_276",
+   "eval_277",
+   "eval_281",
+   "eval_291",
+   "eval_292",
+   "eval_294",
+   "eval_295",
+   "eval_297",
+   "eval_298",
+   "eval_299",
+   "eval_300",
+   "eval_326",
+   "eval_334",
+   "eval_347",
+   "eval_376"
+  ],
+  "scorer_rule": "kaggle/eval_gate_production_2026_10_09.py::_score_both_keys: `if clarified: new_pass = False` -- EVERY clarification is a miss whatever the gold says",
+  "gold_is_itself_a_clarification_and_reply_matches": [
+   "eval_267",
+   "eval_270",
+   "eval_271",
+   "eval_272",
+   "eval_273",
+   "eval_275",
+   "eval_276",
+   "eval_277",
+   "eval_291",
+   "eval_292",
+   "eval_294",
+   "eval_295",
+   "eval_297",
+   "eval_298",
+   "eval_299",
+   "eval_300"
+  ],
+  "clarified_where_an_answer_was_owed": [
+   "eval_108",
+   "eval_281",
+   "eval_326",
+   "eval_334",
+   "eval_376"
+  ]
+ }
+}
