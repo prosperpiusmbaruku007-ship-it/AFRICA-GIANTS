@@ -962,6 +962,11 @@ def is_partnership_entity(text: str) -> bool:
               for c in _PARTNERSHIP_ENTITY_CUES)
 
 
+_CORP_NEIGHBOUR_VETO = re.compile(
+    r"(?<![a-z])(?:gawio|gawiwa|mgao|dividen[a-z]*|zuio|withhold[a-z]*|return|tamko|kuwasilisha|kuwasilishwa|kujaza|inajaza|inalijaza|mfumo|faini|adhabu|penalt[a-z]*|riba|royalt[a-z]*|mrabaha|"
+    r"capital\s+gains?|hailazimiki|hahitaji|deadline|muda\s+wa\s+mwisho|stamp|leseni|kusajili|usajili)(?![a-z])")
+
+
 def asks_corporate_income_tax(text: str) -> bool:
     ql = text.lower()
     return any(re.search(c, ql) if c.startswith(r"\b") else c in ql
@@ -1514,7 +1519,10 @@ def detect_intent(text: str) -> str:
     # is the income-tax/DSE cue; loss-years is read by the engine only to REFINE an answer to
     # a question already confirmed to be about corporate tax, never to trigger the route by
     # itself.
-    if is_corporate_entity(text) and (
+    # 2026-11-17 (founder, set #2 s2_15/s2_18 + the wrong-topic audit): this route answers ONE thing -- the corporate income tax RATE / DSE listing / AMT statement -- and used to claim every question that names a
+    # company and "kodi ya mapato" or a DSE listing: dividend withholding (8 corpus rows), return deadlines, filing, penalties, nil returns, royalty/service withholding. Those get the rate paragraph, a wrong-topic reply
+    # with full engine authority (and the route was auto-send eligible). The veto is the vocabulary of the neighbouring topics; the signal (a company) is not the ask (R31's converse).
+    if is_corporate_entity(text) and not _CORP_NEIGHBOUR_VETO.search(ql) and (
             asks_corporate_income_tax(ql) or is_dse_listed(text) is not None):
         return "corporate_tax"
 

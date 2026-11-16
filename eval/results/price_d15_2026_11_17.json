@@ -1,0 +1,43 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2291,
+   "flags": 2,
+   "rows": [
+    {
+     "src": "negated_premise_set2_live_2026_11_17.json",
+     "q": "Nina wafanyakazi watano kwenye mgahawa. Hiyo 0.5% ya WCF sihitaji kuikata kwenye mishahara yao, maana ni malipo yangu kama mwajiri, si ndiyo?",
+     "flags": [
+      [
+       "wcf_not_deducted",
+       "Ndiyo, hiyo 0.5% unapaswa kuikata kutoka kwa mishahara ya wafanyakazi wako kabla hujaipiga kwa 0.5%."
+      ]
+     ],
+     "reply": "Ndiyo, hiyo 0.5% unapaswa kuikata kutoka kwa mishahara ya wafanyakazi wako kabla hujaipiga kwa 0.5%. Thibitisha na WCF (wcf.go.tz)."
+    },
+    {
+     "src": "negated_premise_set2_live_2026_11_17.json",
+     "q": "Nimenunua gari la kutembelea kwa ajili ya matumizi ya kampuni yangu. Naweza kudai input VAT ya manunuzi yake kama ninavyodai kwenye bidhaa nyingine, au siyo?",
+     "flags": [
+      [
+       "input_vat_passenger_vehicle",
+       "Kwa mujibu wa sheria, unaweza kudai input VAT ya manunuzi ya magari yanayotumiwa kwa shughuli za biashara ikiwa umesajiliwa VAT."
+      ]
+     ],
+     "reply": "Kwa mujibu wa sheria, unaweza kudai input VAT ya manunuzi ya magari yanayotumiwa kwa shughuli za biashara ikiwa umesajiliwa VAT. Thibitisha na tra.go.tz."
+    }
+   ]
+  },
+  "GOLD": {
+   "pairs": 562,
+   "flags": 0,
+   "rows": []
+  },
+  "TRAINING": {
+   "pairs": 8764,
+   "flags": 0,
+   "rows": []
+  }
+ }
+}

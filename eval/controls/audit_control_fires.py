@@ -1148,6 +1148,31 @@ def audit_unexercisable():
     record('2026-11-17 D-FIDELITY-14 (wrong authority repaired)', 'fidelity', 'a citation naming the wrong authority for the topic (osha/immigration/mlywf/wcf/brela/PKF hosts)',
            _v, 'np_19, np_12', 'TanzLII on GN 487A, a KRA refusal, a multi-authority answer, the correct authority', _note)
 
+    # ── 2026-11-17: corporate_tax wrong-topic veto + D-FIDELITY-15 (WCF deducted / car input VAT) + the corporate_tax auto-send exclusion. PLANTED on the verbatim s2_ specimens.
+    try:
+        from chike import fidelity as _f15, routing as _r15
+        _hc15 = importlib.util.module_from_spec(importlib.util.spec_from_file_location('_hc15', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py')))
+        _hc15.__spec__.loader.exec_module(_hc15)
+        _s2 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'negated_premise_set2_live_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _spec15 = {'s2_18 dividend question no longer routes corporate_tax': _r15.detect_intent(_s2['s2_18']['question']) != 'corporate_tax',
+                   's2_15 dividend question no longer routes corporate_tax': _r15.detect_intent(_s2['s2_15']['question']) != 'corporate_tax',
+                   's2_04 WCF-deducted body flagged': bool(_f15.body_contradicts_d15(_s2['s2_04']['question'], _s2['s2_04']['reply'])),
+                   's2_17 car-VAT body flagged': bool(_f15.body_contradicts_d15(_s2['s2_17']['question'], _s2['s2_17']['reply'])),
+                   'corporate_tax excluded from auto-send': 'engine:corporate_tax' in _hc15.AUTOSEND_EXCLUDED_ENGINE_ROUTES and 'engine:corporate_tax' not in _hc15.AUTOSEND_ELIGIBLE_ENGINE_ROUTES}
+        _clean15 = [_r15.detect_intent('Kodi ya mapato ya kampuni ni asilimia ngapi?') == 'corporate_tax',
+                    not _f15.body_contradicts_d15('Nikate WCF kwenye mshahara?', 'Ni kosa kwa mwajiri kukata WCF kutoka kwa mshahara wa mfanyakazi.'),
+                    not _f15.body_contradicts_d15('Naweza kudai input VAT ya gari la kampuni?', 'Hapana kwa gari la abiria, isipokuwa biashara yako ni kusafirisha abiria.')]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code15 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired15 = 'fidelity.body_contradicts_d15(' in _code15
+        _v = ('FIRES' if (all(_spec15.values()) and all(_clean15) and _wired15) else 'NOT_WIRED' if (all(_spec15.values()) and all(_clean15)) else 'ERROR')
+        _note = (f'specimens: {_spec15}; clean limbs (must all be True): {_clean15}; wired (comments stripped): {_wired15}. Priced: 0 gold flags, 0 training, 2 stored = the specimens (eval/results/price_d15_2026_11_17.json); '
+                 'wrong-topic audit 61 probes 0 failed after the veto (eval/results/autosend_wrong_topic_audit_2026_11_17.json).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 corporate_tax veto + D-FIDELITY-15 + auto-send exclusion', 'fidelity', 'a dividend-withholding question answered with the corporate rate; WCF described as deducted; input VAT on a car claimable',
+           _v, 's2_15, s2_18, s2_04, s2_17', 'the corporate rate question, a body forbidding the WCF deduction, the correct car-VAT answer', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

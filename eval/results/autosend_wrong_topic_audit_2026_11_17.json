@@ -1,0 +1,834 @@
+{
+ "probes": [
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni yangu haijaorodheshwa kwenye soko la hisa la DSE. Nikigawa gawio kwa wanahisa, withholding tax yake ni 10%, si ndiyo?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "s2_15 verbatim: dividend WHT"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Nina kampuni ambayo imeorodheshwa DSE. Tukigawa gawio kwa wanahisa, withholding tax yake ni 5%, ndiyo?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "s2_18 verbatim: dividend WHT, DSE-listed (the listing cue fired)"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kiwango cha kodi ya zuio ya gawio kwa kampuni zilizoorodheshwa DSE ni asilimia ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "dividend WHT rate"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni yangu ikigawa mgao kwa wanahisa, nikate kodi kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "'mgao' = dividend"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Dividend withholding tax kwa kampuni isiyoorodheshwa DSE ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "English dividend"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni ya Tanzania inapokea dividendi kutoka kampuni nyingine. Je, inatozwa kodi ya kampuni?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "dividend received"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Muda wa mwisho wa kuwasilisha return ya kodi ya mapato ya kampuni TRA ni lini?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "return deadline, not the rate"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni yangu imechelewa kuwasilisha tamko la kodi ya kampuni, faini ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "late-filing penalty"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni ambayo haikufanya biashara mwaka mzima hailazimiki kuwasilisha tamko la kodi ya kampuni kwa TRA, sivyo?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "nil return"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni inajaza return ya kodi ya mapato kwenye mfumo gani wa TRA?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "filing system"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kodi ya zuio ya huduma za kitaalamu kwa kampuni ni asilimia ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "service-fee withholding"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni inayolipa royalty kwa kampuni ya nje inakata zuio kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "royalty withholding"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kodi ya kampuni inapigwa faida ya mauzo ya hisa (capital gains) kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "capital gains (also out-of-scope: the OOC classifier refuses it before routing; WAS expected none only -- history)"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kodi ya mapato ya kampuni ni asilimia ngapi?",
+   "got": "corporate_tax",
+   "ok": [
+    "corporate_tax"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hi",
+   "why": "CONTROL: the rate question"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni yangu imeorodheshwa DSE, tunalipa kodi ya mapato asilimia ngapi?",
+   "got": "corporate_tax",
+   "ok": [
+    "corporate_tax"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kampuni zilizoorodheshwa DSE zinapata asilimia 25 kwa miaka 3 — LAKINI kwa sharti kwamba angalau asilimia 25 ya hisa ziwe kwa umma (kigezo hiki tangu 2025-07-01",
+   "why": "CONTROL: DSE-listed corporate rate (not a dividend)"
+  },
+  {
+   "route": "corporate_tax",
+   "q": "Kampuni yangu ina hasara miaka mitatu, je tunalipa AMT?",
+   "got": "corporate_tax",
+   "ok": [
+    "corporate_tax"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Ndiyo, AMT inatumika. Kampuni yenye hasara isiyopunguzwa kwa miaka 3 mfululizo hulipa AMT ya asilimia 1 ya mauzo (turnover) ya mwaka wa tatu wa hasara — SI faid",
+   "why": "CONTROL: AMT"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Ninalipa pango la ofisi TZS 800,000 kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+   "got": "rent_wht",
+   "ok": [
+    "rent_wht"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna ",
+   "why": "CONTROL: rent withholding"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+   "got": "sdl",
+   "ok": [
+    "none",
+    "sdl"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "eval_258: rent in the SDL base is an SDL question"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Pango la ofisi TZS 800,000, VAT inaongezwa juu yake?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "VAT on rent, not rent WHT"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Nina nyumba nimepangisha, kodi ya mapato ninayolipa mimi mwenye nyumba ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "the LANDLORD's own income tax, not the tenant's withholding"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Kodi ya ardhi ninayolipa serikalini kwa kiwanja changu ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "land rent/ground rent to government"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Mkataba wa pango la ofisi unatakiwa kuwa na stamp duty?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "stamp duty on a lease"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT?",
+   "got": "vat_registration",
+   "ok": [
+    "vat_registration"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwa",
+   "why": "CONTROL"
+  },
+  {
+   "route": "vat_registration",
+   "q": "VAT withholding kwa huduma ni asilimia ngapi?",
+   "got": "none",
+   "ok": [
+    "fixed_statement",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "VAT withholding is not VAT registration"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Nimesajiliwa VAT, return ya VAT inawasilishwa lini?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "VAT return deadline"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Nimesajiliwa VAT, nikichelewa kulipa faini ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "VAT late penalty"
+  },
+  {
+   "route": "vat_registration",
+   "q": "VAT ya kuagiza bidhaa kutoka nje (import VAT) ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "import VAT"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Nimeuza kwa mkopo milioni 30, VAT inalipwa lini?",
+   "got": "fixed_statement",
+   "ok": [
+    "fixed_statement",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "VAT time of supply"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Kampuni yangu ina mauzo ya milioni 300, kodi ya mapato ya kampuni ni ngapi?",
+   "got": "corporate_tax",
+   "ok": [
+    "corporate_tax",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hi",
+   "why": "income tax of a company that also exceeds the VAT threshold"
+  },
+  {
+   "route": "vat_registration",
+   "q": "Mauzo yangu ni milioni 250, naweza kudai input VAT ya gari la kampuni?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "input VAT on a car"
+  },
+  {
+   "route": "presumptive",
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka, kodi ya makadirio ni kiasi gani?",
+   "got": "presumptive",
+   "ok": [
+    "presumptive"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kodi ya makadirio = 4.0% × TZS 50,000,000 = TZS 2,000,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza k",
+   "why": "CONTROL"
+  },
+  {
+   "route": "presumptive",
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka, return ya kodi ya mapato niwasilishe lini?",
+   "got": "presumptive",
+   "ok": [
+    "none",
+    "presumptive"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kodi ya makadirio = 4.0% × TZS 50,000,000 = TZS 2,000,000 (kiwango hiki ni kile kile ukiwa unatunza kumbukumbu au la) Kumbuka: kama umepata TIN mara ya kwanza k",
+   "why": "return deadline for a small trader (the presumptive engine states a rate, not a deadline)"
+  },
+  {
+   "route": "presumptive",
+   "q": "Mauzo yangu ni milioni 50, nikichelewa kulipa kodi ya makadirio faini ni ngapi?",
+   "got": "presumptive",
+   "ok": [
+    "none",
+    "presumptive"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "late penalty"
+  },
+  {
+   "route": "presumptive",
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka, lazima nijisajili VAT?",
+   "got": "vat_registration",
+   "ok": [
+    "vat_registration"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Kwa upande wa miezi 12: hapana, mauzo yako ya TZS 50,000,000 hayajafikia kizingiti cha TZS 200,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima ",
+   "why": "the VAT neighbour of a turnover figure"
+  },
+  {
+   "route": "presumptive",
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka, nahitaji EFD?",
+   "got": "efd_requirement",
+   "ok": [
+    "efd_requirement",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia",
+   "why": "the EFD neighbour of a turnover figure"
+  },
+  {
+   "route": "paye",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, PAYE ni ngapi?",
+   "got": "paye",
+   "ok": [
+    "paye"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "CONTROL"
+  },
+  {
+   "route": "paye",
+   "q": "Nimemlipa mkandarasi TZS 5,000,000 kwa huduma, nikate withholding kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "contractor service WHT, not PAYE"
+  },
+  {
+   "route": "paye",
+   "q": "Mfanyakazi wangu amelipwa bonus ya TZS 2,000,000, kodi yake ni ngapi?",
+   "got": "paye",
+   "ok": [
+    "none",
+    "paye"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "bonus: PAYE or a clarification, never another engine"
+  },
+  {
+   "route": "paye",
+   "q": "PAYE ikichelewa kulipwa faini ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "PAYE penalty"
+  },
+  {
+   "route": "paye",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000, nikate zuio la kodi?",
+   "got": "none",
+   "ok": [
+    "none",
+    "paye"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "'zuio' in a payroll sentence"
+  },
+  {
+   "route": "sdl",
+   "q": "Nina wafanyakazi 12 na mishahara TZS 6,000,000, SDL ni kiasi gani?",
+   "got": "sdl",
+   "ok": [
+    "sdl"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "CONTROL"
+  },
+  {
+   "route": "sdl",
+   "q": "Nikiacha kulipa SDL kwa wafanyakazi wangu 15, nitatozwa faini kiasi gani?",
+   "got": "sdl",
+   "ok": [
+    "none",
+    "sdl"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "SDL penalty with a headcount"
+  },
+  {
+   "route": "sdl",
+   "q": "SDL inalipwa na nani, mwajiri au mfanyakazi?",
+   "got": "none",
+   "ok": [
+    "none",
+    "sdl"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "incidence"
+  },
+  {
+   "route": "nssf",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?",
+   "got": "nssf",
+   "ok": [
+    "nssf"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "CONTROL"
+  },
+  {
+   "route": "nssf",
+   "q": "Nitapata pensheni kiasi gani nikistaafu NSSF?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "benefits, not contributions"
+  },
+  {
+   "route": "nssf",
+   "q": "Nikichelewa kulipa NSSF kwa mfanyakazi mwenye mshahara 800,000, faini ni ngapi?",
+   "got": "nssf",
+   "ok": [
+    "none",
+    "nssf"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "penalty beside a wage"
+  },
+  {
+   "route": "nssf",
+   "q": "Mafao ya uzazi NSSF ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "maternity benefit"
+  },
+  {
+   "route": "wcf",
+   "q": "Mishahara ya wafanyakazi wangu ni TZS 3,000,000 kwa mwezi, WCF ni ngapi?",
+   "got": "wcf",
+   "ok": [
+    "wcf"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "CONTROL"
+  },
+  {
+   "route": "wcf",
+   "q": "Mfanyakazi ameumia kazini, nitoe taarifa WCF ndani ya siku ngapi?",
+   "got": "fixed_statement",
+   "ok": [
+    "fixed_statement",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "accident reporting"
+  },
+  {
+   "route": "wcf",
+   "q": "Mfanyakazi aliyeumia kazini anastahili fidia ya kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "compensation benefit, not the contribution"
+  },
+  {
+   "route": "minimum_wage",
+   "q": "Mshahara wa chini wa sekta ya kilimo ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "minimum_wage",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "CONTROL-ish: sector minimum"
+  },
+  {
+   "route": "minimum_wage",
+   "q": "Mshahara wa chini Kenya ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "another country"
+  },
+  {
+   "route": "minimum_wage",
+   "q": "Mshahara wa chini wa wafanyakazi wa serikali ni kiasi gani?",
+   "got": "none",
+   "ok": [
+    "minimum_wage",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "public sector (500,000) vs the private order"
+  },
+  {
+   "route": "minimum_wage",
+   "q": "Nikimlipa mfanyakazi wa duka TZS 150,000 kwa mwezi, ni chini ya mshahara wa chini?",
+   "got": "minimum_wage",
+   "ok": [
+    "minimum_wage",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Mshahara wa TZS 150,000 kwa mwezi uko CHINI ya kima cha chini cha biashara na fedha — biashara, ambacho ni TZS 200,500 kwa mwezi (GN 605A, Jedwali la Pili, inay",
+   "why": "compliance check"
+  },
+  {
+   "route": "efd_requirement",
+   "q": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
+   "got": "efd_requirement",
+   "ok": [
+    "efd_requirement"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia",
+   "why": "CONTROL (a corpus row that routes; my first control phrasing, 'Je, EFD ni lazima kwangu...', did not route: a probe-wording miss recorded as history)"
+  },
+  {
+   "route": "efd_requirement",
+   "q": "Mashine ya EFD inagharimu kiasi gani?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "EFD price"
+  },
+  {
+   "route": "efd_requirement",
+   "q": "EFD yangu imeharibika, nifanye nini?",
+   "got": "none",
+   "ok": [
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "EFD breakdown"
+  },
+  {
+   "route": "efd_requirement",
+   "q": "Mteja amenunua kwa shilingi 300, nimpe risiti ya EFD?",
+   "got": "none",
+   "ok": [
+    "efd_requirement",
+    "none"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "receipt on a small sale"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Ubia wetu unalipa kodi ya mapato kiasi gani?",
+   "got": "partnership_tax",
+   "ok": [
+    "partnership_tax"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kw",
+   "why": "CONTROL"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Mimi ni sole proprietor, kodi ya mapato yangu ni ngapi?",
+   "got": "none",
+   "ok": [
+    "none",
+    "presumptive"
+   ],
+   "passed": true,
+   "model_free_engine_reply": false,
+   "head": null,
+   "why": "a sole trader is not a partnership"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Kampuni mbili zimeungana kwa ubia wa mradi (joint venture), kodi ya mapato inalipwaje?",
+   "got": "partnership_tax",
+   "ok": [
+    "corporate_tax",
+    "none",
+    "partnership_tax"
+   ],
+   "passed": true,
+   "model_free_engine_reply": true,
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kw",
+   "why": "a JV of companies"
+  }
+ ],
+ "failed": [],
+ "population_model_free_neighbour_replies": [
+  {
+   "route": "rent_wht",
+   "q": "Kiwango cha kodi ya zuio ya pango la kibiashara (commercial rent) Tanzania ni asilimia ngapi?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Kiwango cha withholding tax kwa kodi ya pango la biashara kwa mtu asiye mkazi ni asilimia ngapi?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Kodi ya zuio kwenye pango la ardhi/mali isiyohamishika kwa mkazi Tanzania ni asilimia 15 — je, ni sahihi?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Nalipa kodi ya pango laki tano kwa mwezi kwa mwenye jengo, je nakata withholding?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Ni nini maana ya kodi ya zuio hasa inapolipa kwenye pango la kibiashara?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Sisi ni ubia wa maduka mawili, mimi na mwenzangu. Tunatakiwa kuwasilisha tamko la kodi ya mapato kama kampuni, au kila mmoja wetu analipa mwenyewe?",
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake"
+  },
+  {
+   "route": "efd_requirement",
+   "q": "TRA inaweza kunipiga faini kwa kutokuwa na EFD wakati mauzo yangu yako TZS 15M kwa mwaka?",
+   "head": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi cha mauzo yako -- hakuna kizingiti cha mauzo kwa EFD. Msamaha unatolewa TU na TRA kupitia taarifa rasmi (Commissioner-General pub"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Ubia wetu una mauzo ya milioni 50, kodi ya mapato ni ngapi?",
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Ubia wetu unalipa kodi ya mapato kiasi gani?",
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "Ubia wetu unauza milioni 30 kwa mwaka, kodi ya mapato tunalipa ngapi?",
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake"
+  },
+  {
+   "route": "rent_wht",
+   "q": "What is the withholding tax rate on commercial rent for a non-resident?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "What is the withholding tax rate on commercial rent in Tanzania?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "rent_wht",
+   "q": "Withholding tax on land/real estate rent paid to a Tanzania resident is 15% — is this correct?",
+   "head": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao y"
+  },
+  {
+   "route": "partnership_tax",
+   "q": "ubia wetu unapata faida ya milioni 40 kwa mwaka, kodi ya mapato tunalipaje?",
+   "head": "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia hugawanywa kwa kila mshirika kulingana na sehemu yake"
+  }
+ ]
+}

@@ -620,6 +620,11 @@ CONSTANT_RESTATEMENTS = {
                                 "Thibitisha na mamlaka ya leseni (halmashauri yako)."),
     "record_keeping_period": ("Rekodi za biashara zihifadhiwe kwa miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. "
                               "Muda ni mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
+    # D-FIDELITY-15 (2026-11-17): WCF is never deducted from the employee; input VAT on a passenger car. Sentences lifted from wcf_paid_to_fund_not_tra / input_vat_passenger_vehicle.
+    "wcf_not_deducted": ("WCF inalipwa na mwajiri peke yake: mfanyakazi hachangii WCF, kwa hiyo HAIKATWI kwenye mshahara wake, na ni kosa kwa mwajiri kukata mchango wa WCF kwa mfanyakazi. "
+                         "Kiwango ni asilimia 0.5 ya jumla ya mishahara ghafi ya wafanyakazi wote, na hulipwa kwa Mfuko wa WCF (wcf.go.tz), si TRA."),
+    "input_vat_passenger_vehicle": ("Hapana: VAT ya pembejeo haidaiwi kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo "
+                                    "(Sheria ya VAT). Thibitisha na TRA (tra.go.tz)."),
     "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
                            "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
 }

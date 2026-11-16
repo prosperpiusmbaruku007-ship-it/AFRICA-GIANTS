@@ -1176,6 +1176,13 @@ class Orchestrator:
             return dataclasses.replace(
                 sub, text=clarification.constants_restated(topics),
                 raw_text=sub.text, needs_clarification=False, guard="replaced")
+        elif sub.computation is None and fidelity.body_contradicts_d15(sub.sub_question.text, cleaned):
+            # D-FIDELITY-15 (2026-11-17, s2_04 / s2_17): WCF described as deducted from the employee's wage; input VAT on a passenger car described as claimable. Constants (R19), FACT path, REPLACED with the
+            # locked statement. Model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
+            topics = [t for t, _ in fidelity.body_contradicts_d15(sub.sub_question.text, cleaned)]
+            return dataclasses.replace(
+                sub, text=clarification.constants_restated(topics),
+                raw_text=sub.text, needs_clarification=False, guard="replaced")
         elif sub.computation is None and fidelity.body_states_derived_levy_amount(sub.sub_question.text, cleaned):
             # D-FIDELITY-13 (np_28, th_22): a shilling amount derived for a payroll levy from a wage nobody gave. D-FIDELITY-9's loose form restricted to the FACT path and to a sentence that DERIVES an amount.
             levies = routing.all_explicit_levies(sub.sub_question.text)

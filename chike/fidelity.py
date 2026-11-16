@@ -1750,3 +1750,50 @@ def repair_authority(question: str, body: str) -> str:
     if n:
         return fixed
     return re.sub(r"(?<![a-z0-9.-])" + esc + r"(?![a-z0-9-])", primary, body, flags=re.IGNORECASE)
+
+
+# ---- D-FIDELITY-15 (2026-11-17, founder, from set #2): TWO MORE CONSTANTS, FACT PATH.
+#   WCF deducted from wages   s2_04  "Ndiyo, hiyo 0.5% unapaswa kuikata kutoka kwa mishahara ya wafanyakazi wako ..."   (the employee does NOT contribute; deducting is a criminal offence: locked wcf_paid_to_fund_not_tra)
+#   input VAT on a car        s2_17  "unaweza kudai input VAT ya manunuzi ya magari ... ikiwa umesajiliwa VAT"            (no input credit for a passenger vehicle unless the business deals in/hires/transports passengers)
+# R19: each is a lookup against a statutory constant -- no transformation of the user's numbers makes "WCF is deducted from the employee" true -- so no engine result is needed and the guard reaches the fact path.
+# OPENER-RIGHT IS NOT CONTENT-RIGHT: s2_04's opener (Ndiyo) was correct for the premise and its content was the offence; no opener metric can see it. NARROW BY CONSTRUCTION (R17): the WCF rule needs WCF named in the
+# SENTENCE and an affirmative deduction verb on the wage, with every negation cue vetoing; the VAT rule needs a PASSENGER-car question (the locked fact says which other vehicles count is NOT stated, so pickups and
+# lorries are never judged), an affirmative "you can claim" with no negation and no passenger-business exception.
+_D15_WCF_SENT = re.compile(r"(?<![a-z])(?:wcf|fidia\s+ya\s+wafanyakazi|mfuko\s+wa\s+fidia)(?![a-z])|0\.5\s*%", re.IGNORECASE)
+_D15_DEDUCT = re.compile(r"(?<![a-z])(?:kuikata|kuzikata|ukate|ukatie|inakatwa|hukatwa|ikatwe|inatakiwa\s+kukatwa|unakata|nakata|mnakata|kukata)(?![a-z])", re.IGNORECASE)
+_D15_OTHER_LEVY = re.compile(r"(?<![a-z])(?:paye|nssf|sdl|osha|vat|tra)(?![a-z])", re.IGNORECASE)
+_D15_WAGE = re.compile(r"mshahara|mishahara|wafanyakazi\s+wako|mfanyakazi", re.IGNORECASE)
+_D15_NEG = re.compile(r"haikatwi|hukatwi|hakatwi|hazikatwi|usikate|usiikate|usimkate|hutakiwi|hupaswi|haupaswi|haitakiwi|haikatwe|bila\s+kukata|si\s+(?:ya|sehemu|kwa)|hakikatwi|hulipwa\s+na\s+mwajiri\s+pekee|mwajiri\s+pekee|kosa|marufuku|haihusu|sihitaji|hahitaji|hatakiwi", re.IGNORECASE)
+_D15_CAR_Q = re.compile(r"gari\s+la\s+(?:kutembelea|abiria|kampuni|kibinafsi|familia)|magari\s+ya\s+abiria|passenger\s+(?:car|vehicle)|saloon|salon|company\s+car", re.IGNORECASE)
+_D15_VAT_Q = re.compile(r"(?<![a-z])vat(?![a-z])|pembejeo|input", re.IGNORECASE)
+_D15_CLAIM = re.compile(r"unaweza\s+kudai|unaruhusiwa\s+kudai|unadai|unastahili\s+kudai|inaruhusiwa\s+kudai|unaweza\s+kurejeshewa|inadaiwa|can\s+claim", re.IGNORECASE)
+_D15_VAT_SAFE = re.compile(r"hapana|huwezi|hairuhusiwi|haidaiwi|hudai|isipokuwa|except|kusafirisha|kukodisha|kuuza\s+magari|abiria|mizigo|lori|pickup|trekta|basi|teksi|taxi|siyo|si\s+", re.IGNORECASE)
+
+
+def wcf_deduction_asserted(body: str, question: str = ""):
+    """[sentence] stating that WCF is deducted from the employee's wage. A sentence with ANY negation/offence cue is a mention, never judged."""
+    # a pronoun reply ("unapaswa kuikata ...") names no levy in the sentence: the QUESTION supplies it, but only when it names WCF and NO other levy
+    wcf_only = bool(_D15_WCF_SENT.search(question or "") and not re.search(r"(?<![a-z])(?:nssf|paye|sdl)(?![a-z])", question or "", re.IGNORECASE))
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if s and (_D15_WCF_SENT.search(s) or wcf_only) and not _D15_OTHER_LEVY.search(s) and _D15_DEDUCT.search(s) and _D15_WAGE.search(s) and not _D15_NEG.search(s):
+            out.append(s.strip())
+    return out
+
+
+def input_vat_car_claim_asserted(question: str, body: str):
+    """[sentence] affirming that input VAT on a PASSENGER car is claimable (no negation, no passenger-business exception), for a question about a passenger/company car."""
+    if not (_D15_CAR_Q.search(question or "") and _D15_VAT_Q.search(question or "")):
+        return []
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if s and _D15_CLAIM.search(s) and not _D15_VAT_SAFE.search(s):
+            out.append(s.strip())
+    return out
+
+
+def body_contradicts_d15(question: str, body: str):
+    """[(topic, sentence)] -- empty when neither rule applies."""
+    out = [("wcf_not_deducted", s) for s in wcf_deduction_asserted(body, question)]
+    out += [("input_vat_passenger_vehicle", s) for s in input_vat_car_claim_asserted(question, body)]
+    return out
