@@ -1,0 +1,482 @@
+{
+ "replies": 2244,
+ "judged": 1132,
+ "flagged_rows": 35,
+ "distinct": [
+  {
+   "src": "coverage_deploy_live_2026_11_13.json",
+   "topic": "labour",
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "cited": [
+    "mamlaka husika (osha",
+    "osha.go.tz"
+   ],
+   "outside": [
+    "mamlaka husika (osha",
+    "osha.go.tz"
+   ],
+   "reply": "Kwa mfanyakazi wa kila mwezi, notisi ni siku 4. Thibitisha na mamlaka husika (osha.go.tz)."
+  },
+  {
+   "src": "coverage_deploy_live_2026_11_13.json",
+   "topic": "labour",
+   "q": "Overtime inalipwa kiasi gani?",
+   "cited": [
+    "gn605a (sekta yako"
+   ],
+   "outside": [
+    "gn605a (sekta yako"
+   ],
+   "reply": "Kiwango cha chini cha overtime ni asilimia 25% ya mshahara wa msingi. Thibitisha na GN605A (sekta yako)."
+  },
+  {
+   "src": "extended_078_live_replies_2026_09_05.json",
+   "topic": "osha",
+   "q": "Tunataka kuanzisha kampuni, tuko wawili tu tunaotarajia kuwa wakurugenzi. Inatosha kisheria?",
+   "cited": [
+    "brela official (brela",
+    "brela.go.tz"
+   ],
+   "outside": [
+    "brela official (brela",
+    "brela.go.tz"
+   ],
+   "reply": "Kwa mujibu wa taarifa nilizonazo, kuna masharti ya idadi ya wakurugenzi kwa kampuni. Thibitisha na BRELA Official (brela.go.tz)."
+  },
+  {
+   "src": "extended_078_live_replies_2026_09_05.json",
+   "topic": "wcf",
+   "q": "Kati ya makato ya wafanyakazi, kile cha mafunzo na kile cha ajali kazini -- ni kipi asilimia tatu na nusu?",
+   "cited": [
+    "tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "tra",
+    "tra.go.tz"
+   ],
+   "reply": "Kiwango cha asilimia 3.5 kinatumika kwenye mafunzo (training levy). Thibitisha na tra.go.tz."
+  },
+  {
+   "src": "extended_078_live_replies_2026_09_05.json",
+   "topic": "wcf",
+   "q": "Duka letu lina wafanyakazi kumi na mbili, mshahara wa kila mmoja ni laki nne. Tunataka kujua makato yote matatu -- mafunzo, uzeeni, na ajali kazini.",
+   "cited": [
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "reply": "Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "src": "fixed_statements_deploy_live_2026_11_16.json",
+   "topic": "labour",
+   "q": "Naomba kujua kuhusu overtime ya wafanyakazi wangu.",
+   "cited": [
+    "mlywf (mlywf",
+    "mlywf.go.tz"
+   ],
+   "outside": [
+    "mlywf.go.tz",
+    "mlywf (mlywf"
+   ],
+   "reply": "Ndiyo, kwa mujibu wa Sheria ya Ajira na Mahusiano Kazini (ELRA), kiwango cha chini cha malipo ya overtime ni asilimia 150% ya mshahara wa msingi. Thibitisha na MLYWF (mlywf.go.tz)."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "tax",
+   "q": "Biashara inaingiza TZS milioni 25 kwa mwezi — baada ya miezi mingapi inafika kizingiti cha VAT cha TZS milioni 200?",
+   "cited": [
+    "kwa makini mauzo yako kila mwezi",
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "kwa makini mauzo yako kila mwezi"
+   ],
+   "reply": "Kufikia kizingiti cha VAT cha TZS 200M/12 miezi kunachukua muda mrefu sana — angalia kwa makini mauzo yako kila mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "tax",
+   "q": "Biashara inapata TZS milioni 20 kwa mwezi — baada ya miezi mingapi inazidi kizingiti cha VAT cha miezi 6 (TZS milioni 100)?",
+   "cited": [
+    "pia kizingiti cha miezi 12 (tzs milioni 200): kama umefikia tzs milioni 190, unaweza kulaz",
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "pia kizingiti cha miezi 12 (tzs milioni 200): kama umefikia tzs milioni 190, unaweza kulaz"
+   ],
+   "reply": "Baada ya miezi 4 tu (miezi 4 × TZS milioni 20 = TZS milioni 80). Kwa sababu 80 ni chini ya 100, bado haujafika kizingiti cha miezi 6. Lakini angalia pia kizingiti cha miezi 12 (TZS milioni 200): kama umefikia TZS milioni 190, unaweza kulazimika kusajili VAT ha"
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "tax",
+   "q": "EFD machine yangu imeharibika ghafla — hatua sahihi ni zipi?",
+   "cited": [
+    "msambazaji wa efd wako haraka ili kurejesha utendaji; (4) rekodi muamala wowote uliotokea",
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "msambazaji wa efd wako haraka ili kurejesha utendaji; (4) rekodi muamala wowote uliotokea"
+   ],
+   "reply": "Hatua sahihi ni: (1) Taarifa TRA mara moja; (2) Tumia rekodi za kumbukumbu (manual receipts) kwa muda wa kusubiri EFD kurekebishwa; (3) Wasiliana na msambazaji wa EFD wako haraka ili kurejesha utendaji; (4) Rekodi muamala wowote uliotokea kwa mikono. Thibitish"
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "brela",
+   "q": "Tofauti kuu kati ya jina la biashara (sole trader) na kampuni yenye ukomo (limited company) kuhusiana na wajibu wa kisheria ni nini?",
+   "cited": [
+    "wakili wa biashara"
+   ],
+   "outside": [
+    "wakili wa biashara"
+   ],
+   "reply": "Kampuni yenye ukomo (limited company): wamiliki wanaweza kulinda mali zao binafsi dhidi ya madeni ya kampuni. Jina la biashara (sole trader): mmiliki ndiye biashara — mali yake binafsi inaweza kuchukuliwa. Thibitisha na wakili wa biashara."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "nssf",
+   "q": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+   "cited": [
+    "nssf",
+    "nssf (nssf",
+    "nssf.go.tz",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "tra.go.tz"
+   ],
+   "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi "
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "labour",
+   "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+   "cited": [
+    "ofisi ya kazi (wcf",
+    "wcf.go.tz"
+   ],
+   "outside": [
+    "wcf.go.tz"
+   ],
+   "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na Ofisi ya Kazi ili kuamua viwango sahihi vya mishahara kwa kila sekta na subsekta. Thibitisha na Ofisi ya Kazi (wcf.go.tz)."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "immigration",
+   "q": "GN 487A ilianza kutumika tarehe ngapi?",
+   "cited": [
+    "tanzlii (tanzlii",
+    "tanzlii.org"
+   ],
+   "outside": [
+    "tanzlii.org",
+    "tanzlii (tanzlii"
+   ],
+   "reply": "GN 487A ilianza kutumika tarehe 28 Julai 2025. Thibitisha na TanzLII (tanzlii.org)."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "immigration",
+   "q": "Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?",
+   "cited": [
+    "tangazo rasmi la serikali (government gazette) kwenye tanzlii",
+    "tanzlii.org"
+   ],
+   "outside": [
+    "tanzlii.org",
+    "tangazo rasmi la serikali (government gazette) kwenye tanzlii"
+   ],
+   "reply": "Hapana. GN 487A haikuwa na muda wa 'kujiandaa' uliotolewa rasmi. Ilisainiwa na Rais Samia Suluhu Hassan tarehe 28 Julai 2025 na kuanza kutumika mara moja siku hiyo hiyo -- hakukuwa na muda wa mpito. Thibitisha na tangazo rasmi la Serikali (government gazette) "
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "immigration",
+   "q": "Jina kamili la GN 487A ni nini?",
+   "cited": [
+    "tanzlii (tanzlii",
+    "tanzlii.org"
+   ],
+   "outside": [
+    "tanzlii.org",
+    "tanzlii (tanzlii"
+   ],
+   "reply": "GN 487A ni Tangazo la Serikali Na. 487A (Government Notice No. 487A). Jina lake kamili ni: The Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025. Linazuia shughuli 15 kwa wasio raia Tanzania. Thibitisha na TanzLII (tanzlii.or"
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "immigration",
+   "q": "GN 487A ilipigwa marufuku tarehe gani na ilitekelezwa lini — ni tarehe moja au mbili tofauti?",
+   "cited": [
+    "tanzlii (tanzlii",
+    "tanzlii.org"
+   ],
+   "outside": [
+    "tanzlii.org",
+    "tanzlii (tanzlii"
+   ],
+   "reply": "GN 487A ilipigiwa marufuku rasmi tarehe 28 Julai 2025 — siku hiyo hiyo. Ilitekelezwa pia kuanzia tarehe hiyo hiyo. Hakuna tarehe nyingine inayohusika na GN 487A — 28 Julai 2025 ndiyo tarehe pekee muhimu hapa. Thibitisha na TanzLII (tanzlii.org)."
+  },
+  {
+   "src": "gate_production_0e11c3d.json",
+   "topic": "tax",
+   "q": "Nina wateja 1,500 kwa mwezi, je hii inanifanya nilazimike kusajili VAT?",
+   "cited": [
+    "mauzo yako kwa miezi sita mfululizo, au kwa mwaka mzima",
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "mauzo yako kwa miezi sita mfululizo, au kwa mwaka mzima"
+   ],
+   "reply": "Hapana, idadi ya wateja peke yake haionyeshi kama unatakiwa kusajili VAT. Kinachotakiwa ni kuangalia mauzo yako kwa miezi sita mfululizo, au kwa mwaka mzima. Ukifikisha TZS 200M kwa mwaka au TZS 100M kwa miezi 6, basi lazima usajili VAT. Thibitisha na TRA (tra"
+  },
+  {
+   "src": "gate_production_c2143c0.json",
+   "topic": "tax",
+   "q": "EFD machine yangu imeharibika ghafla — hatua sahihi ni zipi?",
+   "cited": [
+    "msambazaji wa efd wako mara moja ili akurekebishie au akusaidie kubadilisha machine; (2) w",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "msambazaji wa efd wako mara moja ili akurekebishie au akusaidie kubadilisha machine; (2) w"
+   ],
+   "reply": "Hatua za haraka: (1) Wasiliana na msambazaji wa EFD wako mara moja ili akurekebishie au akusaidie kubadilisha machine; (2) Wakati wa kusubiri marekebisho, tumia rekodi za mikono za mauzo kwa wateja; (3) Toa risiti za mikono badala ya EFD; (4) Taarifa TRA ndani"
+  },
+  {
+   "src": "gate_production_c2143c0.json",
+   "topic": "nssf",
+   "q": "Deadline ya kupeleka michango ya NSSF kwa mwezi mmoja ni tarehe ngapi ya mwezi unaofuata?",
+   "cited": [
+    "nssf",
+    "nssf.go.tz",
+    "nssf.org",
+    "tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "tra.go.tz",
+    "tra"
+   ],
+   "reply": "Kuna tofauti muhimu sana kati ya tarehe za NSSF na SDL:\n\nNSSF: malipo yanawasilishwa ndani ya mwezi MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz.\nSDL: malipo yanawasilishwa ifikapo tarehe 7 ya mwezi unaofuata — si mwezi "
+  },
+  {
+   "src": "gate_production_c2143c0.json",
+   "topic": "labour",
+   "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?",
+   "cited": [
+    "pkf eastern africa au velma law"
+   ],
+   "outside": [
+    "pkf eastern africa au velma law"
+   ],
+   "reply": "Mshahara wa wastani wa TZS 275,060 kwa mwezi ulikuwa wastani wa taarifa za Julai–Agosti 2025. Thibitisha na PKF Eastern Africa au VELMA Law."
+  },
+  {
+   "src": "gate_production_c2143c0.json",
+   "topic": "labour",
+   "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+   "cited": [
+    "pkf eastern africa (pkfeastafrica",
+    "pkfeastafrica.com"
+   ],
+   "outside": [
+    "pkfeastafrica.com",
+    "pkf eastern africa (pkfeastafrica"
+   ],
+   "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na PKF Eastern Africa kwa kila mfanyakazi wake. Thibitisha na PKF Eastern Africa (pkfeastafrica.com)."
+  },
+  {
+   "src": "gate_production_c2143c0.json",
+   "topic": "nssf",
+   "q": "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha, na kama nikichelewa adhabu ni ngapi?",
+   "cited": [
+    "nssf",
+    "nssf.go.tz",
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "outside": [
+    "tra (tra",
+    "tra.go.tz"
+   ],
+   "reply": "NSSF ya mfanyakazi (sehemu yake): TZS 450,000 × 10% = TZS 45,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000)\n\nKwa PAYE, adhabu huwa ni asilimia 2.5 "
+  },
+  {
+   "src": "goke_removal_canary.json",
+   "topic": "tax",
+   "q": "Nina biashara Nairobi Kenya, nalipa kodi ya mapato kwa KRA kiasi gani?",
+   "cited": [
+    "kra (kra",
+    "kra.go.ke"
+   ],
+   "outside": [
+    "kra (kra",
+    "kra.go.ke"
+   ],
+   "reply": "Samahani, ninasaidia na masuala ya Tanzania Bara pekee. Kwa taarifa za kodi nje ya Tanzania, wasiliana na KRA (kra.go.ke). Je, una swali kuhusu kodi ya Tanzania?"
+  },
+  {
+   "src": "goke_removal_canary.json",
+   "topic": "tax",
+   "q": "Sheria za kodi za Kenya zinafananaje na za Tanzania?",
+   "cited": [
+    "kenya revenue authority (kra) kupitia kra",
+    "kra.go.ke"
+   ],
+   "outside": [
+    "kra.go.ke",
+    "kenya revenue authority (kra) kupitia kra"
+   ],
+   "reply": "Samahani sana, ninasaidia tu na masuala ya kodi nchini Tanzania Bara. Kwa taarifa za kodi za Kenya, unaweza kuwasiliana na Kenya Revenue Authority (KRA) kupitia kra.go.ke. Je, una swali kuhusu kodi za Tanzania?"
+  },
+  {
+   "src": "negated_premise_live_2026_11_16.json",
+   "topic": "labour",
+   "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?",
+   "cited": [
+    "mamlaka husika (osha",
+    "osha.go.tz"
+   ],
+   "outside": [
+    "mamlaka husika (osha",
+    "osha.go.tz"
+   ],
+   "reply": "Hapana, si sahihi. Likizo ya mwaka (annual leave) ni siku 30 kwa mujibu wa Sheria ya Ajira na Mahusiano Kazini (ELRA). Thibitisha na mamlaka husika (osha.go.tz)."
+  },
+  {
+   "src": "negated_premise_live_2026_11_16.json",
+   "topic": "labour",
+   "q": "Mfanyakazi akijifungua, likizo ya uzazi ni siku ngapi?",
+   "cited": [
+    "https://immigration",
+    "immigration.go.tz"
+   ],
+   "outside": [
+    "immigration.go.tz",
+    "https://immigration"
+   ],
+   "reply": "Kwa mujibu wa sheria, likizo ya uzazi ni siku 84. Thibitisha na https://immigration.go.tz."
+  },
+  {
+   "src": "work_item2_round2_adjudication_afef9dd.json",
+   "topic": "nssf",
+   "q": "Nataka jibu la haraka: NSSF ya mfanyakazi wa TZS 450,000, na pia deadline ya kuwasilisha, na kama nikichelewa adhabu ni ngapi?",
+   "cited": [
+    "brela official (brela",
+    "brela.go.tz"
+   ],
+   "outside": [
+    "brela official (brela",
+    "brela.go.tz"
+   ],
+   "reply": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 450,000 = TZS 45,000 — jumla ya NSSF ni 20% (mwajiri TZS 45,000 + mfanyakazi TZS 45,000)\n\nKuna adhabu mbili tofauti. Moja ni kwa kuchelewa kuwasilisha taarifa za mmiliki manufaa, ambapo faini huwa ni shilingi milioni 10."
+  }
+ ],
+ "seen": {
+  "brela": {
+   "brela (brela": 22,
+   "brela.go.tz": 37,
+   "brela official (brela": 13,
+   "brela moja kwa moja ili kuthibitisha hali yake kwenye rekodi": 2,
+   "brela": 2,
+   "wakili wa biashara": 1,
+   "ors.brela.go.tz": 2,
+   "upatikanaji wa jina kwenye tovuti ya brela (brela": 2
+  },
+  "nssf": {
+   "nssf.go.tz": 149,
+   "nssf (nssf": 115,
+   "nssf": 33,
+   "tra.go.tz": 4,
+   "nssf haraka (nssf": 1,
+   "ofisi ya nssf ili kupata taarifa kamili kuhusu utaratibu wa kujiunga": 1,
+   "nssf.org": 2,
+   "tra": 2,
+   "nssf haraka ili kuomba mpango wa malipo au makubaliano (payment plan": 1,
+   "tra (tra": 1,
+   "brela official (brela": 1,
+   "brela.go.tz": 1
+  },
+  "tax": {
+   "tra (tra": 546,
+   "tra.go.tz": 669,
+   "tra": 107,
+   "tra kama taarifa kama hiyo inakuhusu": 10,
+   "tra tra": 7,
+   "tra ili kupata namba yako ya tin": 1,
+   "kwa makini mauzo yako kila mwezi": 1,
+   "pia kizingiti cha miezi 12 (tzs milioni 200): kama umefikia tzs milioni 190, unaweza kulaz": 2,
+   "tra mara moja ili kupata cheti cha usajili wa vat (vat registration certificate": 2,
+   "msambazaji wa efd wako haraka ili kurejesha utendaji; (4) rekodi muamala wowote uliotokea": 1,
+   "tra kupitia tra": 3,
+   "mauzo yako kwa miezi sita mfululizo, au kwa mwaka mzima": 1,
+   "kamishna wa tra ili kupata idhini ya kujisajilisha vat kwa hiari": 1,
+   "msambazaji wa efd wako mara moja ili akurekebishie au akusaidie kubadilisha machine; (2) w": 1,
+   "kra (kra": 1,
+   "kra.go.ke": 2,
+   "kenya revenue authority (kra) kupitia kra": 1,
+   "tra kabla ya kuomba (sheria ya vat; tra": 3
+  },
+  "labour": {
+   "mamlaka husika (osha": 2,
+   "osha.go.tz": 2,
+   "sheria husika (elra": 1,
+   "elra.go.tz": 8,
+   "elra (employment and labour relations act": 3,
+   "elra": 7,
+   "elra (elra": 6,
+   "gn605a (sekta yako": 1,
+   "mlywf.go.tz": 2,
+   "mlywf (mlywf": 2,
+   "sheria ya ajira na mahusiano kazini (elra": 1,
+   "pkf eastern africa au tanzlii": 13,
+   "ofisi ya kazi (wcf": 2,
+   "wcf.go.tz": 2,
+   "pkf eastern africa au velma law": 1,
+   "pkfeastafrica.com": 1,
+   "pkf eastern africa (pkfeastafrica": 1,
+   "sheria ya fidia kwa ajali kazini (wcf act": 1,
+   "immigration.go.tz": 1,
+   "https://immigration": 1
+  },
+  "wcf": {
+   "wcf.go.tz": 50,
+   "wcf (wcf": 42,
+   "tra": 1,
+   "tra.go.tz": 2,
+   "wcf official (wcf": 1,
+   "tra (tra": 1
+  },
+  "immigration": {
+   "immigration.go.tz": 96,
+   "idara ya uhamiaji (immigration": 85,
+   "brela.go.tz": 7,
+   "wakili wa uhamiaji na brela (brela": 7,
+   "wakili wa uhamiaji": 7,
+   "tanzlii.org": 8,
+   "tanzlii (tanzlii": 6,
+   "tangazo rasmi la serikali (government gazette) kwenye tanzlii": 2,
+   "idara ya uhamiaji au wakili wa biashara": 2,
+   "idara ya uhamiaji na wakili wa biashara kwa hali yako mahususi": 2,
+   "idara ya uhamiaji na wakili wa biashara kwa hali yako maalum": 3,
+   "idara ya uhamiaji na wakili wa biashara": 4,
+   "https://immigration": 7
+  },
+  "osha": {
+   "osha (osha": 31,
+   "osha.go.tz": 53,
+   "brela official (brela": 1,
+   "brela.go.tz": 1,
+   "osha": 20,
+   "osha mara moja (osha": 3
+  }
+ }
+}

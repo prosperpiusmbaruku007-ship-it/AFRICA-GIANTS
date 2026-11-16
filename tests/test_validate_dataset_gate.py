@@ -206,7 +206,8 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     #   -1  batch_003_cleaned        line 148  "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000"
     #   -1  batch_007_replacements   line 2    "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari"
     # (the other six removals are in sft_shaped_pairs/ and sft/, which this count does not cover; the 4 raw_sources rows are marked, not removed).
-    assert "schema-shaped: 1712 pairs, 0 errors" in r.stdout, (
+    # 1712 -> 1708 on 2026-11-17, re-derived: the licence "31 Machi" quarantine removed FOUR cleaned_pairs rows (batch_002:145, batch_005:146, :157, :193); the four train_sft rows are in sft/, not counted here.
+    assert "schema-shaped: 1708 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 

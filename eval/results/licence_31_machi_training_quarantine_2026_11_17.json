@@ -1,0 +1,23 @@
+{
+  "measured": "2026-11-17",
+  "defect_class": "BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI",
+  "rows_removed_from_live": 8,
+  "rows_marked_raw": 3,
+  "lines_removed": {
+    "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": [
+      145
+    ],
+    "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl": [
+      146,
+      157,
+      193
+    ],
+    "datasets/tier1a/sft/train_sft.jsonl": [
+      1208,
+      1272,
+      2428,
+      2664
+    ]
+  },
+  "quarantine_file": "datasets/tier1a/rejected/licence_renewal_31_machi_quarantine_2026_11_17.jsonl"
+}

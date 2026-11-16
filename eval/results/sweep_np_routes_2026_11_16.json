@@ -1,0 +1,308 @@
+{
+ "corpus_strings": 8261,
+ "changed": [
+  {
+   "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Likizo ya mwaka ni siku 30, sivyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi analipa asilimia ngapi kwa NSSF?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Mfanyakazi wa mshahara wa kila mwezi aliyekaa zaidi ya mwezi mmoja, siwezi kumpa notisi ya siku 7 tu, sivyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi wangu hajatumia likizo yake ya mwaka huu. Nimeambiwa ana haki ya siku 28 mfululizo za likizo yenye malipo, siyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mimi kama mwajiri nalipa asilimia ngapi ya NSSF?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Mwajiri anachangia asilimia ngapi kwenye NSSF?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Mwajiri analipa asilimia ngapi kwa NSSF kila mwezi?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Mwajiri huchangia asilimia ngapi ya mshahara kwa NSSF, tofauti na mfanyakazi?",
+   "old": "none",
+   "new": "nssf"
+  },
+  {
+   "q": "Naomba kufahamu, ni asilimia ngapi ya mshahara wa mfanyakazi ndiyo inakokotolewa kama mchango wa WCF, au kuna kiwango maalum kinachowekwa kwa kila mfanyakazi kulingana na kanuni za 2021?",
+   "old": "none",
+   "new": "wcf"
+  },
+  {
+   "q": "Ni asilimia ngapi ya mshahara inatakiwa kulipa kama WCF kwa mfanyakazi mmoja?",
+   "old": "none",
+   "new": "wcf"
+  },
+  {
+   "q": "Nina mfanyakazi wa kulipwa kwa wiki ambaye amefanya kazi kwangu miaka miwili. Nikitaka kusitisha ajira yake, notice ya siku 7 bado inatosha, sivyo?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Nina wafanyakazi 6, naomba unisaidie kujua ni asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?",
+   "old": "none",
+   "new": "wcf"
+  },
+  {
+   "q": "query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+   "old": "none",
+   "new": "nssf"
+  }
+ ],
+ "asks_rate_changed": [
+  {
+   "q": "Mfanyakazi analipa asilimia ngapi kwa NSSF?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Mimi kama mwajiri nalipa asilimia ngapi ya NSSF?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Mwajiri anachangia asilimia ngapi kwenye NSSF?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Mwajiri analipa asilimia ngapi kwa NSSF kila mwezi?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Mwajiri huchangia asilimia ngapi ya mshahara kwa NSSF, tofauti na mfanyakazi?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Naomba kufahamu, ni asilimia ngapi ya mshahara wa mfanyakazi ndiyo inakokotolewa kama mchango wa WCF, au kuna kiwango maalum kinachowekwa kwa kila mfanyakazi kulingana na kanuni za 2021?",
+   "route_old": "none",
+   "route_new": "wcf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Ni asilimia ngapi ya mshahara inatakiwa kulipa kama WCF kwa mfanyakazi mmoja?",
+   "route_old": "none",
+   "route_new": "wcf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "Nina wafanyakazi 6, naomba unisaidie kujua ni asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?",
+   "route_old": "none",
+   "route_new": "wcf",
+   "was": false,
+   "now": true
+  },
+  {
+   "q": "query: Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+   "route_old": "none",
+   "route_new": "nssf",
+   "was": false,
+   "now": true
+  }
+ ],
+ "probes": [
+  {
+   "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nina mfanyakazi wa kulipwa kwa wiki ambaye amefanya kazi kwangu miaka miwili. Nikitaka kusitisha ajira yake, notice ya siku 7 bado inatosha, sivyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wangu anafanya overtime baada ya muda wa kawaida. Nimeambiwa siwezi kumlipa kiwango kilekile cha saa za kawaida, lazima iwe angalau mara moja na nusu, ni kweli?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi wangu hajatumia likizo yake ya mwaka huu. Nimeambiwa ana haki ya siku 28 mfululizo za likizo yenye malipo, siyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya mwaka ni siku 21 tu, ni kweli?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Hastahili severance kama amefanya kazi chini ya mwaka, sivyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wangu ana likizo ya uzazi, sivyo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Likizo ya mwaka bila malipo inaruhusiwa, sivyo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wangu analipwa overtime, hivyo NSSF yake inakatwa kwenye overtime pia, sivyo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Naweza kumpa mfanyakazi likizo ya mwaka bila kumlipa mshahara, sivyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nina wafanyakazi 7 tu, bado sihusiki na SDL, sivyo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mshahara wa mfanyakazi ni 600,000, overtime ya saa 10 ni kiasi gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi alifanya kazi miaka 3 na kuachishwa, severance yake ni kiasi gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Nina wafanyakazi 6, naomba unisaidie kujua ni asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?",
+   "want": "wcf",
+   "got": "wcf",
+   "was": "none"
+  },
+  {
+   "q": "Asilimia ngapi ya mishahara ninapaswa kulipa NSSF?",
+   "want": "nssf",
+   "got": "nssf",
+   "was": "none"
+  },
+  {
+   "q": "Naomba kujua asilimia ngapi ya mishahara inakwenda SDL?",
+   "want": "sdl",
+   "got": "sdl",
+   "was": "none"
+  },
+  {
+   "q": "Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi — je, ni kweli?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi wangu hajatumia likizo yake ya mwaka huu. Nimeambiwa ana haki ya siku 28 mfululizo za likizo yenye malipo, siyo?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mauzo yangu ni TZS 50,000,000 kwa mwaka — VAT ni asilimia ngapi, na je nahitaji kusajili NSSF?",
+   "want": "nssf",
+   "got": "nssf",
+   "was": "nssf"
+  },
+  {
+   "q": "Nina wafanyakazi 6 kila mmoja 500,000, asilimia ngapi ya mishahara inakwenda WCF kwa jumla?",
+   "want": "wcf",
+   "got": "wcf",
+   "was": "wcf"
+  },
+  {
+   "q": "Asilimia ngapi ya mshahara wa mfanyakazi inakatwa PAYE?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Asilimia ngapi ya faida ni kodi ya mapato ya kampuni?",
+   "want": "corporate_tax",
+   "got": "corporate_tax",
+   "was": "corporate_tax"
+  }
+ ]
+}

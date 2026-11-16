@@ -34,6 +34,9 @@ TOPICS = ("vat", "paye", "sdl", "nssf", "wcf", "efd", "brela", "osha", "gn487a",
 AUTHORS = ("founder", "pilot_participant", "other_person", "external_model")
 CLAUDE_CODE = re.compile(r"claude[\s_\-]*code", re.IGNORECASE)
 MIN_ROWS, MIN_NEG, MIN_PLAIN, MIN_PER_LABEL, MIN_FORMS = 20, 14, 6, 6, 3
+# SET #2 (founder, 2026-11-16) is deliberately TRUE-premise heavy (14 true / 4 false among 18 negated) to test the "Hapana on a right asker" pattern, so it needs a lower false floor and 2 plain controls; set #1 profile unchanged.
+PROFILES = {"set1": {"authored": "negated_premise_AUTHORED.jsonl", "frozen": "FROZEN.json", "min_true": 6, "min_false": 6, "min_plain": 6, "min_neg": 14, "min_forms": 3},
+            "set2": {"authored": "negated_premise_set2_AUTHORED.jsonl", "frozen": "FROZEN_set2.json", "min_true": 6, "min_false": 4, "min_plain": 2, "min_neg": 14, "min_forms": 2}}
 DEFAULT_TOPIC_CAP = 4
 TOPIC_CAPS = {"vat": 5, "labour": 6}          # founder 2026-11-16: VAT 5. LABOUR 6 is the arithmetic consequence of re-filing ten `other` rows under real topics (six are labour-law rows, three of them a deliberate notice pair) -- flagged
 KEYS = ("id", "question", "negation_form", "premise_label", "correct_polarity", "topic", "correct_answer_sw", "source", "authored_by", "author_note", "seen_system_output", "author_source")
@@ -44,7 +47,8 @@ def sha(path):
     return hashlib.sha256(io.open(path, "rb").read()).hexdigest()
 
 
-def validate(path):
+def validate(path, profile="set1"):
+    prof = PROFILES[profile]
     problems, rows = [], []
     if not os.path.exists(path):
         return [f"{path} does not exist"], rows
@@ -106,16 +110,16 @@ def validate(path):
     plain = [r for r in rows if r.get("negation_form") == "none"]
     if len(rows) < MIN_ROWS:
         problems.append(f"{len(rows)} rows, need >= {MIN_ROWS}")
-    if len(neg) < MIN_NEG:
-        problems.append(f"{len(neg)} negated rows, need >= {MIN_NEG}")
-    if len(plain) < MIN_PLAIN:
-        problems.append(f"{len(plain)} plain control rows, need >= {MIN_PLAIN}")
+    if len(neg) < prof["min_neg"]:
+        problems.append(f"{len(neg)} negated rows, need >= {prof['min_neg']}")
+    if len(plain) < prof["min_plain"]:
+        problems.append(f"{len(plain)} plain control rows, need >= {prof['min_plain']}")
     lab = collections.Counter(r.get("premise_label") for r in neg)
-    for k in ("true_premise", "false_premise"):
-        if lab.get(k, 0) < MIN_PER_LABEL:
-            problems.append(f"{lab.get(k, 0)} negated {k} rows, need >= {MIN_PER_LABEL}")
-    if len({r.get("negation_form") for r in neg}) < MIN_FORMS:
-        problems.append(f"fewer than {MIN_FORMS} different negation forms among the negated rows")
+    for k, need in (("true_premise", prof["min_true"]), ("false_premise", prof["min_false"])):
+        if lab.get(k, 0) < need:
+            problems.append(f"{lab.get(k, 0)} negated {k} rows, need >= {need}")
+    if len({r.get("negation_form") for r in neg}) < prof["min_forms"]:
+        problems.append(f"fewer than {prof['min_forms']} different negation forms among the negated rows")
     for t, c in collections.Counter(r.get("topic") for r in rows).items():
         cap = TOPIC_CAPS.get(t, DEFAULT_TOPIC_CAP)
         if t and c > cap:
@@ -123,10 +127,11 @@ def validate(path):
     return problems, rows
 
 
-def check_frozen(path):
-    if not os.path.exists(FROZEN):
-        return ["no FROZEN.json: the set has not been frozen"]
-    rec = json.load(io.open(FROZEN, encoding="utf-8"))
+def check_frozen(path, frozen=None):
+    frozen = frozen or FROZEN
+    if not os.path.exists(frozen):
+        return [f"no {os.path.basename(frozen)}: the set has not been frozen"]
+    rec = json.load(io.open(frozen, encoding="utf-8"))
     if sha(path) != rec["sha256"]:
         return [f"the authored file's bytes differ from FROZEN.json ({sha(path)[:12]} != {rec['sha256'][:12]}): a frozen set is never edited -- a second iteration needs a NEW set"]
     return []
@@ -134,30 +139,34 @@ def check_frozen(path):
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--file", default=AUTHORED)
+    ap.add_argument("--file", default=None)
+    ap.add_argument("--set", default="set1", choices=sorted(PROFILES))
     ap.add_argument("--freeze", action="store_true")
     ap.add_argument("--check-frozen", action="store_true")
     a = ap.parse_args(argv)
+    prof = PROFILES[a.set]
+    a.file = a.file or os.path.join(HERE, prof["authored"])
+    frozen = FROZEN if a.set == "set1" else os.path.join(HERE, prof["frozen"])
     if a.check_frozen:
-        p = check_frozen(a.file)
+        p = check_frozen(a.file, frozen)
         print("\n".join(p) or "frozen set unchanged")
         return 1 if p else 0
-    problems, rows = validate(a.file)
+    problems, rows = validate(a.file, a.set)
     print(f"{len(rows)} rows; {len(problems)} problem(s)")
     for p in problems:
         print("  -", p)
     if problems:
         return 1
     if a.freeze:
-        if os.path.exists(FROZEN):
-            print("already frozen:", FROZEN)
+        if os.path.exists(frozen):
+            print("already frozen:", frozen)
             return 1
         rec = {"file": os.path.basename(a.file), "sha256": sha(a.file), "rows": len(rows), "frozen_utc": __import__("datetime").datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                "validator_sha256": sha(os.path.abspath(__file__)), "authors": sorted({r["authored_by"] for r in rows}),
                "author_models": sorted({str(r.get("author_model", "")) for r in rows if r["authored_by"] == "external_model"}),
                "external_model_rows": sum(1 for r in rows if r["authored_by"] == "external_model"), "seen_system_output_true": sum(1 for r in rows if r["seen_system_output"]),
                "_rule": "Commit this file and the authored set ALONE, before any measurement. Never edit the set; a second iteration needs a new set."}
-        io.open(FROZEN, "w", encoding="utf-8", newline="\n").write(json.dumps(rec, ensure_ascii=False, indent=1) + "\n")
+        io.open(frozen, "w", encoding="utf-8", newline="\n").write(json.dumps(rec, ensure_ascii=False, indent=1) + "\n")
         print("frozen:", rec["sha256"][:16])
     return 0
 

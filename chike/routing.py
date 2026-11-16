@@ -1839,7 +1839,10 @@ def confirms_negated_premise(text: str) -> bool:
 # phrasing; a plain "SDL yangu ni ngapi" is an AMOUNT question and must not land here.
 _RATE_QUESTION = re.compile(
     r"\bkiwango\s+(?:cha|kwa)\b[^.?!]{0,60}?\bngapi\b"
-    r"|\b(?:paye|sdl|nssf|wcf)\s+ni\s+asilimia\s+ngapi\b", re.IGNORECASE)
+    r"|\b(?:paye|sdl|nssf|wcf)\s+ni\s+asilimia\s+ngapi\b"
+    # 2026-11-16 (np_28): the levy may FOLLOW the ask -- "asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?" -- and a headcount in the question ("Nina wafanyakazi 6, ...") does not make it an amount question.
+    # No comma inside the span: "VAT ni asilimia ngapi, na je nahitaji kusajili NSSF?" asks VAT's rate, and the swept diff showed this form misattributing it to NSSF.
+    r"|\basilimia\s+ngapi\b[^.?!,]{0,100}?\b(?:paye|sdl|nssf|wcf)\b", re.IGNORECASE)
 
 
 def asks_rate(text: str) -> bool:
@@ -2453,7 +2456,7 @@ _FS_TOPICS = (
      re.compile(r"overtime|(?:saa|masaa)\s+(?:za|ya)\s+(?:ziada|nyongeza)"),
      None, None),
     ("annual_leave",
-     re.compile(r"likizo\s+ya\s+(?:kila\s+)?mwaka|annual\s+leave"),
+     re.compile(r"likizo\s+(?:yake\s+|yangu\s+|yao\s+)?ya\s+(?:kila\s+)?mwaka|annual\s+leave"),
      None,
      re.compile(r"uzazi|ugonjwa|baba|paternity|maternity|bila\s+malipo|unpaid")),
     ("vat_time_of_supply",
@@ -2492,7 +2495,21 @@ _FS_TOPICS = (
 
 
 # Ask forms specific to the three 2026-11-16 topics (the global _FS_ASK has no "naweza" / "inakatwaje"; widening it would loosen the original five).
+# 2026-11-16 (founder, from np_12/np_05 live): the ORIGINAL four constants (notice, severance, overtime, annual leave) were reachable only by a how-many/how-much ask, so a leading or negated phrasing of the SAME
+# topic ("Likizo ya mwaka haizidi wiki mbili ..., sivyo?", "... hastahili malipo ya kuachishwa kazi, sivyo?") fell to the model, which answered "siku 30" and "miezi 10". The statement for these four is the WHOLE rule
+# (every limb, no selection), so it is a correct and safe answer to a premise check too. NOT given to the three newer topics, whose statements are hedged and whose premise-check forms are deliberately vetoed
+# (eval_343). Raw strings (R39). The topic cue AND the existing vetoes (other levy named, a second topic matching) still apply.
+_FS_PREMISE_ASK = re.compile(
+    r"(?:sivyo|siyo|si\s+ndiyo|ndiyo|si\s+kweli|ni\s+kweli|au\s+siyo|au\s+nimekosea)\s*\?\s*$"
+    r"|(?<![a-z])(?:haizidi|hazidi|hastahili|haistahili|hahitaji|hahitajiki|sihitaji|sihitajiki|sitakiwi|siwezi|hawezi|haiwezi|hailipwi|halipwi|haitoshi|inatosha)(?![a-z])")
+
+_FS_PREMISE_VETO = re.compile(r"(?<![a-z])(?:kodi|tax|paye|vat|zuio|ushuru|inapigwa|hayapigwi|kutozwa|inatozwa)(?![a-z])")
+
 _FS_TOPIC_ASK = {
+    "notice": _FS_PREMISE_ASK,
+    "severance": _FS_PREMISE_ASK,
+    "overtime": _FS_PREMISE_ASK,
+    "annual_leave": _FS_PREMISE_ASK,
     "vat_voluntary_registration": re.compile(r"naweza|unaweza|inawezekana|inaruhusiwa|ruhusiwa|ruhusa|upo|(?<![a-z])je(?![a-z])|nataka|vipi|lini|can\s+i|may\s+i|possible"),
     "wcf_accident_reporting": re.compile(r"ngapi|ndani|lini|muda|kuhesabiwa|inaanza|deadline|how\s+many"),
     "vat_withholding_mixed_supply": re.compile(r"inakatwaje|inakatwa|inazuiwaje|inazuiwa|nakata|nikate|ikatwe|inahesabiwaje|vipi|ngapi|kiasi|asilimia|kiwango"),
@@ -2530,5 +2547,9 @@ def fixed_statement_topic(text: str):
     if not (_FS_ASK.search(ql) or (topic in _FS_TOPIC_ASK and _FS_TOPIC_ASK[topic].search(ql))):
         return None
     if topic not in _FS_LEVY_EXEMPT and _FS_OTHER_LEVY.search(ql):
+        return None
+    # 2026-11-16 sweep (np_ route change): a PREMISE-phrased question about the TAX treatment of a payment ("Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi -- je, ni kweli?") names the severance
+    # topic and a premise cue and asks something the severance statement does not answer -- the eval_211 wrong-topic harm class. Only the premise ask is vetoed here; a how-much ask routed before and is untouched.
+    if topic in ("notice", "severance", "overtime", "annual_leave") and not _FS_ASK.search(ql) and _FS_PREMISE_VETO.search(ql):
         return None
     return topic

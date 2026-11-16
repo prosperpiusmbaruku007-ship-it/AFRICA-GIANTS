@@ -1168,6 +1168,28 @@ class Orchestrator:
             return dataclasses.replace(
                 sub, text="\n\n".join(rules_engine.fixed_statement(t).working for t in topics),
                 raw_text=sub.text, needs_clarification=False, guard="replaced")
+        elif sub.computation is None and fidelity.body_contradicts_constant(sub.sub_question.text, cleaned):
+            # D-FIDELITY-13 (2026-11-16, np_13 / np_20 / np_26): a licence-expiry date other than 30 June, a record-keeping period other than 5 years, a TIN application deadline denied or not 15 days. Constants
+            # (R19), so no engine result is needed and the fact path is reached. REPLACED with the statement lifted from the locked fact (the fact path cannot be blanked). Still a model-path reply
+            # (model_calls > 0, guard 'replaced'): never auto-send eligible.
+            topics = [t for t, _ in fidelity.constant_violations(sub.sub_question.text, cleaned)]
+            return dataclasses.replace(
+                sub, text=clarification.constants_restated(topics),
+                raw_text=sub.text, needs_clarification=False, guard="replaced")
+        elif sub.computation is None and fidelity.body_states_derived_levy_amount(sub.sub_question.text, cleaned):
+            # D-FIDELITY-13 (np_28, th_22): a shilling amount derived for a payroll levy from a wage nobody gave. D-FIDELITY-9's loose form restricted to the FACT path and to a sentence that DERIVES an amount.
+            levies = routing.all_explicit_levies(sub.sub_question.text)
+            rate_text = ""
+            if len(levies) == 1 and levies[0] in ("sdl", "nssf", "wcf"):
+                rate_text = rules_engine.levy_rate_statement(levies[0]).working
+            return dataclasses.replace(
+                sub, text=clarification.derived_amount_withheld(rate_text),
+                raw_text=sub.text, needs_clarification=True, guard="replaced")
+        # D-FIDELITY-14 (2026-11-16): a WRONG authority named in the "Thibitisha na ..." tail (np_19 immigration.go.tz on maternity leave, np_12 osha.go.tz on annual leave). REPAIRED, never withheld: one clause changes,
+        # nothing is blocked. Applies to every model-written body that reaches here; R25's justification and every exclusion are at fidelity.repair_authority.
+        repaired = fidelity.repair_authority(sub.sub_question.text, cleaned)
+        if repaired != cleaned:
+            cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)
 
     @staticmethod

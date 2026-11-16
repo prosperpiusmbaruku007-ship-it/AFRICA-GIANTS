@@ -1254,9 +1254,20 @@ def _fd10_notice(question, scope):
     return out
 
 
-def _fd10_severance(scope):
+_FD10_MONTHS = re.compile(r"(?:miezi|months)\s+(\d+)|(\d+)\s+(?:miezi|months)", re.IGNORECASE)
+_FD10_QUALIFY = re.compile(r"angalau|at\s+least|kiwango\s+cha\s+chini|minimum|utumishi|huduma|kufanya\s+kazi|kufanyakazi|mfululizo|anastahili|hastahili|eligible|service|continuous", re.IGNORECASE)
+
+
+def _fd10_severance(scope, question=""):
     out = []
     for s in scope:
+        # 2026-11-16 (np_05 live: "angalau miezi 10 ... anastahili malipo ya kuachishwa kazi"): the qualifying service is 12 months. A months figure that is not 12, in a sentence about qualifying service, is
+        # invented; one the QUESTION supplied (the asker's own "miezi 8") is a mention. Notice sentences and the per-year months rule below are not judged here.
+        if _FD10_QUALIFY.search(s) and not re.search(r"notisi|notice|kwa\s+kila\s+mwaka|per\s+year", s, re.IGNORECASE):
+            for m in _FD10_MONTHS.finditer(s):
+                k = int(m.group(1) or m.group(2))
+                if k != 12 and not _fd10_negated(s, m.start()) and not re.search(rf"(?<!\d){k}(?!\d)", question):
+                    out.append(f"severance/qualifying-months:{k}")
         for m in _FD10_PERCENT.finditer(s):
             if not _fd10_negated(s, m.start()):
                 out.append(f"severance/percent:{m.group(0).strip()}")
@@ -1303,6 +1314,12 @@ def _fd10_annual_leave(question, scope, whole=()):
             n = int(m.group(1) or m.group(2))
             if n >= 28:
                 stated_28 = stated_28 or n == 28
+                # 2026-11-16 (np_12 live: "Likizo ya mwaka ... ni siku 30"): the rule used to stop at "under 28" on the reasoning that more may be a contractual extension. A figure strictly between 28 and
+                # 61 stated for annual leave is not that: the Act's figure is 28 consecutive days and nothing in the locked facts or the corpora states a 29-60 day annual leave. A figure the QUESTION supplied
+                # is a mention (a reply denying the asker's "siku 30" must pass); 61+ stays unjudged (maternity/other leave counts).
+                if 28 < n < 61 and re.search(r"likizo|leave", s, re.IGNORECASE) and not _fd10_negated(s, m.start()) \
+                        and not re.search(rf"(?<!\d){n}(?!\d)", question):
+                    out.append(f"annual_leave/value:{n}")
             elif re.search(r"likizo|leave", s, re.IGNORECASE) and not _fd10_negated(s, m.start()):
                 out.append(f"annual_leave/value:{n}")
         if re.search(r"wiki\s+(?:4|nne)(?![\d])|(?<!\d)28(?!\d)", s):
@@ -1440,7 +1457,7 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "notice":
             reasons = _fd10_notice(question, scope)
         elif topic == "severance":
-            reasons = _fd10_severance(scope)
+            reasons = _fd10_severance(scope, question)
         elif topic == "overtime":
             reasons = _fd10_overtime(scope)
         elif topic == "annual_leave":
@@ -1536,3 +1553,200 @@ def vat_denial_above_threshold(question: str, body: str):
 
 def body_denies_vat_registration_above_threshold(question: str, body: str) -> bool:
     return vat_denial_above_threshold(question, body) is not None
+
+
+# ---- D-FIDELITY-13 (2026-11-16, founder, from the live np_ replies): THREE CONSTANTS THE MODEL CONTRADICTED ON THE FACT PATH WITH THE CORRECT ROW AT HAND, AND A DERIVED AMOUNT NOBODY COULD HAVE SUPPLIED.
+#   licence    np_13  "leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi"   (every business licence expires 30 June)
+#   records    np_20  "kuhifadhiwa kwa angalau miaka mitatu (3)"                                        (five years from the relevant date)
+#   TIN        np_26  "Hakuna siku maalum za 15 za kuomba TIN"                                          (apply within 15 days of starting business)
+#   WCF amount np_28  "Kwa wafanyakazi 6, hesabu hiyo itakuwa ni TZS 30,000 kwa mwezi"                  (no wage was given; th_22's shape, on the FACT path)
+# R19: each of the first three is a lookup against a statutory CONSTANT -- no transformation of the user's numbers makes "licences expire 31 March" or "keep records three years" true -- so no engine result is
+# needed and the guard reaches the fact path. The fourth is D-FIDELITY-9's loose form restricted to the fact path and to a sentence that DERIVES an amount (per month / per year / per employee / "hesabu"), for a
+# question that names one payroll levy and supplies no figure: with no input there is no lawful transformation to reach it.
+# A figure the QUESTION itself carries (the asker's "miaka mitatu", "siku 15") is a MENTION: a reply that corrects it must pass. Word numbers are read (Swahili writes "tatu" as often as "3").
+_WORD_NUM = {"moja": 1, "mmoja": 1, "mbili": 2, "miwili": 2, "tatu": 3, "mitatu": 3, "nne": 4, "minne": 4, "tano": 5, "mitano": 5, "sita": 6, "saba": 7, "nane": 8, "tisa": 9, "kumi": 10}
+_MONTH_NAMES = r"januari|februari|machi|aprili|mei|juni|julai|agosti|septemba|oktoba|novemba|desemba|january|february|march|april|june|july|august|september|october|november|december"
+_C13_LICENCE_Q = re.compile(r"leseni\s+(?:ya|yangu|za)\s*(?:biashara|duka)?|business\s+licen[cs]e", re.IGNORECASE)
+_C13_LICENCE_Q_NEED = re.compile(r"isha|huisha|ish[ae]|upya|hui?sh|renew|expir|dumu|muda|lini|tarehe|kila\s+mwaka|mwisho", re.IGNORECASE)
+_C13_LICENCE_S = re.compile(r"leseni|licen[cs]e", re.IGNORECASE)
+_C13_EXPIRY_S = re.compile(r"isha|huish|upya|renew|expir|ifikapo|kabla\s+ya|updated|mwisho|tarehe", re.IGNORECASE)
+_C13_DATE = re.compile(rf"(?<!\d)(\d{{1,2}})\s+({_MONTH_NAMES})\b|\b({_MONTH_NAMES})\s+(\d{{1,2}})(?!\d)", re.IGNORECASE)
+_C13_RECORDS_Q = re.compile(r"kumbukumbu|rekodi|vitabu\s+vya|records|books\s+of\s+account", re.IGNORECASE)
+_C13_RECORDS_Q_NEED = re.compile(r"hifadhi|hifadh|keep|retain|muda|miaka|tupa|kuhifadhi", re.IGNORECASE)
+_C13_RECORDS_S = re.compile(r"hifadhi|hifadh|kumbukumbu|rekodi|vitabu|records|keep|retain", re.IGNORECASE)
+_C13_YEARS = re.compile(r"miaka\s+(\d+|%s)\b|(\d+)\s*(?:miaka|years?)\b" % "|".join(_WORD_NUM), re.IGNORECASE)
+_C13_TIN_Q = re.compile(r"(?<![a-z])tin(?![a-z])", re.IGNORECASE)
+_C13_TIN_Q_NEED = re.compile(r"siku|muda|lini|deadline|kuomba|omba|apply|baada|ndani|kuanza|anza|biashara|haraka", re.IGNORECASE)
+_C13_TIN_S = re.compile(r"(?<![a-z])tin(?![a-z])|kuomba|omba|apply|maombi", re.IGNORECASE)
+_C13_TIN_ISSUE = re.compile(r"toa|hutoa|itatoa|kutolewa|itatolewa|issue|kupewa|kupatiwa", re.IGNORECASE)
+_C13_TIN_DENY = re.compile(r"hakuna\s+(?:siku|muda|kikomo|mwisho|deadline|tarehe)(?:\s+(?:maalum|ya\s+mwisho))?", re.IGNORECASE)
+# priced: "kwa mwezi/mwaka" alone, "=" and "jumla" also match thresholds and band tables ("zaidi ya TZS 270,000 kwa mwezi"); only a per-employee / headcount / "hesabu" derivation is the defect.
+_C13_DERIVED = re.compile(r"kwa\s+(?:mfanyakazi|wafanyakazi)|wafanyakazi\s+\d|hesabu|itakuwa", re.IGNORECASE)
+_C13_NOT_AMOUNT = re.compile(r"faini|adhabu|ada\b|kikomo|ceiling|kiwango\s+cha\s+juu|kima\s+cha\s+chini|mshahara\s+wa\s+chini|minimum\s+wage|threshold|kizingiti|riba|penalty|fine\b|mfano|example|ukomo|kiwango\s+cha\s+chini|gn\s*605a", re.IGNORECASE)
+# The PAYE band edges and bases are statute, stated legitimately in answers to SDL/NSSF/WCF questions that also touch PAYE ("PAYE hukatwa kwa wafanyakazi wanaopata zaidi ya TZS 270,000"); priced as false positives.
+_C13_STATUTORY_AMOUNTS = frozenset({270_000, 270_001, 520_000, 520_001, 760_000, 760_001, 1_000_000, 1_000_001, 20_000, 68_000, 128_000})
+_C13_LEVY_Q = re.compile(r"(?<![a-z])(?:wcf|nssf|sdl|fidia)(?![a-z])", re.IGNORECASE)
+
+
+def _c13_numbers(text):
+    """{int} every plain count in `text`, digits and Swahili number words."""
+    out = {int(x) for x in re.findall(r"(?<![\d,.])(\d{1,3})(?![\d,.])", text or "")}
+    for w, n in _WORD_NUM.items():
+        if re.search(rf"\b{w}\b", text or "", re.IGNORECASE):
+            out.add(n)
+    return out
+
+
+def _c13_licence(question, body):
+    if not (_C13_LICENCE_Q.search(question) and _C13_LICENCE_Q_NEED.search(question)):
+        return []
+    qn = _c13_numbers(question)
+    out = []
+    for s in _SENTENCE_SPLIT.split(body):
+        if not (s and _C13_LICENCE_S.search(s) and _C13_EXPIRY_S.search(s)):
+            continue
+        for m in _C13_DATE.finditer(s):
+            day = int(m.group(1) or m.group(4))
+            month = (m.group(2) or m.group(3)).lower()
+            if re.match(r"\s*,?\s*\d{4}", s[m.end():]):
+                continue                 # a FULL date with a year ("GN 487A ya 28 Julai 2025") is a dated instrument, not a recurring licence expiry (priced: 3 training rows)
+            if (day, month) in ((30, "juni"), (30, "june")) or _fd10_negated(s, m.start()):
+                continue
+            if day in qn and re.search(rf"(?<!\d){day}\s+{month}|{month}\s+{day}(?!\d)", question, re.IGNORECASE):
+                continue
+            out.append(f"licence/expiry-date:{day} {month}")
+    return out
+
+
+def _c13_records(question, body):
+    if not (_C13_RECORDS_Q.search(question) and _C13_RECORDS_Q_NEED.search(question)):
+        return []
+    qn = _c13_numbers(question)
+    out = []
+    for s in _SENTENCE_SPLIT.split(body):
+        if not (s and _C13_RECORDS_S.search(s)):
+            continue
+        for m in _C13_YEARS.finditer(s):
+            tok = (m.group(1) or m.group(2) or "").lower()
+            n = int(tok) if tok.isdigit() else _WORD_NUM.get(tok)
+            if n is None or n == 5 or n in qn or _fd10_negated(s, m.start()):
+                continue
+            out.append(f"records/years:{n}")
+    return out
+
+
+def _c13_tin(question, body):
+    if not (_C13_TIN_Q.search(question) and _C13_TIN_Q_NEED.search(question)):
+        return []
+    qn = _c13_numbers(question)
+    out = []
+    for s in _SENTENCE_SPLIT.split(body):
+        if not (s and _C13_TIN_S.search(s)):
+            continue
+        d = _C13_TIN_DENY.search(s)
+        if d and not _fd10_negated(s, d.start()):
+            out.append("tin/deadline-denied")
+            continue
+        if _C13_TIN_ISSUE.search(s):
+            continue                     # "TRA can issue a TIN within 7 days" is the issuance limb, not the application deadline
+        for m in _FD10_SIKU.finditer(s):
+            n = int(m.group(1) or m.group(2))
+            if n != 15 and n not in qn and not _fd10_negated(s, m.start()):
+                out.append(f"tin/days:{n}")
+    return out
+
+
+def constant_violations(question: str, body: str):
+    """[(topic, reason)] for a licence-expiry / record-keeping / TIN-deadline constant the body contradicts. Empty when the question is not about one."""
+    if not body or not question:
+        return []
+    out = [("business_licence_expiry", r) for r in _c13_licence(question, body)]
+    out += [("record_keeping_period", r) for r in _c13_records(question, body)]
+    out += [("tin_apply_deadline", r) for r in _c13_tin(question, body)]
+    return out
+
+
+def body_contradicts_constant(question: str, body: str) -> bool:
+    return bool(constant_violations(question, body))
+
+
+_C13_ANY_MONEY = re.compile(r"\d{1,3}(?:[,.]\d{3})+|\d{4,}|(?<![a-z])(?:laki|elfu|milioni|bilioni|mia|shilingi|tsh|tzs)(?![a-z])|(?<![a-z])sh\.?\s*\d", re.IGNORECASE)
+
+
+def _question_has_money(question):
+    """ANY money notation in the question: digits with separators ("800,000"), plain 4+ digit numbers, and the Swahili words (laki, elfu, milioni ...). `_figures` alone misses "800,000"; a question that supplies a wage is the COMPUTE path's business, never this rule's."""
+    return bool(_figures(question) or _C13_ANY_MONEY.search(question or ""))
+
+
+def derived_levy_amount(question: str, body: str):
+    """[(amount, sentence)] -- a shilling amount the FACT-PATH body DERIVES (per month / per year / per employee / "hesabu") for a question that names a payroll levy and supplies no figure at all. np_28, th_22."""
+    if not body or not question or not _C13_LEVY_Q.search(question) or _question_has_money(question):
+        return []
+    # PRICED over 2,244 stored replies, 562 gold answers and 8,772 training pairs (eval/fidelity/price_np_guards_2026_11_16.py): the first form flagged PAYE band tables (statutory constants with '=' in them) and every
+    # worked example that states its own base ("10% × TZS 700,000 = TZS 70,000"). The defect is an amount with NO base anywhere in the exchange, so (1) PAYE is out (banded: every body states fixed edges),
+    # and (2) the amount must be the ONLY money figure in its sentence -- np_28 and th_22 each carry exactly one. An invented base AND result in one sentence is therefore not caught: the safe direction for a
+    # guard that REPLACES text (precision over recall).
+    return [(a, s) for a, s in _asserted_figures(body)
+            if a not in _C13_STATUTORY_AMOUNTS and _C13_DERIVED.search(s) and not _C13_NOT_AMOUNT.search(s) and len(_figures(s)) == 1]
+
+
+def body_states_derived_levy_amount(question: str, body: str) -> bool:
+    return bool(derived_levy_amount(question, body))
+
+
+# ---- D-FIDELITY-14 (2026-11-16, founder-approved): WRONG AUTHORITY. A reply that tells the asker to "Thibitisha na <authority>" and names the WRONG authority for the question's topic: np_19 (maternity leave -> immigration.go.tz),
+# np_12 (annual leave -> osha.go.tz), an overtime answer -> mlywf.go.tz (a domain with NO DNS record), a GN 605A answer -> "Ofisi ya Kazi (wcf.go.tz)" or PKF Eastern Africa. REPAIRED, never withheld: the citation tail is a formulaic
+# constant per topic, so replacing a wrong host with the topic's host changes one clause and cannot block a user.
+#
+# R25 -- THE TWO QUESTIONS, ANSWERED AT THE SITE (a content rewrite in the cleanup layer needs its justification in writing here):
+#   1. What corpus/system defect does this repair?  Measured over 2,244 stored replies (eval/fidelity/measure_authority_by_topic_2026_11_16.py): 1,132 carry a citation on a single-topic question; 27 distinct pairs flagged by a
+#      naive table, ~9 real (osha/immigration/mlywf/wcf/brela/PKF hosts on the wrong topic). The model learns the formulaic tail, not the authority, so the wrong host is emitted with the right fact at rank 1 (the
+#      D-FIDELITY class: no index edit reaches it). One cause is in the corpus itself: 43 pairs were once sourced to mlywf.go.tz (CLAUDE.md Section 4).
+#   2. What CORRECT output could it damage?  (a) a body citing TWO authorities (an NSSF-vs-SDL comparison legitimately cites nssf.go.tz AND tra.go.tz): the rule judges a body ONLY when it names exactly ONE distinct judged host;
+#      (b) TanzLII (a whitelisted legal database) on an instrument question: never judged, never replaced; (c) an out-of-scope refusal naming a foreign regulator (kra.go.ke): foreign hosts are not judged, and a body
+#      carrying a refusal phrase is skipped; (d) a question about SEVERAL topics: not judged (the topic is then ambiguous, as in the fixed-statement route). The probes in eval/fidelity/authority_repair_probes_2026_11_16.jsonl
+#      hold each of these and the planted tests watch them stay clean.
+# DUAL-FILE SYNC (CLAUDE.md): this lives in chike/, which production (chike-inference/modal_app.py) imports and which the Kaggle gate fetches from GitHub at runtime (kaggle/eval_gate_production_*.py runs the same
+# Orchestrator); there is no second copy of the rule to keep in step. kaggle/eval.py itself runs none of the orchestrator guards and is unchanged.
+_AUTH_TOPICS = (
+    # name, question cue, allowed host suffixes, label, primary host
+    ("labour", re.compile(r"likizo|notisi|(?<![a-z])notice(?![a-z])|severance|kuachishwa|overtime|mshahara\s+wa\s+chini|gn\s*605a|ajira|mkataba\s+wa\s+kazi|(?<![a-z])elra(?![a-z])|uzazi|paternity|maternity", re.IGNORECASE),
+     ("kazi.go.tz",), "Ofisi ya Kazi", "kazi.go.tz"),
+    ("nssf", re.compile(r"(?<![a-z])nssf(?![a-z])|pensheni|mfuko\s+wa\s+hifadhi|uzeeni|uzee(?![a-z])", re.IGNORECASE), ("nssf.go.tz", "kazi.go.tz"), "NSSF", "nssf.go.tz"),
+    ("wcf", re.compile(r"(?<![a-z])wcf(?![a-z])|workers\s+compensation|ajali\s+kazini|fidia", re.IGNORECASE), ("wcf.go.tz",), "WCF", "wcf.go.tz"),
+    ("osha", re.compile(r"(?<![a-z])osha(?![a-z])|usalama\s+kazini|afya\s+na\s+usalama", re.IGNORECASE), ("osha.go.tz", "kazi.go.tz"), "OSHA", "osha.go.tz"),
+    ("brela", re.compile(r"(?<![a-z])brela(?![a-z])|usajili\s+wa\s+kampuni|jina\s+la\s+biashara|annual\s+return", re.IGNORECASE), ("brela.go.tz",), "BRELA", "brela.go.tz"),
+    ("immigration", re.compile(r"gn\s*487a|non-?citizen|wageni|mgeni|foreigner|uhamiaji|(?<![a-z])visa(?![a-z])|kibali\s+cha\s+kazi", re.IGNORECASE), ("immigration.go.tz", "brela.go.tz", "tra.go.tz", "kazi.go.tz"), "Idara ya Uhamiaji", "immigration.go.tz"),
+    ("tax", re.compile(r"(?<![a-z])(?:vat|paye|sdl|efd|tin|tra|withholding|zuio|risiti)(?![a-z])|kodi\s+ya|mafunzo|skills\s+development", re.IGNORECASE), ("tra.go.tz",), "TRA", "tra.go.tz"),
+)
+# Hosts judged: Tanzanian government hosts, plus practitioner firms whose pages are the EVAL family (R6) and are never a "Thibitisha na" authority.
+_AUTH_HOST = re.compile(r"(?<![a-z0-9.-])((?:[a-z0-9-]+\.)*(?:go\.tz|pkfeastafrica\.com|pkfea\.com|velmalaw\.co\.tz|velmalaw\.com|bowmanslaw\.com|clydeco\.com))(?![a-z0-9-])", re.IGNORECASE)
+_AUTH_REFUSAL = re.compile(r"samahani|sijui|siwezi\s+kusaidia|nje\s+ya\s+(?:uwezo|wigo)|masuala\s+ya\s+tanzania\s+bara\s+pekee|sina\s+uhakika", re.IGNORECASE)
+
+
+def authority_topic(question: str):
+    """The ONE topic row the question is about, or None (no topic, or several: not judged)."""
+    hits = [t for t in _AUTH_TOPICS if t[1].search(question or "")]
+    return hits[0] if len(hits) == 1 else None
+
+
+def repair_authority(question: str, body: str) -> str:
+    """The body with a WRONG-authority host replaced by the topic's authority; the body unchanged when nothing is wrong or when the rule does not apply (see the R25 block above for every exclusion)."""
+    if not question or not body or _AUTH_REFUSAL.search(body):
+        return body
+    topic = authority_topic(question)
+    if topic is None:
+        return body
+    _, _, allowed, label, primary = topic
+    hosts = {m.group(1).lower() for m in _AUTH_HOST.finditer(body)}
+    if len(hosts) != 1:
+        return body                                       # none cited, or a multi-authority answer: not judged
+    host = next(iter(hosts))
+    if any(host == a or host.endswith("." + a) for a in allowed):
+        return body
+    esc = re.escape(host)
+    labelled = re.compile(r"(thibitisha\s+na\s+)([^().\n]{0,60}?)\(\s*(?:https?://)?(?:www\.)?" + esc + r"\s*\)", re.IGNORECASE)
+    fixed, n = labelled.subn(lambda m: f"{m.group(1)}{label} ({primary})", body)
+    if n:
+        return fixed
+    return re.sub(r"(?<![a-z0-9.-])" + esc + r"(?![a-z0-9-])", primary, body, flags=re.IGNORECASE)

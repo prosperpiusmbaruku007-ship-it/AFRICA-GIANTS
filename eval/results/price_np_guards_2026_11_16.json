@@ -1,0 +1,133 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2244,
+   "flags": 7,
+   "rows": [
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+     "reply": "Hapana, si sahihi. Mfanyakazi aliyeachishwa kazi baada ya kufanya kazi Tanzania kwa angalau miezi 10 anastahili malipo ya kuachishwa kazi. Miezi 8 ni chini ya kiwango cha chini cha miezi 10. Thibitisha na Sheria ya Fidia kwa Ajali Kazini (WCF Act).",
+     "flags": {
+      "D10_new": [
+       "severance/qualifying-months:10",
+       "severance/qualifying-months:10"
+      ]
+     }
+    },
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?",
+     "reply": "Hapana, si sahihi. Likizo ya mwaka (annual leave) ni siku 30 kwa mujibu wa Sheria ya Ajira na Mahusiano Kazini (ELRA). Thibitisha na mamlaka husika (osha.go.tz).",
+     "flags": {
+      "D10_new": [
+       "annual_leave/value:30"
+      ]
+     }
+    },
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+     "reply": "Hapana, leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi. Thibitisha na BRELA (brela.go.tz).",
+     "flags": {
+      "D13_constant": [
+       "licence/expiry-date:31 machi"
+      ]
+     }
+    },
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Kumbukumbu za biashara natakiwa kuzihifadhi kwa muda gani?",
+     "reply": "Kumbukumbu za biashara zinatakiwa kuhifadhiwa kwa angalau miaka mitatu (3) kulingana na sheria za kodi na mahitaji ya kisheria. Thibitisha na tra.go.tz.",
+     "flags": {
+      "D13_constant": [
+       "records/years:3"
+      ]
+     }
+    },
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?",
+     "reply": "Hapana, hiyo taarifa haiko sahihi. Hakuna siku maalum za 15 za kuomba TIN. Ni muhimu sana kupata TIN haraka iwezekanavyo. Thibitisha na tra.go.tz.",
+     "flags": {
+      "D13_constant": [
+       "tin/deadline-denied"
+      ]
+     }
+    },
+    {
+     "src": "negated_premise_live_2026_11_16.json",
+     "q": "Nina wafanyakazi 6, naomba unisaidie kujua ni asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?",
+     "reply": "Kwa mujibu wa sheria, kiwango cha michango ya WCF ni asilimia 0.5% ya jumla ya mishahara ghafi (gross payroll). Kwa wafanyakazi 6, hesabu hiyo itakuwa ni TZS 30,000 kwa mwezi. Thibitisha na WCF (wcf.go.tz).",
+     "flags": {
+      "D13_amount": [
+       "30000"
+      ]
+     }
+    },
+    {
+     "src": "targeted_route_verification_2026_10_09.json",
+     "q": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+     "reply": "Ndiyo. WCF inatumika kwa waajiri WOTE bila kujali idadi ya wafanyakazi. Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara). Inalipwa na mwajiri pekee. Thibitisha na WCF (wcf.go.tz).\nNdiyo. WCF inahusu waajiri wote kutoka mfanyakazi wa kwanza — hakuna kizingiti cha idadi ya wafanyakazi. WCF ni asilimia 0.5 ya jumla ya mishahara.",
+     "flags": {
+      "D13_amount": [
+       "50000"
+      ]
+     }
+    }
+   ]
+  },
+  "GOLD": {
+   "pairs": 562,
+   "flags": 0,
+   "rows": []
+  },
+  "TRAINING": {
+   "pairs": 8772,
+   "flags": 4,
+   "rows": [
+    {
+     "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+     "q": "Leseni ya biashara ya LGA inahuishwa lini na ada yake inategemeana na nini?",
+     "reply": "Leseni ya biashara ya LGA lazima ihuishwe kila mwaka, kawaida ifikapo tarehe 31 Machi. Kuchelewa kuhuisha kunasababisha faini za ucheleweshaji. Ada ya leseni inategemea aina ya biashara, ukubwa wake (kulingana na mapato au eneo la jengo), na halmashauri husika. Ada zinaweza kutofautiana sana kati ya halmashauri moja na nyingine. Nenda ofisi ya halmashauri yako na hati za biashara kujua ada halisi ",
+     "flags": {
+      "D13_constant": [
+       "licence/expiry-date:31 machi"
+      ]
+     }
+    },
+    {
+     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+     "q": "Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?",
+     "reply": "Ada ya leseni ya biashara ya Mamlaka ya Serikali za Mitaa (LGA) inatofautiana kulingana na aina ya biashara, eneo, na ukubwa. Kwa biashara ndogo za kawaida mji mkubwa, ada inaweza kuanzia TZS 50,000 hadi TZS 500,000+ kwa mwaka. Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. Kuendesha biashara bila leseni ya LGA ni kosa na kunaweza kusababisha faini au kufungwa kwa b",
+     "flags": {
+      "D13_constant": [
+       "licence/expiry-date:31 machi"
+      ]
+     }
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Leseni ya biashara ya LGA inahuishwa lini na ada yake inategemeana na nini?",
+     "reply": "Leseni ya biashara ya LGA lazima ihuishwe kila mwaka, kawaida ifikapo tarehe 31 Machi. Kuchelewa kuhuisha kunasababisha faini za ucheleweshaji. Ada ya leseni inategemea aina ya biashara, ukubwa wake (kulingana na mapato au eneo la jengo), na halmashauri husika. Ada zinaweza kutofautiana sana kati ya halmashauri moja na nyingine. Nenda ofisi ya halmashauri yako na hati za biashara kujua ada halisi ",
+     "flags": {
+      "D13_constant": [
+       "licence/expiry-date:31 machi"
+      ]
+     }
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?",
+     "reply": "Ada ya leseni ya biashara ya Mamlaka ya Serikali za Mitaa (LGA) inatofautiana kulingana na aina ya biashara, eneo, na ukubwa. Kwa biashara ndogo za kawaida mji mkubwa, ada inaweza kuanzia TZS 50,000 hadi TZS 500,000+ kwa mwaka. Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. Kuendesha biashara bila leseni ya LGA ni kosa na kunaweza kusababisha faini au kufungwa kwa b",
+     "flags": {
+      "D13_constant": [
+       "licence/expiry-date:31 machi"
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

@@ -610,3 +610,33 @@ def wrong_fee_band_withheld() -> str:
         f"Ratiba hii ni kama ilivyochapishwa na BRELA (brela.go.tz) tarehe "
         f"{BRELA_CAPTURE_DATE}; thibitisha ratiba inayotumika sasa na BRELA kabla ya kulipa."
     )
+
+
+# --- D-FIDELITY-13 replacement copy (2026-11-16): a licence / record-keeping / TIN constant the fact path contradicted -------------------------------------------------------------------------
+# Unlike D-FIDELITY-7 (which states no figure after being caught inventing one), these three are lookups against statutory constants that the SAME session's locked facts hold verbatim, so the replacement is the
+# right answer, not a second guess. Each sentence is lifted from the locked fact of that name (tests/test_constant_guards.py asserts the figure is in the fact's own text). R44: the Act is named, no section number.
+CONSTANT_RESTATEMENTS = {
+    "business_licence_expiry": ("Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka, kwa hiyo huhuishwa kila mwaka kabla ya tarehe hiyo (Sheria ya Leseni za Biashara). "
+                                "Thibitisha na mamlaka ya leseni (halmashauri yako)."),
+    "record_keeping_period": ("Rekodi za biashara zihifadhiwe kwa miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. "
+                              "Muda ni mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
+    "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
+                           "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
+}
+
+
+def constants_restated(topics) -> str:
+    """The whole statement for every violated constant topic, in the order given, each once."""
+    seen, out = set(), []
+    for t in topics:
+        if t not in seen:
+            seen.add(t)
+            out.append(CONSTANT_RESTATEMENTS[t])
+    return "\n\n".join(out)
+
+
+def derived_amount_withheld(rate_text: str = "") -> str:
+    """D-FIDELITY-13 (np_28, th_22): the fact path stated a shilling amount for a payroll levy although the question gave no wage or payroll. No amount can be derived from nothing, so the sentence is REPLACED
+    (the fact path cannot be blanked: `_render` returns the body alone) by the rate, when one is known, and a request for the one input that is missing."""
+    ask = "Ili nikokotoe kiasi cha shilingi, nipe jumla ya mishahara ya mwezi (na idadi ya wafanyakazi ikihitajika)."
+    return (rate_text.strip() if "nipe jumla" in rate_text else (rate_text.strip() + " " + ask).strip()) if rate_text else ("Siwezi kutaja kiasi cha shilingi bila mshahara au jumla ya mishahara. " + ask)

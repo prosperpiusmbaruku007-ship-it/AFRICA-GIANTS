@@ -1,11 +1,11 @@
 {
-  "audited": "2026-11-16",
+  "audited": "2026-11-17",
   "first_audited": "2026-08-24",
   "harness": "eval/controls/audit_control_fires.py",
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 27,
+    "FIRES": 29,
     "DISABLED": 1,
     "NOT_WIRED": 1,
     "OBSERVED": 3
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmppo4fmpvu\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpgcb7_ygq\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -304,6 +304,24 @@
       "positive_specimen": "eval_318 VAT limb, eval_355, eval_398, eval_257",
       "negative_specimen": "a correct VAT yes, a correct EFD no-threshold body, the plain NSSF compute still computing",
       "note": "founding specimens fire: {'D-FIDELITY-12 (eval_318 VAT limb)': True, 'D-FIDELITY-7 subject fallback (eval_355)': True, 'NSSF agreed split computed (eval_398)': True, 'wage evidence required (eval_257)': True}; clean limbs flagged (must be False, False, False): [False, False, False]; wired (comments stripped): True. Priced before wiring (eval/results/price_batch_guards_2026_11_16.json): D-FIDELITY-12 0 flags in gold and training; the fallback + the `hapana,` negation narrowing add 17 STORED-reply flags, 0 in gold, 0 in training, every one asserting a fabricated threshold (read in full). Engine base-confusion probe: eval/results/engine_base_confusion_probe_2026_11_16.json, 0 of 57 BAD, 6/6 controls compute."
+    },
+    {
+      "id": "2026-11-16 np_ batch (D-FIDELITY-10 leave/severance limbs, D-FIDELITY-13 constants + derived amount, premise-phrasing routes)",
+      "layer": "fidelity",
+      "claims_to_block": "annual leave \"siku 30\", severance \"miezi 10\", licence renewal \"31 Machi\", records \"miaka 3\", a denied 15-day TIN deadline, a TZS amount derived for WCF from no wage",
+      "verdict": "FIRES",
+      "positive_specimen": "np_12, np_05, np_13, np_20, np_26, np_28",
+      "negative_specimen": "the correct leave/licence/TIN bodies, a rate-only WCF body, the severance TAX question staying off the severance statement",
+      "note": "founding specimens fire (verbatim live replies): {'annual leave siku 30 (np_12)': True, 'severance miezi 10 (np_05)': True, 'licence 31 Machi (np_13)': True, 'records miaka 3 (np_20)': True, 'TIN deadline denied (np_26)': True, 'derived WCF amount (np_28)': True, 'np_12 routes to the statement': True, 'np_28 routes to the rate statement': True}; clean limbs flagged (must all be False): [False, False, False, False, False]; wired (comments stripped): True. Priced before wiring (eval/results/price_np_guards_2026_11_16.json): 0 flags in 562 gold answers; 7 stored-reply flags = the six np_ specimens + th_22 (all true positives); 4 training rows = 2 distinct pairs asserting \"31 Machi\" for LGA licence renewal (a genuine corpus defect, reported for quarantine). Route sweep: eval/results/sweep_np_routes_2026_11_16.json, 17 diversions all read by hand."
+    },
+    {
+      "id": "2026-11-17 D-FIDELITY-14 (wrong authority repaired)",
+      "layer": "fidelity",
+      "claims_to_block": "a citation naming the wrong authority for the topic (osha/immigration/mlywf/wcf/brela/PKF hosts)",
+      "verdict": "FIRES",
+      "positive_specimen": "np_19, np_12",
+      "negative_specimen": "TanzLII on GN 487A, a KRA refusal, a multi-authority answer, the correct authority",
+      "note": "specimens repaired: {'np_19 immigration.go.tz on maternity leave': True, 'np_12 osha.go.tz on annual leave': True}; byte-identical limbs (must all be True): [True, True, True, True]; wired (comments stripped): True. Priced over 2,244 stored replies: 18 distinct changes, all read, all true wrong-authority (incl. hosts that do not exist: elra.go.tz, labour.go.tz, labor.go.tz, mlywf.go.tz); two damage cases found by the sweep (a GN 605A/GN 487A confusion; SDL \"mafunzo\" beside NSSF \"uzeeni\") became probes ar_18-ar_21."
     },
     {
       "id": "AUTO-SEND route allowlist",

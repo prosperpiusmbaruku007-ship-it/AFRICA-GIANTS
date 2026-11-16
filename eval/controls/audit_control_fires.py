@@ -1090,6 +1090,64 @@ def audit_unexercisable():
            _v, 'eval_318 VAT limb, eval_355, eval_398, eval_257', 'a correct VAT yes, a correct EFD no-threshold body, the plain NSSF compute still computing',
            _note)
 
+    # ── THE np_ BATCH, 2026-11-16 (founder, from the live negated-premise replies): annual leave outside 28, severance qualifying months, licence expiry, record-keeping years, TIN deadline, a derived levy amount on
+    # the FACT path, and two route cues (premise phrasings of the four constants; the levy after "asilimia ngapi"). PLANTED: each founding specimen is the VERBATIM live reply and must fire; the clean limbs must not;
+    # the wiring is read from orchestrator.py with comments stripped.
+    try:
+        from chike import fidelity as _f13, routing as _r13
+        _live = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'negated_premise_live_2026_11_16.json'), encoding='utf-8'))['rows']}
+        _spec13 = {
+            'annual leave siku 30 (np_12)': bool(_f13.fixed_figure_violations(_live['np_12']['question'], _live['np_12']['reply'])),
+            'severance miezi 10 (np_05)': bool(_f13.fixed_figure_violations(_live['np_05']['question'], _live['np_05']['reply'])),
+            'licence 31 Machi (np_13)': _f13.body_contradicts_constant(_live['np_13']['question'], _live['np_13']['reply']),
+            'records miaka 3 (np_20)': _f13.body_contradicts_constant(_live['np_20']['question'], _live['np_20']['reply']),
+            'TIN deadline denied (np_26)': _f13.body_contradicts_constant(_live['np_26']['question'], _live['np_26']['reply']),
+            'derived WCF amount (np_28)': _f13.body_states_derived_levy_amount(_live['np_28']['question'], _live['np_28']['reply']),
+            'np_12 routes to the statement': _r13.detect_intent(_live['np_12']['question']) == 'fixed_statement',
+            'np_28 routes to the rate statement': _r13.detect_intent(_live['np_28']['question']) == 'wcf'}
+        _clean13 = [
+            _f13.fixed_figure_violations(_live['np_12']['question'], 'Hapana. Likizo ya mwaka ni angalau siku 28 mfululizo.'),
+            _f13.body_contradicts_constant(_live['np_13']['question'], 'Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka.'),
+            _f13.body_contradicts_constant(_live['np_26']['question'], 'Ndiyo. Omba TIN ndani ya siku 15; TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi.'),
+            _f13.body_states_derived_levy_amount(_live['np_28']['question'], 'Kiwango cha WCF ni asilimia 0.5 ya jumla ya mishahara ghafi.'),
+            _r13.detect_intent('Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi — je, ni kweli?') != 'none']
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code13 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired13 = 'fidelity.body_contradicts_constant(' in _code13 and 'fidelity.body_states_derived_levy_amount(' in _code13 and 'fidelity.body_contradicts_fixed_figure(' in _code13
+        _v = ('FIRES' if (all(_spec13.values()) and not any(_clean13) and _wired13) else
+              'NOT_WIRED' if (all(_spec13.values()) and not any(_clean13)) else 'ERROR')
+        _note = (f'founding specimens fire (verbatim live replies): {_spec13}; clean limbs flagged (must all be False): {[bool(c) for c in _clean13]}; wired (comments stripped): {_wired13}. '
+                 'Priced before wiring (eval/results/price_np_guards_2026_11_16.json): 0 flags in 562 gold answers; 7 stored-reply flags = the six np_ specimens + th_22 (all true positives); 4 training rows = 2 distinct '
+                 'pairs asserting "31 Machi" for LGA licence renewal (a genuine corpus defect, reported for quarantine). Route sweep: eval/results/sweep_np_routes_2026_11_16.json, 17 diversions all read by hand.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-16 np_ batch (D-FIDELITY-10 leave/severance limbs, D-FIDELITY-13 constants + derived amount, premise-phrasing routes)', 'fidelity',
+           'annual leave "siku 30", severance "miezi 10", licence renewal "31 Machi", records "miaka 3", a denied 15-day TIN deadline, a TZS amount derived for WCF from no wage',
+           _v, 'np_12, np_05, np_13, np_20, np_26, np_28', 'the correct leave/licence/TIN bodies, a rate-only WCF body, the severance TAX question staying off the severance statement',
+           _note)
+
+    # ── D-FIDELITY-14, 2026-11-17: WRONG AUTHORITY REPAIRED (founder-approved). PLANTED: the verbatim live specimens (np_19, np_12) must be repaired; TanzLII, a refusal naming KRA, a multi-authority answer and the
+    # correct authority must come back byte-identical; wired (comments stripped) in orchestrator._validate_and_clean.
+    try:
+        from chike import fidelity as _f14
+        _lv = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'negated_premise_live_2026_11_16.json'), encoding='utf-8'))['rows']}
+        _spec14 = {'np_19 immigration.go.tz on maternity leave': 'kazi.go.tz' in _f14.repair_authority(_lv['np_19']['question'], _lv['np_19']['reply']) and 'immigration.go.tz' not in _f14.repair_authority(_lv['np_19']['question'], _lv['np_19']['reply']),
+                   'np_12 osha.go.tz on annual leave': 'osha.go.tz' not in _f14.repair_authority(_lv['np_12']['question'], _lv['np_12']['reply'])}
+        _same14 = [_f14.repair_authority('GN 487A ilianza lini?', 'Tarehe 28 Julai 2025. Thibitisha na TanzLII (tanzlii.org).') == 'Tarehe 28 Julai 2025. Thibitisha na TanzLII (tanzlii.org).',
+                   _f14.repair_authority('Nalipa kodi ya mapato kwa KRA kiasi gani?', 'Samahani, masuala ya Tanzania Bara pekee. Wasiliana na KRA (kra.go.ke).') == 'Samahani, masuala ya Tanzania Bara pekee. Wasiliana na KRA (kra.go.ke).',
+                   _f14.repair_authority('Tofauti ya NSSF na SDL?', 'NSSF: nssf.go.tz. SDL: tra.go.tz.') == 'NSSF: nssf.go.tz. SDL: tra.go.tz.',
+                   _f14.repair_authority('Likizo ya uzazi ni siku ngapi?', 'Siku 84. Thibitisha na Ofisi ya Kazi (kazi.go.tz).') == 'Siku 84. Thibitisha na Ofisi ya Kazi (kazi.go.tz).']
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code14 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired14 = 'fidelity.repair_authority(' in _code14
+        _v = ('FIRES' if (all(_spec14.values()) and all(_same14) and _wired14) else 'NOT_WIRED' if (all(_spec14.values()) and all(_same14)) else 'ERROR')
+        _note = (f'specimens repaired: {_spec14}; byte-identical limbs (must all be True): {_same14}; wired (comments stripped): {_wired14}. Priced over 2,244 stored replies: 18 distinct changes, all read, all true wrong-authority '
+                 '(incl. hosts that do not exist: elra.go.tz, labour.go.tz, labor.go.tz, mlywf.go.tz); two damage cases found by the sweep (a GN 605A/GN 487A confusion; SDL "mafunzo" beside NSSF "uzeeni") became probes ar_18-ar_21.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 D-FIDELITY-14 (wrong authority repaired)', 'fidelity', 'a citation naming the wrong authority for the topic (osha/immigration/mlywf/wcf/brela/PKF hosts)',
+           _v, 'np_19, np_12', 'TanzLII on GN 487A, a KRA refusal, a multi-authority answer, the correct authority', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))
