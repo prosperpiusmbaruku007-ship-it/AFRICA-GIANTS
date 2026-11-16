@@ -51,10 +51,11 @@ import requests
 try:
     import kaggle_secrets
     hf_token = kaggle_secrets.UserSecretsClient().get_secret('AFRICA_GIANTS')
-    print(f'[auth] HF token from Kaggle secret ({hf_token[:8]}...)')
+    # NO SECRET VALUE IN A LOG (founder, 2026-11-16): length + a hash fingerprint identify which token was used without printing any of it.
+    print('[auth] HF token from Kaggle secret (len=%d, fingerprint=%s)' % (len(hf_token), __import__('hashlib').sha256(hf_token.encode()).hexdigest()[:8]))
 except Exception as e:
     hf_token = os.environ.get('HF_TOKEN', '')
-    print(f'[auth] fallback env HF_TOKEN: {hf_token[:8] if hf_token else "MISSING"}')
+    print('[auth] fallback env HF_TOKEN: ' + ('len=%d, fingerprint=%s' % (len(hf_token), __import__('hashlib').sha256(hf_token.encode()).hexdigest()[:8]) if hf_token else 'MISSING'))
 os.environ['HF_TOKEN'] = hf_token
 
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'

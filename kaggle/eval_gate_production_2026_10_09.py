@@ -174,7 +174,7 @@ RAW = f'https://raw.githubusercontent.com/{REPO}/main'
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 
 # The index production serves. ASSERTED, not assumed — see gate_index_identity() below.
-EXPECTED_FACT_COUNT = 208   # 2026-11-13: 184 -> 208 with the three-profile coverage regen (the gate must be measured against THIS index)
+EXPECTED_FACT_COUNT = 211   # 2026-11-16: 208 -> 211 with the follow-up regen (R44 strips, 3 new rows); was 184 -> 208 on 2026-11-13. The gate must be measured against THIS index
 
 # The commit the last full gate ran at, and its re-derived in-corpus headline. Both are read
 # back out of the committed artifact at run time rather than trusted from this comment.
@@ -197,7 +197,7 @@ except Exception as e:                                                   # noqa:
     raise RuntimeError('run on Kaggle with the AFRICA_GIANTS secret attached') from e
 assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+print('[auth] AFRICA_GIANTS OK (len=%d, fingerprint=%s)' % (len(hf_token), __import__('hashlib').sha256(hf_token.encode()).hexdigest()[:8]))  # no secret value in a log
 
 # The judge is MANDATORY (2026-08-09) and the reason is specific, not procedural: at 1476caa
 # eval_318 (tells a TZS 205,000,000 business it need not register for VAT against a 200M

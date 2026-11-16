@@ -325,7 +325,8 @@ PINNED = {
     "brela_foreign_late_filing_penalty": (
         "present_elsewhere",
         "faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi"),
-    "osha_registration_before_operations": ("present_elsewhere", "Kifungu 16(2)"),
+    # needle moved 2026-11-16 with the R44 strip: it was "Kifungu 16(2)", a section number, which is no longer in served text (it lives in primary_source).
+    "osha_registration_before_operations": ("present_elsewhere", "hakuna muda wa siku baada ya kufungua"),
     "sdl_exemption_categories": ("present_elsewhere", "zisizolipa SDL"),
 
     # late_filing_penalty_monthly_fee: found 2026-08-26, by the sibling-match audit the fee
@@ -466,10 +467,10 @@ PINNED = {
     "record_keeping_period": ("present_elsewhere", "Miaka 5 tangu tarehe husika"),
     "input_vat_passenger_vehicle": ("present_elsewhere", "gari la abiria, vipuri au matengenezo"),
     "late_return_penalty": ("present_elsewhere", "Adhabu ya kuchelewa kuwasilisha return ya VAT"),
-    # ---- 2026-11-16 follow-up: two NEW facts, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips them the moment it lands).
-    "vat_voluntary_registration": ("pending_r15", None),
-    "wht_construction_services": ("pending_r15", None),
-    "vat_withholding_mixed_supply": ("pending_r15", None),
+    # ---- 2026-11-16 follow-up: three NEW facts, shipped by the Kaggle regen (HF dataset commit 3565846) -- converted from pending_r15.
+    "vat_voluntary_registration": ("present_elsewhere", "usajili wa hiari unaruhusiwa kwa"),
+    "wht_construction_services": ("present_elsewhere", "uwiano wa 3:2 kati ya vifaa na huduma"),
+    "vat_withholding_mixed_supply": ("present_elsewhere", "uwiano wa 3:2 kati ya bidhaa na huduma"),
 }
 
 
