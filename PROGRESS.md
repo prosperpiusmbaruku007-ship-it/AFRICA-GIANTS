@@ -819,6 +819,14 @@ Push took three attempts (the link dropped twice mid-pack; origin was never part
 
 **Not yet done:** deploy of chike-inference for stages 1-2 and its targeted live check; stage 3 (substantive-polarity check); stage 4 items.
 
+### 4aj. 2026-11-17 — STAGES 1-2 DEPLOYED (chike-inference build `81a4930`) AND VERIFIED LIVE: THE corporate_tax VETO AND BOTH D-FIDELITY-15 GUARDS FIRED; TWO OF THE NOW-MODEL-PATH ANSWERS CARRY FIGURES I CANNOT SOURCE
+
+Deployed per R16 (`chike-whatsapp` `/health` `pending: 0`; pre-flight green; stop -> deploy; served build `81a4930`, 211 index rows). Harness `eval/controls/verify_wrongtopic_deploy_live_2026_11_17.py` committed before it ran -> `eval/results/wrongtopic_deploy_live_2026_11_17.json`, 13 rows, replies READ, 0 automated misses. **VETO:** the four dividend/return/penalty company questions no longer reach `engine:corporate_tax` (all now `fact`, model path, reviewed like any model answer). **GUARD (live, `guards ['replaced']`):** s2_04's question now returns the locked "WCF inalipwa na mwajiri peke yake ... HAIKATWI ... ni kosa" statement; s2_17's returns "Hapana: VAT ya pembejeo haidaiwi kwa gari la abiria ... isipokuwa ...". **NEGATIVES held:** the corporate rate question still `engine:corporate_tax`, rent WHT / partnership / NSSF / WCF computes unchanged, a lorry-VAT question not judged ("unaweza kudai ... kwa biashara ya usafirishaji", the locked fact says lorries are not stated), "Nikate WCF?" answered "Hapana — haikatwi".
+
+**OBSERVATIONS (model-path answers that replaced the wrong-topic engine reply; NOT fixed, for the reviewer and a source check):** (1) the non-DSE dividend reply says "10% kwa wakazi na **15% kwa wasio wakazi**" — the locked `dividend_withholding_rate` states no non-resident figure, so the 15% is unsupported; (2) the company return-deadline reply says "miezi 12 ... **30 Septemba**" — not stated by any locked fact I read (the individual return is 6 months, `individual_income_tax_return`); a corporate-return deadline fact is a content gap; (3) the DSE dividend reply ("kwa kampuni zinazohusiana na DSE ... 5%") is vague but consistent with the locked 5%. The wrong-TOPIC defect is closed; wrong/unsourced CONTENT on these topics is the next layer.
+
+**Still open from the founder's list:** stage 3 (substantive-polarity check on sets #1 and #2), and stage 4: the s2_13 paternity window, BRELA-vs-licence authority (primary-source check first), the GN 605A "PKF issued the table" body, the unsourced "15% PAYE" on severance, and `batch_002:8` (annual PAYE statement "31 Machi" vs locked 30 January) read-and-quarantine.
+
 ### 5. Open — **REWRITTEN 2026-11-13; the earlier list was stale (most of it was resolved in 4b–4r). Resolved items are kept, marked, not deleted.**
 
 **OPEN**
