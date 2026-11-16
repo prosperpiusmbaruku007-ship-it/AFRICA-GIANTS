@@ -30,6 +30,11 @@ SEVERANCE = "severance"
 OVERTIME = "overtime"
 ANNUAL_LEAVE = "annual_leave"
 VAT_TIME_OF_SUPPLY = "vat_time_of_supply"
+# 2026-11-16 (founder): three more constants whose rank-1 fact the model contradicted live -- voluntary VAT registration (an unhedged "Ndiyo"), the WCF accident-reporting
+# trigger (counted "from the accident"), and VAT withholding on a mixed supply (the RATE apportioned instead of the VALUE). Same discipline, same exclusion from auto-send.
+VAT_VOLUNTARY = "vat_voluntary_registration"
+WCF_ACCIDENT = "wcf_accident_reporting"
+VAT_WH_MIXED = "vat_withholding_mixed_supply"
 
 # topic -> (locked-fact key, the statement, citation note). Statement text is lifted from the served concise row with
 # the leading question sentence removed (the user has just asked it).
@@ -68,6 +73,21 @@ STATEMENTS = {
         "wa usambazaji. Hivyo ukitoa invoice, VAT inadaiwa hata mteja asipolipa bado. Return ya VAT ni tarehe 20 ya mwezi "
         "unaofuata (Sheria ya VAT).",
         "VAT Act Cap.148 R.E.2023, s.15(a)-(c) and s.70(1) — time of supply is the earliest of the three events",
+    ),
+    VAT_VOLUNTARY: (
+        "vat_voluntary_registration",
+        "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+        "VAT Act Cap.148 R.E.2023 s.28, s.29(1)-(3), s.30(2) (ss.29(4)-(6) added by FA2024 s.105 / FA2025 s.126); TRA FAQ tra.go.tz/ajax/faq/57 (2026-11-16): 'Voluntary registration is also allowed for certain specific economic activities' -- Act and FAQ UNRECONCILED, so the statement hedges and names the routes",
+    ),
+    WCF_ACCIDENT: (
+        "wcf_accident_reporting",
+        "Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
+        "Workers Compensation Act Cap.263 R.E.2023 s.34(1) ('within seven days after receiving a notice ... or having learned in some other way'); GN 185/2016 Reg.15(1),(2),(4) -- the clock runs from RECEIPT of notice, not from the accident; Act 'seven days' vs Regulation 'seven working days' recorded as unresolved",
+    ),
+    VAT_WH_MIXED: (
+        "vat_withholding_mixed_supply",
+        'VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.',
+        "Finance Act 2026 s.91(b) adding VAT Act s.5(7): the taxable VALUE subject to withholding is apportioned 3:2 goods:services, in force 1 July 2026; rates 3% / 6% unchanged (VAT Act s.5(5)); no blended percentage is stated because the Act gives none",
     ),
 }
 

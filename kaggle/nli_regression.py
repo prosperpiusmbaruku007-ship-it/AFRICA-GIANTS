@@ -28,7 +28,8 @@ import os, json, re, time, requests
 try:
     import kaggle_secrets
     HF_TOKEN = kaggle_secrets.UserSecretsClient().get_secret('AFRICA_GIANTS')
-    print(f'[auth] HF token loaded ({HF_TOKEN[:6]}...)')
+    import hashlib as _hl; _fp = _hl.sha256((HF_TOKEN or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+    print(f'[auth] HF token loaded ({len(HF_TOKEN)} chars, fp {_fp}...)')
 except Exception as e:
     HF_TOKEN = os.environ.get('HF_TOKEN', '')
     print(f'[auth] fallback env HF_TOKEN: {"set" if HF_TOKEN else "MISSING"}')

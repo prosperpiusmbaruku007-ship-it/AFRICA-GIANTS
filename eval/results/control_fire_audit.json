@@ -5,7 +5,7 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 26,
+    "FIRES": 27,
     "DISABLED": 1,
     "OBSERVED": 3
   },
@@ -48,8 +48,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -66,8 +66,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -75,8 +75,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -84,8 +84,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -93,8 +93,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -102,7 +102,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpxgb3zg3o\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmp66rhf94d\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -212,7 +212,7 @@
       "verdict": "FIRES",
       "positive_specimen": "nonexistent index paths",
       "negative_specimen": "the real kaggle/ index",
-      "note": "missing index raises: True; real index loads 208 facts"
+      "note": "missing index raises: True; real index loads 211 facts"
     },
     {
       "id": "retrieval.preflight[expected_fact_count]",
@@ -285,6 +285,15 @@
       "positive_specimen": "the five live wrong replies of 2026-11-13",
       "negative_specimen": "a whole-table notice answer, a negated mention, an NSSF split",
       "note": "founding specimens flagged: {'notice': True, 'severance': True, 'overtime': True, 'annual_leave': True, 'vat': True}; clean limbs flagged (must all be empty): [False, False, False, False]; wired in orchestrator code (comments stripped): True. REPLACES with the whole model-free statement (not blanking: the fact path returns the body alone). Priced over 6,932 stored rows before wiring: 0 GOLD flags, but only 13 on-topic rows exist anywhere -- the corpora barely contain these topics, which is why they were gaps; a lower bound (R21), eval/results/fixed_figure_guard_prewiring_2026_11_16.json."
+    },
+    {
+      "id": "D-FIDELITY-10 ext + D-FIDELITY-11",
+      "layer": "fidelity",
+      "claims_to_block": "voluntary-VAT unhedged answer, WCF trigger from the accident date, 3:2 applied to the rate, a PAYE band edge assigned to the wrong band",
+      "verdict": "FIRES",
+      "positive_specimen": "the live wrong replies of 2026-11-16",
+      "negative_specimen": "hedged voluntary answer, trigger from receipt, 3:2 on the value, 760,000 as the end of band 3",
+      "note": "founding specimens flagged: {'voluntary VAT': True, 'WCF trigger': True, 'mixed supply (rate)': True}; PAYE band narration flagged: True; clean limbs flagged (must all be empty): [False, False, False, False]; wired (comments stripped): True. Priced before wiring (eval/results/price_followup_guards_2026_11_16.json): WCF/mixed/PAYE rules 0 flags in gold and training; the voluntary rule flags 2 GOLD rows (eval_013, eval_028) and 10 training pairs that ASSERT a voluntary route the primary text does not -- a gold-key question for the founder, not a defect of the rule."
     },
     {
       "id": "AUTO-SEND route allowlist",

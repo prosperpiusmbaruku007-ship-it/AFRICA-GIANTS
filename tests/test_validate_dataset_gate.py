@@ -201,7 +201,8 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     # arithmetic defect neither row contains. The other six removals of that pass landed in
     # sft_shaped_pairs/ and raw_sources/, which this count does not cover -- which is why the
     # arithmetic is written out: a bare "-1" would hide that nine rows moved, not one.
-    assert "schema-shaped: 1716 pairs, 0 errors" in r.stdout, (
+    # 1716 -> 1714 on 2026-11-16: the two cleaned_pairs rows of the WCF accident-trigger quarantine (batch_004:179 and :295), moved to rejected/ with their reason.
+    assert "schema-shaped: 1714 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 

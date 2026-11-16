@@ -1013,6 +1013,39 @@ def audit_unexercisable():
            _v, 'the five live wrong replies of 2026-11-13', 'a whole-table notice answer, a negated mention, an NSSF split',
            _note)
 
+    # ── D-FIDELITY-10 EXTENSION + D-FIDELITY-11, 2026-11-16 (founder). Founding specimens are the live wrong replies; clean limbs are the correct bodies. ──────────────
+    try:
+        from chike import fidelity as _f11
+        _spec11 = {
+            'voluntary VAT': ('Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?',
+                              'Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA.'),
+            'WCF trigger': ('Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?',
+                            'Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo.'),
+            'mixed supply (rate)': ('VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?',
+                                    'Sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa.')}
+        _hit11 = {k: bool(_f11.fixed_figure_violations(q, b)) for k, (q, b) in _spec11.items()}
+        _paye11 = _f11.body_misnames_paye_band('Kumbuka: TZS 760,000 ni kiwango cha pili cha PAYE (8%), na TZS 40,000 ni ziada.')
+        _clean11 = [
+            _f11.fixed_figure_violations('Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?', 'Sheria ya VAT haitaji usajili wa hiari; thibitisha na TRA.'),
+            _f11.fixed_figure_violations('Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?', 'Mwajiri aijulishe WCF ndani ya siku 7 tangu apokee taarifa ya ajali.'),
+            _f11.fixed_figure_violations('Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?', 'Unagawanya thamani iliyozuiwa kwa uwiano wa 3:2 (bidhaa: huduma).'),
+            [1] if _f11.body_misnames_paye_band('TZS 760,000 ni mwisho wa kiwango cha tatu (20%).') else []]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code11 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired11 = 'fidelity.body_misnames_paye_band(' in _code11 and 'fidelity.body_contradicts_fixed_figure(' in _code11
+        _v = ('FIRES' if (all(_hit11.values()) and _paye11 and not any(_clean11) and _wired11) else
+              'NOT_WIRED' if (all(_hit11.values()) and _paye11 and not any(_clean11)) else 'ERROR')
+        _note = (f'founding specimens flagged: {_hit11}; PAYE band narration flagged: {_paye11}; clean limbs flagged (must all be empty): {[bool(c) for c in _clean11]}; '
+                 f'wired (comments stripped): {_wired11}. Priced before wiring (eval/results/price_followup_guards_2026_11_16.json): WCF/mixed/PAYE rules 0 flags in gold and '
+                 f'training; the voluntary rule flags 2 GOLD rows (eval_013, eval_028) and 10 training pairs that ASSERT a voluntary route the primary text does not -- a gold-key '
+                 f'question for the founder, not a defect of the rule.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:120]}'
+    record('D-FIDELITY-10 ext + D-FIDELITY-11', 'fidelity',
+           'voluntary-VAT unhedged answer, WCF trigger from the accident date, 3:2 applied to the rate, a PAYE band edge assigned to the wrong band',
+           _v, 'the live wrong replies of 2026-11-16', 'hedged voluntary answer, trigger from receipt, 3:2 on the value, 760,000 as the end of band 3',
+           _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

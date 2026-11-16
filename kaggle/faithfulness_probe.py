@@ -78,7 +78,8 @@ except Exception as e:
     raise RuntimeError('run on Kaggle with AFRICA_GIANTS attached') from e
 assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+print(f'[auth] AFRICA_GIANTS ({len(hf_token)} chars, fp {_fp}...) OK')
 
 # ── CLONE chike/ ─────────────────────────────────────────────────────────────────
 _CLONE = '/kaggle/working/AFRICA-GIANTS'
@@ -251,7 +252,8 @@ for pr in probes:
     print(f"  CONTEXT injected ({len(facts_seen)} facts):")
     for i, f in enumerate(facts_seen):
         mark = '  <== TARGET' if (rank is not None and i == rank) else ''
-        print(f"     [{i}] {f[:120]}{mark}")
+        import hashlib as _hl; _fp = _hl.sha256((f or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+        print(f"     [{i}] {len(f)} chars, fp {_fp}{mark}")
     print(f"  GEN:      {gen}")
     if reply.raw_text and reply.raw_text != gen:
         print(f"  RAW:      {reply.raw_text[:400]}")

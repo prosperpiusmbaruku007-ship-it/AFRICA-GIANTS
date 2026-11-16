@@ -2407,7 +2407,32 @@ _FS_TOPICS = (
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"kwa\s+mkopo|mkopo|credit\s+sale|bado\s+hajalipa|hajalipa|hawajalipa|nimetoa\s+(?:invoice|ankara)|deni"),
      re.compile(r"usajili|kujisajili|register|kizingiti|threshold|refund|rejesho|zero|msamaha|exempt|adhabu|faini|penalty|riba|chelewa|kuchelewa|withhold|zuia|zuiw|kuzuia|tofauti|difference|risk|hatari|procedure|msambazaji|supplier")),
+    # ---- 2026-11-16 (founder): three more constants the model contradicted live with the correct row at rank 1. NARROW BY CONSTRUCTION (R17): each needs a subject cue
+    # AND a second, specific limb (lookaheads), a veto for the neighbouring questions it must not swallow, and premise-check questions ("... sivyo?") are vetoed so a
+    # false-premise question still reaches the model, where polarity matters (eval_343's "siku 30, sivyo?" gold starts "Hapana").
+    ("vat_voluntary_registration",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?:jisajili|kusajili|usajili|sajili|register|registration))(?=.*(?:hiari|voluntar|ingawa\s+sijafikia|ingawa\s+sijafika|kabla\s+ya\s+kufikia\s+kiwango|bila\s+kufikia\s+kiwango))", re.S),
+     re.compile(r"zuio|withhold|refund|rejesho|zero|msamaha|exempt|faini|adhabu|penalty|kughairi|kufuta|kujiondoa|cancel|deregist|efd|risiti|mashine|faida|benefit|advantage|hasara|nssf|paye|sdl|wcf|sivyo|si\s+kweli|ni\s+kweli")),
+    ("wcf_accident_reporting",
+     re.compile(r"ajali|accident|ameumia|alipoumia|kuumia"),
+     re.compile(r"(?=.*(?:kazi|mfanyakazi|wafanyakazi|wcf|mwajiri|workplace|employee))(?=.*(?:taarifa|ripoti|kuripoti|kuarifu|kumwarifu|kumjulisha|kupeleka|report|notif))(?=.*(?:siku|lini|muda|kuhesabiwa|inaanza|ndani\s+ya|deadline|days))", re.S),
+     re.compile(r"ugonjwa|magonjwa|disease|kifo|kufa|death|fidia|compensation|madai|claim|osha|tofauti|difference|usajili|kujisajili|register|leseni|ukaguzi|kiasi\s+gani\s+cha|sivyo|si\s+kweli|ni\s+kweli|bima|insurance")),
+    ("vat_withholding_mixed_supply",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))", re.S),
+     re.compile(r"cheti|certificate|tarehe|deadline|remit|ndani\s+ya\s+siku|lini|inalipwa|inapelekwa|kuwasilisha|kulipa|nssf|paye|sdl|wcf|makato|makadirio|sivyo|si\s+kweli|ni\s+kweli")),
 )
+
+
+# Ask forms specific to the three 2026-11-16 topics (the global _FS_ASK has no "naweza" / "inakatwaje"; widening it would loosen the original five).
+_FS_TOPIC_ASK = {
+    "vat_voluntary_registration": re.compile(r"naweza|unaweza|inawezekana|inaruhusiwa|ruhusiwa|ruhusa|upo|(?<![a-z])je(?![a-z])|nataka|vipi|lini|can\s+i|may\s+i|possible"),
+    "wcf_accident_reporting": re.compile(r"ngapi|ndani|lini|muda|kuhesabiwa|inaanza|deadline|how\s+many"),
+    "vat_withholding_mixed_supply": re.compile(r"inakatwaje|inakatwa|inazuiwaje|inazuiwa|nakata|nikate|ikatwe|inahesabiwaje|vipi|ngapi|kiasi|asilimia|kiwango"),
+}
+# The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply"})
 
 
 def fixed_statement_topics(text: str):
@@ -2429,7 +2454,12 @@ def fixed_statement_topic(text: str):
     None when: no ask cue; another levy is named (a different question); zero topics; or MORE THAN ONE topic matched
     (declining beats stating one limb of a two-part question)."""
     ql = text.lower()
-    if not _FS_ASK.search(ql) or _FS_OTHER_LEVY.search(ql):
-        return None
     hits = fixed_statement_topics(text)
-    return hits[0] if len(hits) == 1 else None
+    if len(hits) != 1:
+        return None
+    topic = hits[0]
+    if not (_FS_ASK.search(ql) or (topic in _FS_TOPIC_ASK and _FS_TOPIC_ASK[topic].search(ql))):
+        return None
+    if topic not in _FS_LEVY_EXEMPT and _FS_OTHER_LEVY.search(ql):
+        return None
+    return topic

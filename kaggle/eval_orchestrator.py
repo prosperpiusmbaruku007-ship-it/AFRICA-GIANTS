@@ -78,7 +78,8 @@ if not hf_token:
     raise RuntimeError(
         'AFRICA_GIANTS (HuggingFace token) not found in Kaggle secrets — attach it to '
         'this notebook before running. It is the only secret this script needs.')
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+print(f'[auth] AFRICA_GIANTS ({len(hf_token)} chars, fp {_fp}...) OK')
 os.environ['HF_TOKEN'] = hf_token
 
 REPO = 'prosperpiusmbaruku007-ship-it/AFRICA-GIANTS'

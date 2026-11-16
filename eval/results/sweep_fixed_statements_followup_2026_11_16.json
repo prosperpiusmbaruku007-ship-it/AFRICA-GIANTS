@@ -1,0 +1,380 @@
+{
+ "corpus_strings": 8156,
+ "changed": [
+  {
+   "q": "Ajali ya kazini inatakiwa kuripotiwa WCF ndani ya muda gani?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Ajali ya kazini inatolewa taarifa WCF ndani ya siku ngapi?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Ajali za kazini zinaripotiwa ndani ya siku 7 — je, muda huu ni sahihi?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Biashara yangu ya mpya inatazamia mapato ya TZS 300M kwa mwaka wa kwanza — ninaweza kusajili VAT mapema (voluntary registration)?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Chike, kama mfanyakazi wangu amepata ajali kazini, nikiripoti kwa muajiri, si muda huo huo huwa kuna kikomo cha siku ngapi kuripoti kwa WCF?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Chike, mambo vipi! Hii VAT withholding kwa bidhaa na huduma ikanichanganya kidogo. Ni kiasi gani hasa kinatakiwa kuhudhiwa kwa kila moja? Ni percentage sawa au inatofautiana?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Ikiwa mfanyakazi ameumia kazini, ninapaswa kuripoti lini na wapi?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Je, bidhaa na huduma vina kiwango sawa cha VAT withholding?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Je, kiwango cha VAT withholding ni sawa kwa bidhaa na huduma?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mauzo yangu bado madogo, lakini naweza kujisajili VAT kwa hiari?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi wangu amepata ajali kazini — nina muda gani wa kutoa taarifa?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "My annual sales have not yet reached TZS 200 million. Can I register for VAT voluntarily?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Ninaweza kusajiliwa VAT hiari (voluntarily) kabla sijafika kizingiti?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "Siku ngapi za kazi natakiwa kuripoti ajali ya kazini kwa WCF?",
+   "old": "none",
+   "new": "fixed_statement"
+  },
+  {
+   "q": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+   "old": "none",
+   "new": "fixed_statement"
+  }
+ ],
+ "probes": [
+  {
+   "q": "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Naweza kujisajili VAT ingawa mauzo yangu bado ni madogo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Je, usajili wa VAT wa hiari upo Tanzania?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nataka kusajili biashara yangu VAT kwa hiari, nifanyeje?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Can I register for VAT voluntarily?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Kizingiti cha kujisajili VAT ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka, lazima nijisajili VAT?",
+   "want": "vat_registration",
+   "got": "vat_registration",
+   "was": "vat_registration"
+  },
+  {
+   "q": "Nimesajiliwa VAT, naweza kujiondoa kwa hiari?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Usajili wa NSSF ni wa hiari?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Naweza kujisajili VAT mtandaoni?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Je, mshauri wa kodi lazima ajisajili VAT?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mchango wa hiari wa NSSF ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT ya hiari ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nimeuza kwa mkopo mauzo milioni 250 kwa mwaka, je nijisajili VAT?",
+   "want": "vat_registration",
+   "got": "vat_registration",
+   "was": "vat_registration"
+  },
+  {
+   "q": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi ameumia kazini, mwajiri ana muda gani wa kuripoti WCF?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Taarifa ya ajali kazini inapelekwa WCF ndani ya siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "How many days to report a workplace accident to WCF?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Taarifa ya ugonjwa wa kazini WCF ni siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Ajali ya kazini fidia ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Ajali ya gari, nipeleke taarifa polisi lini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Ajali ya kazini WCF itolewe taarifa ndani ya siku 30, sivyo?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Mfanyakazi akifa kazini taarifa WCF ni muda gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Tofauti kati ya ripoti ya ajali ya OSHA na WCF ni ipi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Nahitaji kujisajili WCF nikiwa na mfanyakazi, ndani ya siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "WCF ni asilimia ngapi?",
+   "want": "wcf",
+   "got": "wcf",
+   "was": "wcf"
+  },
+  {
+   "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Je, VAT ya zuio kwa mkataba wenye vifaa na huduma inakatwa kwa 6% kwenye thamani yote?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "Nauza vifaa na kufunga (bidhaa na huduma), zuio la VAT ni asilimia ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "none"
+  },
+  {
+   "q": "VAT ya zuio kwa bidhaa ni asilimia ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT ya zuio kwa huduma ni asilimia ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Cheti cha VAT ya zuio kinatolewa lini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT ya zuio kwa bidhaa na huduma inalipwa lini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kodi ya zuio kwa mkandarasi wa ujenzi ni asilimia ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "VAT ya zuio, bidhaa na huduma, ni kweli inakatwa 3%?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Severance pay inahesabiwaje?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Overtime inalipwa kiasi gani?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "want": "fixed_statement",
+   "got": "fixed_statement",
+   "was": "fixed_statement"
+  },
+  {
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Kizingiti cha EFD ni kiasi gani?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Niko chini ya kizingiti cha VAT lakini nataka kujisajili VAT kwa hiari -- je EFD inakuwa lazima mara moja?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  },
+  {
+   "q": "Faida ya kusajili VAT kwa hiari kabla ya kizingiti ni nini?",
+   "want": "none",
+   "got": "none",
+   "was": "none"
+  }
+ ]
+}

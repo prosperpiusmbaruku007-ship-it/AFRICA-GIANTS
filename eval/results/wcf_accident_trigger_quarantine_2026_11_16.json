@@ -1,0 +1,27 @@
+{
+  "measured": "2026-11-16",
+  "defect_class": "WCF_ACCIDENT_TRIGGER_FROM_ACCIDENT_NOT_RECEIPT",
+  "rows_removed_from_live": 10,
+  "rows_marked_raw": 3,
+  "lines_removed": {
+    "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl": [
+      179,
+      295
+    ],
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl": [
+      1018
+    ],
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl": [
+      214,
+      233
+    ],
+    "datasets/tier1a/sft/train_sft.jsonl": [
+      1280,
+      1944,
+      2664,
+      2683,
+      3099
+    ]
+  },
+  "quarantine_file": "datasets/tier1a/rejected/wcf_accident_trigger_superseded_quarantine_2026_11_16.jsonl"
+}

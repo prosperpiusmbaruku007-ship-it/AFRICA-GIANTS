@@ -45,6 +45,13 @@ LIVE = {
     "vat_time_of_supply": ("Nimeuza kwa mkopo, VAT inalipwa lini?",
                            "Kwa mauzo ya mkopo, unaweza kuomba kulipa VAT kidogo kidogo kulingana na makubaliano ya malipo. "
                            "Thibitisha na tra.go.tz."),
+    # The three live wrong replies of the 2026-11-16 follow-up deploy (eval/results/followup_deploy_live_2026_11_16.json), VERBATIM -- the founding specimens of the extension.
+    'vat_voluntary_registration': ('Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?',
+        'Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).'),
+    'wcf_accident_reporting': ('Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?',
+        'Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).'),
+    'vat_withholding_mixed_supply': ('VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?',
+        'Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).'),
 }
 
 

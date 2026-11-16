@@ -1069,7 +1069,10 @@ class Orchestrator:
                 # path or to figure-bearing questions is a HOLD WITH AN EXPIRY rather than a
                 # note, so "until it has seen more" is a decision somebody takes on a date.
                 or fidelity.body_states_unsupported_figure(
-                    sub.sub_question.text, cleaned, sub.computation.working)):
+                    sub.sub_question.text, cleaned, sub.computation.working)
+                # D-FIDELITY-11 (2026-11-16): a PAYE band edge assigned to the wrong band ("TZS 760,000 ni kiwango cha pili cha PAYE (8%)"; it is the top of the 20% band). A constant
+                # comparison, so it needs no engine result; blanking is safe for the same reason as every rule above -- the working still renders and it has the right band.
+                or fidelity.body_misnames_paye_band(cleaned)):
             cleaned = ""
             guard = "blanked"
         elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned):

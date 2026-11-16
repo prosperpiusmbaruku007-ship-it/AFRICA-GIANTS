@@ -1318,16 +1318,81 @@ def _fd10_vat(scope):
     return out
 
 
+# ---- D-FIDELITY-10 EXTENSION (2026-11-16, founder): three more fixed statements, each founded on a LIVE wrong reply with the correct row at rank 1 -------------------------
+#   voluntary VAT registration  the Act names no voluntary route and TRA's FAQ names no activities, so ANY substantive answer that does not carry the hedge is unsupported:
+#                               live "Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango" and the garbled "lazima uwe umefikia kiwango ... ili
+#                               usajiliwe kwa hiari". The rule is the ABSENCE of the hedge, which the statement itself always carries -- so a flag costs nothing: the replacement is the right answer.
+#   WCF accident reporting      the employer's clock runs from RECEIPT of the employee's notice (Cap.263 R.E.2023 s.34(1); GN 185/2016 Reg.15(4)); live "inaanza kuhesabiwa tangu siku ya
+#                               ajali au siku ambayo mwajiri alipata habari". A sentence tying the period to the accident date is flagged UNLESS it is about the employee (the employee's own 2-working-day
+#                               and direct 7-working-day legs genuinely run from the accident, Reg.15(1),(2)) or negates it ("si tangu tarehe ya ajali" is the statement's own wording).
+#   VAT withholding, mixed      the VALUE subject to withholding is apportioned 3:2 goods:services (FA2026 s.91(b) -> VAT Act s.5(7)); live "kiwango kinagawanywa 3:2" apportions the RATE. A sentence
+#                               with 3:2 and a rate subject and no mention of the value is flagged, as is a rate applied to "thamani yote".
+# These topics are ABOUT a levy by name (WCF, "zuio"), so the "another levy is named" early return does not apply to them (each has its own veto in routing._FS_TOPICS).
+_FD10_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply"})
+_FD10_VOL_HEDGE = re.compile(
+    r"hayataji|haitaji|hazitaji|haijatajwa|hakuna\s+njia|si\s+wazi|siyo\s+wazi|haiko\s+wazi|bila\s+(?:kuzitaja|kutaja)|anayetarajia|intending|Kamishna\s+ndiye|njia\s+zilizotajwa",
+    re.IGNORECASE)
+_FD10_ACCIDENT_TRIGGER = re.compile(
+    r"(?<![a-z])(?:tangu|kutoka|toka|baada\s+ya)\s+(?:siku|tarehe)\s+ya\s+ajali|tangu\s+ajali\s+(?:itokee|ilipotokea|kutokea)|baada\s+ya\s+ajali\s+kutokea|"
+    r"siku\s+(?:7|saba)(?:\s*\(7\))?(?:\s+za\s+kazi)?\s+(?:tangu|baada\s+ya|toka)\s+(?:tarehe\s+ya\s+|siku\s+ya\s+)?ajali|"
+    r"(?:from|since|after)\s+the\s+(?:date|day)\s+of\s+the\s+accident", re.IGNORECASE)
+_FD10_EMPLOYEE_LEG = re.compile(r"mfanyakazi|employee", re.IGNORECASE)
+_FD10_RATIO_32 = re.compile(r"3\s*:\s*2")
+_FD10_RATE_SUBJECT = re.compile(r"kiwango|asilimia|\brate\b", re.IGNORECASE)
+_FD10_VALUE_WORD = re.compile(r"thamani|value|consideration|bei\s+ya", re.IGNORECASE)
+_FD10_WHOLE_VALUE = re.compile(r"thamani\s+yote|full\s+value|whole\s+value|jumla\s+ya\s+thamani|kiasi\s+chote", re.IGNORECASE)
+
+
+def _fd10_voluntary(body):
+    if _FD10_VOL_HEDGE.search(body):
+        return []
+    return ["voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"]
+
+
+def _fd10_wcf_accident(body):
+    out = []
+    for sent in [x for x in _SENTENCE_SPLIT.split(body) if x and x.strip()]:
+        for m in _FD10_ACCIDENT_TRIGGER.finditer(sent):
+            if _fd10_negated(sent, m.start()) or _FD10_EMPLOYEE_LEG.search(sent):
+                continue
+            out.append("the employer's reporting period is tied to the date of the accident; it runs from RECEIPT of the employee's notice")
+            break
+    return out
+
+
+def _fd10_vat_mixed(body):
+    out = []
+    for sent in [x for x in _SENTENCE_SPLIT.split(body) if x and x.strip()]:
+        if _FD10_RATIO_32.search(sent) and _FD10_RATE_SUBJECT.search(sent) and not _FD10_VALUE_WORD.search(sent):
+            out.append("3:2 is applied to the RATE; the Act apportions the VALUE subject to withholding")
+        for m in _FD10_WHOLE_VALUE.finditer(sent):
+            if not _fd10_negated(sent, m.start()) and re.search(r"\d\s*%|asilimia", sent, re.IGNORECASE):
+                out.append("a single withholding rate applied to the whole value of a mixed supply")
+                break
+    return out
+
+
+
 def fixed_figure_violations(question: str, body: str):
     """[(topic, reason)] for every fixed statutory figure the body contradicts. Empty when the question is not about a fixed-statement topic."""
     if not body or not question:
         return []
-    if _FD10_OTHER_LEVY.search(question):
-        return []                  # another levy is named: a different question (priced: an NSSF-on-overtime answer was flagged on its "10%")
     from .routing import fixed_statement_topics
     topics = fixed_statement_topics(question)
+    levy_named = bool(_FD10_OTHER_LEVY.search(question))   # another levy is named: a different question (priced: an NSSF-on-overtime answer was flagged on its "10%")
     out = []
     for topic in topics:
+        if levy_named and topic not in _FD10_LEVY_EXEMPT:
+            continue
+        if topic == "vat_voluntary_registration":
+            out += [(topic, r) for r in _fd10_voluntary(body)]
+            continue
+        if topic == "wcf_accident_reporting":
+            out += [(topic, r) for r in _fd10_wcf_accident(body)]
+            continue
+        if topic == "vat_withholding_mixed_supply":
+            out += [(topic, r) for r in _fd10_vat_mixed(body)]
+            continue
         scope = _fd10_scope(topic, topics, body)
         if not scope and topic != "annual_leave":
             continue                # annual leave's OMISSION rule must still run on a body that never mentions leave at all
@@ -1349,3 +1414,32 @@ def fixed_figure_violations(question: str, body: str):
 def body_contradicts_fixed_figure(question: str, body: str) -> bool:
     """True iff the body contradicts a fixed statutory figure for a topic the QUESTION is about."""
     return bool(fixed_figure_violations(question, body))
+
+# ---- D-FIDELITY-11 (2026-11-16, founder): THE PAYE BAND NARRATION. A compute reply is a model-written body with the engine's working appended; the working was right and the narration
+# around it said "TZS 760,000 ni kiwango cha pili cha PAYE (8%)". 760,000 is the TOP of the 20% band (TZS 520,001-760,000), and the BASE of the 25% band's excess. A CONSTANT comparison
+# (R19: the band edges are statute, no transformation of the user's numbers can make "760,000 is in the 8% band" true), so it needs no engine result and judges any body.
+# An edge figure may be named as the END of band k or the START of band k+1; anything else is a misnaming. Only the strict "TZS <edge> ... kiwango cha <ordinal> | (<rate>%)" form is read:
+# a figure followed by "juu ya", "zaidi ya", or an excess is not an assignment to a band.
+_PAYE_EDGE_BAND = {270000: 1, 520000: 2, 760000: 3, 1000000: 4}
+_PAYE_ORDINAL = {"kwanza": 1, "pili": 2, "tatu": 3, "nne": 4, "tano": 5}
+_PAYE_RATE_BAND = {0: 1, 8: 2, 20: 3, 25: 4, 30: 5}
+_PAYE_CLAIM = re.compile(
+    r"TZS\s*(270,000|520,000|760,000|1,000,000)(?![\d,])[^.;\n]{0,50}?(?:(?:kiwango|band|bendi|daraja)\s+cha\s+(kwanza|pili|tatu|nne|tano)|\((\d+)\s*%\))", re.IGNORECASE)
+
+
+def paye_band_misnamings(body):
+    """[(edge, claimed_band)] where the body assigns a PAYE band edge to a band it is neither the end of nor the start of."""
+    out = []
+    for m in _PAYE_CLAIM.finditer(body or ""):
+        edge = int(m.group(1).replace(",", ""))
+        claimed = _PAYE_ORDINAL.get((m.group(2) or "").lower()) or _PAYE_RATE_BAND.get(int(m.group(3))) if (m.group(2) or m.group(3)) else None
+        if claimed is None:
+            continue
+        end = _PAYE_EDGE_BAND[edge]
+        if claimed not in (end, end + 1):
+            out.append((edge, claimed))
+    return out
+
+
+def body_misnames_paye_band(body: str) -> bool:
+    return bool(paye_band_misnamings(body))

@@ -44,10 +44,13 @@ try:
     import kaggle_secrets
     us = kaggle_secrets.UserSecretsClient()
     hf_token = us.get_secret("AFRICA_GIANTS")
-    print(f"[auth] HF token loaded ({hf_token[:8]}...)")
+    import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+    print(f"[auth] HF token loaded ({len(hf_token)} chars, fp {_fp}...)")
 except Exception as e:
     hf_token = os.environ.get("HF_TOKEN", "")
-    print(f"[auth] fallback env HF_TOKEN: {hf_token[:8] if hf_token else 'MISSING'}")
+    import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+    _td = ('len=%d fp=%s' % (len(hf_token), _fp)) if hf_token else 'MISSING'
+    print(f"[auth] fallback env HF_TOKEN: {_td}")
 
 BASE_MODEL   = "McGill-NLP/AfriqueLlama-8B"
 ADAPTER_REPO = "prospaprospa007/africa-giants-adapter-v1"

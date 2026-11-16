@@ -53,7 +53,8 @@ except Exception as e:
     raise RuntimeError('run on Kaggle with the AFRICA_GIANTS secret attached') from e
 assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+print(f'[auth] AFRICA_GIANTS ({len(hf_token)} chars, fp {_fp}...) OK')
 
 # ── CLONE chike/ (for chike.prompting + chike.retrieval — the EVAL-format path) ──
 _CLONE = '/kaggle/working/AFRICA-GIANTS'

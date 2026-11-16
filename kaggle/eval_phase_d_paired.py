@@ -148,7 +148,8 @@ except Exception as e:                                               # noqa: BLE
     raise RuntimeError('run on Kaggle with the AFRICA_GIANTS secret attached') from e
 assert hf_token, 'AFRICA_GIANTS empty'
 os.environ['HF_TOKEN'] = hf_token
-print(f'[auth] AFRICA_GIANTS ({hf_token[:6]}...) OK')
+import hashlib as _hl; _fp = _hl.sha256((hf_token or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+print(f'[auth] AFRICA_GIANTS ({len(hf_token)} chars, fp {_fp}...) OK')
 
 # ── JUDGE OVERLAY IS MANDATORY (2026-08-09) ──────────────────────────────────────
 # It used to be optional: absent key -> the run completed and simply skipped the overlay.
@@ -386,7 +387,8 @@ def _publish(stage, complete=False, **extra):
                 print(f'[publish] {stage:<14} OK  HF {DATASET_REPO}/{ARTIFACT_NAME}  '
                       f'sha256={local_sha[:16]}  complete={complete}', flush=True)
                 return True
-            print(f'[publish] {stage} VERIFY MISMATCH local={local_sha[:16]} '
+            import hashlib as _hl; _fp = _hl.sha256((local_sha or '').encode()).hexdigest()[:8]  # no secret value in a log: length + fingerprint only
+            print(f'[publish] {stage} VERIFY MISMATCH local={len(local_sha)} chars, fp {_fp} '
                   f'remote={remote_sha[:16]} — retrying', flush=True)
             last = RuntimeError('sha mismatch')
         except Exception as e:                                       # noqa: BLE001

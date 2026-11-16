@@ -1,0 +1,323 @@
+{
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 1706,
+   "flags": 21,
+   "rows": [
+    {
+     "src": "coverage_profiles_after.json",
+     "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "coverage_profiles_after.json",
+     "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "coverage_profiles_before.json",
+     "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "coverage_profiles_before.json",
+     "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "coverage_profiles_fixed_after.json",
+     "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "coverage_profiles_fixed_after.json",
+     "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+     "reply": "[MODEL]",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16.json",
+     "q": "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?",
+     "reply": "Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16.json",
+     "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+     "reply": "Kulingana na sheria, lazima uwe umefikia kiwango cha mauzo cha shilingi milioni 200 katika kipindi cha miezi 12 ili usajiliwe kwa hiari. Thibitisha na tra.go.tz.",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16.json",
+     "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+     "reply": "Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).",
+     "reasons": [
+      "the employer's reporting period is tied to the date of the accident; it runs from RECEIPT of the employee's notice"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16.json",
+     "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+     "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "3:2 is applied to the RATE; the Act apportions the VALUE subject to withholding"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16.json",
+     "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi. PAYE ni kiasi gani?",
+     "reply": "Hesabu:\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000)\n= TZS 68,000 + 25% × TZS 40,000\n= TZS 68,000 + TZS 10,000\n= TZS 78,000\nKumbuka: TZS 760,000 ni kiwango cha pili cha PAYE (8%), na TZS 40,000 ni ziada juu ya hapo. Thibitisha na TRA (tra.go.tz).\nPAYE",
+     "reasons": [
+      "(760000, 2)"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16_firstrun.json",
+     "q": "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?",
+     "reply": "Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16_firstrun.json",
+     "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+     "reply": "Kulingana na sheria, lazima uwe umefikia kiwango cha mauzo cha shilingi milioni 200 katika kipindi cha miezi 12 ili usajiliwe kwa hiari. Thibitisha na tra.go.tz.",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16_firstrun.json",
+     "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+     "reply": "Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).",
+     "reasons": [
+      "the employer's reporting period is tied to the date of the accident; it runs from RECEIPT of the employee's notice"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16_firstrun.json",
+     "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+     "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "3:2 is applied to the RATE; the Act apportions the VALUE subject to withholding"
+     ]
+    },
+    {
+     "src": "followup_deploy_live_2026_11_16_firstrun.json",
+     "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi. PAYE ni kiasi gani?",
+     "reply": "Hesabu:\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000)\n= TZS 68,000 + 25% × TZS 40,000\n= TZS 68,000 + TZS 10,000\n= TZS 78,000\nKumbuka: TZS 760,000 ni kiwango cha pili cha PAYE (8%), na TZS 40,000 ni ziada juu ya hapo. Thibitisha na TRA (tra.go.tz).\nPAYE",
+     "reasons": [
+      "(760000, 2)"
+     ]
+    },
+    {
+     "src": "gate_production_0e11c3d.json",
+     "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?",
+     "reply": "Ndiyo, unaweza kujiandikisha kwa hiari kabla ya kufikia kizingiti. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "gate_production_0e11c3d.json",
+     "q": "Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?",
+     "reply": "Kuna utaratibu maalum wa kujiandikisha kwa hiari. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "sweep_bound_premise_2026_11_12.json",
+     "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+     "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "vat_orchestrator_offline.json",
+     "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?",
+     "reply": "NDIYO UNATAKIWA KUSAJILI — model text that must never appear on this path.",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "work_item2_round2_adjudication_afef9dd.json",
+     "q": "Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?",
+     "reply": "Unaweza kuwasilisha ombi la usajilishaji wa hiari wa VAT kwa Kamishna wa TRA ndani ya siku 30 tangu tarehe ya kuanzia. Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    }
+   ]
+  },
+  "GOLD": {
+   "pairs": 562,
+   "flags": 2,
+   "rows": [
+    {
+     "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+     "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?",
+     "reply": "Ndiyo. Usajilishaji wa hiari wa VAT unaruhusiwa. Faida kuu ni uwezo wa kudai VAT ya pembejeo kwenye manunuzi ya biashara. Wasiliana na TRA kwa maelezo ya mchakato wa usajilishaji wa hiari.",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+     "q": "Jinsi gani ya kuomba kujisajilisha VAT kwa hiari kabla ya kufikia kizingiti?",
+     "reply": "1) Wasiliana na TRA kupitia tra.go.tz au ofisi ya karibu. 2) Wasilisha ombi la usajilishaji wa hiari pamoja na BRELA certificate, TIN, na hati za biashara. 3) TRA itakagua ombi. 4) Ukipitishwa, utapata nambari ya VAT na unaweza kutoa invoice za VAT na kudai VA",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    }
+   ]
+  },
+  "TRAINING": {
+   "pairs": 8780,
+   "flags": 10,
+   "rows": [
+    {
+     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+     "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?",
+     "reply": "Ndiyo. Usajili wa hiari wa VAT unawezekana hata kama mauzo yako yako chini ya kizingiti cha lazima. Faida ya usajili wa hiari ni kwamba unaweza kudai input VAT (VAT uliyolipa kwa wanunuzi). Hasara ni kwamba lazima uzingatie majukumu yote ya VAT — kuwasilisha r",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/cleaned_pairs/batch_007_replacements.jsonl",
+     "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+     "reply": "Ndiyo — unaweza kusajili VAT kwa hiari hata kama mauzo yako hayajafika kizingiti cha lazima cha TZS 200,000,000 kwa miezi 12 (au TZS 100,000,000 kwa miezi 6). Faida ya usajili wa hiari: unaweza kudai mkopo wa VAT (input VAT) kwa manunuzi ya biashara yako na hi",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+     "q": "Biashara yangu ya mpya inatazamia mapato ya TZS 300M kwa mwaka wa kwanza — ninaweza kusajili VAT mapema (voluntary registration)?",
+     "reply": "Ndiyo — TRA inaruhusu usajili wa hiari wa VAT (voluntary registration) hata kabla ya kufika kizingiti. Faida za usajili wa mapema: (1) Unaweza kudai input VAT kwa manunuzi yako ya awali (vifaa, vifaa vya biashara); (2) Wateja wako wa VAT wanaweza kudai input V",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+     "q": "Ninaweza kusajiliwa VAT hiari (voluntarily) kabla sijafika kizingiti?",
+     "reply": "Ndiyo. Unaweza kuomba usajilishaji wa hiari wa VAT hata kama mauzo yako hayajafika kizingiti. Hii inakufaa kama unauza kwa biashara zilizosajiliwa VAT — watakuruhusu kudai pembejeo ya VAT (input VAT) kwenye ununuzi wako. Omba kwa Kamishna wa TRA (tra.go.tz). F",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+     "q": "Mauzo yangu bado madogo, lakini naweza kujisajili VAT kwa hiari?",
+     "reply": "Ndiyo — unaruhusiwa kujisajili VAT kwa hiari hata kama mauzo yako hayajafikia kizingiti cha TZS 200M/miezi 12 au 100M/miezi 6. Usajili wa hiari hukuwezesha kudai VAT ya ununuzi (input VAT). Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?",
+     "reply": "Ndiyo — unaweza kusajili VAT kwa hiari hata kama mauzo yako hayajafika kizingiti cha lazima cha TZS 200,000,000 kwa miezi 12 (au TZS 100,000,000 kwa miezi 6). Faida ya usajili wa hiari: unaweza kudai mkopo wa VAT (input VAT) kwa manunuzi ya biashara yako na hi",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?",
+     "reply": "Ndiyo. Usajili wa hiari wa VAT unawezekana hata kama mauzo yako yako chini ya kizingiti cha lazima. Faida ya usajili wa hiari ni kwamba unaweza kudai input VAT (VAT uliyolipa kwa wanunuzi). Hasara ni kwamba lazima uzingatie majukumu yote ya VAT — kuwasilisha r",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Mauzo yangu bado madogo, lakini naweza kujisajili VAT kwa hiari?",
+     "reply": "Ndiyo — unaruhusiwa kujisajili VAT kwa hiari hata kama mauzo yako hayajafikia kizingiti cha TZS 200M/miezi 12 au 100M/miezi 6. Usajili wa hiari hukuwezesha kudai VAT ya ununuzi (input VAT). Thibitisha na TRA (tra.go.tz).",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Ninaweza kusajiliwa VAT hiari (voluntarily) kabla sijafika kizingiti?",
+     "reply": "Ndiyo. Unaweza kuomba usajilishaji wa hiari wa VAT hata kama mauzo yako hayajafika kizingiti. Hii inakufaa kama unauza kwa biashara zilizosajiliwa VAT — watakuruhusu kudai pembejeo ya VAT (input VAT) kwenye ununuzi wako. Omba kwa Kamishna wa TRA (tra.go.tz). F",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    },
+    {
+     "src": "datasets/tier1a/sft/val_sft.jsonl",
+     "q": "Biashara yangu ya mpya inatazamia mapato ya TZS 300M kwa mwaka wa kwanza — ninaweza kusajili VAT mapema (voluntary registration)?",
+     "reply": "Ndiyo — TRA inaruhusu usajili wa hiari wa VAT (voluntary registration) hata kabla ya kufika kizingiti. Faida za usajili wa mapema: (1) Unaweza kudai input VAT kwa manunuzi yako ya awali (vifaa, vifaa vya biashara); (2) Wateja wako wa VAT wanaweza kudai input V",
+     "reasons": [
+      "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+     ]
+    }
+   ]
+  }
+ },
+ "specimens": [
+  {
+   "specimen": "voluntary VAT",
+   "flagged": true,
+   "reasons": [
+    "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+   ]
+  },
+  {
+   "specimen": "voluntary VAT",
+   "flagged": true,
+   "reasons": [
+    "voluntary VAT registration answered without the hedge: the Act names no voluntary route and TRA names no activities, so a categorical answer is unsupported"
+   ]
+  },
+  {
+   "specimen": "WCF trigger",
+   "flagged": true,
+   "reasons": [
+    "the employer's reporting period is tied to the date of the accident; it runs from RECEIPT of the employee's notice"
+   ]
+  },
+  {
+   "specimen": "mixed supply (rate)",
+   "flagged": true,
+   "reasons": [
+    "3:2 is applied to the RATE; the Act apportions the VALUE subject to withholding"
+   ]
+  },
+  {
+   "specimen": "PAYE band narration",
+   "flagged": true,
+   "reasons": [
+    "(760000, 2)"
+   ]
+  }
+ ]
+}
