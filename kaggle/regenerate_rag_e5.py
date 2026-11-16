@@ -714,6 +714,7 @@ critical_queries = [
     ('VAT voluntary registration (follow-up 2026-11-16)', 'query: Je naweza kujisajili VAT kwa hiari?', ['usajili wa hiari unaruhusiwa kwa']),
     ('Construction services withholding (follow-up 2026-11-16)', 'query: Namlipa mkandarasi wa ujenzi, nakata kodi ya zuio asilimia ngapi?', ['uwiano wa 3:2 kati ya vifaa na huduma']),
     ('WCF accident reporting chain (rewritten row)', 'query: Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?', ['taarifa wcf ni ndani ya siku ngapi']),
+    ('VAT withholding mixed supply (FA2026 s.91(b), follow-up 2026-11-16)', 'query: VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?', ['uwiano wa 3:2 kati ya bidhaa na huduma']),
     ('WCF accident reporting deadline (rewritten row, nat_45 wording)', 'query: Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali', ['wcf accident reporting deadline: mfanyakazi ameumia']),
 ]
 

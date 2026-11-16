@@ -127,6 +127,10 @@ W.update({
     "Kodi ya zuio kwa fundi wa ujenzi ni kiasi gani?": ["wht_construction_services"],
     "Withholding tax kwa contractor wa ujenzi wa nyumba?": ["wht_construction_services"],
     "Namlipa mhandisi au msanifu majengo, nakata zuio kiasi gani?": ["wht_construction_services", "professional_service_fee_wht"],
+    "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?": ["vat_withholding_mixed_supply"],
+    "Nauza vifaa na kufunga (bidhaa na huduma), zuio la VAT ni asilimia ngapi?": ["vat_withholding_mixed_supply"],
+    "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?": ["vat_withholding_mixed_supply"],
+    "Je, VAT ya zuio kwa mkataba wenye vifaa na huduma inakatwa kwa 6% kwenye thamani yote?": ["vat_withholding_mixed_supply"],
     "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali": ["wcf_accident_reporting", "wcf_accident_reporting_deadline"],
     "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?": ["wcf_accident_reporting", "wcf_accident_reporting_deadline"],
     "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?": ["wcf_accident_reporting", "wcf_accident_reporting_deadline"],
@@ -205,7 +209,7 @@ def main():
     texts, keys, _ = pre.build_fact_texts()
     # NEW rows = keys absent from the COMMITTED locked_facts.json. Rows in the batch dict that already existed are REWRITES (they keep
     # their position), and the committed-index-minus-new-rows equality below must hold with them in place.
-    new_keys = {"vat_voluntary_registration", "wht_construction_services"}
+    new_keys = {"vat_voluntary_registration", "wht_construction_services", "vat_withholding_mixed_supply"}
     rewritten = set()   # decided from the rows themselves below: R44-stripped rows (base text carried a Kifungu/Vifungu citation) + the two WCF rows
     base_texts = json.load(open(os.path.join(REPO, "kaggle", "rag_facts_text.json"), encoding="utf-8"))
     model = SentenceTransformer(pre.EMBED_MODEL)
@@ -220,7 +224,7 @@ def main():
     assert len(rest) == len(base_texts), "row count mismatch"
     changed = [k for (t, k), bt in zip(rest, base_texts) if t != bt]
     base_by_key = {k: bt for (t, k), bt in zip(rest, base_texts)}
-    allowed = {k for k, bt in base_by_key.items() if re.search(r"(?i)(kifungu|vifungu)\s+\d", bt)} | {"wcf_accident_reporting", "wcf_accident_reporting_deadline"}
+    allowed = {k for k, bt in base_by_key.items() if re.search(r"(?i)(kifungu|vifungu)\s+\d|First Schedule para", bt)} | {"wcf_accident_reporting", "wcf_accident_reporting_deadline"}
     assert set(changed) <= allowed, f"rows changed that are neither R44 strips nor the WCF rows: {set(changed) - allowed}"
     print("rewritten rows actually changed:", changed)
     key_of_c = dict(zip(texts, keys))

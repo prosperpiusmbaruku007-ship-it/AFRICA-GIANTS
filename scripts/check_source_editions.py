@@ -276,6 +276,31 @@ DECLARED = {
         'edition': 'capture of tra.go.tz/page/value-added-tax-vat on 2026-11-16',
         'edition_evidence': "fetched 2026-11-16; embedded news items dated '06 November, 2026' bound the capture from below. States the registration rules (threshold, professionals / Government entities / intending traders) with no mention of voluntary registration.",
     },
+    'tra/finance_act_2026_no2.pdf': {
+        'kind': 'gazette',
+        'edition': 'Finance Act 2026 (No. 2), 30th June 2026',
+        'edition_evidence': "page 1: 'No. 2 The Finance Act, 2026 ... THE UNITED REPUBLIC OF TANZANIA No. 2 30th June, 2026 ACT SUPPLEMENT To The Special Gazette of the United Republic of Tanzania No. 8 Vol. 107 Dated 30th June, 2026'; s.2 'This Act shall come into operation on the 1st day of July, 2026'. s.91(b) adds VAT Act s.5(7) (3:2 goods:services apportionment of the value subject to withholding); s.27(a)(iii) adds First Schedule para 2(4) of the Income Tax Act. Fetched from tra.go.tz.",
+    },
+    'tra/gn225_2015_vat_general_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 225, published 19/06/2015',
+        'edition_evidence': "OCR of page 1: 'Value Added Tax (General) Regulations, 2015 G.N. No. 225 ... GOVERNMENT NOTICE NO. 225 published on 19/06/2015 VALUE ADDED TAX (GENERAL) REGULATIONS, 2015'. IMAGE-ONLY PDF (no text layer): read by machine OCR 2026-11-16; Part IV regs 11-16 = registration. Fetched from tra.go.tz/images/uploads/regulations/.",
+    },
+    'tra/gn608_2018_vat_general_amendment_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 608, published 19/10/2018',
+        'edition_evidence': "OCR of page 1: 'Supplement No. 40 19th October, 2018 ... GOVERNMENT NOTICE No. 608 published on 19/10/2018 THE VALUE ADDED TAX ACT (CAP. ...)'. IMAGE-ONLY PDF: machine OCR 2026-11-16; no registration provision.",
+    },
+    'tra/gn225_2015_vat_general_regulations_OCR.json': {
+        'kind': 'portal',
+        'edition': 'machine OCR (rapidocr-onnxruntime) of gn225_2015_vat_general_regulations.pdf, 2026-11-16',
+        'edition_evidence': "A DERIVED artifact, not a source: per-page OCR text of the sibling PDF (40 pages). Spacing is degraded ('Applicationbyintending trader'); quote the PDF, never this file. Kept so the claim 'no voluntary route in the 2015 Regulations' can be re-checked without re-running OCR.",
+    },
+    'tra/gn608_2018_vat_general_amendment_regulations_OCR.json': {
+        'kind': 'portal',
+        'edition': 'machine OCR (rapidocr-onnxruntime) of gn608_2018_vat_general_amendment_regulations.pdf, 2026-11-16',
+        'edition_evidence': 'A DERIVED artifact (8 pages), see the GN 225 OCR entry.',
+    },
 }
 
 # Files whose edition is simply "the capture", with no in-document marker to quote. Declared as

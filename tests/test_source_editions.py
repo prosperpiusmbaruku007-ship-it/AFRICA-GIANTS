@@ -264,9 +264,9 @@ def test_undeclared_sources_are_COUNTED_so_the_gap_cannot_go_quiet():
     """
     man = cse.load_manifest()
     undeclared = man["counts"]["undeclared"]
-    # 62 -> 73 on 2026-11-16: eleven sources cached WITH their editions for the four-unanswered-questions follow-up (Cap.263 R.E.2023, GN 185/2016,
+    # 62 -> 78 on 2026-11-16 (73 + Finance Act 2026 for the mixed-supply fact, + 4 for the OCR-read VAT Regulations 2015/2018 and their OCR texts): eleven sources cached WITH their editions for the four-unanswered-questions follow-up (Cap.263 R.E.2023, GN 185/2016,
     # GN 668/2021, GN 47/2017, VAT Act and Income Tax Act R.E.2023, three VAT amending Regulations, two TRA captures). Declared, so `undeclared` did not grow.
-    assert man["counts"]["files"] == 73, (
+    assert man["counts"]["files"] == 78, (
         f"the source tree changed size ({man['counts']['files']} files) -- rebuild the manifest "
         f"and re-derive this number rather than editing it")
     assert undeclared <= 52, (

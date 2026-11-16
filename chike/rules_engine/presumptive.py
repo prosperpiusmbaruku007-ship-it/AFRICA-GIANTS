@@ -77,7 +77,7 @@ def _apply(spec, turnover: Decimal):
 _NEW_BUSINESS_NOTE = (
     " Kumbuka: kama umepata TIN mara ya kwanza kwa ajili ya kuanzisha biashara hii ndani ya "
     "miezi 12 iliyopita, huenda ukastahili msamaha wa TZS 0 kwa mwaka wa kwanza — LAKINI hii "
-    "SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe (First Schedule para 2(4)). "
+    "SI ya moja kwa moja: lazima uombe kwa Kamishna na aidhinishe. "
     "Bila kuidhinishwa, kiasi hapo juu ndicho kinachotumika. Thibitisha na TRA.")
 
 
@@ -138,7 +138,7 @@ def compute_presumptive(annual_turnover, keeps_records: bool,
             computation="presumptive", applicable=True, amount=Decimal("0"),
             working=(
                 f"Kodi ya makadirio = TZS 0. Umeidhinishwa msamaha wa mwaka wa kwanza wa "
-                f"biashara mpya (First Schedule para 2(3)-(4), TIN mpya kwa ajili ya kuanzisha "
+                f"biashara mpya (TIN mpya kwa ajili ya kuanzisha "
                 f"biashara, ndani ya miezi 12) — msamaha huu unatumika hadi "
                 f"{tzs(PRESUMPTIVE_TURNOVER_CEILING)} za mauzo."),
             inputs=inputs,

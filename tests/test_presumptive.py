@@ -146,7 +146,10 @@ def test_new_business_exemption_confirmed_granted_is_zero():
     result = compute_presumptive(30_000_000, True, new_business_exemption_granted=True)
     assert result.applicable is True
     assert result.amount == Decimal("0")
-    assert "2(3)-(4)" in result.working
+    # CLAUDE.md R44 (2026-11-16): the paragraph number is gone from the SERVED text and lives in the note (metadata). It used to be asserted in
+    # `working`; the assertion moved with the citation, it was not dropped.
+    assert "2(3)-(4)" not in result.working and "First Schedule" not in result.working
+    assert "para 2(3)" in result.note and "para 2(4)" in result.note, result.note
 
 
 def test_new_business_exemption_confirmed_granted_applies_up_to_the_new_ceiling():

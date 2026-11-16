@@ -1102,8 +1102,10 @@ _COVERAGE_2026_11_16 = {
         "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango? Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
     'wht_construction_services':
         'Kodi ya zuio kwa kazi za ujenzi: kwa huduma za kitaalamu zinazohusisha ujenzi (mfano usanifu, uhandisi, usimamizi), Sheria ya Kodi ya Mapato inasema kiasi kinachokatwa kinahesabiwa kwa uwiano wa 3:2 kati ya vifaa na huduma; kiwango cha huduma za kitaalamu kwa mkazi ni 5%. Sheria haisemi wazi kama mkandarasi wa kawaida wa ujenzi yumo, wala jinsi uwiano unavyotumika kwa kiasi -- thibitisha na TRA (Sheria ya Kodi ya Mapato).',
+    'vat_withholding_mixed_supply':
+        'Nauza bidhaa na huduma pamoja (mfano mkandarasi anayetoa vifaa na kazi), VAT ya zuio inakatwaje? VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.',
 }
-_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('vat_voluntary_registration', 'wht_construction_services')
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('vat_voluntary_registration', 'wht_construction_services', 'vat_withholding_mixed_supply')
 CONCISE_BILINGUAL_FACTS.update(_COVERAGE_2026_11_16)
 
 

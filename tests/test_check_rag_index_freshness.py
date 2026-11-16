@@ -449,8 +449,8 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     # TWENTIETH FLIP (2026-11-16): PENDING the follow-up regen -- the R44 citation strip (24 facts + the rows built from them), two NEW rows
     # (vat_voluntary_registration, wht_construction_services) and the in-place WCF accident rewrite. See test_content_limb_passes_on_the_real_built_texts.
     assert ok is False, (
-        f"the live repo reports FRESH: the 2026-11-16 follow-up regen has landed. Flip back to `ok is True` / 210 rows and delete the "
-        f"two pending_r15 pins in scripts/check_facts_index_sync.py: {report}")
+        f"the live repo reports FRESH: the 2026-11-16 follow-up regen has landed. Flip back to `ok is True` / 211 rows and delete the "
+        f"three pending_r15 pins in scripts/check_facts_index_sync.py: {report}")
     assert report["content_matches"] is False, report
     assert report["content_build_error"] is None, report
     for _d in ("kaggle", "chike-inference"):
@@ -458,8 +458,8 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
             _served = json.load(_fh)
         assert len(_served) == 208, (_d, len(_served))
         assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], _served[9][:200]
-    assert report["embedding_rows_match"] is False, report      # 210 built rows vs 208 shipped embedding rows: pending, same flip
-    assert report["built_rows"] == 210, report["built_rows"]
+    assert report["embedding_rows_match"] is False, report      # 211 built rows vs 208 shipped embedding rows: pending, same flip
+    assert report["built_rows"] == 211, report["built_rows"]
     assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
@@ -482,7 +482,7 @@ def _real_texts():
     spec.loader.exec_module(mod)
     texts, err = mod.built_fact_texts(REPO)
     assert err is None, f"the builder itself failed, so these arms cannot run: {err}"
-    assert texts and len(texts) == 210, f"unexpected builder output: {texts and len(texts)}"
+    assert texts and len(texts) == 211, f"unexpected builder output: {texts and len(texts)}"
     return texts
 
 
@@ -517,23 +517,25 @@ def test_content_limb_passes_on_the_real_built_texts():
     row 9 still carries the BASE/SOURCE separation (seventeenth flip). (Eighteenth flip, kept for provenance: PENDING that regen --
     208 built vs 184 served, the first 184 differing only at rows 1, 26, 58, 90, 95.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    # TWENTIETH FLIP (2026-11-16), back to PENDING: 210 built vs 208 served. The pending content is exactly the follow-up batch, asserted
+    # TWENTIETH FLIP (2026-11-16), back to PENDING: 211 built vs 208 served. The pending content is exactly the follow-up batch, asserted
     # row by row so that "PENDING" cannot quietly become "something else changed": the two new rows trail the 208, and the first 208 differ
     # only at rows that carried a consolidated-Act section number (CLAUDE.md R44) or are the two WCF accident rows.
     assert ok is False, (
-        f"the real builder's output now matches the served index: the follow-up regen has landed. Flip back to `ok is True`, 210 rows, "
+        f"the real builder's output now matches the served index: the follow-up regen has landed. Flip back to `ok is True`, 211 rows, "
         f"and re-assert the specifics: {rep}")
     assert rep["content_matches"] is False
-    assert len(REAL_TEXTS) == 210 and len(SERVED_TEXTS) == 208
+    assert len(REAL_TEXTS) == 211 and len(SERVED_TEXTS) == 208
     import re as _re
     _moved = [i for i in range(208) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
     for i in _moved:
-        assert (_re.search(r"(?i)(kifungu|vifungu)\s+\d", SERVED_TEXTS[i]) or SERVED_TEXTS[i].startswith(("wcf accident reporting", "Ajali"))
+        assert (_re.search(r"(?i)(kifungu|vifungu)\s+\d|First Schedule para", SERVED_TEXTS[i]) or SERVED_TEXTS[i].startswith(("wcf accident reporting", "Ajali"))
                 or "wcf accident reporting" in SERVED_TEXTS[i][:40]), f"row {i} changed but is neither an R44 strip nor a WCF row: {SERVED_TEXTS[i][:90]}"
         assert not _re.search(r"(?i)(?<!20\d\d )(kifungu|vifungu)\s+\d", REAL_TEXTS[i]) or "2025, Kifungu" in REAL_TEXTS[i], REAL_TEXTS[i][:120]
     assert 51 in _moved and 52 in _moved, _moved
     assert REAL_TEXTS[208].startswith("Je naweza kujisajili VAT kwa hiari") or REAL_TEXTS[209].startswith("Je naweza kujisajili VAT kwa hiari"),         "the voluntary-registration row is not in the appended position"
     assert any(t.startswith("Kodi ya zuio kwa kazi za ujenzi") for t in REAL_TEXTS[208:])
+    assert any(t.startswith("Nauza bidhaa na huduma pamoja") and "uwiano wa 3:2 kati ya bidhaa na huduma" in t for t in REAL_TEXTS[208:])
+    assert "First Schedule para" not in REAL_TEXTS[169] and "aidhinishwe." in REAL_TEXTS[169]
     assert "si tangu tarehe ya ajali" in REAL_TEXTS[51].lower() and "siku 2 za kazi" in REAL_TEXTS[51]
     assert "wcf accident reporting deadline: Mfanyakazi ameumia" in REAL_TEXTS[52] and "7 working days from date of accident" not in REAL_TEXTS[52]
     assert not any("ELRA, Kifungu" in t or "Sheria ya VAT, Kifungu" in t or "Sheria ya VAT, Vifungu" in t for t in REAL_TEXTS)

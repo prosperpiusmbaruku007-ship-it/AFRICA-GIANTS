@@ -469,6 +469,7 @@ PINNED = {
     # ---- 2026-11-16 follow-up: two NEW facts, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips them the moment it lands).
     "vat_voluntary_registration": ("pending_r15", None),
     "wht_construction_services": ("pending_r15", None),
+    "vat_withholding_mixed_supply": ("pending_r15", None),
 }
 
 

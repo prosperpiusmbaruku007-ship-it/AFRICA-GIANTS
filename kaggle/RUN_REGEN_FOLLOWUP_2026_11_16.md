@@ -1,23 +1,23 @@
 # R15 REGEN PACKAGE — four-unanswered-questions follow-up + R44 citation strip (2026-11-16)
 
-Ships, as **one** regen, everything that changes a served index row since the 2026-11-13 coverage regen. The index goes **208 → 210 rows**.
+Ships, as **one** regen, everything that changes a served index row since the 2026-11-13 coverage regen. The index goes **208 → 211 rows**.
 
 | | rows | what |
 |---|---|---|
-| NEW, appended after the 208 (rows 208–209) | 2 | `vat_voluntary_registration` (voluntary VAT registration, hedged: the Act names no route, TRA's FAQ says voluntary registration is allowed for unnamed "specific economic activities"), `wht_construction_services` (the 3:2 construction proviso, hedged) |
+| NEW, appended after the 208 (rows 208–210) | 3 | `vat_voluntary_registration` (voluntary VAT registration, hedged: the Act names no route, TRA's FAQ says voluntary registration is allowed for unnamed "specific economic activities"), `wht_construction_services` (the ITA s.106(4) 3:2 construction proviso, hedged), `vat_withholding_mixed_supply` (FA2026 s.91(b) → VAT Act s.5(7): value subject to VAT withholding apportioned 3:2 goods:services from 1 Jul 2026; no blended percentage) |
 | REWRITTEN in place (rows 51, 52) | 2 | `wcf_accident_reporting`, `wcf_accident_reporting_deadline` — the served text said "7 working days from date of accident" (row 52) and "7 WORKING days" with no trigger (row 51); both now state the chain and that the clock runs from RECEIPT of notice. `superseded_value` recorded, nothing deleted |
-| REWRITTEN in place (CLAUDE.md R44) | 29 | every served Swahili row that carried a consolidated-Act section number (`Kifungu`/`Vifungu` N): the number is gone from the text and lives in `primary_source`. Amending-Act numbers ("2025, Kifungu 8") are kept |
+| REWRITTEN in place (CLAUDE.md R44) | 30 | every served Swahili row that carried a consolidated-Act section number (`Kifungu`/`Vifungu` N) — 29 — plus `presumptive_tax_bands_2022` (row 169, "First Schedule para 2(4)"): the number is gone from the text and lives in `primary_source`. Amending-Act numbers ("2025, Kifungu 8") are kept |
 
 **No existing row number moves.** New rows trail the group passages (`_COVERAGE_NEW_KEYS`), as on 2026-11-13.
 
 ## ⛔⛔ `rag_fact_count` SEQUENCING — read before anything else
 
 `kaggle/chike_config.json` carries `"rag_fact_count": 208` and `chike-inference/modal_app.py` **refuses to serve** on a mismatch. It is deliberately
-**NOT bumped in the packaging commit**; step 2 below is the one commit that changes it (208 → 210) together with the fetched artifacts.
+**NOT bumped in the packaging commit**; step 2 below is the one commit that changes it (208 → 211) together with the fetched artifacts.
 
 ## Local dry run — ALREADY DONE (`eval/index_quality/measure_followup_2026_11_16.py`, artifact `eval/results/followup_2026_11_16_final.json`)
 
-Numbers are in PROGRESS 4w. Gates replayed locally: 72 committed regen guards (68 + 4 new, each with its own anchor — the phrase "si tangu
+Numbers are in PROGRESS 4w. Gates replayed locally: 73 committed regen guards (68 + 5 new, each with its own anchor — the phrase "si tangu
 tarehe ya ajali" is in BOTH WCF rows, so a shared anchor would have been ambiguous), self-retrieval, the rank-regression gate.
 
 ## Run it
@@ -29,13 +29,13 @@ tarehe ya ajali" is in BOTH WCF rows, so a shared anchor would have been ambiguo
 !git log --oneline -1          # must have EXPECTED_HEAD (see regenerate_rag_e5.py) as an ancestor, or the script aborts
 !python kaggle/regenerate_rag_e5.py
 ```
-Expect: `210 facts`, 0–1 self-retrieval failures, all payload gates `[OK]`, every guard `[PASS]` (72), rank gate `PASS`, `correction_sync=CLEAN`.
+Expect: `211 facts`, 0–1 self-retrieval failures, all payload gates `[OK]`, every guard `[PASS]` (73), rank gate `PASS`, `correction_sync=CLEAN`.
 
 ## Then, in order (R15 steps 4–6)
 
-1. Fetch `rag_embeddings.npy` + `rag_facts_text.json` from the HF dataset repo; verify the text equals `build_fact_texts()` row for row (210).
-2. **One commit:** both files into **both** `chike-inference/` and `kaggle/`, `rag_fact_count` **208 → 210**, flip the pending-regen tests
-   (`tests/test_check_rag_index_freshness.py`: the TWENTIETH flip back to `ok is True` / 210 rows), delete the two `pending_r15` pins in
+1. Fetch `rag_embeddings.npy` + `rag_facts_text.json` from the HF dataset repo; verify the text equals `build_fact_texts()` row for row (211).
+2. **One commit:** both files into **both** `chike-inference/` and `kaggle/`, `rag_fact_count` **208 → 211**, flip the pending-regen tests
+   (`tests/test_check_rag_index_freshness.py`: the TWENTIETH flip back to `ok is True` / 211 rows), delete the three `pending_r15` pins in
    `scripts/check_facts_index_sync.py`; `tests/test_gate_production_package.py`, `tests/test_inference_health_endpoint.py` and
    `tests/test_modal_index_contract.py` assert the count too.
 3. Redeploy `chike-inference` per R16 — **only when `/health` shows 0 pending drafts**, so no participant waits through the stop (pre-flight,

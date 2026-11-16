@@ -3,7 +3,7 @@
  "self_retrieval_failures": {
   "before": 1,
   "after": 1,
-  "rows_after": 210
+  "rows_after": 211
  },
  "rank_gate": {
   "before": [
@@ -36,7 +36,7 @@
    {
     "name": "nat_23 (SDL rate)",
     "anchors": 1,
-    "observed": 42,
+    "observed": 41,
     "measured": 45,
     "pre": 86,
     "ok": true
@@ -127,6 +127,30 @@
    "new_row_now_first": true
   },
   {
+   "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "before": "VAT_zero_rated_vs_exempt_input_VAT",
+   "after": "vat_withholding_mixed_supply",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Nauza vifaa na kufunga (bidhaa na huduma), zuio la VAT ni asilimia ngapi?",
+   "before": "vat_standard_rate",
+   "after": "vat_withholding_mixed_supply",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "before": "professional_service_fee_wht",
+   "after": "vat_withholding_mixed_supply",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Je, VAT ya zuio kwa mkataba wenye vifaa na huduma inakatwa kwa 6% kwenye thamani yote?",
+   "before": "vat_standard_rate",
+   "after": "vat_withholding_mixed_supply",
+   "new_row_now_first": true
+  },
+  {
    "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
    "before": "osha_vs_wcf_roles",
    "after": "wcf_accident_reporting",
@@ -140,11 +164,11 @@
   }
  ],
  "rows_before": 208,
- "rows_after": 210,
- "n_questions": 167,
+ "rows_after": 211,
+ "n_questions": 171,
  "targets": {
-  "total": 91,
-  "pass_after": 89,
+  "total": 95,
+  "pass_after": 93,
   "pass_before": 81,
   "failing_after": [
    "Nataka kusajili biashara yangu VAT lakini mauzo yangu ni chini ya milioni 200",
@@ -174,9 +198,17 @@
    ]
   },
   {
+   "q": "Nimeuza bidhaa kwa mkopo, VAT inalipwa lini?",
+   "new_rows_in_top3": [
+    "vat_withholding_mixed_supply"
+   ],
+   "want": null
+  },
+  {
    "q": "Ushuru wa zuio kwa huduma zinazolipwa kwa mkandarasi ni asilimia ngapi?",
    "new_rows_in_top3": [
-    "wht_construction_services"
+    "wht_construction_services",
+    "vat_withholding_mixed_supply"
    ],
    "want": null
   },
@@ -202,6 +234,15 @@
    "want": null
   },
   {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "new_rows_in_top3": [
+    "vat_withholding_mixed_supply"
+   ],
+   "want": [
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
    "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
    "new_rows_in_top3": [
     "vat_voluntary_registration"
@@ -216,9 +257,19 @@
    "want": null
   },
   {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "new_rows_in_top3": [
+    "vat_withholding_mixed_supply"
+   ],
+   "want": [
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
    "q": "Ushuru wa zuio kwa huduma za mkandarasi ni asilimia ngapi?",
    "new_rows_in_top3": [
-    "wht_construction_services"
+    "wht_construction_services",
+    "vat_withholding_mixed_supply"
    ],
    "want": [
     "professional_service_fee_wht"
@@ -227,7 +278,7 @@
   {
    "q": "Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?",
    "new_rows_in_top3": [
-    "wht_construction_services"
+    "vat_withholding_mixed_supply"
    ],
    "want": [
     "dividend_withholding_rate"
@@ -239,10 +290,28 @@
     "wht_construction_services"
    ],
    "want": null
+  },
+  {
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": [
+    "vat_withholding_mixed_supply"
+   ]
+  },
+  {
+   "q": "Je, VAT ya zuio kwa mkataba wenye vifaa na huduma inakatwa kwa 6% kwenye thamani yote?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": [
+    "vat_withholding_mixed_supply"
+   ]
   }
  ],
  "guards": {
-  "total": 72,
+  "total": 73,
   "regressed": [],
   "dead_anchors": {},
   "newly_ambiguous": [],
@@ -788,8 +857,8 @@
    "rank_after": 1,
    "top3_after": [
     "tin_apply_deadline",
-    "presumptive_tax_bands_2022",
-    "_unresolved_items"
+    "_unresolved_items",
+    "presumptive_tax_bands_2022"
    ],
    "top3_before": [
     "tin_apply_deadline",
@@ -936,8 +1005,8 @@
    "rank_after": null,
    "top3_after": [
     "vat_credit_sale_timing",
-    "VAT_zero_rated_vs_exempt_input_VAT",
-    "vat_refund_deadline"
+    "vat_withholding_mixed_supply",
+    "VAT_zero_rated_vs_exempt_input_VAT"
    ],
    "top3_before": [
     "vat_credit_sale_timing",
@@ -1049,7 +1118,7 @@
    "top3_after": [
     "professional_service_fee_wht",
     "wht_construction_services",
-    "rent_wht_rate"
+    "vat_withholding_mixed_supply"
    ],
    "top3_before": [
     "professional_service_fee_wht",
@@ -1213,7 +1282,7 @@
    "top3_after": [
     "company_registration_ladder",
     "dividend_withholding_rate",
-    "late_return_penalty"
+    "presumptive_tax_bands_2022"
    ],
    "top3_before": [
     "company_registration_ladder",
@@ -1518,8 +1587,8 @@
    "rank_after": null,
    "top3_after": [
     "presumptive_tax_ceiling_100m",
-    "paye_penalty_rate",
-    "presumptive_tax_bands_2022"
+    "presumptive_tax_bands_2022",
+    "paye_penalty_rate"
    ],
    "top3_before": [
     "presumptive_tax_ceiling_100m",
@@ -1609,7 +1678,7 @@
    "top3_after": [
     "vat_credit_sale_timing",
     "vat_refund_deadline",
-    "VAT_zero_rated_vs_exempt_input_VAT"
+    "vat_withholding_mixed_supply"
    ],
    "top3_before": [
     "vat_credit_sale_timing",
@@ -2092,8 +2161,8 @@
    "rank_after": 1,
    "top3_after": [
     "tin_apply_deadline",
-    "presumptive_tax_bands_2022",
-    "_unresolved_items"
+    "_unresolved_items",
+    "presumptive_tax_bands_2022"
    ],
    "top3_before": [
     "tin_apply_deadline",
@@ -2164,7 +2233,7 @@
    "top3_after": [
     "vat_credit_sale_timing",
     "vat_refund_deadline",
-    "VAT_zero_rated_vs_exempt_input_VAT"
+    "vat_withholding_mixed_supply"
    ],
    "top3_before": [
     "vat_credit_sale_timing",
@@ -2182,7 +2251,7 @@
    "top3_after": [
     "professional_service_fee_wht",
     "wht_construction_services",
-    "rent_wht_rate"
+    "vat_withholding_mixed_supply"
    ],
    "top3_before": [
     "professional_service_fee_wht",
@@ -2200,7 +2269,7 @@
    "top3_after": [
     "dividend_withholding_rate",
     "professional_service_fee_wht",
-    "wht_construction_services"
+    "vat_withholding_mixed_supply"
    ],
    "top3_before": [
     "dividend_withholding_rate",
@@ -2252,7 +2321,7 @@
    "top3_after": [
     "company_registration_ladder",
     "dividend_withholding_rate",
-    "late_return_penalty"
+    "presumptive_tax_bands_2022"
    ],
    "top3_before": [
     "company_registration_ladder",
@@ -3041,6 +3110,78 @@
     "rent_wht_rate",
     "professional_service_fee_wht",
     "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "want": [
+    "vat_withholding_mixed_supply"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_withholding_mixed_supply",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_standard_rate"
+   ],
+   "top3_before": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_standard_rate",
+    "vat_refund_when"
+   ]
+  },
+  {
+   "q": "Nauza vifaa na kufunga (bidhaa na huduma), zuio la VAT ni asilimia ngapi?",
+   "want": [
+    "vat_withholding_mixed_supply"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_withholding_mixed_supply",
+    "vat_standard_rate",
+    "council_service_levy_is_a_cap_not_a_rate"
+   ],
+   "top3_before": [
+    "vat_standard_rate",
+    "council_service_levy_is_a_cap_not_a_rate",
+    "vat_refund_when"
+   ]
+  },
+  {
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "want": [
+    "vat_withholding_mixed_supply"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_withholding_mixed_supply",
+    "professional_service_fee_wht",
+    "wht_construction_services"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "rent_wht_rate",
+    "efd_threshold_tzs_11m"
+   ]
+  },
+  {
+   "q": "Je, VAT ya zuio kwa mkataba wenye vifaa na huduma inakatwa kwa 6% kwenye thamani yote?",
+   "want": [
+    "vat_withholding_mixed_supply"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_withholding_mixed_supply",
+    "vat_standard_rate",
+    "wht_construction_services"
+   ],
+   "top3_before": [
+    "vat_standard_rate",
+    "professional_service_fee_wht",
+    "council_service_levy_is_a_cap_not_a_rate"
    ]
   },
   {

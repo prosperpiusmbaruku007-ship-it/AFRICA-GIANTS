@@ -43,3 +43,14 @@ def test_served_swahili_text_has_no_consolidated_act_section_numbers():
     finally:
         os.chdir(cwd)
     assert not bad, bad[:5]
+
+
+def test_schedule_paragraph_numbers_follow_the_same_rule_and_the_checker_is_not_inert():
+    """Founder's decision 2026-11-16: 'First Schedule para N' of a consolidated Act is stripped from served text like a section number."""
+    assert sweep.schedule_violations([("x", "lazima aombe kwa Kamishna (First Schedule para 2(4), mpya).")])
+    assert not sweep.schedule_violations([("x", "lazima aombe kwa Kamishna na aidhinishwe.")])
+    import json
+    rows = json.load(open(os.path.join(REPO, "chike-inference", "rag_facts_text.json"), encoding="utf-8"))
+    if len(rows) == 208 and "aidhinishwe (First Schedule para 2(4), mpya)" in rows[169]:
+        assert any(i == 169 for i, _ in sweep.schedule_violations(list(enumerate(rows)))), "the shipped presumptive row must be flagged"
+    assert {"royalties_wht_rate", "paye_nonresident_flat_rate"} == set(sweep.ENGLISH_KEY_SCHEDULE_EXEMPT), "the exemption list changed: justify it"
