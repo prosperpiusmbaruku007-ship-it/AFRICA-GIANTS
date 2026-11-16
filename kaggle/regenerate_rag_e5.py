@@ -708,6 +708,13 @@ critical_queries = [
     ('EFD enforcement (rewritten row)', 'query: Nikikosa kutoa risiti ya EFD adhabu ni nini?', ['Nikikosa kutoa risiti ya EFD adhabu ni nini']),
     ('Provisional tax instalments (rewritten row)', 'query: Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?', ['mwishoni mwa mwezi wa 3, 6, 9 na 12']),
     ('Input VAT zero-rated vs exempt (rewritten row, batch)', 'query: Naweza kudai VAT niliyolipa nikinunua bidhaa za biashara?', ['HAWEZI kudai input VAT']),
+    # ---- 2026-11-16 FOUR-UNANSWERED-QUESTIONS FOLLOW-UP: two new rows and the WCF accident rewrite (both WCF rows, each with its own anchor: the
+    # phrase 'si tangu tarehe ya ajali' is in BOTH, so a shared anchor would be ambiguous -- the 2026-10-05 lesson). Measured in the top 3 locally
+    # first (eval/index_quality/measure_followup_2026_11_16.py).
+    ('VAT voluntary registration (follow-up 2026-11-16)', 'query: Je naweza kujisajili VAT kwa hiari?', ['usajili wa hiari unaruhusiwa kwa']),
+    ('Construction services withholding (follow-up 2026-11-16)', 'query: Namlipa mkandarasi wa ujenzi, nakata kodi ya zuio asilimia ngapi?', ['uwiano wa 3:2 kati ya vifaa na huduma']),
+    ('WCF accident reporting chain (rewritten row)', 'query: Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?', ['taarifa wcf ni ndani ya siku ngapi']),
+    ('WCF accident reporting deadline (rewritten row, nat_45 wording)', 'query: Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali', ['wcf accident reporting deadline: mfanyakazi ameumia']),
 ]
 
 # ── KNOWN-FAILING GUARDS (2026-08-22) ────────────────────────────────────────────

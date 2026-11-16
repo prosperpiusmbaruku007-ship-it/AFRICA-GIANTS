@@ -388,5 +388,20 @@
     "last_verified": "2026-11-13",
     "re_scrape_trigger": "When a cited Act is amended or a consolidation supersedes it",
     "notes": "OWNERSHIP VERIFIED FROM THE SITES THEMSELVES 2026-11-13: https://polis.bunge.go.tz/ (HTTP 200) titles itself 'Bunge Polis' and 'Bunge la Tanzania - Jamhuri ya Muungano ya Tanzania' with a 'Miswada na Sheria' (Bills and Acts) menu; https://www.bunge.go.tz/ redirects to https://www.parliament.go.tz/ (the already-whitelisted tier1c_parliament_ppa2023 domain), whose own pages link to polis.bunge.go.tz 37 times. Listed SEPARATELY because validate_dataset deliberately does not collapse arbitrary subdomains. FIRST USE: the Labour Laws (Amendments) Act, 2025 (Act No. 4 of 2025, Gazette Supplement No. 4 Vol. 106 of 14 March 2025), whose text on this host is word-for-word identical (similarity 1.0) to the FB Attorneys scan first read; it supplies the premature-birth maternity/paternity provisions and the unfair-termination compensation scales (facts maternity_leave_premature_birth, paternity_leave_days, unfair_termination_compensation). NOTE the host's file name says 'ACT, 2024 ... CHAPA DOM' while the document is the 2025 Act: the file name is not the citation, the Gazette Supplement header is."
+  },
+  {
+    "id": "tier1a_osg_elibrary_001",
+    "url": "https://elibrary.osg.go.tz",
+    "institution": "Ofisi ya Wakili Mkuu wa Serikali (Office of the Solicitor General) - OSG e-Library of revised Acts",
+    "source_type": "official_gazette",
+    "approved_for": [
+      "tier1a"
+    ],
+    "use_for": "training",
+    "content_type": "pdf_official",
+    "decay_risk": "Stable",
+    "last_verified": "2026-11-16",
+    "re_scrape_trigger": "When a cited Act is amended or a consolidation supersedes it",
+    "notes": "OWNERSHIP VERIFIED FROM THE SITES THEMSELVES 2026-11-16: https://elibrary.osg.go.tz/ (HTTP 200) titles itself 'OSG e-Library' and its page reads 'The United Republic of Tanzania, Office of the Solicitor General, e-Library ... Welcome to the Office of Solicitor General e-Library'; the ministry's own site https://www.osg.go.tz/ (HTTP 200, title 'OWMS | Ofisi ya Wakili Mkuu wa Serikali - Mwanzo') links to http://elibrary.osg.go.tz/. Listed SEPARATELY because validate_dataset deliberately does not collapse arbitrary subdomains. FIRST USE: the Workers Compensation Act Cap.263 R.E.2023 (every page headed 'CAP. 263 R.E. 2023'), cached as data/source_documents/wcf/wca_cap263_re2023_osg.pdf with its edition quoted in the manifest; s.34(1) is the employer's accident-reporting duty. NOTE: the document's own footer reads '(c)2025 Government of Tanzania ... OAG' (Office of the Attorney General, which compiles the revised editions) while the host belongs to the Solicitor General's office -- both are Government of Tanzania offices and the compiling office is named in the document itself; the file name is not the citation, the page header is."
   }
 ]

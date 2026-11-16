@@ -1,0 +1,3123 @@
+{
+ "label": "final",
+ "self_retrieval_failures": {
+  "before": 1,
+  "after": 1,
+  "rows_after": 210
+ },
+ "rank_gate": {
+  "before": [
+   {
+    "name": "nat_23 (SDL rate)",
+    "anchors": 1,
+    "observed": 40,
+    "measured": 45,
+    "pre": 86,
+    "ok": true
+   },
+   {
+    "name": "nat_33 (BRELA annual return fee)",
+    "anchors": 1,
+    "observed": 14,
+    "measured": 23,
+    "pre": 48,
+    "ok": true
+   },
+   {
+    "name": "nat_05 (SDL rate)",
+    "anchors": 1,
+    "observed": 6,
+    "measured": 8,
+    "pre": 24,
+    "ok": true
+   }
+  ],
+  "after": [
+   {
+    "name": "nat_23 (SDL rate)",
+    "anchors": 1,
+    "observed": 42,
+    "measured": 45,
+    "pre": 86,
+    "ok": true
+   },
+   {
+    "name": "nat_33 (BRELA annual return fee)",
+    "anchors": 1,
+    "observed": 14,
+    "measured": 23,
+    "pre": 48,
+    "ok": true
+   },
+   {
+    "name": "nat_05 (SDL rate)",
+    "anchors": 1,
+    "observed": 6,
+    "measured": 8,
+    "pre": 24,
+    "ok": true
+   }
+  ]
+ },
+ "top1_changes": [
+  {
+   "q": "Mfanyakazi akipata ajali kazini nifanye nini? Natakiwa kuripoti WCF ndani ya siku ngapi?",
+   "before": "small_headcount_still_register",
+   "after": "wcf_accident_reporting",
+   "new_row_now_first": false
+  },
+  {
+   "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+   "before": "employment_particulars_keeping",
+   "after": "employment_particulars_required",
+   "new_row_now_first": false
+  },
+  {
+   "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+   "before": "vat_registration_who_must",
+   "after": "vat_voluntary_registration",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Nalipa mlinzi 120,000 kwa mwezi, ni halali?",
+   "before": "application_fee_patent",
+   "after": "unfair_termination_compensation",
+   "new_row_now_first": false
+  },
+  {
+   "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+   "before": "employment_particulars_keeping",
+   "after": "employment_particulars_required",
+   "new_row_now_first": false
+  },
+  {
+   "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+   "before": "efd_not_every_business",
+   "after": "vat_voluntary_registration",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Je naweza kujisajili VAT kwa hiari?",
+   "before": "vat_registration_who_must",
+   "after": "vat_voluntary_registration",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+   "before": "efd_not_every_business",
+   "after": "vat_voluntary_registration",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Usajili wa VAT wa hiari upo?",
+   "before": "input_vat_passenger_vehicle",
+   "after": "vat_voluntary_registration",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Namlipa mkandarasi wa ujenzi, nakata kodi ya zuio asilimia ngapi?",
+   "before": "professional_service_fee_wht",
+   "after": "wht_construction_services",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Kodi ya zuio kwa fundi wa ujenzi ni kiasi gani?",
+   "before": "professional_service_fee_wht",
+   "after": "wht_construction_services",
+   "new_row_now_first": true
+  },
+  {
+   "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+   "before": "osha_vs_wcf_roles",
+   "after": "wcf_accident_reporting",
+   "new_row_now_first": false
+  },
+  {
+   "q": "Nimepokea taarifa ya ajali kutoka kwa mfanyakazi, nina siku ngapi kumjulisha WCF?",
+   "before": "wcf_accident_reporting",
+   "after": "wcf_accident_reporting_deadline",
+   "new_row_now_first": false
+  }
+ ],
+ "rows_before": 208,
+ "rows_after": 210,
+ "n_questions": 167,
+ "targets": {
+  "total": 91,
+  "pass_after": 89,
+  "pass_before": 81,
+  "failing_after": [
+   "Nataka kusajili biashara yangu VAT lakini mauzo yangu ni chini ya milioni 200",
+   "Withholding tax kwa contractor wa ujenzi wa nyumba?"
+  ]
+ },
+ "generic_row_in_top3": {
+  "before": 24,
+  "after": 22
+ },
+ "hijacks": [
+  {
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": null
+  },
+  {
+   "q": "Kizingiti cha kujisajili VAT ni kiasi gani?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": [
+    "vat_registration_threshold_annual",
+    "vat_registration_threshold"
+   ]
+  },
+  {
+   "q": "Ushuru wa zuio kwa huduma zinazolipwa kwa mkandarasi ni asilimia ngapi?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": null
+  },
+  {
+   "q": "Je, mteja anaweza kudai VAT ya pembejeo kwa gari la kampuni?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": null
+  },
+  {
+   "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": null
+  },
+  {
+   "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": null
+  },
+  {
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": null
+  },
+  {
+   "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+   "new_rows_in_top3": [
+    "vat_voluntary_registration"
+   ],
+   "want": null
+  },
+  {
+   "q": "Ushuru wa zuio kwa huduma za mkandarasi ni asilimia ngapi?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": [
+    "professional_service_fee_wht"
+   ]
+  },
+  {
+   "q": "Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": [
+    "dividend_withholding_rate"
+   ]
+  },
+  {
+   "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+   "new_rows_in_top3": [
+    "wht_construction_services"
+   ],
+   "want": null
+  }
+ ],
+ "guards": {
+  "total": 72,
+  "regressed": [],
+  "dead_anchors": {},
+  "newly_ambiguous": [],
+  "failing_unexpected": []
+ },
+ "rows": [
+  {
+   "q": "Nina wafanyakazi 8, kila mmoja analipwa TZS 600,000 kwa mwezi. PAYE ni kiasi gani kwa mmoja?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_bands_with_examples",
+    "nssf_calculation_example",
+    "domestic_worker_minimum_wage"
+   ],
+   "top3_before": [
+    "paye_bands_with_examples",
+    "nssf_calculation_example",
+    "domestic_worker_minimum_wage"
+   ]
+  },
+  {
+   "q": "Mfanyakazi wangu analipwa 900,000, nikate kodi ya PAYE kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_bands_with_examples",
+    "paye_penalty_rate",
+    "provisional_tax_instalments"
+   ],
+   "top3_before": [
+    "paye_bands_with_examples",
+    "paye_penalty_rate",
+    "rent_wht_rate"
+   ]
+  },
+  {
+   "q": "NSSF ya mwajiri ni asilimia ngapi?",
+   "want": [
+    "nssf_employer_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "nssf_employer_rate",
+    "nssf_total_rate",
+    "wcf_rate_0_5_percent_confirmed"
+   ],
+   "top3_before": [
+    "nssf_employer_rate",
+    "nssf_total_rate",
+    "wcf_rate_0_5_percent_confirmed"
+   ]
+  },
+  {
+   "q": "Mshahara wa mfanyakazi ni 700,000, NSSF ni kiasi gani kwa mwezi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "nssf_calculation_example",
+    "nssf_total_rate",
+    "nssf_employer_rate"
+   ],
+   "top3_before": [
+    "nssf_calculation_example",
+    "nssf_total_rate",
+    "nssf_employer_rate"
+   ]
+  },
+  {
+   "q": "Nina wafanyakazi 12, je SDL inanihusu?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "sdl_rate"
+   ],
+   "top3_before": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "sdl_rate"
+   ]
+  },
+  {
+   "q": "SDL ni asilimia ngapi na inalipwa lini?",
+   "want": [
+    "sdl_rate",
+    "sdl_payment_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "sdl_rate",
+    "sdl_payment_deadline",
+    "sdl_calculation_example"
+   ],
+   "top3_before": [
+    "sdl_rate",
+    "sdl_payment_deadline",
+    "sdl_calculation_example"
+   ]
+  },
+  {
+   "q": "Je, ni lazima nijisajili WCF nikiwa na wafanyakazi 5?",
+   "want": [
+    "small_headcount_still_register",
+    "wcf_new_employer_registration"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "small_headcount_still_register",
+    "osha_vs_wcf_roles",
+    "wcf_accident_reporting"
+   ],
+   "top3_before": [
+    "small_headcount_still_register",
+    "osha_vs_wcf_roles",
+    "OSHA_safety_officer_threshold"
+   ]
+  },
+  {
+   "q": "WCF ni asilimia ngapi ya mshahara?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "wcf_rate_0_5_percent_confirmed",
+    "osha_vs_wcf_roles",
+    "nssf_total_rate"
+   ],
+   "top3_before": [
+    "wcf_rate_0_5_percent_confirmed",
+    "osha_vs_wcf_roles",
+    "nssf_total_rate"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "rent_wht_rate"
+   ]
+  },
+  {
+   "q": "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ]
+  },
+  {
+   "q": "Mwisho wa kulipa NSSF ni tarehe ngapi kila mwezi?",
+   "want": [
+    "nssf_payment_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "nssf_payment_deadline",
+    "nssf_calculation_example",
+    "nssf_total_rate"
+   ],
+   "top3_before": [
+    "nssf_payment_deadline",
+    "nssf_calculation_example",
+    "nssf_total_rate"
+   ]
+  },
+  {
+   "q": "Return ya PAYE inawasilishwa lini?",
+   "want": [
+    "paye_remittance_deadline"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "individual_income_tax_return",
+    "paye_remittance_deadline",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "individual_income_tax_return",
+    "paye_remittance_deadline",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "Je, nikichelewa kulipa PAYE kuna adhabu gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_penalty_rate",
+    "paye_remittance_deadline",
+    "unpaid_contribution_penalty_rate"
+   ],
+   "top3_before": [
+    "paye_penalty_rate",
+    "paye_remittance_deadline",
+    "unpaid_contribution_penalty_rate"
+   ]
+  },
+  {
+   "q": "Mfanyakazi akipata ajali kazini nifanye nini? Natakiwa kuripoti WCF ndani ya siku ngapi?",
+   "want": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "rank_before": 7,
+   "rank_after": 1,
+   "top3_after": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline",
+    "small_headcount_still_register"
+   ],
+   "top3_before": [
+    "small_headcount_still_register",
+    "osha_vs_wcf_roles",
+    "termination_notice_period"
+   ]
+  },
+  {
+   "q": "Naweza kumfukuza mfanyakazi bila notisi? Malipo ya kuachishwa kazi ni yapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "severance_pay",
+    "termination_notice_period",
+    "unfair_termination_compensation"
+   ],
+   "top3_before": [
+    "severance_pay",
+    "termination_notice_period",
+    "unfair_termination_compensation"
+   ]
+  },
+  {
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "want": [
+    "maternity_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "maternity_leave_days",
+    "maternity_leave_premature_birth",
+    "paternity_leave_days"
+   ],
+   "top3_before": [
+    "maternity_leave_days",
+    "maternity_leave_premature_birth",
+    "paternity_leave_days"
+   ]
+  },
+  {
+   "q": "Nina wafanyakazi 9 na nimeajiri wa 10, SDL inaanza lini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "sdl_payment_deadline"
+   ],
+   "top3_before": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "sdl_payment_deadline"
+   ]
+  },
+  {
+   "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+   "want": [
+    "employment_particulars_required",
+    "employment_particulars_keeping"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "employment_particulars_required",
+    "employment_particulars_keeping",
+    "osha_registration_threshold_b004"
+   ],
+   "top3_before": [
+    "employment_particulars_keeping",
+    "employment_particulars_required",
+    "osha_registration_threshold_b004"
+   ]
+  },
+  {
+   "q": "OSHA inahitaji nini kwa duka lenye wafanyakazi 10?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "small_headcount_still_register",
+    "osha_registration_threshold_b004",
+    "osha_vs_wcf_roles"
+   ],
+   "top3_before": [
+    "small_headcount_still_register",
+    "osha_registration_threshold_b004",
+    "osha_vs_wcf_roles"
+   ]
+  },
+  {
+   "q": "Mshahara wa mfanyakazi ni 1,200,000 na nina wafanyakazi 14. Jumla ya makato yote ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "nssf_calculation_example",
+    "paye_bands_with_examples",
+    "sdl_calculation_example"
+   ],
+   "top3_before": [
+    "nssf_calculation_example",
+    "paye_bands_with_examples",
+    "sdl_calculation_example"
+   ]
+  },
+  {
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "efd_not_every_business",
+    "vat_voluntary_registration",
+    "vat_registration_who_must"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "efd_threshold_tzs_11m",
+    "vat_registration_who_must"
+   ]
+  },
+  {
+   "q": "Mauzo yangu ni milioni 150 kwa mwaka, nalipa kodi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "paye_penalty_rate",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "paye_penalty_rate",
+    "presumptive_tax_bands_2022"
+   ]
+  },
+  {
+   "q": "Je, ni lazima nitumie mashine ya EFD? Mauzo yangu ni milioni 30.",
+   "want": [
+    "efd_threshold_tzs_11m",
+    "efd_not_every_business"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_threshold_tzs_11m"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_threshold_tzs_11m"
+   ]
+  },
+  {
+   "q": "Naanza kutumia EFD lini, kuna kizingiti cha mauzo?",
+   "want": [
+    "efd_threshold_tzs_11m",
+    "efd_not_every_business"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "efd_not_every_business",
+    "efd_threshold_tzs_11m",
+    "efd_receipt_per_transaction_no_minimum"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "efd_threshold_tzs_11m",
+    "efd_receipt_per_transaction_no_minimum"
+   ]
+  },
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ]
+  },
+  {
+   "q": "Presumptive tax ni nini na nani anastahili?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_bands_2022",
+    "presumptive_tax_ceiling_100m",
+    "presumptive_excluded_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_bands_2022",
+    "presumptive_tax_ceiling_100m",
+    "presumptive_excluded_services"
+   ]
+  },
+  {
+   "q": "Mauzo yangu ni milioni 120 kwa mwaka, nitalipa kodi ya makadirio kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "vat_registration_threshold_annual"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "vat_registration_threshold_annual"
+   ]
+  },
+  {
+   "q": "Kizingiti cha kujisajili VAT ni kiasi gani?",
+   "want": [
+    "vat_registration_threshold_annual",
+    "vat_registration_threshold"
+   ],
+   "rank_before": 2,
+   "rank_after": 3,
+   "top3_after": [
+    "efd_threshold_tzs_11m",
+    "vat_voluntary_registration",
+    "vat_registration_threshold_annual"
+   ],
+   "top3_before": [
+    "efd_threshold_tzs_11m",
+    "vat_registration_threshold_annual",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "VAT ni asilimia ngapi?",
+   "want": [
+    "vat_standard_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_standard_rate",
+    "vat_refund_when",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "vat_standard_rate",
+    "vat_refund_when",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Mauzo yangu yamefika milioni 210, nifanye nini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "vat_registration_threshold_annual",
+    "application_fee_patent",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "vat_registration_threshold_annual",
+    "application_fee_patent",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Return ya VAT inawasilishwa lini?",
+   "want": [
+    "vat_return_submission_deadline",
+    "vat_credit_sale_timing"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "individual_income_tax_return"
+   ],
+   "top3_before": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "individual_income_tax_return"
+   ]
+  },
+  {
+   "q": "Nitapataje TIN?",
+   "want": [
+    "tin_apply_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "_unresolved_items"
+   ],
+   "top3_before": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "_unresolved_items"
+   ]
+  },
+  {
+   "q": "Nawezaje kurudisha VAT niliyolipa ninaponunua bidhaa?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_when",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_when",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Nikikosa kutoa risiti ya EFD adhabu ni nini?",
+   "want": [
+    "efd_tra_closure_authority"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ],
+   "top3_before": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ]
+  },
+  {
+   "q": "Naweza kutumia risiti ya mkono badala ya EFD?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_not_every_business",
+    "efd_tra_closure_authority"
+   ],
+   "top3_before": [
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_not_every_business",
+    "efd_tra_closure_authority"
+   ]
+  },
+  {
+   "q": "Ninaagiza bidhaa kutoka China, ushuru wa forodha ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_bands_with_examples",
+    "market_dues_no_national_amount",
+    "brela_filing_fees"
+   ],
+   "top3_before": [
+    "paye_bands_with_examples",
+    "market_dues_no_national_amount",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "business_licence_fee_national_schedule_local_collection",
+    "business_licence_expiry_30_june",
+    "brela_foreign_late_filing_penalty"
+   ],
+   "top3_before": [
+    "business_licence_fee_national_schedule_local_collection",
+    "business_licence_expiry_30_june",
+    "brela_foreign_late_filing_penalty"
+   ]
+  },
+  {
+   "q": "Nahitaji kusajili jina la biashara BRELA, gharama ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "trademark_fees",
+    "business_name_maintenance_fee",
+    "brela_filing_fees"
+   ],
+   "top3_before": [
+    "trademark_fees",
+    "business_name_maintenance_fee",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "Kodi ya duka la rejareja la milioni 80 kwa mwaka?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "paye_bands_with_examples"
+   ]
+  },
+  {
+   "q": "Je, nikipanga fremu ya duka nakatwa kodi ya zuio ya pango?",
+   "want": [
+    "rent_wht_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "rent_wht_rate",
+    "efd_not_every_business",
+    "paye_penalty_rate"
+   ],
+   "top3_before": [
+    "rent_wht_rate",
+    "efd_not_every_business",
+    "paye_penalty_rate"
+   ]
+  },
+  {
+   "q": "Nimeuza bidhaa kwa mkopo, VAT inalipwa lini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "vat_credit_sale_timing",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "vat_credit_sale_timing",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "Mapato yangu ni 15 milioni, ninahitaji kuwasilisha return ya mapato?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "late_return_penalty",
+    "efd_not_every_business",
+    "individual_income_tax_return"
+   ],
+   "top3_before": [
+    "late_return_penalty",
+    "efd_not_every_business",
+    "application_fee_patent"
+   ]
+  },
+  {
+   "q": "Mteja ana mauzo ya milioni 90 na wafanyakazi 6, ni kodi gani anapaswa kulipa?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_bands_2022",
+    "paye_penalty_rate",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "presumptive_tax_bands_2022",
+    "paye_penalty_rate",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Mshahara wa mfanyakazi ni 1,500,000, PAYE na NSSF ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "nssf_calculation_example",
+    "nssf_total_rate",
+    "nssf_employer_rate"
+   ],
+   "top3_before": [
+    "nssf_calculation_example",
+    "nssf_total_rate",
+    "nssf_employer_rate"
+   ]
+  },
+  {
+   "q": "Kampuni ndogo ya mteja ina faida, kodi ya mapato ya kampuni ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "late_return_penalty",
+    "brela_foreign_late_filing_penalty"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "late_return_penalty",
+    "brela_foreign_late_filing_penalty"
+   ]
+  },
+  {
+   "q": "Ubia wa watu wawili unalipa kodi ya mapato vipi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "individual_income_tax_return",
+    "late_return_penalty",
+    "paye_penalty_rate"
+   ],
+   "top3_before": [
+    "individual_income_tax_return",
+    "late_return_penalty",
+    "paye_penalty_rate"
+   ]
+  },
+  {
+   "q": "Mteja ana hasara kwa miaka mitatu, kuna kodi ya chini kabisa (AMT)?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "minimum_turnover_tax",
+    "vat_refund_deadline",
+    "record_keeping_period"
+   ],
+   "top3_before": [
+    "minimum_turnover_tax",
+    "vat_refund_deadline",
+    "record_keeping_period"
+   ]
+  },
+  {
+   "q": "Ushuru wa zuio kwa huduma zinazolipwa kwa mkandarasi ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "professional_service_fee_wht",
+    "wht_construction_services",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "rent_wht_rate",
+    "dividend_withholding_rate"
+   ]
+  },
+  {
+   "q": "Withholding tax kwenye gawio ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "vat_withholding_buyer_remits_directly",
+    "royalties_wht_rate"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "vat_withholding_buyer_remits_directly",
+    "royalties_wht_rate"
+   ]
+  },
+  {
+   "q": "Mteja anakodisha jengo la biashara, kodi ya zuio ya pango ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "rent_wht_rate",
+    "dividend_withholding_rate",
+    "professional_service_fee_wht"
+   ],
+   "top3_before": [
+    "rent_wht_rate",
+    "dividend_withholding_rate",
+    "professional_service_fee_wht"
+   ]
+  },
+  {
+   "q": "Tarehe ya mwisho ya kuwasilisha return ya VAT na PAYE ni lini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "vat_refund_deadline",
+    "vat_credit_sale_timing",
+    "individual_income_tax_return"
+   ],
+   "top3_before": [
+    "vat_refund_deadline",
+    "vat_credit_sale_timing",
+    "individual_income_tax_return"
+   ]
+  },
+  {
+   "q": "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?",
+   "want": [
+    "late_return_penalty"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "vat_refund_deadline",
+    "late_return_penalty",
+    "vat_credit_sale_timing"
+   ],
+   "top3_before": [
+    "vat_refund_deadline",
+    "late_return_penalty",
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
+   "q": "Annual return BRELA inawasilishwa lini na ada yake ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "annual_return_filing_fee",
+    "trademark_fees",
+    "brela_filing_fees"
+   ],
+   "top3_before": [
+    "annual_return_filing_fee",
+    "trademark_fees",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "Kampuni ya kigeni inachelewa kuwasilisha annual return, adhabu ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "brela_foreign_late_filing_penalty",
+    "annual_return_filing_fee",
+    "late_filing_penalty_monthly_fee"
+   ],
+   "top3_before": [
+    "brela_foreign_late_filing_penalty",
+    "annual_return_filing_fee",
+    "late_filing_penalty_monthly_fee"
+   ]
+  },
+  {
+   "q": "Je, mteja anaweza kudai VAT ya pembejeo kwa gari la kampuni?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "input_vat_passenger_vehicle",
+    "vat_voluntary_registration",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "input_vat_passenger_vehicle",
+    "efd_not_every_business",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ]
+  },
+  {
+   "q": "Rekodi za biashara zihifadhiwe kwa miaka mingapi?",
+   "want": [
+    "record_keeping_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "brela_striking_off_non_filing"
+   ],
+   "top3_before": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "brela_striking_off_non_filing"
+   ]
+  },
+  {
+   "q": "Mteja anapaswa kulipa kodi ya mapato kwa awamu (instalment) lini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "provisional_tax_instalments",
+    "individual_income_tax_return",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "provisional_tax_instalments",
+    "individual_income_tax_return",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Capital gains tax kwa kuuza hisa ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "company_registration_ladder",
+    "dividend_withholding_rate",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "company_registration_ladder",
+    "dividend_withholding_rate",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Transfer pricing inahitaji nyaraka gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "brela_filing_fees",
+    "certified_copy_agreement_law_constitution_fee",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "brela_filing_fees",
+    "certified_copy_agreement_law_constitution_fee",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "provisional_tax_instalments",
+    "wht_construction_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "provisional_tax_instalments",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Stamp duty kwenye mkataba wa pango ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "rent_wht_rate",
+    "certified_copy_agreement_law_constitution_fee",
+    "trademark_fees"
+   ],
+   "top3_before": [
+    "rent_wht_rate",
+    "certified_copy_agreement_law_constitution_fee",
+    "trademark_fees"
+   ]
+  },
+  {
+   "q": "Mteja ana biashara Zanzibar, ZRA inatoza nini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "trademark_fees",
+    "vat_registration_who_must",
+    "employment_particulars_keeping"
+   ],
+   "top3_before": [
+    "trademark_fees",
+    "vat_registration_who_must",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "SDL ni asilimia ngapi? Na WCF? Na NSSF ya mwajiri?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "sdl_rate",
+    "nssf_employer_rate",
+    "sdl_calculation_example"
+   ],
+   "top3_before": [
+    "sdl_rate",
+    "nssf_employer_rate",
+    "sdl_calculation_example"
+   ]
+  },
+  {
+   "q": "Mteja ana wafanyakazi 20 wa mishahara tofauti, nahitaji kuhesabu SDL kwa jumla ya mishahara milioni 18.",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "application_fee_patent"
+   ],
+   "top3_before": [
+    "sdl_threshold",
+    "sdl_calculation_example",
+    "application_fee_patent"
+   ]
+  },
+  {
+   "q": "Ni wakati gani biashara inatakiwa kujisajili kwa VAT kwa hiari?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "vat_voluntary_registration",
+    "vat_registration_who_must",
+    "vat_credit_sale_timing"
+   ],
+   "top3_before": [
+    "vat_registration_who_must",
+    "record_keeping_period",
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
+   "q": "Kodi ya mapato ya mfanyakazi asiye mkazi (non-resident) ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "professional_service_fee_wht",
+    "domestic_worker_minimum_wage"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "professional_service_fee_wht",
+    "domestic_worker_minimum_wage"
+   ]
+  },
+  {
+   "q": "Nalipa dada wa kazi za nyumbani 150,000 kwa mwezi, ni halali?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ]
+  },
+  {
+   "q": "Nalipa mfanyakazi wa nyumbani 150,000 kwa mwezi, je ni sawa?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "application_fee_patent",
+    "late_filing_penalty_monthly_fee"
+   ]
+  },
+  {
+   "q": "Mfanyakazi wa duka analipwa 200,000 kwa mwezi, je inatosha kisheria?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "small_headcount_still_register",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "small_headcount_still_register",
+    "rent_wht_rate"
+   ]
+  },
+  {
+   "q": "Nalipa mlinzi 120,000 kwa mwezi, ni halali?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "unfair_termination_compensation",
+    "application_fee_patent",
+    "brela_foreign_late_filing_penalty"
+   ],
+   "top3_before": [
+    "application_fee_patent",
+    "unfair_termination_compensation",
+    "brela_foreign_late_filing_penalty"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "want": [
+    "domestic_worker_minimum_wage"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "nssf_employer_rate"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "nssf_employer_rate"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "GN605A_sector_count",
+    "rent_wht_rate"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "GN605A_sector_count",
+    "domestic_worker_minimum_wage",
+    "wcf_rate_0_5_percent_confirmed"
+   ],
+   "top3_before": [
+    "GN605A_sector_count",
+    "domestic_worker_minimum_wage",
+    "wcf_rate_0_5_percent_confirmed"
+   ]
+  },
+  {
+   "q": "Kodi ya makadirio kwa mauzo ya milioni 40 ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ]
+  },
+  {
+   "q": "Nina duka, mauzo milioni 80 kwa mwaka, kodi ya makadirio ni ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "presumptive_excluded_services"
+   ]
+  },
+  {
+   "q": "Kodi ya duka la rejareja la milioni 80 kwa mwaka?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "paye_bands_with_examples"
+   ]
+  },
+  {
+   "q": "Mauzo ya mwaka ni milioni 150, nalipa kodi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "paye_penalty_rate",
+    "presumptive_tax_bands_2022"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "want": [
+    "termination_notice_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "termination_notice_period",
+    "severance_pay",
+    "paye_remittance_deadline"
+   ],
+   "top3_before": [
+    "termination_notice_period",
+    "severance_pay",
+    "paye_remittance_deadline"
+   ]
+  },
+  {
+   "q": "Severance pay inahesabiwaje?",
+   "want": [
+    "severance_pay"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "severance_pay",
+    "paye_remittance_deadline",
+    "paternity_leave_days"
+   ],
+   "top3_before": [
+    "severance_pay",
+    "unpaid_contribution_penalty_rate",
+    "paternity_leave_days"
+   ]
+  },
+  {
+   "q": "Overtime inalipwa kiasi gani?",
+   "want": [
+    "overtime_pay_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "overtime_pay_rate",
+    "fine_limit",
+    "severance_pay"
+   ],
+   "top3_before": [
+    "overtime_pay_rate",
+    "fine_limit",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "want": [
+    "annual_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "annual_leave_days",
+    "maternity_leave_days",
+    "paternity_leave_days"
+   ],
+   "top3_before": [
+    "annual_leave_days",
+    "maternity_leave_days",
+    "paternity_leave_days"
+   ]
+  },
+  {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "want": [
+    "vat_credit_sale_timing"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "record_keeping_period"
+   ]
+  },
+  {
+   "q": "Mfanyakazi wa kila mwezi nikimwachisha, notisi ni ya siku zipi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "termination_notice_period",
+    "wcf_accident_reporting",
+    "annual_leave_days"
+   ],
+   "top3_before": [
+    "termination_notice_period",
+    "severance_pay",
+    "annual_leave_days"
+   ]
+  },
+  {
+   "q": "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "employer_notification_deadline_before_retirement",
+    "duration_of_maternity_cash_benefit",
+    "fund_payment_deadline_after_retirement_notification"
+   ],
+   "top3_before": [
+    "employer_notification_deadline_before_retirement",
+    "duration_of_maternity_cash_benefit",
+    "fund_payment_deadline_after_retirement_notification"
+   ]
+  },
+  {
+   "q": "Likizo ya mwaka na overtime ni siku ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "annual_leave_days",
+    "overtime_pay_rate",
+    "maternity_leave_days"
+   ],
+   "top3_before": [
+    "annual_leave_days",
+    "overtime_pay_rate",
+    "maternity_leave_days"
+   ]
+  },
+  {
+   "q": "Nimeuza kwa mkopo, naomba kujua kuhusu VAT.",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "application_fee_patent",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_withholding_buyer_remits_directly"
+   ],
+   "top3_before": [
+    "application_fee_patent",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_withholding_buyer_remits_directly"
+   ]
+  },
+  {
+   "q": "Mshahara wa mfanyakazi ni 800,000 kwa mwezi, PAYE ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_bands_with_examples",
+    "domestic_worker_minimum_wage",
+    "severance_pay"
+   ],
+   "top3_before": [
+    "paye_bands_with_examples",
+    "domestic_worker_minimum_wage",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Je, ni halali kumfukuza mfanyakazi bila notisi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "termination_notice_period",
+    "small_headcount_still_register",
+    "unfair_termination_compensation"
+   ],
+   "top3_before": [
+    "termination_notice_period",
+    "unfair_termination_compensation",
+    "small_headcount_still_register"
+   ]
+  },
+  {
+   "q": "Je, ni halali kutumia risiti ya mkono badala ya EFD?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_not_every_business",
+    "efd_tra_closure_authority"
+   ],
+   "top3_before": [
+    "efd_receipt_per_transaction_no_minimum",
+    "efd_not_every_business",
+    "efd_tra_closure_authority"
+   ]
+  },
+  {
+   "q": "Mauzo yangu ni milioni 50 kwa mwaka. Je, ni lazima nijisajili VAT?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "efd_not_every_business",
+    "vat_voluntary_registration",
+    "vat_registration_who_must"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "efd_threshold_tzs_11m",
+    "vat_registration_who_must"
+   ]
+  },
+  {
+   "q": "Mauzo yangu ni milioni 40 kwa mwaka, nalipa kodi ya makadirio kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "provisional_tax_instalments"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "presumptive_tax_bands_2022",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Kampuni ina mapato ya milioni 300, kodi ya mapato ya kampuni ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "corporate_tax_rate",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "corporate_tax_rate",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Nikichelewa kulipa PAYE kuna adhabu gani?",
+   "want": [
+    "paye_penalty_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paye_penalty_rate",
+    "paye_remittance_deadline",
+    "unpaid_contribution_penalty_rate"
+   ],
+   "top3_before": [
+    "paye_penalty_rate",
+    "unpaid_contribution_penalty_rate",
+    "paye_remittance_deadline"
+   ]
+  },
+  {
+   "q": "Nikikosa kutoa risiti ya EFD adhabu ni nini?",
+   "want": [
+    "efd_tra_closure_authority"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ],
+   "top3_before": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ]
+  },
+  {
+   "q": "Mteja alichelewa kuwasilisha return ya VAT, faini ni kiasi gani?",
+   "want": [
+    "late_return_penalty"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "vat_refund_deadline",
+    "late_return_penalty",
+    "vat_credit_sale_timing"
+   ],
+   "top3_before": [
+    "vat_refund_deadline",
+    "late_return_penalty",
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
+   "q": "Naweza kudai VAT niliyolipa nikinunua bidhaa za biashara?",
+   "want": [
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "input_vat_passenger_vehicle",
+    "vat_refund_when"
+   ],
+   "top3_before": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "input_vat_passenger_vehicle",
+    "vat_refund_when"
+   ]
+  },
+  {
+   "q": "Mteja anapaswa kulipa kodi ya mapato kwa awamu lini?",
+   "want": [
+    "provisional_tax_instalments"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "provisional_tax_instalments",
+    "individual_income_tax_return",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "provisional_tax_instalments",
+    "individual_income_tax_return",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+   "want": [
+    "domestic_worker_minimum_wage"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "nssf_calculation_example",
+    "sdl_calculation_example"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "nssf_calculation_example",
+    "sdl_calculation_example"
+   ]
+  },
+  {
+   "q": "Je, ni lazima nijisajili WCF nikiwa na wafanyakazi 5?",
+   "want": [
+    "small_headcount_still_register",
+    "wcf_new_employer_registration"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "small_headcount_still_register",
+    "osha_vs_wcf_roles",
+    "wcf_accident_reporting"
+   ],
+   "top3_before": [
+    "small_headcount_still_register",
+    "osha_vs_wcf_roles",
+    "OSHA_safety_officer_threshold"
+   ]
+  },
+  {
+   "q": "OSHA inahitaji nini kwa duka lenye wafanyakazi 10?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "small_headcount_still_register",
+    "osha_registration_threshold_b004",
+    "osha_vs_wcf_roles"
+   ],
+   "top3_before": [
+    "small_headcount_still_register",
+    "osha_registration_threshold_b004",
+    "osha_vs_wcf_roles"
+   ]
+  },
+  {
+   "q": "PAYE inalipwa tarehe ngapi kila mwezi?",
+   "want": [
+    "paye_remittance_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paye_remittance_deadline",
+    "paye_penalty_rate",
+    "nssf_payment_deadline"
+   ],
+   "top3_before": [
+    "paye_remittance_deadline",
+    "paye_penalty_rate",
+    "nssf_payment_deadline"
+   ]
+  },
+  {
+   "q": "Return ya PAYE inawasilishwa lini?",
+   "want": [
+    "paye_remittance_deadline"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "individual_income_tax_return",
+    "paye_remittance_deadline",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "individual_income_tax_return",
+    "paye_remittance_deadline",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "Je, ni lazima kila mfanyakazi awe na mkataba wa maandishi?",
+   "want": [
+    "employment_particulars_required",
+    "employment_particulars_keeping"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "employment_particulars_required",
+    "employment_particulars_keeping",
+    "osha_registration_threshold_b004"
+   ],
+   "top3_before": [
+    "employment_particulars_keeping",
+    "employment_particulars_required",
+    "osha_registration_threshold_b004"
+   ]
+  },
+  {
+   "q": "Naweza kumfukuza mfanyakazi bila notisi? Notisi ni muda gani?",
+   "want": [
+    "termination_notice_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "termination_notice_period",
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "top3_before": [
+    "termination_notice_period",
+    "brela_striking_off_non_filing",
+    "annual_leave_days"
+   ]
+  },
+  {
+   "q": "Mfanyakazi akiachishwa kazi anastahili malipo ya kuachishwa (severance) kiasi gani?",
+   "want": [
+    "severance_pay"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "severance_pay",
+    "unfair_termination_compensation",
+    "domestic_worker_minimum_wage"
+   ],
+   "top3_before": [
+    "severance_pay",
+    "unfair_termination_compensation",
+    "domestic_worker_minimum_wage"
+   ]
+  },
+  {
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "want": [
+    "annual_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "annual_leave_days",
+    "maternity_leave_days",
+    "paternity_leave_days"
+   ],
+   "top3_before": [
+    "annual_leave_days",
+    "maternity_leave_days",
+    "paternity_leave_days"
+   ]
+  },
+  {
+   "q": "Overtime inalipwa kiasi gani?",
+   "want": [
+    "overtime_pay_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "overtime_pay_rate",
+    "fine_limit",
+    "severance_pay"
+   ],
+   "top3_before": [
+    "overtime_pay_rate",
+    "fine_limit",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "want": [
+    "maternity_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "maternity_leave_days",
+    "maternity_leave_premature_birth",
+    "paternity_leave_days"
+   ],
+   "top3_before": [
+    "maternity_leave_days",
+    "maternity_leave_premature_birth",
+    "paternity_leave_days"
+   ]
+  },
+  {
+   "q": "Likizo ya baba (paternity leave) ni siku ngapi?",
+   "want": [
+    "paternity_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paternity_leave_days",
+    "maternity_leave_days",
+    "maternity_leave_premature_birth"
+   ],
+   "top3_before": [
+    "paternity_leave_days",
+    "maternity_leave_days",
+    "maternity_leave_premature_birth"
+   ]
+  },
+  {
+   "q": "Nitapataje TIN?",
+   "want": [
+    "tin_apply_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "_unresolved_items"
+   ],
+   "top3_before": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "_unresolved_items"
+   ]
+  },
+  {
+   "q": "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?",
+   "want": [
+    "individual_income_tax_return"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "individual_income_tax_return",
+    "late_return_penalty",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "individual_income_tax_return",
+    "late_return_penalty",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "Naweza kujisajili VAT kwa hiari nikiwa na mauzo madogo?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "vat_voluntary_registration",
+    "efd_not_every_business",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_when"
+   ]
+  },
+  {
+   "q": "Nawezaje kurejeshewa VAT (VAT refund)?",
+   "want": [
+    "vat_refund_when",
+    "vat_refund_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_refund_when",
+    "vat_refund_deadline",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "vat_refund_when",
+    "vat_refund_deadline",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Nimeuza kwa mkopo, VAT inalipwa lini?",
+   "want": [
+    "vat_credit_sale_timing"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "vat_credit_sale_timing",
+    "vat_refund_deadline",
+    "record_keeping_period"
+   ]
+  },
+  {
+   "q": "Ushuru wa zuio kwa huduma za mkandarasi ni asilimia ngapi?",
+   "want": [
+    "professional_service_fee_wht"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "professional_service_fee_wht",
+    "wht_construction_services",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "rent_wht_rate",
+    "dividend_withholding_rate"
+   ]
+  },
+  {
+   "q": "Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?",
+   "want": [
+    "dividend_withholding_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "professional_service_fee_wht",
+    "wht_construction_services"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "professional_service_fee_wht",
+    "rent_wht_rate"
+   ]
+  },
+  {
+   "q": "Rekodi za biashara zihifadhiwe kwa miaka mingapi?",
+   "want": [
+    "record_keeping_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "brela_striking_off_non_filing"
+   ],
+   "top3_before": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "brela_striking_off_non_filing"
+   ]
+  },
+  {
+   "q": "Naweza kudai VAT ya pembejeo kwa gari la kampuni?",
+   "want": [
+    "input_vat_passenger_vehicle"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "input_vat_passenger_vehicle",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "input_vat_passenger_vehicle",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Capital gains tax kwa kuuza hisa ni asilimia ngapi?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "company_registration_ladder",
+    "dividend_withholding_rate",
+    "late_return_penalty"
+   ],
+   "top3_before": [
+    "company_registration_ladder",
+    "dividend_withholding_rate",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Transfer pricing inahitaji nyaraka gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "brela_filing_fees",
+    "certified_copy_agreement_law_constitution_fee",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "brela_filing_fees",
+    "certified_copy_agreement_law_constitution_fee",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Stamp duty kwenye mkataba wa pango ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "rent_wht_rate",
+    "certified_copy_agreement_law_constitution_fee",
+    "trademark_fees"
+   ],
+   "top3_before": [
+    "rent_wht_rate",
+    "certified_copy_agreement_law_constitution_fee",
+    "trademark_fees"
+   ]
+  },
+  {
+   "q": "Kodi ya majengo (property tax) inalipwa kwa nani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "presumptive_tax_ceiling_100m",
+    "provisional_tax_instalments",
+    "wht_construction_services"
+   ],
+   "top3_before": [
+    "presumptive_tax_ceiling_100m",
+    "provisional_tax_instalments",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Ninaagiza bidhaa kutoka China, ushuru wa forodha ni kiasi gani?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "paye_bands_with_examples",
+    "market_dues_no_national_amount",
+    "brela_filing_fees"
+   ],
+   "top3_before": [
+    "paye_bands_with_examples",
+    "market_dues_no_national_amount",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "Mteja ana biashara Zanzibar, ZRA inatoza nini?",
+   "want": null,
+   "rank_before": null,
+   "rank_after": null,
+   "top3_after": [
+    "trademark_fees",
+    "vat_registration_who_must",
+    "employment_particulars_keeping"
+   ],
+   "top3_before": [
+    "trademark_fees",
+    "vat_registration_who_must",
+    "brela_filing_fees"
+   ]
+  },
+  {
+   "q": "Mwisho wa kulipa PAYE kwa TRA ni lini?",
+   "want": [
+    "paye_remittance_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paye_remittance_deadline",
+    "individual_income_tax_return",
+    "paye_penalty_rate"
+   ],
+   "top3_before": [
+    "paye_remittance_deadline",
+    "individual_income_tax_return",
+    "paye_penalty_rate"
+   ]
+  },
+  {
+   "q": "Nilipe PAYE ya wafanyakazi wangu kabla ya tarehe ngapi?",
+   "want": [
+    "paye_remittance_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paye_remittance_deadline",
+    "employer_notification_deadline_before_retirement",
+    "severance_pay"
+   ],
+   "top3_before": [
+    "paye_remittance_deadline",
+    "employer_notification_deadline_before_retirement",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mpya nimpe nini cha maandishi anapoanza kazi?",
+   "want": [
+    "employment_particulars_required"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "employment_particulars_required",
+    "employment_particulars_keeping",
+    "termination_notice_period"
+   ],
+   "top3_before": [
+    "employment_particulars_required",
+    "employment_particulars_keeping",
+    "termination_notice_period"
+   ]
+  },
+  {
+   "q": "Nahifadhi mikataba ya wafanyakazi waliondoka kwa muda gani?",
+   "want": [
+    "employment_particulars_keeping"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "employment_particulars_keeping",
+    "employment_particulars_required",
+    "small_headcount_still_register"
+   ],
+   "top3_before": [
+    "employment_particulars_keeping",
+    "employment_particulars_required",
+    "small_headcount_still_register"
+   ]
+  },
+  {
+   "q": "Nataka kuacha kazi, natakiwa kutoa notisi ya muda gani?",
+   "want": [
+    "termination_notice_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "termination_notice_period",
+    "employer_notification_deadline_before_retirement",
+    "wcf_accident_reporting_deadline"
+   ],
+   "top3_before": [
+    "termination_notice_period",
+    "employer_notification_deadline_before_retirement",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Nimemfukuza mfanyakazi aliyefanya kazi miaka 4, nimlipe nini?",
+   "want": [
+    "severance_pay"
+   ],
+   "rank_before": 3,
+   "rank_after": 2,
+   "top3_after": [
+    "compliance_license_processing_time_old",
+    "severance_pay",
+    "employer_notification_deadline_before_retirement"
+   ],
+   "top3_before": [
+    "compliance_license_processing_time_old",
+    "employer_notification_deadline_before_retirement",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Mfanyakazi ana haki ya likizo ya siku ngapi kwa mwaka?",
+   "want": [
+    "annual_leave_days"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "annual_leave_days",
+    "maternity_leave_premature_birth",
+    "severance_pay"
+   ],
+   "top3_before": [
+    "annual_leave_days",
+    "maternity_leave_premature_birth",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Nikimfanyisha mfanyakazi saa za ziada nimlipe mara ngapi ya mshahara?",
+   "want": [
+    "overtime_pay_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "overtime_pay_rate",
+    "working_hours_limits",
+    "vat_refund_when"
+   ],
+   "top3_before": [
+    "overtime_pay_rate",
+    "working_hours_limits",
+    "duration_of_maternity_cash_benefit"
+   ]
+  },
+  {
+   "q": "Mfanyakazi anaruhusiwa kufanya kazi saa ngapi kwa siku?",
+   "want": [
+    "working_hours_limits"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "working_hours_limits",
+    "severance_pay",
+    "termination_notice_period"
+   ],
+   "top3_before": [
+    "working_hours_limits",
+    "termination_notice_period",
+    "severance_pay"
+   ]
+  },
+  {
+   "q": "Saa za kazi kwa wiki ni ngapi kisheria?",
+   "want": [
+    "working_hours_limits"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "working_hours_limits",
+    "overtime_pay_rate",
+    "termination_notice_period"
+   ],
+   "top3_before": [
+    "working_hours_limits",
+    "overtime_pay_rate",
+    "termination_notice_period"
+   ]
+  },
+  {
+   "q": "Mfanyakazi wangu amejifungua, apewe likizo ya siku ngapi?",
+   "want": [
+    "maternity_leave_days"
+   ],
+   "rank_before": 3,
+   "rank_after": 3,
+   "top3_after": [
+    "maternity_leave_premature_birth",
+    "annual_leave_days",
+    "maternity_leave_days"
+   ],
+   "top3_before": [
+    "maternity_leave_premature_birth",
+    "annual_leave_days",
+    "maternity_leave_days"
+   ]
+  },
+  {
+   "q": "Mtoto akizaliwa kabla ya wakati mama anapata likizo ya uzazi ya muda gani?",
+   "want": [
+    "maternity_leave_premature_birth"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "maternity_leave_premature_birth",
+    "paternity_leave_days",
+    "maternity_leave_days"
+   ],
+   "top3_before": [
+    "maternity_leave_premature_birth",
+    "paternity_leave_days",
+    "maternity_leave_days"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mwanaume amepata mtoto, apewe siku ngapi za likizo?",
+   "want": [
+    "paternity_leave_days"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "maternity_leave_premature_birth",
+    "paternity_leave_days",
+    "annual_leave_days"
+   ],
+   "top3_before": [
+    "maternity_leave_premature_birth",
+    "paternity_leave_days",
+    "maternity_leave_days"
+   ]
+  },
+  {
+   "q": "Nimemfukuza mfanyakazi bila utaratibu, fidia ya kuachishwa kazi isivyo haki ni kiasi gani?",
+   "want": [
+    "unfair_termination_compensation"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "unfair_termination_compensation",
+    "severance_pay",
+    "domestic_worker_minimum_wage"
+   ],
+   "top3_before": [
+    "unfair_termination_compensation",
+    "severance_pay",
+    "domestic_worker_minimum_wage"
+   ]
+  },
+  {
+   "q": "Dada wa kazi anayeishi kwangu analipwa kiasi gani kisheria?",
+   "want": [
+    "domestic_worker_minimum_wage"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "domestic_worker_minimum_wage",
+    "paye_penalty_rate",
+    "working_hours_limits"
+   ],
+   "top3_before": [
+    "domestic_worker_minimum_wage",
+    "working_hours_limits",
+    "paye_penalty_rate"
+   ]
+  },
+  {
+   "q": "Nimeanza biashara, nisajili TIN ndani ya muda gani?",
+   "want": [
+    "tin_apply_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "osha_registration_before_operations"
+   ],
+   "top3_before": [
+    "tin_apply_deadline",
+    "presumptive_tax_bands_2022",
+    "osha_registration_before_operations"
+   ]
+  },
+  {
+   "q": "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?",
+   "want": [
+    "individual_income_tax_return"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "individual_income_tax_return",
+    "late_return_penalty",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "individual_income_tax_return",
+    "vat_refund_deadline",
+    "late_return_penalty"
+   ]
+  },
+  {
+   "q": "Natoa gawio kwa wanahisa wa kampuni yangu, nakata kodi ya zuio asilimia ngapi?",
+   "want": [
+    "dividend_withholding_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "dividend_withholding_rate",
+    "rent_wht_rate",
+    "paye_penalty_rate"
+   ],
+   "top3_before": [
+    "dividend_withholding_rate",
+    "rent_wht_rate",
+    "paye_penalty_rate"
+   ]
+  },
+  {
+   "q": "Nikimlipa mshauri wa kodi au mhasibu, nakata kodi ya zuio asilimia ngapi?",
+   "want": [
+    "professional_service_fee_wht"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "professional_service_fee_wht",
+    "dividend_withholding_rate",
+    "unpaid_contribution_penalty_frequency"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "dividend_withholding_rate",
+    "unpaid_contribution_penalty_frequency"
+   ]
+  },
+  {
+   "q": "Mhasibu au wakili anahitaji kusajili VAT hata kama mauzo ni madogo?",
+   "want": [
+    "vat_registration_who_must"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "efd_not_every_business",
+    "vat_registration_who_must",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "vat_registration_who_must",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ]
+  },
+  {
+   "q": "Nina VAT ya ziada kwa miezi mingi, naweza kurudishiwa pesa?",
+   "want": [
+    "vat_refund_when"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_refund_when",
+    "vat_refund_deadline",
+    "vat_credit_sale_timing"
+   ],
+   "top3_before": [
+    "vat_refund_when",
+    "vat_refund_deadline",
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
+   "q": "Nina muda gani wa kuomba kurejeshewa VAT?",
+   "want": [
+    "vat_refund_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_refund_deadline",
+    "vat_refund_when",
+    "vat_credit_sale_timing"
+   ],
+   "top3_before": [
+    "vat_refund_deadline",
+    "vat_refund_when",
+    "vat_credit_sale_timing"
+   ]
+  },
+  {
+   "q": "Mteja hajanilipa bado, nalipa VAT ya mauzo hayo lini?",
+   "want": [
+    "vat_credit_sale_timing"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "vat_credit_sale_timing",
+    "unpaid_contribution_penalty_frequency",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "vat_credit_sale_timing",
+    "unpaid_contribution_penalty_frequency",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Nihifadhi risiti na vitabu vya mahesabu kwa muda gani?",
+   "want": [
+    "record_keeping_period"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "vat_refund_deadline"
+   ],
+   "top3_before": [
+    "record_keeping_period",
+    "employment_particulars_keeping",
+    "vat_refund_deadline"
+   ]
+  },
+  {
+   "q": "Nimenunua gari la kampuni, naweza kudai VAT niliyolipa?",
+   "want": [
+    "input_vat_passenger_vehicle"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "input_vat_passenger_vehicle",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "input_vat_passenger_vehicle",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Nikichelewa kuwasilisha return ya kodi ya mapato adhabu ni nini?",
+   "want": [
+    "late_return_penalty"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "late_return_penalty",
+    "paye_penalty_rate",
+    "individual_income_tax_return"
+   ],
+   "top3_before": [
+    "late_return_penalty",
+    "paye_penalty_rate",
+    "individual_income_tax_return"
+   ]
+  },
+  {
+   "q": "PAYE nimechelewa kulipa mwezi mmoja, nitatozwa nini?",
+   "want": [
+    "paye_penalty_rate"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "paye_penalty_rate",
+    "unpaid_contribution_penalty_frequency",
+    "paye_remittance_deadline"
+   ],
+   "top3_before": [
+    "paye_penalty_rate",
+    "unpaid_contribution_penalty_frequency",
+    "paye_remittance_deadline"
+   ]
+  },
+  {
+   "q": "TRA inaweza kuchukua hatua gani nikiacha kutoa risiti za EFD?",
+   "want": [
+    "efd_tra_closure_authority"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ],
+   "top3_before": [
+    "efd_tra_closure_authority",
+    "efd_not_every_business",
+    "efd_receipt_per_transaction_no_minimum"
+   ]
+  },
+  {
+   "q": "Je, nadai VAT ya manunuzi (input VAT) ya biashara yangu?",
+   "want": [
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "input_vat_passenger_vehicle",
+    "efd_not_every_business"
+   ],
+   "top3_before": [
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "input_vat_passenger_vehicle",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Nalipa kodi ya mapato kwa awamu (instalment) mara ngapi kwa mwaka?",
+   "want": [
+    "provisional_tax_instalments"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "provisional_tax_instalments",
+    "late_return_penalty",
+    "paye_penalty_rate"
+   ],
+   "top3_before": [
+    "provisional_tax_instalments",
+    "late_return_penalty",
+    "individual_income_tax_return"
+   ]
+  },
+  {
+   "q": "Leseni ya biashara inaisha lini?",
+   "want": [
+    "business_licence_expiry_30_june"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "business_licence_expiry_30_june",
+    "business_licence_fee_national_schedule_local_collection",
+    "council_service_levy_non_corporate_conflict"
+   ],
+   "top3_before": [
+    "business_licence_expiry_30_june",
+    "business_licence_fee_national_schedule_local_collection",
+    "council_service_levy_non_corporate_conflict"
+   ]
+  },
+  {
+   "q": "Je naweza kujisajili VAT kwa hiari?",
+   "want": [
+    "vat_voluntary_registration"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_voluntary_registration",
+    "vat_registration_who_must",
+    "input_vat_passenger_vehicle"
+   ],
+   "top3_before": [
+    "vat_registration_who_must",
+    "input_vat_passenger_vehicle",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ]
+  },
+  {
+   "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+   "want": [
+    "vat_voluntary_registration"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_voluntary_registration",
+    "efd_not_every_business",
+    "VAT_zero_rated_vs_exempt_input_VAT"
+   ],
+   "top3_before": [
+    "efd_not_every_business",
+    "VAT_zero_rated_vs_exempt_input_VAT",
+    "vat_refund_when"
+   ]
+  },
+  {
+   "q": "Usajili wa VAT wa hiari upo?",
+   "want": [
+    "vat_voluntary_registration"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "vat_voluntary_registration",
+    "input_vat_passenger_vehicle",
+    "vat_registration_who_must"
+   ],
+   "top3_before": [
+    "input_vat_passenger_vehicle",
+    "vat_registration_who_must",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Nataka kusajili biashara yangu VAT lakini mauzo yangu ni chini ya milioni 200",
+   "want": [
+    "vat_voluntary_registration"
+   ],
+   "rank_before": ">30",
+   "rank_after": 9,
+   "top3_after": [
+    "vat_registration_threshold_annual",
+    "application_fee_patent",
+    "vat_registration_threshold_six_months"
+   ],
+   "top3_before": [
+    "vat_registration_threshold_annual",
+    "application_fee_patent",
+    "vat_registration_threshold_six_months"
+   ]
+  },
+  {
+   "q": "Namlipa mkandarasi wa ujenzi, nakata kodi ya zuio asilimia ngapi?",
+   "want": [
+    "wht_construction_services"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "wht_construction_services",
+    "professional_service_fee_wht",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "rent_wht_rate",
+    "dividend_withholding_rate"
+   ]
+  },
+  {
+   "q": "Kodi ya zuio kwa fundi wa ujenzi ni kiasi gani?",
+   "want": [
+    "wht_construction_services"
+   ],
+   "rank_before": ">30",
+   "rank_after": 1,
+   "top3_after": [
+    "wht_construction_services",
+    "professional_service_fee_wht",
+    "rent_wht_rate"
+   ],
+   "top3_before": [
+    "professional_service_fee_wht",
+    "rent_wht_rate",
+    "presumptive_excluded_services"
+   ]
+  },
+  {
+   "q": "Withholding tax kwa contractor wa ujenzi wa nyumba?",
+   "want": [
+    "wht_construction_services"
+   ],
+   "rank_before": ">30",
+   "rank_after": 10,
+   "top3_after": [
+    "vat_withholding_buyer_remits_directly",
+    "presumptive_excluded_services",
+    "presumptive_tax_ceiling_100m"
+   ],
+   "top3_before": [
+    "vat_withholding_buyer_remits_directly",
+    "presumptive_excluded_services",
+    "presumptive_tax_ceiling_100m"
+   ]
+  },
+  {
+   "q": "Namlipa mhandisi au msanifu majengo, nakata zuio kiasi gani?",
+   "want": [
+    "wht_construction_services",
+    "professional_service_fee_wht"
+   ],
+   "rank_before": 2,
+   "rank_after": 2,
+   "top3_after": [
+    "rent_wht_rate",
+    "wht_construction_services",
+    "professional_service_fee_wht"
+   ],
+   "top3_before": [
+    "rent_wht_rate",
+    "professional_service_fee_wht",
+    "efd_not_every_business"
+   ]
+  },
+  {
+   "q": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+   "want": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "rank_before": 10,
+   "rank_after": 3,
+   "top3_after": [
+    "compliance_license_processing_time_old",
+    "employer_notification_deadline_before_retirement",
+    "wcf_accident_reporting_deadline"
+   ],
+   "top3_before": [
+    "compliance_license_processing_time_old",
+    "employer_notification_deadline_before_retirement",
+    "registration_certificate_processing_time_new"
+   ]
+  },
+  {
+   "q": "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?",
+   "want": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline",
+    "small_headcount_still_register"
+   ],
+   "top3_before": [
+    "wcf_accident_reporting",
+    "small_headcount_still_register",
+    "wcf_disease_reporting_deadline"
+   ]
+  },
+  {
+   "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+   "want": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "rank_before": 4,
+   "rank_after": 1,
+   "top3_after": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline",
+    "osha_vs_wcf_roles"
+   ],
+   "top3_before": [
+    "osha_vs_wcf_roles",
+    "small_headcount_still_register",
+    "wcf_rate_0_5_percent_confirmed"
+   ]
+  },
+  {
+   "q": "Nimepokea taarifa ya ajali kutoka kwa mfanyakazi, nina siku ngapi kumjulisha WCF?",
+   "want": [
+    "wcf_accident_reporting",
+    "wcf_accident_reporting_deadline"
+   ],
+   "rank_before": 1,
+   "rank_after": 1,
+   "top3_after": [
+    "wcf_accident_reporting_deadline",
+    "wcf_accident_reporting",
+    "wcf_disease_reporting_deadline"
+   ],
+   "top3_before": [
+    "wcf_accident_reporting",
+    "wcf_disease_reporting_deadline",
+    "employer_notification_deadline_before_retirement"
+   ]
+  }
+ ]
+}

@@ -466,6 +466,9 @@ PINNED = {
     "record_keeping_period": ("present_elsewhere", "Miaka 5 tangu tarehe husika"),
     "input_vat_passenger_vehicle": ("present_elsewhere", "gari la abiria, vipuri au matengenezo"),
     "late_return_penalty": ("present_elsewhere", "Adhabu ya kuchelewa kuwasilisha return ya VAT"),
+    # ---- 2026-11-16 follow-up: two NEW facts, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips them the moment it lands).
+    "vat_voluntary_registration": ("pending_r15", None),
+    "wht_construction_services": ("pending_r15", None),
 }
 
 

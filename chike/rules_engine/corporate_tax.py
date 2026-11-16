@@ -83,7 +83,7 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
         if exempt_permanent:
             working = (
                 f"Hapana, AMT haitumiki. Kampuni zinazofanya kilimo, afya au elimu ZIMESAMEHEWA "
-                f"AMT kabisa (Sheria ya Kodi ya Mapato Kifungu 4(8)), hata kama zina hasara "
+                f"AMT kabisa (Sheria ya Kodi ya Mapato), hata kama zina hasara "
                 f"miaka {loss_years} mfululizo. Kodi ya kawaida ya asilimia "
                 f"{_pct(CORPORATE_STANDARD_RATE)} inatumika kwa faida (si AMT).")
             return ComputationResult(
@@ -98,7 +98,7 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
                 f"Hapana, AMT haitumiki kwa sasa. Kampuni za usindikaji chai ZIMESAMEHEWA AMT "
                 f"kwa kipindi maalum tu — {AMT_EXEMPT_TEA_PROCESSING_FROM} hadi "
                 f"{AMT_EXEMPT_TEA_PROCESSING_TO} (Sheria ya Fedha 2024 Kifungu 34, ikiongeza "
-                f"msamaha huu kwenye Kifungu 4(8)). Nje ya kipindi hicho, AMT ya asilimia "
+                f"msamaha huu kwenye Sheria ya Kodi ya Mapato). Nje ya kipindi hicho, AMT ya asilimia "
                 f"{_pct(AMT_RATE)} ya mauzo ya mwaka wa tatu inatumika kama kwa kampuni "
                 f"nyingine yoyote yenye hasara miaka {AMT_LOSS_YEARS_REQUIRED} mfululizo.")
             return ComputationResult(
@@ -109,7 +109,7 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
         if loss_years < AMT_LOSS_YEARS_REQUIRED:
             working = (
                 f"Bado hapana. AMT inatumika tu baada ya miaka {AMT_LOSS_YEARS_REQUIRED} "
-                f"mfululizo ya hasara isiyopunguzwa (First Schedule para 3(3)) — umetaja miaka "
+                f"mfululizo ya hasara isiyopunguzwa — umetaja miaka "
                 f"{loss_years}. Kodi ya kawaida ya asilimia {_pct(CORPORATE_STANDARD_RATE)} "
                 f"inatumika kwa faida kwa sasa.")
             return ComputationResult(
@@ -124,7 +124,7 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
             f"Ndiyo, AMT inatumika. Kampuni yenye hasara isiyopunguzwa kwa miaka "
             f"{AMT_LOSS_YEARS_REQUIRED} mfululizo hulipa AMT ya asilimia {_pct(AMT_RATE)} ya "
             f"mauzo (turnover) ya mwaka wa tatu wa hasara — SI faida, SI kodi ya kawaida ya "
-            f"asilimia {_pct(CORPORATE_STANDARD_RATE)} (First Schedule para 3(3), Sheria ya "
+            f"asilimia {_pct(CORPORATE_STANDARD_RATE)} (Sheria ya "
             f"Fedha 2025 Kifungu 60(d)(ii)). Kiasi halisi kinahitaji mauzo ya mwaka huo — "
             f"thibitisha na TRA.")
         return ComputationResult(
@@ -138,8 +138,8 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
         if meets_public_float is True:
             working = (
                 f"Kiwango cha kodi ya kampuni yako ni asilimia {_pct(CORPORATE_DSE_RATE)} kwa "
-                f"miaka {CORPORATE_DSE_RATE_YEARS} tangu tarehe ya kuorodheshwa DSE (First "
-                f"Schedule para 3(2)(a)) — kwa sababu umetaja kufikia kigezo cha hisa kwa umma. "
+                f"miaka {CORPORATE_DSE_RATE_YEARS} tangu tarehe ya kuorodheshwa DSE "
+                f"— kwa sababu umetaja kufikia kigezo cha hisa kwa umma. "
                 f"Baada ya miaka {CORPORATE_DSE_RATE_YEARS}, kiwango cha kawaida cha asilimia "
                 f"{_pct(CORPORATE_STANDARD_RATE)} kinarudi kutumika.")
         elif meets_public_float is False:
@@ -147,15 +147,15 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
                 f"Kiwango cha kawaida cha asilimia {_pct(CORPORATE_STANDARD_RATE)} kinatumika, "
                 f"SI asilimia {_pct(CORPORATE_DSE_RATE)}. Kuorodheshwa DSE peke yake hakutoshi — "
                 f"lazima angalau asilimia {_pct(CORPORATE_DSE_PUBLIC_FLOAT_CURRENT)} ya hisa "
-                f"ziwe kwa umma (First Schedule para 3(2)(a), kigezo hiki kilipunguzwa kutoka "
+                f"ziwe kwa umma (kigezo hiki kilipunguzwa kutoka "
                 f"asilimia 30 hadi 25 na Sheria ya Fedha 2025 Kifungu 60(d)(i), tangu "
                 f"{CORPORATE_DSE_PUBLIC_FLOAT_CHANGE_DATE}) — umetaja huwezi kufikia kigezo hicho.")
         else:
             working = (
                 f"Kampuni zilizoorodheshwa DSE zinapata asilimia {_pct(CORPORATE_DSE_RATE)} kwa "
                 f"miaka {CORPORATE_DSE_RATE_YEARS} — LAKINI kwa sharti kwamba angalau asilimia "
-                f"{_pct(CORPORATE_DSE_PUBLIC_FLOAT_CURRENT)} ya hisa ziwe kwa umma (First "
-                f"Schedule para 3(2)(a), kigezo hiki tangu {CORPORATE_DSE_PUBLIC_FLOAT_CHANGE_DATE} "
+                f"{_pct(CORPORATE_DSE_PUBLIC_FLOAT_CURRENT)} ya hisa ziwe kwa umma ("
+                f"kigezo hiki tangu {CORPORATE_DSE_PUBLIC_FLOAT_CHANGE_DATE} "
                 f"— kilikuwa asilimia 30 kabla ya hapo). Je, sehemu ya hisa kwa umma inafikia "
                 f"kiwango hicho? Bila hilo, kiwango cha kawaida cha asilimia "
                 f"{_pct(CORPORATE_STANDARD_RATE)} ndicho kinachotumika.")
@@ -165,11 +165,11 @@ def corporate_tax_rate_statement(is_dse_listed=None, meets_public_float=None,
 
     working = (
         f"Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia "
-        f"{_pct(CORPORATE_STANDARD_RATE)} ya faida inayotozwa kodi (First Schedule para 3(1)). "
+        f"{_pct(CORPORATE_STANDARD_RATE)} ya faida inayotozwa kodi. "
         f"Kampuni zilizoorodheshwa DSE zenye angalau asilimia "
         f"{_pct(CORPORATE_DSE_PUBLIC_FLOAT_CURRENT)} ya hisa kwa umma hulipa asilimia "
-        f"{_pct(CORPORATE_DSE_RATE)} kwa miaka {CORPORATE_DSE_RATE_YEARS} tangu kuorodheshwa "
-        f"(para 3(2)(a)). Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) "
+        f"{_pct(CORPORATE_DSE_RATE)} kwa miaka {CORPORATE_DSE_RATE_YEARS} tangu kuorodheshwa. "
+        f"Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) "
         f"ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.")
     return ComputationResult(
         computation="corporate_tax", applicable=True, amount=None, working=working,
@@ -184,8 +184,8 @@ def partnership_tax_statement(partner_is_individual=None) -> ComputationResult:
     inputs = {"partner_is_individual": partner_is_individual}
     working = (
         "Ubia (partnership) wenyewe HAULIPI kodi ya mapato ya jumla yake (Sheria ya Kodi ya "
-        "Mapato Kifungu 48(1)) — si kama kampuni. Badala yake, faida au hasara ya ubia "
-        "hugawanywa kwa kila mshirika kulingana na sehemu yake (Vifungu 49-50), na KILA "
+        "Mapato) — si kama kampuni. Badala yake, faida au hasara ya ubia "
+        "hugawanywa kwa kila mshirika kulingana na sehemu yake, na KILA "
         "MSHIRIKA analipa kodi mwenyewe juu ya sehemu yake, kwa kiwango kinachomhusu YEYE — "
         "viwango vya mtu binafsi kama mshirika ni mtu, au asilimia 30 kama mshirika ni kampuni. "
         "Sina taarifa ya kutosha kutaja kiwango bila kujua mshirika ni nani. Thibitisha na TRA "

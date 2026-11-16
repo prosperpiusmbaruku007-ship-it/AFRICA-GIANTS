@@ -217,6 +217,65 @@ DECLARED = {
         "edition_evidence": "cover text names the firm and the 2025/2026 year.",
         "superseded": False,
     },
+    # ---- 2026-11-16 four-unanswered-questions follow-up: every file below was READ for a fact and its edition is quoted from it ----
+    'wcf/wca_cap263_re2023_osg.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "page header of every page after the first: 'THE WORKERS COMPENSATION ACT [CAP . 263 R.E. 2023]'; first page 'CHAPTER 263 THE WORKERS COMPENSATION ACT [PRINCIPAL LEGISLATION]', footer '(c)2025 Government of Tanzania. All rights reserved ... OAG'. Fetched 2026-11-16 from https://elibrary.osg.go.tz/server/api/core/bitstreams/d71ef688-13fb-466d-ac95-ccb03e455514/content (host ownership verified from osg.go.tz, which links to http://elibrary.osg.go.tz/). s.34(1) reads 'within seven  days after receiving a notice of an accident from the employee or having learned in some other way that an accident has occurred'.",
+    },
+    'wcf/gn185_2016_workers_compensation_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 185, published 27/5/2016',
+        'edition_evidence': "page 1: 'Supplement No. 21 27th May, 2016 ... GOVERNMENT NOTICE NO. 185 published on 27/5/2016 THE WORKERS' COMPENSATION REGULATIONS, 2016'. Fetched 2026-11-16 from the Parliament of Tanzania copy (www.parliament.go.tz/uploads/documents/sw-1738841389-1476206253-GN 185-...pdf). Reg.15 'Notification of accident by employee or employer'.",
+    },
+    'wcf/gn668_2021_wc_amendment_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 668, published 10/9/2021',
+        'edition_evidence': "page 1: 'GOVERNMENT NOTICE No. 668 Published On. 10/9/2021 ... THE WORKERS COMPENSATION (AMENDMENT) REGULATIONS, 2021'. Amends regulations 13, 26(1), 36, 38, 41(1) ...; does NOT amend regulation 15. Fetched 2026-11-16 from wcf.go.tz.",
+    },
+    'labour/gn47_2017_elr_general_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 47, published 24/02/2017',
+        'edition_evidence': "page 1: 'Supplement No. 8 24th February, 2017 ... GOVERNMENT NOTICE NO. 47 published on 24/02/2017 THE EMPLOYMENT AND LABOUR RELATIONS (GENERAL) REGULATIONS'. The only written-contract requirement in it is Reg.10(1) (a child's employment). Fetched 2026-11-16 from commons.laws.africa.",
+    },
+    'tra/vat_act_cap148_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "page header from the first section onward: 'THE VALUE ADDED TAX ACT [CAP. 148 R.E. 2023]'; first page 'CHAPTER 148 THE VALUE ADDED TAX ACT [PRINCIPAL LEGISLATION]'. Fetched from tra.go.tz/images/uploads/acts/The_Value_Added_Tax_Act.pdf. Amended after this edition by Finance Acts 2024 (s.105 -> s.29(4),(5)), 2025 (s.126 -> s.29(5),(6)) and 2026 (s.91 -> s.5(5),(7)); this file does NOT contain those amendments.",
+        'superseded': False,
+        'note': 'A consolidated Act is a snapshot: read the amending Finance Acts before encoding anything from it.',
+    },
+    'tra/income_tax_act_cap332_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "page header: 'THE INCOME TAX ACT [CAP. 332 R.E. 2023]'. Fetched from tra.go.tz/images/uploads/acts/The_Income_Tax_Act.pdf. Amended after this edition by the Finance Acts 2024-2026; this file does NOT contain those amendments. s.106(4) proviso (3:2 ratio) is [s. 83] in R.E.2019.",
+        'note': 'A consolidated Act is a snapshot: read the amending Finance Acts before encoding any rate or schedule from it.',
+    },
+    'tra/gn714_2021_vat_general_amendment_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 714, published 8/10/2021',
+        'edition_evidence': "page 1: 'GOVERNMENT NOTICE No. 714 Published On. 8/10/2021 ... THE VALUE ADDED TAX (GENERAL) (AMENDMENT) REGULATIONS, 2021'. Replaces regulation 36B (refund for goods bought in Zanzibar). No registration provision.",
+    },
+    'tra/gn448y_2023_vat_general_amendment_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 448Y, published 30/6/2023',
+        'edition_evidence': "page 1: 'GOVERNMENT NOTICE NO. 448Y published on 30/6/2023 THE VALUE ADDED TAX ACT, (CAP.148) ... REGULATIONS'. No registration provision.",
+    },
+    'tra/gn352k_2025_vat_general_amendment_regulations.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 352K, published 30/6/2025',
+        'edition_evidence': "page 1: 'GOVERNMENT NOTICE No. 352K published on 30/6/2025 THE VALUE ADDED TAX ACT, (CAP. 148) ... REGULATIONS'. No registration provision.",
+    },
+    'tra/tra_faq_57_2026_11_16.html': {
+        'kind': 'portal',
+        'edition': 'capture of tra.go.tz/ajax/faq/57 on 2026-11-16',
+        'edition_evidence': "fetched 2026-11-16 (this session; a regulator FAQ has no edition, so the capture date is the honest answer). States: 'Voluntary registration is also allowed for certain specific economic activities' and names none.",
+    },
+    'tra/tra_vat_page_2026_11_16.html': {
+        'kind': 'portal',
+        'edition': 'capture of tra.go.tz/page/value-added-tax-vat on 2026-11-16',
+        'edition_evidence': "fetched 2026-11-16; embedded news items dated '06 November, 2026' bound the capture from below. States the registration rules (threshold, professionals / Government entities / intending traders) with no mention of voluntary registration.",
+    },
 }
 
 # Files whose edition is simply "the capture", with no in-document marker to quote. Declared as

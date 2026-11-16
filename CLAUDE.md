@@ -611,7 +611,13 @@ All facts below are locked from verified primary sources. Encode these exactly.
 
 **WCF Additional Timelines (wcf.go.tz, confirmed Jun 2026):**
 - New employer: must register with WCF within 30 days of hiring first employee
-- Accident reporting: 7 working days from date of accident (already locked)
+- ~~Accident reporting: 7 working days from date of accident (already locked)~~ → **CORRECTED 2026-11-16: THE CLOCK RUNS FROM RECEIPT OF NOTICE,
+  NOT FROM THE ACCIDENT.** Workers Compensation Act Cap.263 R.E.2023 s.34(1): the employer reports to the Director-General *"within seven days
+  after receiving a notice of an accident from the employee or having learned in some other way that an accident has occurred"* (the word
+  "working" is absent); GN 185/2016 Reg.15: employee → employer within 2 working days, employer → WCF within 7 working days *"from the date of
+  receipt of notification"*, and the employee may notify WCF directly within 7 working days after the accident. **The Act says "seven days" and the
+  Regulation says "seven working days" for the same duty: recorded as an unresolved discrepancy, and served as both, with "report early".**
+  The old line was stale for the same reason as the Part XII and disease-reporting lines: it was written once and nothing re-derived it.
 - ~~Occupational disease reporting: 7 working days from date of diagnosis~~ → **CORRECTED
   2026-10-09. IT IS A TWO-STAGE CHAIN, NOT A FLAT 7 DAYS, and the worst case from diagnosis to
   WCF is up to 21 working days.** Per the **Workers Compensation Regulations 2016 (GN 185/2016)
@@ -1506,6 +1512,32 @@ introduced it.
    tax made listing status in-scope; `mrabaha` was correct until `royalties_wht_rate` was
    locked. **So the trigger to re-check refusals is ADDING A DOMAIN, not editing a phrase** —
    and adding a domain does not look like touching refusals, which is exactly why it is missed.
+
+### ⛔⛔ R44 — SWAHILI ANSWER TEXT NAMES A CONSOLIDATED ACT WITHOUT A SECTION NUMBER. SECTION NUMBERS LIVE ONLY IN SOURCE METADATA. (standing rule, founder's decision 2026-11-16; origin 2026-07)
+
+**Origin.** The 2026-07 BRELA verification set it ("cite the Act without a section number in the Swahili answer text; section numbers only in
+source metadata") and it was recorded only as the Q13 note in PROGRESS ("Section numbers kept in metadata only (R.E.2023 renumbers
+s.400A→s.403)"), which is exactly how a rule decays (R30/R35). **The census of 2026-11-16 found it violated in 29 served index rows, all five
+fixed statements and the corporate-tax renderer** (`eval/results/sweep_section_citations_2026_11_16.json`): ELRA sections cited by their R.E. 2019
+numbers while TanzLII's consolidation numbers every section one higher, ITA/TAA/VAT sections cited from memory of the old numbering.
+
+**Why.** A consolidated Act is renumbered between editions (Cap.50, Cap.212, Cap.332 and Cap.438 are the recorded cases — the renumbering trap, Section 4;
+ELRA is the fifth, +1 between R.E. 2019 and the TanzLII 31 Dec 2023 consolidation, proved from the text's own `[s. N]` notes). A section number
+in an answer is a claim that is **silently wrong the day the edition moves** — and a reader checking it against the other edition is *confirmed*
+by a real section of the wrong provision. The Act's name carries the same authority without the failure.
+
+**The rule.**
+1. User-facing Swahili text (index rows, locked-fact text that is served, fixed statements, rule-engine renderer text, replacement copy) names the
+   Act — "(ELRA)", "(Sheria ya VAT)" — and gives **no** `Kifungu`/`Vifungu` number of a consolidated Act.
+2. **Kept:** Government Notice paragraph numbers and section numbers of Finance Acts and amending Acts ("Sheria ya Fedha 2025 Kifungu 60",
+   "Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 8") — fixed once enacted, they do not renumber.
+3. **The numbers do not vanish: they move to `primary_source`/`source_note` metadata**, as heading + TanzLII number + R.E. number, edition asserted.
+4. English-key index rows (model-facing context, not served text) keep their citations; several exist to state the renumbering itself. They are
+   listed in the census, not stripped.
+
+**Enforced, not remembered:** `tests/test_no_section_numbers_in_answer_text.py` builds the prospective index from source and walks every
+rule-engine string; planted (a real citation flags, the amending-Act form and a clean sentence pass) and run against the pre-strip shipped index
+(29 violations) so the checker is shown not to be inert.
 
 ### ⛔⛔ R43 — A LABEL ON A PATH IS NOT A PROPERTY OF THE TEXT; AND A WRITE-BACK ACROSS AN AWAIT IS A LOST UPDATE. (added 2026-11-13)
 

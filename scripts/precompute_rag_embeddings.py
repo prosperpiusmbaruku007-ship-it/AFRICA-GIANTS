@@ -563,8 +563,8 @@ CONCISE_BILINGUAL_FACTS = {
     # rows, but still new rather than reachable-by-rewording.
     'osha_registration_before_operations':
         'Umefungua karakana au sehemu mpya ya kazi? Usajili wa OSHA lazima ufanyike '
-        'KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. (Kifungu '
-        '16(2), Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)',
+        'KABLA ya kuanza biashara — hakuna muda wa siku baada ya kufungua. '
+        '(Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 2003.)',
 
     'OSHA_annual_inspection':
         'OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania.',
@@ -641,7 +641,7 @@ CONCISE_BILINGUAL_FACTS = {
     # pulled a company-shareholders fact for a WCF question — a same-language grounding
     # entry stops that cross-lingual displacement.
     'osha_vs_wcf_roles':
-        'OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (kifungu 16, Sheria '
+        'OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (Sheria '
         'ya OSHA Na.5 ya 2003), hukagua, na hutoa leseni ya utii kila mwaka — OSHA HAILIPI fidia '
         'ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya '
         'mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu '
@@ -901,8 +901,8 @@ FACT_GROUPS = {
             'Polarity, Continuity, Earth Resistance, Insulation Test) ilipunguzwa mwaka 2025 '
             'kutoka TZS 650,000 hadi TZS 150,000 ili kuhamasisha uwekezaji vijijini. Hii SI ada '
             'ya jumla ya ukaguzi wa umeme kwa maeneo yote ya kazi -- kila kiwanda/eneo la kazi '
-            'linalotumia umeme linahitajika kukaguliwa KILA MWAKA chini ya Cap.297 kifungu '
-            '66(2), kwa ada tofauti isiyothibitishwa (si TZS 650,000 wala 150,000).'),
+            'linalotumia umeme linahitajika kukaguliwa KILA MWAKA chini ya Cap.297, '
+            'kwa ada tofauti isiyothibitishwa (si TZS 650,000 wala 150,000).'),
     },
 }
 
@@ -1027,61 +1027,61 @@ def fact_value(v) -> str:
 # it was read from. Primary-source detail, edition and amending-Act checks live in scripts/locked_facts.json.
 _COVERAGE_2026_11_13 = {
     'paye_remittance_deadline':
-        'PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa kila mwezi, yaani ifikapo tarehe 7 ya mwezi unaofuata (Sheria ya Kodi ya Mapato, Kifungu 109). Utaratibu wa kuwasilisha taarifa ya kila mwezi: thibitisha na TRA.',
+        'PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa kila mwezi, yaani ifikapo tarehe 7 ya mwezi unaofuata (Sheria ya Kodi ya Mapato). Utaratibu wa kuwasilisha taarifa ya kila mwezi: thibitisha na TRA.',
     'employment_particulars_required':
-        'Mkataba wa ajira: mwajiri lazima ampe mfanyakazi maelezo ya maandishi anapoanza kazi — jina, umri, anwani, jinsia, mahali alipoajiriwa, kazi atakayofanya, tarehe ya kuanza, aina na muda wa mkataba, mahali pa kazi, saa za kazi, malipo na faida (ELRA, Kifungu 15).',
+        'Mkataba wa ajira: mwajiri lazima ampe mfanyakazi maelezo ya maandishi anapoanza kazi — jina, umri, anwani, jinsia, mahali alipoajiriwa, kazi atakayofanya, tarehe ya kuanza, aina na muda wa mkataba, mahali pa kazi, saa za kazi, malipo na faida (ELRA).',
     'employment_particulars_keeping':
-        'Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unatosha, hakuna hati nyingine. Mwajiri ayahifadhi miaka 5 baada ya mfanyakazi kuacha kazi. Hayahitajiki kwa anayefanya kazi chini ya siku 6 kwa mwezi. Mwajiri asipoweza kuonyesha mkataba, yeye ndiye anayethibitisha masharti ya ajira (ELRA, Kifungu 15).',
+        'Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unatosha, hakuna hati nyingine. Mwajiri ayahifadhi miaka 5 baada ya mfanyakazi kuacha kazi. Hayahitajiki kwa anayefanya kazi chini ya siku 6 kwa mwezi. Mwajiri asipoweza kuonyesha mkataba, yeye ndiye anayethibitisha masharti ya ajira (ELRA).',
     'termination_notice_period':
-        'Notisi ya kuacha au kuachishwa kazi ni siku ngapi? Mwezi wa kwanza: siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi badala yake (ELRA, Kifungu 41).',
+        'Notisi ya kuacha au kuachishwa kazi ni siku ngapi? Mwezi wa kwanza: siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi badala yake (ELRA).',
     'severance_pay':
-        'Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA, Kifungu 42).',
+        'Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).',
     'annual_leave_days':
-        'Likizo ya mwaka ni siku ngapi? Angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA, Kifungu 31).',
+        'Likizo ya mwaka ni siku ngapi? Angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).',
     'overtime_pay_rate':
-        'Overtime (saa za ziada) inalipwa kiasi gani? Angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA, Kifungu 19).',
+        'Overtime (saa za ziada) inalipwa kiasi gani? Angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA).',
     'working_hours_limits':
-        'Saa za kazi kisheria ni ngapi? Kawaida siku 6 kwa wiki, saa 45 kwa wiki, saa 9 kwa siku. Mwajiri hawezi kumlazimisha au kumruhusu mfanyakazi afanye kazi zaidi ya saa 12 kwa siku kwa hali yoyote (ELRA, Kifungu 19).',
+        'Saa za kazi kisheria ni ngapi? Kawaida siku 6 kwa wiki, saa 45 kwa wiki, saa 9 kwa siku. Mwajiri hawezi kumlazimisha au kumruhusu mfanyakazi afanye kazi zaidi ya saa 12 kwa siku kwa hali yoyote (ELRA).',
     'maternity_leave_days':
-        'Likizo ya uzazi ni siku ngapi? Siku 84 zenye malipo; siku 100 ukizaa watoto zaidi ya mmoja kwa pamoja; siku 84 za ziada mtoto akifa ndani ya mwaka. Toa notisi miezi 3 kabla ya tarehe ya kujifungua na cheti cha daktari; usifanye kazi wiki 6 baada ya kujifungua isipokuwa daktari athibitishe (ELRA, Kifungu 33).',
+        'Likizo ya uzazi ni siku ngapi? Siku 84 zenye malipo; siku 100 ukizaa watoto zaidi ya mmoja kwa pamoja; siku 84 za ziada mtoto akifa ndani ya mwaka. Toa notisi miezi 3 kabla ya tarehe ya kujifungua na cheti cha daktari; usifanye kazi wiki 6 baada ya kujifungua isipokuwa daktari athibitishe (ELRA).',
     'maternity_leave_premature_birth':
-        'Likizo ya uzazi mtoto akizaliwa kabla ya wakati: mfanyakazi ana likizo yenye malipo kuanzia tarehe ya kujifungua hadi wiki 40 za ujauzito zikamilike, pamoja na siku 84 za kawaida ndani ya mzunguko wa likizo (ELRA, Kifungu 33(8), kilichoongezwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 8).',
+        'Likizo ya uzazi mtoto akizaliwa kabla ya wakati: mfanyakazi ana likizo yenye malipo kuanzia tarehe ya kujifungua hadi wiki 40 za ujauzito zikamilike, pamoja na siku 84 za kawaida ndani ya mzunguko wa likizo (ELRA, kilichoongezwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 8).',
     'paternity_leave_days':
-        'Likizo ya baba (paternity leave): siku 3 zenye malipo ukichukua ndani ya siku 7 tangu mtoto azaliwe; siku 7 ikiwa mtoto amezaliwa kabla ya wakati. Pia siku 4 zenye malipo kwa ugonjwa au kifo cha mtoto wako, au kifo cha mke/mume, mzazi, babu/bibi, mjukuu au ndugu (ELRA, Kifungu 34; Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 9).',
+        'Likizo ya baba (paternity leave): siku 3 zenye malipo ukichukua ndani ya siku 7 tangu mtoto azaliwe; siku 7 ikiwa mtoto amezaliwa kabla ya wakati. Pia siku 4 zenye malipo kwa ugonjwa au kifo cha mtoto wako, au kifo cha mke/mume, mzazi, babu/bibi, mjukuu au ndugu (ELRA; Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 9).',
     'unfair_termination_compensation':
-        'Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sahihi, malipo ya miezi 6 hadi 12; kwa sababu isiyo halali, miezi 12 hadi 18; kwa zote mbili, miezi 12 hadi 20; kwa ubaguzi au unyanyasaji, miezi 12 hadi 24 (ELRA, Kifungu 40(1)(c), kilichobadilishwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 12).',
+        'Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sahihi, malipo ya miezi 6 hadi 12; kwa sababu isiyo halali, miezi 12 hadi 18; kwa zote mbili, miezi 12 hadi 20; kwa ubaguzi au unyanyasaji, miezi 12 hadi 24 (ELRA, kilichobadilishwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 12).',
     'domestic_worker_minimum_wage':
         'Kima cha chini cha mshahara kwa dada wa kazi au mfanyakazi wa nyumbani (kwa mwezi, GN 605A, kuanzia 1 Januari 2026): anayeajiriwa na mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; na maafisa wenye stahili (entitled officers) TZS 265,000; asiyeishi nyumbani kwa mwajiri TZS 160,000; wengine wote TZS 80,000.',
     'tin_apply_deadline':
-        'Nitapataje TIN? Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi, Vifungu 22 na 24).',
+        'Nitapataje TIN? Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).',
     'individual_income_tax_return':
-        'Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato, Vifungu 117, 118 na 20).',
+        'Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).',
     'dividend_withholding_rate':
-        'Gawio (dividend) linakatwa kodi ya zuio asilimia ngapi? Kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam: 5%; kampuni mkazi kwenda kampuni mkazi inayomiliki 25% au zaidi: 5%; kampuni nyingine: 10%. Mtu binafsi anayelipa nje ya biashara hahusiki (Sheria ya Kodi ya Mapato, Kifungu 105).',
+        'Gawio (dividend) linakatwa kodi ya zuio asilimia ngapi? Kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam: 5%; kampuni mkazi kwenda kampuni mkazi inayomiliki 25% au zaidi: 5%; kampuni nyingine: 10%. Mtu binafsi anayelipa nje ya biashara hahusiki (Sheria ya Kodi ya Mapato).',
     'professional_service_fee_wht':
-        'Kodi ya zuio kwa mshauri, wakili, mhasibu, mkaguzi, mhandisi au huduma nyingine za kitaalamu: mkazi 5%, asiye mkazi 15%. Haisemi kiwango cha mkandarasi wa kawaida: thibitisha na TRA (Sheria ya Kodi ya Mapato, Kifungu 106).',
+        'Kodi ya zuio kwa mshauri, wakili, mhasibu, mkaguzi, mhandisi au huduma nyingine za kitaalamu: mkazi 5%, asiye mkazi 15%. Haisemi kiwango cha mkandarasi wa kawaida: thibitisha na TRA (Sheria ya Kodi ya Mapato).',
     'vat_registration_who_must':
-        'Mtaalamu anayetoa huduma za kitaalamu zenye leseni au chama cha taaluma lazima ajisajili VAT bila kujali kiasi cha mauzo. Taasisi za Serikali zinazofanya shughuli za kiuchumi pia. Kamishna anaweza kumsajili anayetarajia kuanza biashara (intending trader) mwenye ushahidi (Sheria ya VAT, Kifungu 29).',
+        'Mtaalamu anayetoa huduma za kitaalamu zenye leseni au chama cha taaluma lazima ajisajili VAT bila kujali kiasi cha mauzo. Taasisi za Serikali zinazofanya shughuli za kiuchumi pia. Kamishna anaweza kumsajili anayetarajia kuanza biashara (intending trader) mwenye ushahidi (Sheria ya VAT).',
     'vat_refund_when':
-        'Nawezaje kurejeshewa VAT (VAT refund)? Kwa kawaida VAT ya ziada hubebwa mbele hadi vipindi 6. Marejesho ya pesa hupewa mwenye 50% au zaidi ya mauzo au pembejeo zake za zero-rated, au Kamishna akiridhika kuwa biashara yake mara kwa mara ina VAT ya ziada (Sheria ya VAT, Vifungu 85 na 86).',
+        'Nawezaje kurejeshewa VAT (VAT refund)? Kwa kawaida VAT ya ziada hubebwa mbele hadi vipindi 6. Marejesho ya pesa hupewa mwenye 50% au zaidi ya mauzo au pembejeo zake za zero-rated, au Kamishna akiridhika kuwa biashara yake mara kwa mara ina VAT ya ziada (Sheria ya VAT).',
     'vat_refund_deadline':
-        'Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kodi (au baada ya malipo ya ziada kufanywa). Kamishna ana siku 90 kutoa uamuzi kwa maandishi. VAT uliyolipa zaidi ya kiasi kwenye return pia hurejeshwa kwa ombi (Sheria ya VAT, Vifungu 87 na 88).',
+        'Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kodi (au baada ya malipo ya ziada kufanywa). Kamishna ana siku 90 kutoa uamuzi kwa maandishi. VAT uliyolipa zaidi ya kiasi kwenye return pia hurejeshwa kwa ombi (Sheria ya VAT).',
     'vat_credit_sale_timing':
-        'Nimeuza kwa mkopo, VAT inalipwa lini? VAT inakuwa inadaiwa mapema zaidi kati ya: siku ya kutoa invoice, siku ya kupokea malipo (hata sehemu), au wakati wa usambazaji. Hivyo ukitoa invoice, VAT inadaiwa hata mteja asipolipa bado. Return ya VAT ni tarehe 20 ya mwezi unaofuata (Sheria ya VAT, Vifungu 15 na 70).',
+        'Nimeuza kwa mkopo, VAT inalipwa lini? VAT inakuwa inadaiwa mapema zaidi kati ya: siku ya kutoa invoice, siku ya kupokea malipo (hata sehemu), au wakati wa usambazaji. Hivyo ukitoa invoice, VAT inadaiwa hata mteja asipolipa bado. Return ya VAT ni tarehe 20 ya mwezi unaofuata (Sheria ya VAT).',
     'record_keeping_period':
-        'Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. Muda mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi, Kifungu 43).',
+        'Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. Muda mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi).',
     'input_vat_passenger_vehicle':
-        'Naweza kudai VAT ya pembejeo kwa gari la kampuni? Hapana kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo. Burudani nayo haidaiwi (Sheria ya VAT, Kifungu 72(3)).',
+        'Naweza kudai VAT ya pembejeo kwa gari la kampuni? Hapana kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo. Burudani nayo haidaiwi (Sheria ya VAT).',
     'late_return_penalty':
-        'Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kodi inayotakiwa ukiondoa iliyolipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi, Kifungu 89).',
+        'Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kodi inayotakiwa ukiondoa iliyolipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi).',
     # --- existing rows REWRITTEN Swahili-first / led with the asker's words (B: rows that existed but did not surface); each keeps its
     #     committed guard anchors (checked by eval/index_quality/measure_coverage_batch_2026_11_13.py) ---
     'paye_penalty_rate':
-        'Nikichelewa kulipa PAYE adhabu ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi ambacho hakijalipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi, Kifungu 89).',
+        'Nikichelewa kulipa PAYE adhabu ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi ambacho hakijalipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi).',
     'efd_tra_closure_authority':
         'Nikikosa kutoa risiti ya EFD adhabu ni nini? TRA inaweza kutoa onyo la maandishi, kutoza faini, kusimamisha kifaa au leseni ya EFD, na kufunga eneo la biashara kwa anayeshindwa mara kwa mara kutoa risiti za EFD (Sheria ya Usimamizi wa Kodi).',
     'provisional_tax_instalments':
-        'Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishoni mwa mwezi wa 3, 6, 9 na 12 wa mwaka wa mapato (Sheria ya Kodi ya Mapato, Kifungu 113(2)).',
+        'Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishoni mwa mwezi wa 3, 6, 9 na 12 wa mwaka wa mapato (Sheria ya Kodi ya Mapato).',
     'VAT_zero_rated_vs_exempt_input_VAT':
         'Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti.',
     'efd_not_every_business':
@@ -1089,6 +1089,22 @@ _COVERAGE_2026_11_13 = {
 }
 _COVERAGE_NEW_KEYS = ('paye_remittance_deadline', 'employment_particulars_required', 'employment_particulars_keeping', 'termination_notice_period', 'severance_pay', 'annual_leave_days', 'overtime_pay_rate', 'working_hours_limits', 'maternity_leave_days', 'maternity_leave_premature_birth', 'paternity_leave_days', 'unfair_termination_compensation', 'domestic_worker_minimum_wage', 'tin_apply_deadline', 'individual_income_tax_return', 'dividend_withholding_rate', 'professional_service_fee_wht', 'vat_registration_who_must', 'vat_refund_when', 'vat_refund_deadline', 'vat_credit_sale_timing', 'record_keeping_period', 'input_vat_passenger_vehicle', 'late_return_penalty')
 CONCISE_BILINGUAL_FACTS.update(_COVERAGE_2026_11_13)
+
+
+# ─── 2026-11-16 FOUR-UNANSWERED-QUESTIONS FOLLOW-UP ─────────────────────────────────────────────────────────────
+# Two NEW rows (voluntary VAT registration, construction withholding) appended after the group passages like the 2026-11-13 batch, and
+# one REWRITTEN row (wcf_accident_reporting, in place: the served text gave '7 WORKING days' with no trigger and its sibling row said
+# 'from date of accident'). No section numbers in the Swahili text (CLAUDE.md R44); they live in locked_facts.json metadata.
+_COVERAGE_2026_11_16 = {
+    'wcf_accident_reporting':
+        "Ajali kazini, taarifa WCF ni ndani ya siku ngapi? Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
+    'vat_voluntary_registration':
+        "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango? Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+    'wht_construction_services':
+        'Kodi ya zuio kwa kazi za ujenzi: kwa huduma za kitaalamu zinazohusisha ujenzi (mfano usanifu, uhandisi, usimamizi), Sheria ya Kodi ya Mapato inasema kiasi kinachokatwa kinahesabiwa kwa uwiano wa 3:2 kati ya vifaa na huduma; kiwango cha huduma za kitaalamu kwa mkazi ni 5%. Sheria haisemi wazi kama mkandarasi wa kawaida wa ujenzi yumo, wala jinsi uwiano unavyotumika kwa kiasi -- thibitisha na TRA (Sheria ya Kodi ya Mapato).',
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('vat_voluntary_registration', 'wht_construction_services')
+CONCISE_BILINGUAL_FACTS.update(_COVERAGE_2026_11_16)
 
 
 def build_fact_text(key: str, value: str) -> str:

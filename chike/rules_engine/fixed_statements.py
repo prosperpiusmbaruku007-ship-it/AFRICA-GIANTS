@@ -39,34 +39,34 @@ STATEMENTS = {
         "Notisi ya kuacha au kuachishwa kazi: mwezi wa kwanza ni siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku "
         "au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na "
         "mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi "
-        "badala yake (ELRA, Kifungu 41).",
+        "badala yake (ELRA).",
         "ELRA Cap.366, notice of termination (s.41 R.E.2019; TanzLII s.42) — all three limbs stated, none selected",
     ),
     SEVERANCE: (
         "severance_pay",
         "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata "
         "angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa "
-        "utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA, Kifungu 42).",
+        "utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
         "ELRA Cap.366, severance pay (s.42 R.E.2019; TanzLII s.43) — a rule, never an amount",
     ),
     OVERTIME: (
         "overtime_pay_rate",
         "Overtime (saa za ziada) inalipwa angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na "
-        "isizidi saa 50 kwa kila wiki 4 (ELRA, Kifungu 19).",
+        "isizidi saa 50 kwa kila wiki 4 (ELRA).",
         "ELRA Cap.366, hours of work (s.19 R.E.2019; TanzLII s.20)",
     ),
     ANNUAL_LEAVE: (
         "annual_leave_days",
         "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na "
         "mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa "
-        "ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA, Kifungu 31).",
+        "ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
         "ELRA Cap.366, annual leave (s.31 R.E.2019; TanzLII s.32)",
     ),
     VAT_TIME_OF_SUPPLY: (
         "vat_credit_sale_timing",
         "VAT inakuwa inadaiwa mapema zaidi kati ya: siku ya kutoa invoice, siku ya kupokea malipo (hata sehemu), au wakati "
         "wa usambazaji. Hivyo ukitoa invoice, VAT inadaiwa hata mteja asipolipa bado. Return ya VAT ni tarehe 20 ya mwezi "
-        "unaofuata (Sheria ya VAT, Vifungu 15 na 70).",
+        "unaofuata (Sheria ya VAT).",
         "VAT Act Cap.148 R.E.2023, s.15(a)-(c) and s.70(1) — time of supply is the earliest of the three events",
     ),
 }
