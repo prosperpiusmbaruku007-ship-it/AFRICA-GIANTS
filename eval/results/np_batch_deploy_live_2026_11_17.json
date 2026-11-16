@@ -1,0 +1,445 @@
+{
+ "identity": {
+  "served": {
+   "build": "c6570e4",
+   "rag_rows_loaded": 211,
+   "rag_embeddings_shape": [
+    211,
+    768
+   ],
+   "rag_facts_text_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+   "config_rag_fact_count": 211,
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+   "coldstart": {
+    "container_import_ts": 1794864078.482,
+    "enter_started_ts": 1794864078.498,
+    "enter_done_ts": 1794864133.748,
+    "import_to_enter_s": 0.0,
+    "load_s": 55.2,
+    "gpu": "Tesla T4"
+   }
+  },
+  "committed_rows": 211,
+  "committed_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+  "took_s": 101.2
+ },
+ "rows": [
+  {
+   "arm": "ROUTE",
+   "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?",
+   "reply": "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.7
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+   "reply": "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.5
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mfanyakazi wangu hajatumia likizo yake ya mwaka huu. Nimeambiwa ana haki ya siku 28 mfululizo za likizo yenye malipo, siyo?",
+   "reply": "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.6
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Nina mfanyakazi wa kulipwa kwa wiki ambaye amefanya kazi kwangu miaka miwili. Nikitaka kusitisha ajira yake, notice ya siku 7 bado inatosha, sivyo?",
+   "reply": "Notisi ya kuacha au kuachishwa kazi: mwezi wa kwanza ni siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi badala yake (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.5
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?",
+   "reply": "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.6
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mfanyakazi wangu anafanya overtime baada ya muda wa kawaida. Nimeambiwa siwezi kumlipa kiwango kilekile cha saa za kawaida, lazima iwe angalau mara moja na nusu, ni kweli?",
+   "reply": "Overtime (saa za ziada) inalipwa angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.6
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Nina wafanyakazi 6, naomba unisaidie kujua ni asilimia ngapi ya mishahara yao inapaswa kwenda kwenye WCF?",
+   "reply": "Kiwango cha WCF ni asilimia 0.5 ya JUMLA ya mishahara ghafi ya wafanyakazi wote — hakibadiliki kwa ukubwa wa mshahara. WCF inalipwa na mwajiri — haikatwi kwenye mshahara wa mfanyakazi. Hulipwa kwa Mamlaka ya WCF (wcf.go.tz), si TRA.",
+   "path": "engine:wcf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.6
+  },
+  {
+   "arm": "ROUTE",
+   "q": "Mwajiri analipa asilimia ngapi NSSF kila mwezi?",
+   "reply": "Kiwango cha NSSF ni asilimia 20 ya mshahara ghafi wa mfanyakazi — hakibadiliki kwa ukubwa wa mshahara. (asilimia 10 mwajiri + asilimia 10 mfanyakazi). Sehemu ya mwajiri (asilimia 10) hulipwa na mwajiri kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. Sehemu ya mfanyakazi (asilimia 10) ndiyo hukatwa kwenye mshahara wake.",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.5
+  },
+  {
+   "arm": "GUARD",
+   "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+   "reply": "Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka, kwa hiyo huhuishwa kila mwaka kabla ya tarehe hiyo (Sheria ya Leseni za Biashara). Thibitisha na mamlaka ya leseni (halmashauri yako).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 18.9
+  },
+  {
+   "arm": "GUARD",
+   "q": "Kumbukumbu za biashara natakiwa kuzihifadhi kwa muda gani?",
+   "reply": "Rekodi za biashara zihifadhiwe kwa miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. Muda ni mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 8.0
+  },
+  {
+   "arm": "GUARD",
+   "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.8
+  },
+  {
+   "arm": "GUARD",
+   "q": "Nina vitabu vya mauzo na manunuzi vya duka langu. Nikivihifadhi kwa miaka mitatu tu halafu nikavitupa, hakuna tatizo siyo?",
+   "reply": "Hapana, huwezi kutupa rekodi za biashara kabla ya muda uliotolewa na sheria. Ni lazima uhifadhi rekodi hizo angalau kwa miaka MITANO (5). Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.9
+  },
+  {
+   "arm": "GUARD",
+   "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+   "reply": "Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika (lga.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false,
+   "took_s": 6.3
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "Mfanyakazi akijifungua, likizo ya uzazi ni siku ngapi?",
+   "reply": "Kwa mujibu wa sheria, likizo ya uzazi ni siku 84. Thibitisha na https://kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 31.4
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+   "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na PKF Eastern Africa kwa kila mfanyakazi wake. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": false
+   },
+   "ok": false,
+   "took_s": 12.1
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "nimeajiri watu watano tu je nalipa ile ya mafunzo",
+   "reply": "Kulingana na taarifa uliyopewa, unatakiwa kulipa asilimia 0.5% ya mishahara yote kwa ajili ya mafunzo. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.7
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "GN 487A ilianza kutumika tarehe ngapi?",
+   "reply": "GN 487A ilianza kutumika tarehe 28 Julai 2025. Thibitisha na TanzLII (tanzlii.org).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 21.9
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina biashara Nairobi Kenya, nalipa kodi ya mapato kwa KRA kiasi gani?",
+   "reply": "Samahani, ninasaidia na masuala ya Tanzania Bara pekee. Kwa taarifa za kodi ya mapato Kenya, wasiliana na KRA (kra.go.ke). Je, unataka kufanya biashara Tanzania?",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 14.0
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kuna tofauti gani kati ya tarehe za NSSF na SDL za kulipa?",
+   "reply": "NSSF inalipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Thibitisha na nssf.go.tz. SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata. Tarehe hizi ni tofauti kabisa. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 17.0
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi — je, ni kweli?",
+   "reply": "Hapana, si kweli kabisa. Sehemu ya malipo ya fidia ya kuachishwa kazi inaweza kuwa exempt kutokana na sheria ya Tanzania, lakini si yote. Sehemu inayozidi kiwango cha chini cha kisheria kinachotajwa inatozwa kodi ya asilimia 15 (PAYE). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 11.6
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Overtime inalipwa kiasi gani?",
+   "reply": "Overtime (saa za ziada) inalipwa angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.2
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Likizo ya mwaka ni siku ngapi?",
+   "reply": "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.0
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?",
+   "reply": "NSSF ya mfanyakazi: mwajiri analipa 10% na mfanyakazi anachangia 10%, jumla 20%. Kwa mshahara wa TZS 800,000: mfanyakazi analipa TZS 80,000 (10%) na mwajiri analipa TZS 80,000 (10%). Jumlisha unapopata: NSSF ya mfanyakazi = TZS 80,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+   "path": "engine:nssf",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true,
+   "took_s": 22.2
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mapato yangu ya ajira ni TZS 800,000 kwa mwezi, PAYE ni ngapi?",
+   "reply": "Kwa mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000). Thibitisha hesabu: TZS 68,000 ni sehemu ya kwanza; asilimia 25 ya TZS 40,000 (800,000 − 760,000) = TZS 10,000; jumla = TZS 78,000.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true,
+   "took_s": 24.1
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mishahara ya wafanyakazi wangu ni TZS 4,000,000 kwa mwezi, WCF ni ngapi?",
+   "reply": "Kwa mishahara ya TZS 4,000,000, WCF ni asilimia 0.5 ya hiyo mishahara, sawa na TZS 20,000. Thibitisha na WCF (wcf.go.tz).\nWCF = 0.5% × TZS 4,000,000 = TZS 20,000",
+   "path": "engine:wcf",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true,
+   "took_s": 11.6
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina wafanyakazi 7 tu, bado sihusiki na SDL, sivyo?",
+   "reply": "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true,
+   "took_s": 7.0
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mfanyakazi wa mshahara wa kila mwezi aliyekaa zaidi ya mwezi mmoja, siwezi kumpa notisi ya siku 7 tu, sivyo?",
+   "reply": "Notisi ya kuacha au kuachishwa kazi: mwezi wa kwanza ni siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi badala yake (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 1.2
+  }
+ ]
+}
