@@ -1,0 +1,448 @@
+{
+ "probes": 57,
+ "bad": 0,
+ "controls_failed": 0,
+ "rows": [
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 12,300,000) si mshahara"
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, SDL ni ngapi?",
+   "computed": false,
+   "text": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 12,300,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe "
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, WCF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 12,300,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe "
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 12,300,"
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Biashara imepata pato la TZS 9,000,000 mwezi huu, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Biashara imepata pato la TZS 9,000,000 mwezi huu, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Biashara imepata pato la TZS 9,000,000 mwezi huu, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Biashara imepata pato la TZS 9,000,000 mwezi huu, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Kipato cha duka letu ni TZS 7,500,000 kwa mwezi, NSSF yake ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Kipato cha duka letu ni TZS 7,500,000 kwa mwezi, SDL yake ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Kipato cha duka letu ni TZS 7,500,000 kwa mwezi, WCF yake ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Kipato cha duka letu ni TZS 7,500,000 kwa mwezi, PAYE yake ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Nimekopa benki mkopo wa TZS 20,000,000, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Nimekopa benki mkopo wa TZS 20,000,000, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Nimekopa benki mkopo wa TZS 20,000,000, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Nimekopa benki mkopo wa TZS 20,000,000, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Faida yangu halisi ni TZS 3,000,000, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 3,000,000) si mshahara,"
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Faida yangu halisi ni TZS 3,000,000, SDL ni ngapi?",
+   "computed": false,
+   "text": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 3,000,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe j"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Faida yangu halisi ni TZS 3,000,000, WCF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 3,000,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe j"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Faida yangu halisi ni TZS 3,000,000, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 3,000,0"
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Gharama zangu za mafuta ni TZS 4,000,000 kwa mwezi, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Gharama zangu za mafuta ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Gharama zangu za mafuta ni TZS 4,000,000 kwa mwezi, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Gharama zangu za mafuta ni TZS 4,000,000 kwa mwezi, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Bajeti ya kampuni ni TZS 50,000,000 kwa mwaka, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Bajeti ya kampuni ni TZS 50,000,000 kwa mwaka, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Bajeti ya kampuni ni TZS 50,000,000 kwa mwaka, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Bajeti ya kampuni ni TZS 50,000,000 kwa mwaka, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Mteja amenilipa TZS 6,000,000 kwa oda, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Mteja amenilipa TZS 6,000,000 kwa oda, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Mteja amenilipa TZS 6,000,000 kwa oda, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Mteja amenilipa TZS 6,000,000 kwa oda, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Nina amana ya TZS 15,000,000, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Nina amana ya TZS 15,000,000, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Nina amana ya TZS 15,000,000, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Nina amana ya TZS 15,000,000, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Ada ya shule ni TZS 2,500,000, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Ada ya shule ni TZS 2,500,000, SDL ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu SDL, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Ada ya shule ni TZS 2,500,000, WCF ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu WCF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. K"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Ada ya shule ni TZS 2,500,000, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. "
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Mapato ya kampuni yetu ni TZS 40,000,000, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 40,000,000) si mshahara"
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Mapato ya kampuni yetu ni TZS 40,000,000, SDL ni ngapi?",
+   "computed": false,
+   "text": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 40,000,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe "
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Mapato ya kampuni yetu ni TZS 40,000,000, WCF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 40,000,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe "
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Mapato ya kampuni yetu ni TZS 40,000,000, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 40,000,"
+  },
+  {
+   "kind": "probe",
+   "engine": "NSSF",
+   "q": "Mapato ya duka ni TZS 5,000,000 kwa mwezi, NSSF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 5,000,000) si mshahara,"
+  },
+  {
+   "kind": "probe",
+   "engine": "SDL",
+   "q": "Mapato ya duka ni TZS 5,000,000 kwa mwezi, SDL ni ngapi?",
+   "computed": false,
+   "text": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 5,000,000) si mshahara, hivyo hakitumiki kukokotoa SDL. Nipe j"
+  },
+  {
+   "kind": "probe",
+   "engine": "WCF",
+   "q": "Mapato ya duka ni TZS 5,000,000 kwa mwezi, WCF ni ngapi?",
+   "computed": false,
+   "text": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanyakazi. Kiasi ulichotaja (TZS 5,000,000) si mshahara, hivyo hakitumiki kukokotoa WCF. Nipe j"
+  },
+  {
+   "kind": "probe",
+   "engine": "PAYE",
+   "q": "Mapato ya duka ni TZS 5,000,000 kwa mwezi, PAYE ni ngapi?",
+   "computed": false,
+   "text": "Hapana. PAYE inatozwa kwa kodi inayokatwa kutoka mshahara wa mfanyakazi kwa mabano (0% hadi TZS 270,000, kisha 8%, 20%, 25%, 30%). Kiasi ulichotaja (TZS 5,000,0"
+  },
+  {
+   "kind": "probe",
+   "engine": "vat_registration",
+   "q": "Nina mtaji wa TZS 250,000,000, je nijisajili VAT?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "vat_registration",
+   "q": "Faida yangu ni TZS 250,000,000 kwa mwaka, je ni lazima nijisajili VAT?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "vat_registration",
+   "q": "Nimekopa TZS 250,000,000, je ni lazima nijisajili VAT?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "presumptive",
+   "q": "Faida yangu ni TZS 20,000,000 kwa mwaka, nalipa kodi ya makadirio kiasi gani?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "presumptive",
+   "q": "Mtaji wangu ni TZS 20,000,000, nalipa kodi ya makadirio kiasi gani?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "rent_wht",
+   "q": "Mauzo yangu ni TZS 10,000,000, kodi ya zuio ya pango ni ngapi?",
+   "computed": false,
+   "text": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna "
+  },
+  {
+   "kind": "probe",
+   "engine": "rent_wht",
+   "q": "Nimekopa TZS 10,000,000, withholding tax ya pango ni kiasi gani?",
+   "computed": false,
+   "text": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna "
+  },
+  {
+   "kind": "probe",
+   "engine": "minimum_wage",
+   "q": "Mapato ya biashara yangu ni TZS 300,000 kwa mwezi, je ni chini ya mshahara wa chini wa mlinzi?",
+   "computed": false,
+   "text": ""
+  },
+  {
+   "kind": "probe",
+   "engine": "corporate_tax",
+   "q": "Mtaji wa kampuni ni TZS 100,000,000, kodi ya kampuni ni ngapi?",
+   "computed": false,
+   "text": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hi"
+  },
+  {
+   "kind": "control",
+   "engine": "nssf",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?",
+   "computed": true,
+   "text": "NSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)"
+  },
+  {
+   "kind": "control",
+   "engine": "paye",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, PAYE ni ngapi?",
+   "computed": true,
+   "text": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+  },
+  {
+   "kind": "control",
+   "engine": "paye",
+   "q": "Mapato yangu ya ajira ni TZS 800,000 kwa mwezi, PAYE ni ngapi?",
+   "computed": true,
+   "text": "PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000"
+  },
+  {
+   "kind": "control",
+   "engine": "wcf",
+   "q": "Mishahara ya wafanyakazi wangu ni TZS 4,000,000 kwa mwezi, WCF ni ngapi?",
+   "computed": true,
+   "text": "WCF = 0.5% × TZS 4,000,000 = TZS 20,000"
+  },
+  {
+   "kind": "control",
+   "engine": "sdl",
+   "q": "Nina wafanyakazi 12 na mishahara TZS 6,000,000 kwa mwezi, SDL ni ngapi?",
+   "computed": true,
+   "text": "SDL = 3.5% × TZS 6,000,000 = TZS 210,000"
+  },
+  {
+   "kind": "control",
+   "engine": "vat_registration",
+   "q": "Mauzo yangu ni milioni 250 kwa mwaka, je ni lazima nijisajili VAT?",
+   "computed": true,
+   "text": "Unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwa"
+  }
+ ]
+}

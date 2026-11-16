@@ -310,6 +310,11 @@ def compute_clarification(computation_type, reasons, question=""):
     if "foreign currency" in blob or "not tzs" in blob:
         return (f"Ili nihesabu {levy}, tafadhali badilisha kiasi kuwa shilingi za Tanzania "
                 "(TZS) — kiasi ulichotaja kiko katika sarafu ya kigeni. Kisha nitahesabu.")
+    if "unanchored_base" in blob:
+        # 2026-11-16: the question names a levy and one figure but nothing says the figure is a wage ("Mapato yangu ni TZS ..."). ASK; do not assert it is not a salary --
+        # an employee's own pay can be phrased that way, which is why this is not the base-rejection answer.
+        return (f"Ili nihesabu {levy}, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — "
+                "si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi.")
     if "gross-net" in blob or "allowance" in blob:
         return (f"Ili nihesabu {levy}, thibitisha kama kiasi ulichotaja ni mshahara ghafi "
                 "(kabla ya makato) au wa mkononi (baada ya makato).")
@@ -488,6 +493,21 @@ def wrong_threshold_withheld(subject: str) -> str:
         f"kingine. Thibitisha na TRA (tra.go.tz) — au niulize utaratibu bila kiasi, "
         f"nikueleze hatua."
     )
+
+
+NSSF_SPLIT_INVALID = ("Jumla ya NSSF ni asilimia 20 ya mshahara ghafi daima, na mgao wa mwajiri na mfanyakazi lazima ujumlishe asilimia 20 "
+                      "(kwa mfano 10 + 10, 15 + 5, au 20 + 0). Mgao uliotaja haujumlishi asilimia 20 — niambie mgao unaokusudia, kisha nitahesabu.")
+
+
+def vat_registration_verdict_withheld() -> str:
+    """D-FIDELITY-12 replacement copy (2026-11-16): the fact path told a turnover ABOVE the VAT threshold that it need not register.
+
+    States the RULE from the served rows (the two limbs, and that reaching either one is what obliges registration) and passes NO verdict on the user's figure: the system has just been caught
+    asserting a wrong verdict about this very comparison, so a replacement verdict from the same generation would be a second guess. The user can read their own figure against the rule in one line.
+    No apology (the user never sees the original reply on the fact path) and no days figure (not stated here as a positive fact)."""
+    return ("Kizingiti cha kusajili VAT ni mauzo ya TZS 200,000,000 ndani ya miezi 12 AU TZS 100,000,000 ndani ya miezi 6. "
+            "Ukifikia au ukizidi mojawapo ya viwango hivi, ni lazima ujisajili VAT. Linganisha mauzo yako ya kipindi husika na kiwango hiki, "
+            "kisha thibitisha na TRA (tra.go.tz).")
 
 
 # ─── D-FIDELITY-8 REPLACEMENT COPY: THE BRELA SHARE-CAPITAL FEE LADDER ───────────

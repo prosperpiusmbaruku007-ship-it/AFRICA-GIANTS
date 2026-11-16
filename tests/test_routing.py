@@ -45,14 +45,14 @@ def test_incidental_digit_with_no_levy_word_is_fact_not_ambiguous_multi():
     ) == "none"
 
 
-def test_custom_split_with_no_levy_word_is_fact_not_ambiguous_multi():
-    # eval_398 shape: self-contained arithmetic with an explicit non-levy custom split
-    # ('mgao wa 15% mwajiri na 5%') and no levy/obligation word -> fact/RAG, not ambiguous_multi.
-    # (The fixed-rate rules engine cannot produce a custom split anyway.)
+def test_custom_split_with_no_levy_word_routes_to_the_nssf_engine_which_honours_it():
+    """INVERTED 2026-11-16 (R31). This test asserted `none` ("fact/RAG, not ambiguous_multi"; "the fixed-rate rules engine cannot produce a custom split anyway"). The second clause was false:
+    `compute_nssf(employer_rate=, employee_rate=)` always accepted a 15/5 split and nothing extracted one, so the live behaviour for the same shape WITH an NSSF word was the engine stating the
+    default 10/10 over the user's split. The split is now extracted (routing.nssf_agreed_split) and the engine computes 15% / 5%. The old expectation is kept here as history, not deleted."""
     assert routing.detect_intent(
         "Mshahara ni TZS 700,000 na tumekubaliana mgao wa 15% mwajiri na 5% mfanyakazi — "
         "kila upande ni ngapi?"
-    ) == "none"
+    ) == "nssf"
 
 
 # --- boundary discriminators (same topic, opposite route) -------------------
@@ -223,9 +223,10 @@ def test_explicit_guard_additional_rate_and_threshold_confirmations_route_to_fac
         "analipa asilimia ngapi ya mchango wake wote (sehemu zote mbili)?",                        # eval_095
         "Kiwango cha mchango wa NSSF ni asilimia 3.5, au ni 0.5?",                                 # eval_337
         "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",                                              # eval_341
-        "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",           # eval_348
     ]:
         assert routing.detect_intent(q) == "none"
+    # eval_348 was in the list above (routed `none`, answered by the model with "Ndiyo ... hakuna mgawanyo mwingine", wrong). 2026-11-16: it has its own model-free statement (nssf_split).
+    assert routing.detect_intent("NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?") == "fixed_statement"
 
 
 # A3 — regression locks: genuine compute (a payroll money magnitude, a money-ask, or an

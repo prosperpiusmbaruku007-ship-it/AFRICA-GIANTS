@@ -805,7 +805,30 @@ _WRONG_BASE = [
     r"gharama za umeme", r"gharama za maji",   # eval_261 utility cost
     r"\bdeni\b",                               # eval_253 bank loan
     r"mzunguko wa fedha", r"cash ?flow",       # eval_255 business cash flow
+    # 2026-11-16 (eval_257): BUSINESS INCOME is not a payroll base. `mapato` is NOT listed bare -- "kodi ya mapato" / "mapato ya ajira" are PAYE vocabulary -- only with a business noun.
+    r"mapato\s+ya\s+(?:biashara|duka|kampuni|kiwanda|shamba|ghala|hoteli|mgahawa|mauzo)\b",
 ]
+# ── 2026-11-16: A PAYROLL FIGURE NEEDS POSITIVE EVIDENCE THAT IT IS A WAGE (eval_257, found by reading the reply). The deny-list above cannot be finished -- it lists the non-wage nouns somebody has
+# already thought of (mauzo, faida, mtaji, deni ...), and the probe of 2026-11-16 found NSSF/WCF/PAYE computing from a loan, a deposit, school fees, fuel costs, a customer's payment and "pato",
+# none of them listed. Closing one axis closes that axis (R33). So the extractor also requires WAGE EVIDENCE: a payroll-context word or a wage verb/headcount phrase anywhere in the question.
+# Absent, the figure is not rejected as "not a salary" (that would be asserted about an employee who wrote "mapato yangu"); it is asked about.
+_WAGE_VERBS = re.compile(
+    r"\b(?:w?a?na(?:o)?pata|w?a?na(?:o)?pokea|napokea|\w+lipwa|\w*walipa|namlipa|ninamlipa|kila\s+mmoja|watu\s+\d+|wa\s+kudumu|wa\s+muda)\b")
+
+
+def has_wage_evidence(text):
+    from . import routing                                      # lazy: routing imports this module
+    tl = text.lower()
+    return any(c in tl for c in routing._PAYROLL_CTX) or bool(_WAGE_VERBS.search(tl))
+
+
+def detect_unanchored_payroll_base(text, computation_type):
+    """True when a payroll levy was asked about, a figure is present, and NOTHING in the question ties the figure to wages."""
+    if computation_type not in ("sdl", "nssf", "wcf", "paye"):
+        return False
+    return not has_wage_evidence(text)
+
+
 _ALLOWANCE = [
     r"\bposho\b", r"\bbonasi\b", r"\ballowance\b", r"\bgross\b", r"\bnet\b",
     r"take home", r"baada ya kukatwa", r"bila posho", r"\bbima\b", r"\bovertime\b",

@@ -412,13 +412,18 @@ def test_multi_levy_part_computes_each_levy_plus_fact_survives():
     fact_subs = [s for s in reply.sub_answers
                  if s.computation is None and not s.needs_clarification]
     assert [s.computation.computation for s in compute_subs] == ["sdl", "nssf"]
-    assert len(fact_subs) == 1, "the VAT fact part must survive alongside the two computes"
+    # CHANGED 2026-11-16 (3c): the VAT limb ("je nasajili VAT kama mapato ni TZS 205,000,000?") used to be a MODEL fact part (len(fact_subs) == 1; it answered "Hapana ... huhitajiwi kusajili VAT" at gate
+    # c2143c0, 205M told it need not register). "nasajili" and "kama mapato ni" were router gaps; it now reaches the VAT engine, which asks which PERIOD the figure covers (never guessing one) -- so the part
+    # SURVIVES as a deterministic clarification and no model word is written for it. The invariant this test protects (the VAT part is not dropped) holds and is asserted below.
+    assert len(fact_subs) == 0
+    clar = [s for s in reply.sub_answers if s.needs_clarification]
+    assert len(clar) == 1 and "kipindi" in clar[0].text and "200,000,000" in clar[0].text
     assert compute_subs[0].computation.amount == Decimal("192500")     # SDL 3.5% x 5,500,000
     assert compute_subs[1].computation.amount == Decimal("1100000")    # NSSF 20% x 5,500,000
     assert "TZS 192,500" in reply.text
     assert "TZS 1,100,000" in reply.text                               # NSSF no longer dropped
     assert "VAT" in reply.text
-    assert fake.call_count == 5            # (extract+format) x 2 computes + 1 pooled fact gen
+    assert fake.call_count == 4            # (extract+format) x 2 computes; the VAT limb no longer costs a model call (was 5 with a pooled fact generation)
 
 
 # --- Real-weights confirmation (Phase D Stage 1) ---------------------------

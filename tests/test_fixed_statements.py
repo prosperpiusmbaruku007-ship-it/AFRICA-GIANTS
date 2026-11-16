@@ -50,6 +50,13 @@ LIVE = {
         'Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).'),
     'wcf_accident_reporting': ('Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?',
         'Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).'),
+    # 2026-11-16 (3a): the live wrong replies of gate c2143c0 (eval_239, eval_348) and the PAYE question that has NO guard (see PAYE_NO_GUARD).
+    'wcf_disease_reporting': ('Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?',
+        'Magonjwa ya kazini yanatakiwa kuripotiwa WCF ndani ya siku 14 za kazi tangu kugunduliwa. Thibitisha na WCF (wcf.go.tz).'),
+    'nssf_split': ('NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?',
+        'Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).'),
+    'paye_band_table': ('Mfumo wa mabano ya PAYE ya kila mwezi unafuata mpangilio gani wa viwango?',
+        'Kuna ngazi 8 za mabano ya PAYE: asilimia 0 (hadi TZS 270,000), 8, 20, 25, 30, 35, 40, 45. Thibitisha na TRA (tra.go.tz).'),
     'vat_withholding_mixed_supply': ('VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?',
         'Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).'),
 }
@@ -60,7 +67,7 @@ def _nums(text):
     return sorted(set(re.findall(r"\d+(?:[.,]\d+)?", text)))
 
 
-@pytest.mark.parametrize("topic", fs.TOPICS)
+@pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in fs.TOPICS_NO_CONCISE_ROW])
 def test_statement_figures_equal_the_served_row_and_the_locked_fact(topic):
     import precompute_rag_embeddings as pre
     key, text, _ = fs.STATEMENTS[topic]
@@ -233,7 +240,12 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 
 
 # ── GUARDS (D-FIDELITY-10): the five live replies are the founding specimens ────────────────────
-@pytest.mark.parametrize("topic", fs.TOPICS)
+# 3b: NO ordinal-band guard is built. "Sehemu ya pili (20%)" is defensible if the 0% band is not counted and wrong if it is (the served row numbers it band 3); a guard would blank a defensible narration.
+# The PAYE band-table STATEMENT is the control for the question that asks for the table; D-FIDELITY-11 keeps guarding band EDGES. The invented-band specimen below IS caught, by the figure rule.
+PAYE_NO_GUARD = frozenset({"paye_band_table"})
+
+
+@pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])
 def test_the_live_wrong_reply_is_flagged(topic):
     q, body = LIVE[topic]
     got = fidelity.fixed_figure_violations(q, body)

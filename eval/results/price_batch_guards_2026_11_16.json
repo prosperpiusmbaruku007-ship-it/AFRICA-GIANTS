@@ -1,0 +1,124 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2177,
+   "D12": {
+    "flags": 0,
+    "rows": []
+   },
+   "D7_delta": {
+    "flags": 17,
+    "rows": [
+     {
+      "src": "dfidelity7_wiring_live_2026_10_06.json",
+      "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka. Je, EFD ni lazima kwangu?",
+      "reply": "Ndiyo, kwa mauzo hayo, unatakiwa kutumia EFD. Hakuna msamaha kwa sababu tu mauzo yako ni chini ya TZS 11M. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "discard_rate.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "gap_ab_canary_live.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "gate_production_0e11c3d.json",
+      "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+      "reply": "Ndiyo, kwa mauzo hayo, unatakiwa kutumia EFD. Hakuna msamaha wa mauzo chini ya TZS 11M. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "gate_production_c2143c0.json",
+      "q": "Tuna wafanyakazi 15 wenye mshahara wa TZS 600,000 kila mmoja, je tunahitaji kusajili VAT?",
+      "reply": "Hapana, kwa sasa. Jumla ya mishahara yao ni TZS 9,000,000 kwa mwezi, ambayo ni chini ya kizingiti cha TZS 10,000,000. Kwa hivyo hakuna ulazima wa kusajili VAT. Lakini kumbuka: kama jumla ya mishahara itafika TZS 10,000,000, utakuwa lazimishwa kusajili VAT mara moja. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "gate_production_c2143c0.json",
+      "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+      "reply": "Hapana, kwa sababu umefika chini ya kizingiti cha TZS 11M. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "grounding_48.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "natural48_rerun_2026_08_11_adjudication.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "natural48_rerun_2026_08_15_adjudication.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "natural48_rerun_2026_08_17_adjudication.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "presumptive_cue_canary_live.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "rate_guard_canary_live.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "vat_orchestrator_offline.json",
+      "q": "Mauzo yangu ya mwaka ni TZS milioni 15 na sijasajili VAT — je nahitaji mashine ya risiti?",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "vat_orchestrator_offline.json",
+      "q": "mauzo yangu ya mwaka ni milioni 15 na sijasajili vat je nahitaji mashine ya risiti",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "vat_orchestrator_offline.json",
+      "q": "Mauzo yangu ni TZS 11,000,000 kamili kwa mwaka, je nalazimika kutumia EFD?",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 11,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "vat_orchestrator_offline.json",
+      "q": "Mauzo yangu ni TZS 15,000,000 kwa mwaka na sina usajili wa VAT — je nahitaji EFD?",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 15,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     },
+     {
+      "src": "vat_orchestrator_offline.json",
+      "q": "Mauzo yangu ni TZS 50,000,000 kwa mwaka — je nasajili VAT na je nahitaji EFD?",
+      "reply": "Ndiyo, unatakiwa kuwa na mashine ya EFD. Mauzo yako ya mwaka ya TZS 50,000,000 yamefikia au kuzidi kizingiti cha TZS 11,000,000. Thibitisha na TRA (tra.go.tz)."
+     }
+    ]
+   }
+  },
+  "GOLD": {
+   "pairs": 562,
+   "D12": {
+    "flags": 0,
+    "rows": []
+   },
+   "D7_delta": {
+    "flags": 0,
+    "rows": []
+   }
+  },
+  "TRAINING": {
+   "pairs": 8780,
+   "D12": {
+    "flags": 0,
+    "rows": []
+   },
+   "D7_delta": {
+    "flags": 0,
+    "rows": []
+   }
+  }
+ }
+}

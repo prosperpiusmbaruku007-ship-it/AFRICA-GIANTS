@@ -165,10 +165,10 @@ def test_the_guard_is_reachable_from_the_production_call_site():
     import inspect
     src = inspect.getsource(orchestrator.Orchestrator._validate_and_clean)
     code = "\n".join(line.split("#", 1)[0] for line in src.splitlines())
-    assert "fidelity.body_states_wrong_threshold(cleaned)" in code, (
+    assert "fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text)" in code, (
         "D-FIDELITY-7 is not called from the orchestrator. It was NOT_WIRED from 2026-08-23 to "
         "2026-10-06 on a hold that was meant to last one R16 cycle.")
-    assert code.count("fidelity.body_states_wrong_threshold(cleaned)") >= 2, (
+    assert code.count("fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text)") >= 2, (
         "only one path calls the guard. Both are needed and they do different things: the "
         "compute path blanks, the fact path replaces (blanking a fact answer ships silence).")
     assert "clarification.wrong_threshold_withheld" in code, (

@@ -544,6 +544,12 @@ class Orchestrator:
                 # resolution the single-figure path already applies must reach here too.
                 if sq.computation_type == "nssf":
                     inputs["party"] = routing.nssf_party(sq.text)
+                    split = routing.nssf_agreed_split(sq.text)          # 2026-11-16 (R31): see the standard path below
+                    if split == "invalid":
+                        return SubAnswer(sub_question=sq, text=clarification.NSSF_SPLIT_INVALID, needs_clarification=True)
+                    if split:
+                        inputs["employer_rate"], inputs["employee_rate"] = split
+                        inputs["party"] = "total"
                 result = rules_engine.compute(sq.computation_type, **inputs)
                 prompt = self._build_compute_prompt(sq.text, result)
                 reply = self._generate(prompt)
@@ -575,6 +581,14 @@ class Orchestrator:
         # branch above; other levies are untouched.
         if sq.computation_type == "nssf":
             inputs["party"] = routing.nssf_party(sq.text)
+            # 2026-11-16 (R31): an AGREED split ("mwajiri 15% na mfanyakazi 5%") was never extracted; the engine answered it with the default 10/10. Valid split -> the engine computes with it and shows both shares;
+            # an unsatisfiable one (not summing to 20%) -> decline, never guess which number the user meant.
+            split = routing.nssf_agreed_split(sq.text)
+            if split == "invalid":
+                return SubAnswer(sub_question=sq, text=clarification.NSSF_SPLIT_INVALID, needs_clarification=True)
+            if split:
+                inputs["employer_rate"], inputs["employee_rate"] = split
+                inputs["party"] = "total"
         # D-PAYE-1: a non-resident employee pays flat 15%, not the resident progressive bands.
         # Resolve residency from the question (guarded against the mixed two-person case, which
         # defers to decompose/merge). Levy-gated like the NSSF branch; other levies untouched.
@@ -1050,7 +1064,7 @@ class Orchestrator:
                 # D-FIDELITY-7 (built 2026-08-23, WIRED 2026-10-06). A stated turnover threshold
                 # that is not the statutory one. Safe to blank here for the same reason as every
                 # rule above: the engine's working still renders.
-                or fidelity.body_states_wrong_threshold(cleaned)
+                or fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text)
                 # D-FIDELITY-9 (scoped, priced and wired 2026-10-10). A money figure the body
                 # asserts that NEITHER the question NOR the engine's working contains, and only
                 # when the question supplies no figure at all — th_22's live "Kwa mfanyakazi
@@ -1075,7 +1089,7 @@ class Orchestrator:
                 or fidelity.body_misnames_paye_band(cleaned)):
             cleaned = ""
             guard = "blanked"
-        elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned):
+        elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text):
             # ⛔ THE FACT PATH CANNOT BE BLANKED, AND THAT IS WHY THIS IS A SECOND BRANCH RATHER
             # THAN ONE MORE `or` ABOVE. _render returns the body alone when there is no
             # computation, so blanking a fact answer returns an EMPTY REPLY. GUARD A's note
@@ -1091,9 +1105,16 @@ class Orchestrator:
             # confident fabrication to a non-answer, which still scores as a miss. Said plainly
             # in clarification.wrong_threshold_withheld's docstring so a later reader does not
             # mistake a shrinking wrong-answer count for a rising correct-answer count.
-            subject = fidelity.stated_wrong_thresholds(cleaned)[0][0]
+            subject = fidelity.stated_wrong_thresholds(cleaned, sub.sub_question.text)[0][0]
             return dataclasses.replace(
                 sub, text=clarification.wrong_threshold_withheld(subject),
+                raw_text=sub.text, needs_clarification=True, guard="replaced")
+        elif sub.computation is None and fidelity.body_denies_vat_registration_above_threshold(
+                sub.sub_question.text, cleaned):
+            # D-FIDELITY-12 (2026-11-16): eval_318's VAT limb -- a turnover of TZS 205,000,000 told it "huhitajiwi kusajili VAT". FACT PATH ONLY, and REPLACED not blanked (_render returns the body alone here).
+            # The compute path is not wired on purpose: the VAT engine writes its own verdict there and no measured instance of a model body contradicting it exists.
+            return dataclasses.replace(
+                sub, text=clarification.vat_registration_verdict_withheld(),
                 raw_text=sub.text, needs_clarification=True, guard="replaced")
         elif sub.computation is None and fidelity.body_states_wrong_fee_band(
                 sub.sub_question.text, cleaned):

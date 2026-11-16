@@ -1,0 +1,56 @@
+{
+ "tag": "payroll_evidence",
+ "before_rev": "HEAD",
+ "n_questions": 1072,
+ "n_moved": 3,
+ "moved": [
+  {
+   "q": "Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, NSSF ya jumla ni ngapi?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "changed": [
+    "text",
+    "prompts"
+   ],
+   "before": {
+    "intent": "nssf",
+    "text": "NSSF = 20% × TZS 12,300,000 = TZS 2,460,000 (mwajiri TZS 1,230,000 + mfanyakazi TZS 1,230,000)"
+   },
+   "after": {
+    "intent": "nssf",
+    "text": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 12,300,000) si mshahara, hivyo hakitumiki kukokotoa NSSF. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz)."
+   }
+  },
+  {
+   "q": "nililipa PAYE ya laki mbili mwezi uliopita je nilikosea",
+   "src": "eval/accuracy_gate/wage_pay_concord_018.jsonl",
+   "changed": [
+    "text",
+    "prompts"
+   ],
+   "before": {
+    "intent": "paye",
+    "text": "PAYE = TZS 0 (mshahara TZS 200,000 uko ndani ya bendi ya 0%)"
+   },
+   "after": {
+    "intent": "paye",
+    "text": "Ili nihesabu PAYE, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi."
+   }
+  },
+  {
+   "q": "tulilipa NSSF ya laki tatu mwezi uliopita je ni sahihi",
+   "src": "eval/accuracy_gate/wage_pay_concord_018.jsonl",
+   "changed": [
+    "text",
+    "prompts"
+   ],
+   "before": {
+    "intent": "nssf",
+    "text": "NSSF = 20% × TZS 300,000 = TZS 60,000 (mwajiri TZS 30,000 + mfanyakazi TZS 30,000)"
+   },
+   "after": {
+    "intent": "nssf",
+    "text": "Ili nihesabu NSSF, nahitaji kuthibitisha kwamba kiasi ulichotaja ni MSHAHARA (wa mfanyakazi, kwa mwezi) — si mapato ya biashara, faida, mkopo au kiasi kingine. Kama ni mshahara niambie, au nipe mshahara halisi."
+   }
+  }
+ ]
+}

@@ -828,8 +828,11 @@ _THRESHOLD_MONEY_FLOOR = 1_000_000
 # the only direction a guard that removes text may err in, and the claim is near-true in effect
 # (VAT registration does compel EFD) rather than fabricated.
 _THRESHOLD_NEGATION = re.compile(
-    r"(?:\bsi\b|\bsio\b|\bsiyo\b|\bhakuna\b|\bhaina\b|\bhakina\b|\bhamna\b|\bhapana\b|"
-    r"\bnot\b|\bno\b|\bnever\b)[\s:,—–-]*(?:tzs\s*)?$", re.IGNORECASE)
+    r"(?:\bsi\b|\bsio\b|\bsiyo\b|\bhakuna\b|\bhaina\b|\bhakina\b|\bhamna\b|"
+    r"\bnot\b|\bno\b|\bnever\b)[\s:,—–-]*(?:tzs\s*)?$|"
+    # 2026-11-16: `hapana` followed by a COMMA is the answer opener ("Hapana, kizingiti ni TZS 11,000,000") and does not negate the noun after it; only the comma-free "hapana kizingiti" does.
+    # The comma form had exempted exactly the shape D-FIDELITY-7 exists for (found by a probe written for the subject fallback, sf_02).
+    r"\bhapana\b[\s:—–-]*(?:tzs\s*)?$", re.IGNORECASE)
 # How far back a negation may sit and still govern. 24 chars covers "SI TZS 200,000,000" and
 # "haina kizingiti" without reaching across a clause boundary.
 _THRESHOLD_NEGATION_CHARS = 24
@@ -853,7 +856,7 @@ def _frame_reaches(sentence: str, amount_pos: int, amount_positions) -> bool:
     return not any(frame.end() <= p < amount_pos for p in amount_positions)
 
 
-def stated_wrong_thresholds(body: str):
+def stated_wrong_thresholds(body: str, question: str = ""):
     """[(subject, stated_amount)] for every sentence making a non-statutory threshold claim.
 
     THE LAWFUL-AMOUNT ESCAPE IS BODY-LEVEL, NOT SENTENCE-LEVEL, and the sweep is why. A recorded
@@ -873,10 +876,14 @@ def stated_wrong_thresholds(body: str):
         return []
     from .swahili_numbers import parse_amounts, parse_amounts_located
     body_amounts = {int(a) for a in parse_amounts(body)}
+    # 2026-11-16 (eval_355): the subject can live in the QUESTION only. "Mauzo yangu ni TZS 10,999,000, je EFD ni lazima?" was answered "Hapana, kwa sababu umefika chini ya kizingiti cha TZS 11M"
+    # and the body never says EFD, so no sentence had a subject and the guard could not fire (the notation was never the problem: 11M, 11,000,000 and milioni 11 all flag once EFD is in the body).
+    # A sentence that names NO subject of its own inherits the question's. Every other narrowing (lawful-amount escape, negation, frame reach, co-named lawful sets) applies unchanged.
+    q_subjects = ({_THRESHOLD_SUBJECT[m.group(0).lower()] for m in _THRESHOLD_SUBJECT_RE.finditer(question)} if question else set())
     out = []
     for sentence in _SENTENCE_SPLIT.split(body):
         subjects = {_THRESHOLD_SUBJECT[m.group(0).lower()]
-                    for m in _THRESHOLD_SUBJECT_RE.finditer(sentence)}
+                    for m in _THRESHOLD_SUBJECT_RE.finditer(sentence)} or set(q_subjects)
         if not subjects or not _THRESHOLD_FRAME.search(sentence):
             continue
         located = [(p, int(a)) for p, a in parse_amounts_located(sentence)]
@@ -915,9 +922,9 @@ def stated_wrong_thresholds(body: str):
     return out
 
 
-def body_states_wrong_threshold(body: str) -> bool:
-    """True iff the body claims a statutory threshold that is not the statutory threshold."""
-    return bool(stated_wrong_thresholds(body))
+def body_states_wrong_threshold(body: str, question: str = "") -> bool:
+    """True iff the body claims a statutory threshold that is not the statutory threshold. `question` (optional) supplies the subject a body never names."""
+    return bool(stated_wrong_thresholds(body, question))
 
 
 # ─── D-FIDELITY-8 — A FEE STATED FOR THE WRONG BAND OF A PUBLISHED FEE TABLE ─────
@@ -1328,7 +1335,7 @@ def _fd10_vat(scope):
 #   VAT withholding, mixed      the VALUE subject to withholding is apportioned 3:2 goods:services (FA2026 s.91(b) -> VAT Act s.5(7)); live "kiwango kinagawanywa 3:2" apportions the RATE. A sentence
 #                               with 3:2 and a rate subject and no mention of the value is flagged, as is a rate applied to "thamani yote".
 # These topics are ABOUT a levy by name (WCF, "zuio"), so the "another levy is named" early return does not apply to them (each has its own veto in routing._FS_TOPICS).
-_FD10_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply"})
+_FD10_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table"})
 _FD10_VOL_HEDGE = re.compile(
     r"hayataji|haitaji|hazitaji|haijatajwa|hakuna\s+njia|si\s+wazi|siyo\s+wazi|haiko\s+wazi|bila\s+(?:kuzitaja|kutaja)|anayetarajia|intending|Kamishna\s+ndiye|njia\s+zilizotajwa",
     re.IGNORECASE)
@@ -1373,6 +1380,32 @@ def _fd10_vat_mixed(body):
 
 
 
+def _fd10_wcf_disease(body):
+    """2026-11-16 (eval_239): occupational-disease reporting is a TWO-stage chain (employee -> employer 14 working days; employer -> WCF 7 working days from RECEIPT). A body that names a day count for disease
+    reporting and does not carry BOTH stages collapses it ("siku 14 za kazi tangu kugunduliwa" as the whole deadline). A body naming no day count is not judged."""
+    if not (re.search(r"ugonjwa|magonjwa|disease", body, re.IGNORECASE) and re.search(r"wcf", body, re.IGNORECASE)):
+        return []
+    if not re.search(r"siku\s+(?:7|14|21)|(?:7|14|21)\s+(?:working\s+)?days|siku\s+saba", body, re.IGNORECASE):
+        return []
+    if re.search(r"\b14\b", body) and re.search(r"\b7\b|saba", body):
+        return []
+    return ["occupational-disease reporting is a two-stage chain (employee to employer 14 working days, then employer to WCF 7 working days from receipt), not one deadline"]
+
+
+_FD10_SPLIT_DENIAL = re.compile(r"hakuna\s+mgawanyo\s+mwingine|mgawanyo\s+mmoja\s+tu|mgawanyo\s+huo\s+pekee|10\s*%?\s*kwa\s*10\s*(?:tu|pekee)|hakuna\s+migawanyo\s+mingine", re.IGNORECASE)
+
+
+def _fd10_nssf_split(body):
+    """2026-11-16 (eval_348): the Act lets the employer opt to contribute more than its 10% share (15+5, 20+0 are examples) and enumerates no list of permitted splits. A body that says no other split exists is wrong."""
+    if re.search(r"\b15\b|20\s*%?\s*\+\s*0|anaweza\s+kuchagua|kikubwa\s+zaidi", body, re.IGNORECASE):
+        return []
+    for m in _FD10_SPLIT_DENIAL.finditer(body):
+        sent = next((x for x in _SENTENCE_SPLIT.split(body) if m.group(0) in x), body)
+        if not _fd10_negated(sent, sent.lower().find(m.group(0).lower())):
+            return ["the body says the 10/10 NSSF split is the only one; the employer may opt to contribute a greater share (15+5, 20+0) and the Act lists no exhaustive set"]
+    return []
+
+
 def fixed_figure_violations(question: str, body: str):
     """[(topic, reason)] for every fixed statutory figure the body contradicts. Empty when the question is not about a fixed-statement topic."""
     if not body or not question:
@@ -1393,6 +1426,14 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "vat_withholding_mixed_supply":
             out += [(topic, r) for r in _fd10_vat_mixed(body)]
             continue
+        if topic == "wcf_disease_reporting":
+            out += [(topic, r) for r in _fd10_wcf_disease(body)]
+            continue
+        if topic == "nssf_split":
+            out += [(topic, r) for r in _fd10_nssf_split(body)]
+            continue
+        if topic == "paye_band_table":
+            continue                # no ordinal guard by decision (tests/test_fixed_statements.py PAYE_NO_GUARD); D-FIDELITY-11 guards band edges on the compute path
         scope = _fd10_scope(topic, topics, body)
         if not scope and topic != "annual_leave":
             continue                # annual leave's OMISSION rule must still run on a body that never mentions leave at all
@@ -1443,3 +1484,55 @@ def paye_band_misnamings(body):
 
 def body_misnames_paye_band(body: str) -> bool:
     return bool(paye_band_misnamings(body))
+
+
+# ---- D-FIDELITY-12 (2026-11-16, founder): A TURNOVER ABOVE THE VAT THRESHOLD IS TOLD IT NEED NOT REGISTER. The founding specimen is eval_318's VAT limb: "Mapato ya TZS 205,000,000 hayazidi kizingiti
+# hicho, hivyo huhitajiwi kusajili VAT" -- 205M > 200M. ``stated_wrong_thresholds``' own docstring says this exact reply is OUT of its scope ("wrong about a COMPARISON ... Guard B territory"), and that
+# was right about THAT guard. What makes this one buildable (R19's test, applied honestly): the claim compared is the user's ONE figure against a CONSTANT, and the verdict has a single lawful
+# value. "TZS 205,000,000 does not reach TZS 200,000,000" is not true under ANY transformation of the user's own number -- there is no halving, annualising or netting that makes 205M smaller than
+# 200M -- unless the figure is a different PERIOD (a 24-month total) or a BOUND ("bado hayajafika 205M"), both of which are excluded from the trigger rather than argued about afterwards.
+# NARROW BY CONSTRUCTION (R17): exactly ONE money figure in the question, STRICTLY above 200,000,000 (either limb is then met for any period up to 12 months), no foreign currency, no bound/period
+# vocabulary, and the question must be about VAT registration. The body must DENY an obligation (a registration-specific denial or "hayazidi kizingiti") in a sentence that is NOT conditional, and must
+# not also AFFIRM one -- a body that states both errs toward silence, the only direction a guard that replaces text may err in (D-FIDELITY-7's N3, same trade, same stated cost).
+# Replaced, not blanked, on the FACT path: _render returns the body alone there, so blanking ships silence.
+_VAT_REG_ASK = re.compile(r"sajili|jisajili|usajili|usajilishaji|register|jiandikish|andikish|ni\s+lazima|lazima\s+(?:ni|tu)", re.IGNORECASE)
+_VAT_NOT_A_TURNOVER = re.compile(
+    r"hayajafika|haijafika|hajafika|hatujafika|sijafikia|hatujafikia|\bbado\b|chini\s+ya|isiyozidi|yasiyozidi|kabla\s+ya|ukiwa|\bmiaka\b|miezi\s+(?:1[3-9]|[2-9]\d)\b|\byears?\b|\bsivyo\b|"
+    # a trader whose supplies are all EXEMPT genuinely need not register, so exemption vocabulary vetoes the trigger rather than letting the guard contradict a correct answer.
+    r"sameh|msamaha|exempt", re.IGNORECASE)
+_VAT_FOREIGN = re.compile(r"shilingi\s+za\s+kenya|kenyan?\s+shilling|\bkes\b|\bugx\b|\busd\b|dola|dollar|\beur\b|euro|\bgbp\b|paundi|\brand\b", re.IGNORECASE)
+_VAT_DENIAL = re.compile(
+    r"huhitajiwi\s+(?:kusajili|kujisajili|kujiandikisha|usajili)|hutahitaji\s+(?:kusajili|kujisajili)|hauhitajiki|haulazimiki|"
+    r"huna\s+(?:haja|lazima|wajibu)\s+(?:ya\s+)?(?:kusajili|kujisajili|usajili|kujiandikisha)|"
+    r"(?:si|sio)\s+lazima\s+(?:kusajili|kujisajili|usajili|ujisajili|usajiliwe|ujiandikishe)|hakuna\s+ulazima|"
+    r"hayazidi\s+kizingiti|haijazidi\s+kizingiti|hayajazidi\s+kizingiti|haujazidi\s+kizingiti|hujazidi\s+kizingiti|"
+    r"hayajafika\s+kizingiti|haujafika\s+kizingiti|hujafika\s+kizingiti|haijafika\s+kizingiti|"
+    r"(?:do\s+not|don't|need\s+not|not\s+required\s+to)\s+(?:need\s+to\s+)?register", re.IGNORECASE)
+_VAT_AFFIRM = re.compile(
+    r"(?<!si )(?<!sio )lazima\s+(?:ujisajili|usajili|usajiliwe|ujiandikishe|kusajili|kujisajili)|unatakiwa\s+(?:kusajili|kujisajili|kujiandikisha|ujisajili)|inakulazimu|"
+    r"(?:umezidi|yamezidi|umevuka|yamevuka|umefika|yamefika)\s+kizingiti|must\s+register", re.IGNORECASE)
+_VAT_CONDITIONAL = re.compile(r"\b(?:ikiwa|kama|ukiwa|ukipata|ukifikia|usipofika|endapo|isipozidi|chini\s+ya)\b", re.IGNORECASE)
+_VAT_REG_TOP_LIMB = 200_000_000
+
+
+def vat_denial_above_threshold(question: str, body: str):
+    """The question's single figure when the body denies a VAT registration obligation that figure triggers, else None."""
+    if not question or not body:
+        return None
+    ql = question.lower()
+    if not (_VAT_TOKEN.search(ql) and _VAT_REG_ASK.search(ql)) or _VAT_NOT_A_TURNOVER.search(ql) or _VAT_FOREIGN.search(ql):
+        return None
+    from .swahili_numbers import parse_amounts
+    figures = [int(a) for a in parse_amounts(question) if int(a) >= _THRESHOLD_MONEY_FLOOR]
+    if len(figures) != 1 or figures[0] <= _VAT_REG_TOP_LIMB:
+        return None
+    if _VAT_AFFIRM.search(body) or not (_VAT_TOKEN.search(body) or re.search(r"kizingiti|usajili|sajili", body, re.IGNORECASE)):
+        return None
+    for sentence in _SENTENCE_SPLIT.split(body):
+        if _VAT_DENIAL.search(sentence) and not _VAT_CONDITIONAL.search(sentence):
+            return figures[0]
+    return None
+
+
+def body_denies_vat_registration_above_threshold(question: str, body: str) -> bool:
+    return vat_denial_above_threshold(question, body) is not None

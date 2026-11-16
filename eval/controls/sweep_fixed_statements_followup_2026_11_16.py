@@ -49,7 +49,7 @@ PROBES = [
     ("Taarifa ya ajali kazini inapelekwa WCF ndani ya siku ngapi?", FS, "fp_06b-like"),
     ("How many days to report a workplace accident to WCF?", FS, "English"),
     # ---- WCF: same vocabulary, must stay CLEAN
-    ("Taarifa ya ugonjwa wa kazini WCF ni siku ngapi?", "none", "occupational disease is a different chain (14 + 7)"),
+    ("Taarifa ya ugonjwa wa kazini WCF ni siku ngapi?", "fixed_statement", "INVERTED 2026-11-16: was `none` (\"occupational disease is a different chain (14 + 7)\"); it now has its OWN statement, wcf_disease_reporting, which states that chain"),
     ("Ajali ya kazini fidia ni kiasi gani?", "none", "compensation amount, not reporting"),
     ("Ajali ya gari, nipeleke taarifa polisi lini?", "none", "a road accident: no workplace word"),
     ("Ajali ya kazini WCF itolewe taarifa ndani ya siku 30, sivyo?", "none", "a false-premise question goes to the model (eval_343)"),

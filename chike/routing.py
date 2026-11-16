@@ -587,7 +587,11 @@ _VAT_REG_CUES = ["kusajili vat", "kujisajili vat", "kusajilisha vat", "kujisajil
 _VAT_REG_RE = re.compile(
     r"\b(?:(?:ni|tu)(?:sajili|jisajili|sajilishe|jisajilishe|sajiliwe|jiandikishe|andikishe|andikishwe)"
     r"|kujiandikisha|kujiandikishwa)\s+(?:kwa\s+(?:ajili\s+ya\s+)?)?vat\b"
-    r"|\bvat\s+(?:ni\s+)?lazima\s+(?:kwangu|kwetu|kwa\s+(?:mimi|sisi)|kwa\s+biashara\s+(?:yangu|yetu))\b",
+    r"|\bvat\s+(?:ni\s+)?lazima\s+(?:kwangu|kwetu|kwa\s+(?:mimi|sisi)|kwa\s+biashara\s+(?:yangu|yetu))\b"
+    # 2026-11-16 (eval_208, eval_318): the PRESENT-tense first-person verb ("je NASAJILI VAT kama mapato ni ...") and "kizingiti cha LAZIMA cha VAT" (a word between "kizingiti" and "VAT" defeated
+    # the "kizingiti cha vat" cue). Same narrowness as the forms above: the verb sits immediately before "vat"; a cue alone routes nothing -- the own-turnover and money gates still apply.
+    r"|\b(?:na|tuna)(?:sajili|jisajili|sajiliwa|jiandikisha)\s+(?:kwa\s+(?:ajili\s+ya\s+)?)?vat\b"
+    r"|\bkizingiti\s+(?:cha\s+)?(?:lazima\s+)?(?:cha\s+)?vat\b",
     re.IGNORECASE)
 _EFD_CUES = ["mashine ya risiti", "mashine ya efd", "risiti ya mashine", "kuwa na efd",
              "nahitaji efd", "lazima niwe na efd", "efd machine", "kutumia efd"]
@@ -613,6 +617,8 @@ _OWN_TURNOVER_CUES = ["mauzo yangu", "mauzo ya biashara yangu", "mauzo ya duka l
                       "mauzo ya biashara yetu", "mauzo ya duka letu", "mzunguko wetu",
                       "biashara yetu ina mauzo", "biashara yetu imepata", "duka letu lina",
                       "tumepata mauzo",
+                      # 2026-11-16 (eval_318): "kama mapato ni TZS ..." is a first-person CONDITIONAL turnover statement; bare "mapato ni" is NOT added (lookups say it).
+                      "kama mapato ni", "kama mauzo ni",
                       "my turnover", "my sales"]
 
 # ⛔ THE OWNERSHIP GATE MATCHED CUES AS BARE SUBSTRINGS (found 2026-11-12 by a probe, not by the corpus).
@@ -1664,6 +1670,11 @@ def detect_intent(text: str) -> str:
     # supply. Five questions whose answer is a constant that the model was handed at rank 1 and contradicted live.
     # PLACED LAST, so it can only capture what every route above has declined (nothing that routes today changes
     # route). Gated on the TOPIC *and* the ASK (R31's converse: a topic word is a signal, not a question).
+    # ── PATH 9b — AN AGREED NSSF SPLIT WITH A FIGURE (2026-11-16, eval_398): "mgao wa 15% mwajiri na 5% mfanyakazi" names no levy, but employer + employee percentages of one wage ARE the NSSF split (no other levy has
+    # an employee share), so it routes to the NSSF engine, which now honours the split (orchestrator). A bare split with NO figure is the statement question and is not routed here. Placed before PATH 10.
+    if nssf_agreed_split(text) is not None and explicit in (None, "", "nssf") and _has_money_magnitude(ql):
+        return "nssf"
+
     if fixed_statement_topic(text) is not None:
         return "fixed_statement"
 
@@ -2185,6 +2196,39 @@ def nssf_party(text: str) -> str:
     return "total"
 
 
+# ── 2026-11-16: THE AGREED NSSF SPLIT HAD AN ENGINE PARAMETER AND NO EXTRACTOR (R31, found by probing the NSSF engine for eval_398) ─────────────────────────────────────────────────────────────────────
+# `compute_nssf(employer_rate=, employee_rate=)` has always accepted a 15/5 or 20/0 split ("other valid splits keep the 20% total"), and nothing in routing or the orchestrator ever extracted one: "Mshahara ni TZS
+# 700,000, NSSF -- mwajiri 15% na mfanyakazi 5%, kila upande ni ngapi?" was answered by the ENGINE, with no model word, as "mwajiri TZS 70,000 + mfanyakazi TZS 70,000" -- the default 10/10 stated over a split the user
+# had just supplied. On an auto-send-eligible route. The branch was correct and unreachable from anything a person types.
+#
+# NARROW BY CONSTRUCTION (R17): BOTH parties' percentages must be named, each next to its role word (the figure may sit before or after it). One party alone ("mwajiri analipa asilimia 10 ya mshahara") is NOT a split.
+# Returns None (no split stated), a (employer, employee) pair of Decimal fractions when the two sum to 20% (the statutory total never changes), or "invalid" when both are stated and do not sum to 20% -- the caller
+# declines to compute rather than guess which number the user meant.
+_SPLIT_NUM = r"(\d{1,2}(?:[.,]\d+)?)"
+_SPLIT_AFTER = r"{role}\s*(?:analipa|atalipa|alipe|ni|ana|wa)?\s*(?:asilimia\s*)?" + _SPLIT_NUM + r"\s*(?:%|asilimia)?"
+_SPLIT_BEFORE = r"(?:asilimia\s*)?" + _SPLIT_NUM + r"\s*(?:%|asilimia)?\s*(?:ya\s+|kwa\s+|upande\s+wa\s+)*{role}"
+
+
+def _split_party(ql: str, role: str):
+    from decimal import Decimal
+    for pat in (_SPLIT_BEFORE, _SPLIT_AFTER):
+        m = re.search(pat.replace("{role}", role), ql)
+        if m:
+            return Decimal(m.group(1).replace(",", ".")) / Decimal(100)
+    return None
+
+
+def nssf_agreed_split(text: str):
+    from decimal import Decimal
+    ql = text.lower()
+    if "mwajiri" not in ql or "mfanyakazi" not in ql:
+        return None
+    emp, ee = _split_party(ql, "mwajiri"), _split_party(ql, "mfanyakazi")
+    if emp is None or ee is None:
+        return None
+    return (emp, ee) if emp + ee == Decimal("0.20") else "invalid"
+
+
 # ══ THE EXTRACTOR THAT MAKES THE PARTY RENDERER A CAPABILITY RATHER THAN AN INTENTION ════
 # ⛔ R31, FIFTH INSTANCE, CAUGHT BEFORE DEPLOY INSTEAD OF AFTER. `levy_party_share_statement`
 # was written last night with a docstring naming an extractor called `asks_levy_party` that
@@ -2351,6 +2395,10 @@ def paye_resident(text: str) -> bool:
     return False
 
 
+_PENALTY_ASK = re.compile(r"(?<![a-z])(?:riba|adhabu|faini|penalty|interest|fine)(?![a-z])")
+_NO_EMPLOYEES = re.compile(r"(?<![a-z])(?:sina|hatuna|hakuna)\s+(?:wafanyakazi|mfanyakazi|waajiriwa)(?![a-z])")
+
+
 def is_uncomputable_payroll_amount(text: str) -> bool:
     """Never-guess (R8) fabrication guard for the FACT/RAG path.
 
@@ -2372,6 +2420,11 @@ def is_uncomputable_payroll_amount(text: str) -> bool:
     ql = text.lower()
     if detect_intent(text) != "none":
         return False                                  # a computable route exists — not this guard's job
+    # 2026-11-16 (eval_108, eval_376): two kinds of question are NOT "give me a salary" questions, and answering them with that request is a non-answer where a fact exists.
+    #   * a PENALTY / INTEREST question ("NSSF inatoza riba kiasi gani kwenye michango iliyochelewa") asks a rate that lives in the index, not an amount derived from a wage;
+    #   * a question whose subject states there are NO EMPLOYEES ("sina wafanyakazi kabisa -- SDL yangu ni ngapi?") has its answer in the SDL threshold (10), not in a salary.
+    if _PENALTY_ASK.search(ql) or _NO_EMPLOYEES.search(ql):
+        return False
     has_payroll = any(c in ql for c in _PAYROLL_CTX)
     has_levy = bool(_explicit_levy(ql) or _natural_levy(ql))   # named levy OR generic 'makato'
     return has_payroll and has_levy and _has_money_ask(ql)
@@ -2418,6 +2471,19 @@ _FS_TOPICS = (
      re.compile(r"ajali|accident|ameumia|alipoumia|kuumia"),
      re.compile(r"(?=.*(?:kazi|mfanyakazi|wafanyakazi|wcf|mwajiri|workplace|employee))(?=.*(?:taarifa|ripoti|kuripoti|kuarifu|kumwarifu|kumjulisha|kupeleka|report|notif))(?=.*(?:siku|lini|muda|kuhesabiwa|inaanza|ndani\s+ya|deadline|days))", re.S),
      re.compile(r"ugonjwa|magonjwa|disease|kifo|kufa|death|fidia|compensation|madai|claim|osha|tofauti|difference|usajili|kujisajili|register|leseni|ukaguzi|kiasi\s+gani\s+cha|sivyo|si\s+kweli|ni\s+kweli|bima|insurance")),
+    # ---- 2026-11-16 (founder, 3a): occupational-disease reporting chain, the NSSF split, the PAYE band table. Same construction: subject cue + a specific second limb, vetoes for neighbours.
+    ("wcf_disease_reporting",
+     re.compile(r"(?<![a-z])(?:ugonjwa|magonjwa|disease)"),
+     re.compile(r"(?=.*(?:kazi|mfanyakazi|wafanyakazi|wcf|mwajiri|occupational))(?=.*(?:taarifa|ripoti|kuripoti|kuarifu|kumjulisha|kupeleka|report|notif))(?=.*(?:siku|lini|muda|ndani\s+ya|deadline|days))", re.S),
+     re.compile(r"ajali|accident|kifo|kufa|death|madai|claim|fidia|compensation|orodha|list|aina\s+za|yapi|osha|tofauti|difference|usajili|kujisajili|register|leseni|ukaguzi|sivyo|si\s+kweli|ni\s+kweli|bima|insurance|likizo|sick|mgonjwa|nssf|paye|sdl")),
+    ("nssf_split",
+     re.compile(r"(?<![a-z])nssf(?![a-z])"),
+     re.compile(r"(?=.*(?:mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split))", re.S),
+     re.compile(r"adhabu|faini|riba|kuchelewa|tarehe|usajili|kujisajili|cheti|paye|sdl|wcf|vat|zuio|makadirio")),
+    ("paye_band_table",
+     re.compile(r"(?<![a-z])paye(?![a-z])"),
+     re.compile(r"(?=.*(?:mabano|bendi|(?<![a-z])bands?(?![a-z])|viwango|ngazi|madaraja))", re.S),
+     re.compile(r"adhabu|faini|riba|tarehe|lini|siku|kuchelewa|kuwasilisha|kulipa|p9|cheti|kurejesha|nssf|sdl|wcf|vat|zuio|makadirio|mfanyakazi\s+\d|mshahara\s+wa|mshahara\s+ni|sivyo|si\s+kweli|ni\s+kweli")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))", re.S),
@@ -2430,9 +2496,12 @@ _FS_TOPIC_ASK = {
     "vat_voluntary_registration": re.compile(r"naweza|unaweza|inawezekana|inaruhusiwa|ruhusiwa|ruhusa|upo|(?<![a-z])je(?![a-z])|nataka|vipi|lini|can\s+i|may\s+i|possible"),
     "wcf_accident_reporting": re.compile(r"ngapi|ndani|lini|muda|kuhesabiwa|inaanza|deadline|how\s+many"),
     "vat_withholding_mixed_supply": re.compile(r"inakatwaje|inakatwa|inazuiwaje|inazuiwa|nakata|nikate|ikatwe|inahesabiwaje|vipi|ngapi|kiasi|asilimia|kiwango"),
+    "wcf_disease_reporting": re.compile(r"ngapi|ndani|lini|muda|deadline|how\s+(?:many|long)"),
+    "nssf_split": re.compile(r"mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split|(?<![a-z])je(?![a-z])|inawezekana|naweza|halali|vipi|ngapi"),
+    "paye_band_table": re.compile(r"ngapi|gani|vipi|mpangilio|ni\s+nini|zipi|yapi|orodha|(?<![a-z])je(?![a-z])|what|which|list"),
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table"})
 
 
 def fixed_statement_topics(text: str):

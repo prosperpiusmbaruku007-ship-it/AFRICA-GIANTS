@@ -1,0 +1,32 @@
+{
+ "artifact": "gate_production_c2143c0.json",
+ "n": 384,
+ "old": 319,
+ "new": 333,
+ "promoted": {
+  "eval_267": "same piece ['payroll']",
+  "eval_270": "same piece ['headcount', 'payroll']",
+  "eval_271": "same piece ['conversion']",
+  "eval_272": "same piece ['conversion']",
+  "eval_273": "same piece ['conversion']",
+  "eval_275": "same piece ['conversion']",
+  "eval_276": "same piece ['conversion']",
+  "eval_291": "same piece ['payroll']",
+  "eval_292": "same piece ['payroll']",
+  "eval_295": "same piece ['payroll']",
+  "eval_297": "same piece ['payroll']",
+  "eval_298": "same piece ['payroll']",
+  "eval_299": "same piece ['payroll']",
+  "eval_300": "same piece ['payroll']"
+ },
+ "kept_as_miss": {
+  "eval_108": "gold is not a pure clarification",
+  "eval_277": "gold is not a pure clarification",
+  "eval_281": "gold is not a pure clarification",
+  "eval_294": "gold is not a pure clarification",
+  "eval_326": "gold is not a pure clarification",
+  "eval_334": "gold is not a pure clarification",
+  "eval_347": "gold is not a pure clarification",
+  "eval_376": "gold is not a pure clarification"
+ }
+}

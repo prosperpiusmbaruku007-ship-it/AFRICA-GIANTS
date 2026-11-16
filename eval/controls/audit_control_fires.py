@@ -1046,6 +1046,50 @@ def audit_unexercisable():
            _v, 'the live wrong replies of 2026-11-16', 'hedged voluntary answer, trigger from receipt, 3:2 on the value, 760,000 as the end of band 3',
            _note)
 
+    # ── THE 2026-11-16 SAFETY BATCH (founder, after gate c2143c0): D-FIDELITY-12, the D-FIDELITY-7 subject fallback, the NSSF agreed-split extractor, the payroll wage-evidence rule. Each is PLANTED: the
+    # founding specimen must fire, a clean limb must not, and the wiring is read from orchestrator.py with comments stripped (R26: the wiring is what an inert control looks like from outside).
+    try:
+        from chike import fidelity as _f12, routing as _r12
+        from chike.model_abstraction import ModelBackend as _MB12
+        from chike.orchestrator import Orchestrator as _O12
+
+        class _E12(_MB12):
+            def generate(self, prompt, params=None):
+                return ''
+
+        _o12 = _O12(backend=_E12(), retriever=lambda *a, **k: [], system_prompt='x')
+        _spec = {
+            'D-FIDELITY-12 (eval_318 VAT limb)': bool(_f12.body_denies_vat_registration_above_threshold(
+                'Kampuni yenye mapato ya TZS 205,000,000 inahitaji kusajili VAT?',
+                'Hapana. Mapato ya TZS 205,000,000 hayazidi kizingiti hicho, hivyo huhitajiwi kusajili VAT.')),
+            'D-FIDELITY-7 subject fallback (eval_355)': bool(_f12.body_states_wrong_threshold(
+                'Hapana, kwa sababu umefika chini ya kizingiti cha TZS 11M.', 'Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?')),
+            'NSSF agreed split computed (eval_398)': 'mwajiri TZS 105,000 + mfanyakazi TZS 35,000' in _o12.answer(
+                'Mshahara ni TZS 700,000, NSSF — mwajiri 15% na mfanyakazi 5%, kila upande ni ngapi?').text,
+            'wage evidence required (eval_257)': 'TZS 2,460,000' not in _o12.answer(
+                'Mapato ya biashara yangu yalifika TZS 12,300,000 mwezi jana, NSSF ya jumla ni ngapi?').text and 'TZS 2,460,000' not in _o12.answer(
+                'Nina amana ya TZS 12,300,000, NSSF ni ngapi?').text}
+        _clean12 = [
+            _f12.body_denies_vat_registration_above_threshold('Kampuni yenye mapato ya TZS 205,000,000 inahitaji kusajili VAT?', 'Ndiyo, lazima ujisajili VAT; yamezidi kizingiti cha TZS 200,000,000.'),
+            _f12.body_states_wrong_threshold('EFD haina kizingiti cha mauzo kwa mwaka.', 'Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?'),
+            'TZS 560,000' not in _o12.answer('Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?').text and 'TZS 80,000' not in _o12.answer(
+                'Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?').text]       # the control must still COMPUTE the plain case: this is False when it does
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code12 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired12 = ('fidelity.body_denies_vat_registration_above_threshold(' in _code12 and 'nssf_agreed_split(' in _code12
+                    and 'body_states_wrong_threshold(cleaned, sub.sub_question.text)' in _code12)
+        _v = ('FIRES' if (all(_spec.values()) and not any(_clean12[:2]) and not _clean12[2] and _wired12) else
+              'NOT_WIRED' if (all(_spec.values()) and not any(_clean12[:2]) and not _clean12[2]) else 'ERROR')
+        _note = (f'founding specimens fire: {_spec}; clean limbs flagged (must be False, False, False): {[bool(c) for c in _clean12]}; wired (comments stripped): {_wired12}. '
+                 'Priced before wiring (eval/results/price_batch_guards_2026_11_16.json): D-FIDELITY-12 0 flags in gold and training; the fallback + the `hapana,` negation narrowing add 17 STORED-reply flags, '
+                 '0 in gold, 0 in training, every one asserting a fabricated threshold (read in full). Engine base-confusion probe: eval/results/engine_base_confusion_probe_2026_11_16.json, 0 of 57 BAD, 6/6 controls compute.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-16 safety batch (D-FIDELITY-12, D-FIDELITY-7 fallback, NSSF split, wage evidence)', 'fidelity',
+           'a VAT denial for a turnover above 200M, a fabricated EFD threshold with the subject only in the question, an agreed NSSF split ignored, a loan/deposit/business-income computed as payroll',
+           _v, 'eval_318 VAT limb, eval_355, eval_398, eval_257', 'a correct VAT yes, a correct EFD no-threshold body, the plain NSSF compute still computing',
+           _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

@@ -175,6 +175,15 @@ class SlotExtractor:
                 # accept the model's proposal (role assignment regex can't do).
                 mval, mconf = model_fields[name]
                 value, conf, reason = mval, mconf, "model fallback (no deterministic value)"
+                # 2026-11-16 (founder, after the wage-evidence fix): THE MODEL-FALLBACK AMOUNT BYPASSED EVERY BASE CHECK. The deterministic layer vetoes a non-payroll figure (deny-list + wage evidence), but a figure
+                # it cannot parse ("Nina amana ya 800k, NSSF ni ngapi?" -- the parser reads no "k" suffix) falls to the model, whose proposal was accepted as-is: the same loan/deposit/income computed as payroll, on an
+                # auto-send-eligible route, by the one extractor the deterministic fix did not reach. The same two checks now run on a model-supplied amount; a HIGH value becomes a clarification.
+                if (name in _AMOUNT_FIELDS and conf == Confidence.HIGH
+                        and computation_type in ("sdl", "nssf", "wcf", "paye")):
+                    if swn.detect_wrong_base(sub_question, computation_type):
+                        conf, reason = Confidence.LOW, "wrong_base (non-payroll figure)"
+                    elif swn.detect_unanchored_payroll_base(sub_question, computation_type):
+                        conf, reason = Confidence.LOW, "unanchored_base (figure not tied to wages)"
             else:
                 continue                            # absent -> missing -> clarify
             out[name] = ExtractedField(name, value, conf, reason)
@@ -329,6 +338,11 @@ class SlotExtractor:
             a = self._amount_field(amount_field, amounts, count, per_person, aggregate,
                                    divisor, period, wrong_base, allowance, foreign_currency,
                                    unit_rate_monthly)
+            # 2026-11-16 (eval_257): a HIGH amount with no WAGE EVIDENCE anywhere in the question is demoted to a clarification. A figure the user labelled as payroll
+            # (`payroll_anchored`) always has evidence; the deny-list `wrong_base` keeps its own deterministic rejection and has already run.
+            if (a is not None and a[1] == Confidence.HIGH and not wrong_base and not payroll_anchored
+                    and swn.detect_unanchored_payroll_base(text, computation_type)):
+                a = (a[0], Confidence.LOW, "unanchored_base (figure not tied to wages)")
             if a is not None:
                 det[amount_field] = a
         if any(f in _COUNT_FIELDS for f in required):

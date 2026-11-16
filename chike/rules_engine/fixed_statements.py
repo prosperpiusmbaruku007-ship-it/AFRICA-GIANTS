@@ -23,7 +23,7 @@ must not during the pilot: they go to review like any model answer, but with a C
 `handler_core.engine_only_verdict` and fails closed on any route not explicitly allowed.
 """
 
-from .results import ComputationResult
+from .results import ComputationResult, tzs
 
 NOTICE = "notice"
 SEVERANCE = "severance"
@@ -35,6 +35,31 @@ VAT_TIME_OF_SUPPLY = "vat_time_of_supply"
 VAT_VOLUNTARY = "vat_voluntary_registration"
 WCF_ACCIDENT = "wcf_accident_reporting"
 VAT_WH_MIXED = "vat_withholding_mixed_supply"
+# 2026-11-16 (founder, 3a): three more constants. They are answered from facts whose served rows are English-key index rows (disease reporting, NSSF split) or a generated table (PAYE bands), not from a
+# CONCISE_BILINGUAL_FACTS row, so they are named in TOPICS_NO_CONCISE_ROW and checked by tests/test_fixed_statements_coverage_batch.py instead of the concise-row figure test.
+WCF_DISEASE = "wcf_disease_reporting"
+NSSF_SPLIT = "nssf_split"
+PAYE_BANDS_TOPIC = "paye_band_table"
+
+
+def _paye_bands_text() -> str:
+    """The PAYE band table, GENERATED from rates.PAYE_BANDS so the sentence a user reads cannot drift from the engine's table (the BRELA ladder discipline). Numbering follows the served row
+    `paye bands monthly 2025 26`: the 0% band is band 1, so the 20% band is band 3. A narration that numbers the bands differently contradicts the served row; stating the table is how this route avoids it."""
+    from .rates import PAYE_BANDS, PAYE_NONRESIDENT_RATE
+    parts = []
+    for i, (lower, rate, base) in enumerate(PAYE_BANDS):
+        top = PAYE_BANDS[i + 1][0] if i + 1 < len(PAYE_BANDS) else None
+        pct = f"{rate * 100:.0f}%"
+        if i == 0:
+            parts.append(f"kiwango cha 1: hadi {tzs(top)} = {pct}")
+        elif top is None:
+            parts.append(f"kiwango cha {i + 1}: zaidi ya {tzs(lower)} = {tzs(base)} + {pct} ya kinachozidi {tzs(lower)}")
+        else:
+            lead = f"{tzs(base)} + " if base else ""
+            parts.append(f"kiwango cha {i + 1}: {tzs(lower + 1)} hadi {tzs(top)} = {lead}{pct} ya kinachozidi {tzs(lower)}")
+    return ("Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): " + "; ".join(parts) + ". "
+            f"Asiye mkazi analipa {PAYE_NONRESIDENT_RATE * 100:.0f}% tambarare (kodi ya mwisho, si mabano). "
+            "Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi.")
 
 # topic -> (locked-fact key, the statement, citation note). Statement text is lifted from the served concise row with
 # the leading question sentence removed (the user has just asked it).
@@ -84,6 +109,26 @@ STATEMENTS = {
         "Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
         "Workers Compensation Act Cap.263 R.E.2023 s.34(1) ('within seven days after receiving a notice ... or having learned in some other way'); GN 185/2016 Reg.15(1),(2),(4) -- the clock runs from RECEIPT of notice, not from the accident; Act 'seven days' vs Regulation 'seven working days' recorded as unresolved",
     ),
+    WCF_DISEASE: (
+        "wcf_disease_reporting_deadline",
+        "Ugonjwa wa kazini unaripotiwa kwa hatua MBILI, si siku 7 moja kwa moja (Kanuni za Fidia kwa Wafanyakazi, 2016 — GN 185/2016, Kanuni ya 16): (1) mfanyakazi amjulishe mwajiri ndani ya siku 14 za kazi tangu ugonjwa kugunduliwa; "
+        "(2) mwajiri aijulishe WCF ndani ya siku 7 za kazi tangu APOKEE taarifa hiyo ya mfanyakazi. Hivyo kutoka utambuzi hadi WCF inaweza kufikia siku 21 za kazi. "
+        "Kifo kazini kiripotiwe WCF ndani ya miezi 12, na madai ya fidia yawasilishwe ndani ya miezi 12 tangu ajali au ugonjwa kugunduliwa. Thibitisha na WCF (wcf.go.tz).",
+        "Workers Compensation Regulations 2016 (GN 185/2016) Reg.16(1) employee to employer 14 working days of diagnosis; Reg.16(2) employer to WCF 7 working days of RECEIVING that notice; Reg.17(2) death 12 months; Reg.19(1) claim 12 months. "
+        "Served as English index row 46 (a Swahili concise row is pending an R15 regen); the gate's eval_239 answered 'siku 14 za kazi tangu kugunduliwa' with row 46 in context",
+    ),
+    NSSF_SPLIT: (
+        "NSSF_split_triggers",
+        "Jumla ya NSSF ni asilimia 20 ya mshahara ghafi daima. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, lakini si mgawanyo pekee halali: mwajiri anaweza kuchagua kuchangia kiwango kikubwa zaidi, hadi mchango wote, "
+        "kwa hiyo 15% + 5% au 20% + 0% ni mifano ya chaguo hilo, si orodha kamili iliyotajwa na sheria. Chaguo hilo lina masharti kwa wanachama fulani (Sheria ya NSSF). Jumla haibadiliki — ni nani anabeba sehemu ndiyo hubadilika. Thibitisha na NSSF (nssf.go.tz).",
+        "NSSF Act Cap.50 R.E.2023 s.12(1)-(3) and First Schedule (locked fact NSSF_split_triggers, read 2026-10-05 from two byte-identical routes, sha256 2a820e67...; s.12(2)-(3) re-read 2026-11-16 in the cached R.E.2015 as corroboration, edition flagged). "
+        "The Act does not enumerate permitted splits; eval_348 answered 'Ndiyo ... hakuna mgawanyo mwingine' with row 78 in context",
+    ),
+    PAYE_BANDS_TOPIC: (
+        "paye_bands_monthly_2025_26",
+        _paye_bands_text(),
+        "Income Tax Act Cap.332, First Schedule individual PAYE table, as at FA2026 (rates.PAYE_BANDS, locked facts paye_bands_monthly_2025_26 / paye_all_bands_sequence / paye_nonresident_flat_rate / paye_personal_relief); the text is GENERATED from rates.PAYE_BANDS",
+    ),
     VAT_WH_MIXED: (
         "vat_withholding_mixed_supply",
         'VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.',
@@ -92,6 +137,7 @@ STATEMENTS = {
 }
 
 TOPICS = tuple(STATEMENTS)
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC})
 
 
 def fixed_statement(topic) -> ComputationResult:

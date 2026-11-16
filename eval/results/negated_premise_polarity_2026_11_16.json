@@ -1,0 +1,862 @@
+{
+ "neg": [
+  {
+   "id": "eval_388",
+   "gold": "Y",
+   "reply": "N",
+   "inverted": true,
+   "q": "Je, si kweli kwamba SDL hailipwi na mfanyakazi?",
+   "reply_head": "Hapana, si kweli. SDL ni kodi ya mwajiri pekee — haikatwi kutoka kwa m"
+  },
+  {
+   "id": "eval_390",
+   "gold": "Y",
+   "reply": "N",
+   "inverted": true,
+   "q": "Je, VAT haitozwi kwa bidhaa zilizosamehewa (exempt)?",
+   "reply_head": "Hapana, si sahihi. Bidhaa zilizo katika daraja la exempt zimesamehewa "
+  }
+ ],
+ "plain": [
+  {
+   "id": "eval_013",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hi",
+   "reply_head": "Ndiyo, sheria inamruhusu mfanyabiashara kujisajilisha VAT kwa hiari ha"
+  },
+  {
+   "id": "eval_014",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, wakili aliyesajiliwa lazima asajilishe VAT hata kama mapato yake ya mwaka ni chini ya ",
+   "reply_head": "Ndiyo, wakili aliyesajiliwa (advocate) ana wajibu wa kusajilisha VAT b"
+  },
+  {
+   "id": "eval_015",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Huduma za 'exempt' (zisizo na VAT) — je, mfanyabiashara anaweza kudai VAT ya pembejeo inay",
+   "reply_head": "Hapana — huduma za exempt hazitozwi VAT kabisa, si kwa asilimia 5. Thi"
+  },
+  {
+   "id": "eval_016",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, biashara isiyosajiliwa VAT inaweza kuweka VAT ya asilimia 18 kwenye invoice zake na ku",
+   "reply_head": "Hapana. Biashara isiyosajiliwa VAT haiwezi 'kuweka' VAT. Ni biashara i"
+  },
+  {
+   "id": "eval_017",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, biashara inayouza bidhaa za zero-rated inaweza kudai VAT ya pembejeo kwenye gharama za",
+   "reply_head": "Ndiyo, ikiwa bidhaa hizo ni zero-rated na si exempt. Zero-rated inaruh"
+  },
+  {
+   "id": "eval_020",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mhasibu aliyeidhinishwa (CPA) lazima asajilishe VAT hata kama ana wateja wachache na m",
+   "reply_head": "Ndiyo — mhasibu aliyeidhinishwa (CPA) ni mtaalamu aliyehitimu, na sher"
+  },
+  {
+   "id": "eval_039",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, kiwango cha VAT withholding ni sawa kwa bidhaa na huduma?",
+   "reply_head": "Hapana. Bidhaa: 3%; Huduma: 6%. Tofauti hii imetokana na utaratibu wa "
+  },
+  {
+   "id": "eval_040",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, msambazaji anapoteza haki ya kudai VAT ya pembejeo wakati mnunuzi anayehitimu anakata ",
+   "reply_head": "Hapana — msambazaji bado ana haki ya kudai input VAT yake. VAT withhol"
+  },
+  {
+   "id": "eval_041",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, utaratibu wa VAT withholding wa Finance Act 2025 ulianza kutumika tangu 1 Januari 2025",
+   "reply_head": "Hapana. Utaratibu wa VAT withholding ulianza rasmi tarehe 1 JULAI 2025"
+  },
+  {
+   "id": "eval_042",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, certificate ya VAT withholding inatakiwa ifikishwe msambazaji ifikapo siku ya 20 ya mw",
+   "reply_head": "Hapana, certificate ya VAT withholding lazima itolewe si baadaye ya ta"
+  },
+  {
+   "id": "eval_043",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, kampuni ya kawaida ya biashara (isiyo ya serikali) inaweza kuwa mnunuzi anayehitimu wa",
+   "reply_head": "Hapana — si kiotomatiki. Kampuni ya kawaida LAZIMA iwe imesajiliwa VAT"
+  },
+  {
+   "id": "eval_044",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT ",
+   "reply_head": "Ndiyo, kiwango cha asilimia 3 hutumika kwa malipo ya huduma zinazotole"
+  },
+  {
+   "id": "eval_045",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, Wizara ya Fedha Tanzania ni mnunuzi anayehitimu kwa madhumuni ya VAT withholding kioto",
+   "reply_head": "Ndiyo, Wizara ya Fedha na Taasisi zake zinazohusika zimeorodheshwa ras"
+  },
+  {
+   "id": "eval_056",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Wateja wangu wanalipa pesa taslimu — naweza kusema muamala mdogo wa taslimu chini ya TZS 1",
+   "reply_head": "Hapana — muamala wowote wa mauzo unaojumuisha malipo ya bidhaa au hudu"
+  },
+  {
+   "id": "eval_057",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, biashara inahitaji ruhusa ya TRA kabla ya kuendelea kufanya mauzo wakati EFD ikiwa ime",
+   "reply_head": "Ndiyo, unapaswa kupata ruhusa ya TRA ili kuendelea na mauzo wakati wa "
+  },
+  {
+   "id": "eval_058",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, wateja wana haki ya kisheria ya kudai risiti ya EFD kutoka kwa biashara iliyosajiliwa ",
+   "reply_head": "Ndiyo. Wateja wana haki ya kisheria ya kupewa risiti ya EFD (fiscal re"
+  },
+  {
+   "id": "eval_059",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Mteja akilipa kupitia mobile money — je, ninaweza kutoa risiti iliyoandikwa kwa mkono bada",
+   "reply_head": "Hapana — malipo ya mobile money yanahitaji risiti ya EFD kama malipo m"
+  },
+  {
+   "id": "eval_060",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, TRA inaweza kufunga biashara kwa kutotoa risiti za EFD mara kwa mara?",
+   "reply_head": "Ndiyo, TRA ina nguvu ya kufunga biashara au kutoa notisi ya kukosea ku"
+  },
+  {
+   "id": "eval_061",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mashine ya EFD inatuma taarifa za miamala moja kwa moja TRA bila mfanyabiashara kufany",
+   "reply_head": "Ndiyo, mashine ya EFD iliyoidhinishwa inaunganishwa moja kwa moja na m"
+  },
+  {
+   "id": "eval_062",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "EFD ikiwa imeharibika na inasubiri ukarabati — je, biashara inaweza kutumia risiti za kawa",
+   "reply_head": "Hapana — EFD iliyoharibika lazima ifanyiwe marekebisho haraka. Kutumia"
+  },
+  {
+   "id": "eval_075",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mfanyabiashara anayefanya kazi peke yake kwa jina lake la kawaida bado anahitaji kusaj",
+   "reply_head": "Ndiyo — kwa mujibu wa sheria, kila mtu anayeendesha shughuli za kiuchu"
+  },
+  {
+   "id": "eval_076",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, certificate ya BRELA peke yake inatosha kufanya biashara kikamilifu bila kupata TIN ku",
+   "reply_head": "Hapana, BRELA certificate haipati leseni ya kufanya shughuli za fedha "
+  },
+  {
+   "id": "eval_077",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mfanyabiashara anaweza kutafuta jina la biashara kwenye tovuti ya BRELA kabla ya kusaj",
+   "reply_head": "Ndiyo — BRELA inatoa huduma ya utafutaji wa jina la biashara kwenye to"
+  },
+  {
+   "id": "eval_078",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, kampuni inaweza kufutwa usajilishaji wake BRELA kwa kushindwa kuwasilisha annual retur",
+   "reply_head": "Ndiyo — kampuni isiyowasilisha annual return kwa miaka miwili au zaidi"
+  },
+  {
+   "id": "eval_079",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, ushirikiano (partnership) wa watu wawili wanaomiliki duka pamoja unahitaji kusajiliwa ",
+   "reply_head": "Ndiyo, ushirikiano wa kibiashara unapaswa kusajiliwa BRELA chini ya Sh"
+  },
+  {
+   "id": "eval_096",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, ni kosa la kisheria kwa mwajiri kutosajilisha wafanyakazi wake NSSF?",
+   "reply_head": "Ndiyo, ni kosa la kisheria chini ya Sheria ya NSSF Na. 13 ya 2009. Mwa"
+  },
+  {
+   "id": "eval_097",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, wafanyakazi wa nyumbani (domestic workers) kama wasichana wa nyumba wanaostahili NSSF?",
+   "reply_head": "Ndiyo, wafanyakazi wa nyumbani wanastahili NSSF. Thibitisha na NSSF (n"
+  },
+  {
+   "id": "eval_098",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mfanyabiashara anayejitegemea (self-employed) anaweza kujiunga NSSF kwa hiari bila mwa",
+   "reply_head": "Ndiyo. NSSF inaruhusu wanachama wa hiari (voluntary members) ambao si "
+  },
+  {
+   "id": "eval_099",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, mchango wa NSSF wa mwajiri (asilimia 10) unakatwa kutoka mshahara wa mfanyakazi?",
+   "reply_head": "Hapana kabisa. Mchango wa mwajiri (asilimia 10) unalipwa na mwajiri ku"
+  },
+  {
+   "id": "eval_100",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mfanyakazi anapata mshahara wa jumla wa TZS milioni 2 kwa mwezi — je, NSSF inahusika na ms",
+   "reply_head": "Ndiyo — NSSF inahesabiwa kwenye mshahara mkubwa wa jumla bila kikomo c"
+  },
+  {
+   "id": "eval_101",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, NSSF inatoa mafao ya uzazi kwa wanawake wanaohitimu?",
+   "reply_head": "Ndiyo. NSSF inalipa mafao ya uzazi (maternity benefits) kwa wanawake w"
+  },
+  {
+   "id": "eval_102",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, deadline ya kulipa michango ya NSSF kila mwezi ni siku ya 20 ya mwezi unaofuata?",
+   "reply_head": "Hapana — siku ya 20 ni tarehe ya mwisho ya kuwasilisha taarifa ya mali"
+  },
+  {
+   "id": "eval_103",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, mwajiri anaweza kuahirisha malipo ya NSSF wakati wa msongo wa kifedha bila adhabu?",
+   "reply_head": "Hapana — hakuna ruhusa rasmi ya kuahirisha malipo ya NSSF bila adhabu."
+  },
+  {
+   "id": "eval_121",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, mwajiri mwenye wafanyakazi 8 ana wajibu wa kulipa SDL?",
+   "reply_head": "Hapana. SDL inatakiwa tu pale unapoajiri wafanyakazi 10 au zaidi. Kwa "
+  },
+  {
+   "id": "eval_122",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, SDL inakatwa kutoka mshahara wa mfanyakazi na kulipwa TRA?",
+   "reply_head": "Hapana. Ni mwajiri pekee anayelipa SDL — hakatiwi kutoka mshahara wa m"
+  },
+  {
+   "id": "eval_123",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, WCF na SDL ni ushuru ule ule unaolipwa mahali pamoja?",
+   "reply_head": "Hapana, ni ushuru TOFAUTI kabisa. WCF ni asilimia 0.5 ya mishahara gha"
+  },
+  {
+   "id": "eval_124",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Biashara yangu ina wafanyakazi 9 na ninaajiri mfanyakazi wa 10 katikati ya mwezi — je, SDL",
+   "reply_head": "Ndiyo. Mara idadi ya wafanyakazi inapofikia 10 au zaidi, SDL inatakiwa"
+  },
+  {
+   "id": "eval_125",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari",
+   "reply_head": "Hapana. Amri ya mishahara ya 2022 ILIFUTWA rasmi kuanzia 1 Januari 202"
+  },
+  {
+   "id": "eval_126",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+   "reply_head": "Hapana. Hazarau ya TZS 500,000 kwa mwezi haikutolewa na GN 605A. Hazar"
+  },
+  {
+   "id": "eval_127",
+   "gold": "Y",
+   "reply": "N",
+   "inverted": true,
+   "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+   "reply_head": "Hapana — zinawasilishwa kwa nyakati tofauti. PAYE inalipwa ifikapo tar"
+  },
+  {
+   "id": "eval_128",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, mwajiri anaweza kulipa WCF moja kwa moja TRA badala ya Mamlaka ya WCF?",
+   "reply_head": "Hapana. WCF inalipwa kupitia Mamlaka ya WCF (si TRA). Thibitisha na WC"
+  },
+  {
+   "id": "eval_145",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Naweza kumwomba rafiki yangu Mtanzania asajili biashara kwa jina lake, niendelee mimi kuen",
+   "reply_head": "Hapana — hii ni 'kuwezesha' au 'kuwasilisha' (facilitating) ambayo ime"
+  },
+  {
+   "id": "eval_146",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?",
+   "reply_head": "Hapana. GN 487A haikuwa na muda wa 'kujiandaa' uliotolewa rasmi. Ilisa"
+  },
+  {
+   "id": "eval_147",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Biashara ya rejareja — kama duka la nguo — iko kwenye orodha ya biashara zilizokatazwa kwa",
+   "reply_head": "Ndiyo — biashara ya rejareja (retail trade) imezuiliwa kwa wasio raia."
+  },
+  {
+   "id": "eval_148",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Biashara ya jumla — kuuza bidhaa kwa maduka mengine — imekatazwa kwa wageni?",
+   "reply_head": "Ndiyo — biashara ya jumla (wholesale trade) ni mojawapo ya shughuli 15"
+  },
+  {
+   "id": "eval_149",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Rafiki yangu wa Ethiopia ana duka la kutengeneza simu Kariakoo — GN 487A inamfunika?",
+   "reply_head": "Ndiyo — rafiki yako wa Ethiopia amefunikwa kabisa na GN 487A. Shughuli"
+  },
+  {
+   "id": "eval_150",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Saluni yangu ya nywele — mimi ni mgeni — imekatazwa na GN 487A?",
+   "reply_head": "Ndiyo, saluni za nywele ni shughuli iliyozuiliwa kwa wasio raia chini "
+  },
+  {
+   "id": "eval_151",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Kama wakala wa mobile money — mimi ni mgeni — GN 487A inanikataza?",
+   "reply_head": "Ndiyo, GN 487A inakukataza kufanya shughuli za fedha za kidijitali kam"
+  },
+  {
+   "id": "eval_152",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Kampuni yangu ya usafi wa nyumba na ofisi — mimi si raia wa Tanzania — inakabiliwa na GN 4",
+   "reply_head": "Ndiyo, shughuli za usafi wa nyumba na ofisi imezuiliwa kwa wasio raia "
+  },
+  {
+   "id": "eval_153",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mimi ni raia wa Tanzania — ninaweza kuendelea kufanya biashara ya rejareja bila tatizo la ",
+   "reply_head": "Ndiyo — GN 487A inalenga tu wasio raia wa Tanzania. Raia wa Tanzania w"
+  },
+  {
+   "id": "eval_155",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Zoezi la utekelezaji wa GN 487A bado linaendelea — lazima niwe makini sana sasa hivi?",
+   "reply_head": "Ndiyo, utekelezaji wa GN 487A unaendelea. Thibitisha na Idara ya Uhami"
+  },
+  {
+   "id": "eval_179",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Duka langu la vifaa lina wafanyakazi 3 tu — bado nahitaji kusajili mahali pa kazi na OSHA?",
+   "reply_head": "Ndiyo — OSHA inasajili MAHALI PA KAZI BILA KIKOMO CHA IDADI YA WAFANYA"
+  },
+  {
+   "id": "eval_180",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nilisajili biashara yangu BRELA tayari — hiyo inamaanisha nimesajili OSHA pia?",
+   "reply_head": "Hapana — BRELA na OSHA ni taasisi tofauti kabisa zenye majukumu tofaut"
+  },
+  {
+   "id": "eval_181",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mahali pa kazi lazima kuwe na cheti halali cha usajili wa OSHA?",
+   "reply_head": "Ndiyo. Mahali pa kazi panapaswa kusajiliwa na kupata cheti halali cha "
+  },
+  {
+   "id": "eval_183",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Mwajiri asiyesajili OSHA anaweza kufungiwa biashara yake?",
+   "reply_head": "Ndiyo — OSHA ina nguvu kamili ya kutoa amri ya kusimamisha shughuli ka"
+  },
+  {
+   "id": "eval_201",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, SDL inakatwa kutoka mshahara wa mfanyakazi kama vile PAYE?",
+   "reply_head": "Hapana kabisa. SDL inalipwa na mwajiri pekee — haikatwi kutoka mshahar"
+  },
+  {
+   "id": "eval_202",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, chakula kinatozwa VAT ya asilimia 5 nchini Tanzania Bara?",
+   "reply_head": "Hapana. Tanzania haina viwango vya VAT vya chini (reduced rates) vya a"
+  },
+  {
+   "id": "eval_203",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Mfanyakazi akiondoka kazini, je ninapaswa kumpa fomu ya P45 kama inavyotumika Uingereza?",
+   "reply_head": "Hapana, fomu ya P45 haipo katika mfumo wetu wa kodi Tanzania. Tofauti "
+  },
+  {
+   "id": "eval_204",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nimefunga ndoa na raia wa Tanzania — je hilo linanipa haki ya kufanya biashara ya rejareja",
+   "reply_head": "Hapana — ndoa na raia wa Tanzania haikupi msamaha wowote chini ya GN 4"
+  },
+  {
+   "id": "eval_205",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Je, ninaweza kukata rufaa dhidi ya tathmini ya kodi ya TRA bila kulipa kiasi chochote kwan",
+   "reply_head": "Ndiyo, unaweza kuomba ukaguzi wa ndani (internal appeal) kabla ya kuli"
+  },
+  {
+   "id": "eval_206",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nimesajili biashara yangu BRELA — je hiyo inamaanisha nimesajili OSHA pia?",
+   "reply_head": "Hapana — BRELA inasajili makampuni na majina ya biashara; OSHA inasaji"
+  },
+  {
+   "id": "eval_207",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, msambazaji anapoteza haki ya kudai VAT ya pembejeo pale mnunuzi anapokata VAT withhold",
+   "reply_head": "Hapana — msambazaji bado ana haki ya kudai VAT ya pembejeo (input VAT "
+  },
+  {
+   "id": "eval_208",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Biashara yangu imepata mauzo ya TZS milioni 95 katika miezi 6 — je nimevuka kizingiti cha ",
+   "reply_head": "Ndiyo — umefikia kizingiti cha TZS 100M/6 miezi. Lazima usajili VAT na"
+  },
+  {
+   "id": "eval_210",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, kiwango cha mshahara wa chini cha mwaka 2022 bado kinatumika baada ya Januari 2026?",
+   "reply_head": "Hapana. Viwango vya mshahara wa chini vya mwaka 2022 vilimalizika rasm"
+  },
+  {
+   "id": "eval_212",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, ni kweli kwamba bidhaa za dawa bado zinasimamiwa na TFDA nchini Tanzania?",
+   "reply_head": "Hapana, si sahihi tena. Taasisi husika sasa ni TMDA (Tanzania Medicine"
+  },
+  {
+   "id": "eval_213",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, raia wa Tanzania anayekopesha leseni yake kwa mgeni naye anaadhibiwa chini ya GN 487A?",
+   "reply_head": "Ndiyo — raia wa Tanzania anayekopesha leseni yake kwa mgeni anakabiliw"
+  },
+  {
+   "id": "eval_214",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, ukaguzi wa kila mwaka wa OSHA mahali pa kazi ni wa lazima?",
+   "reply_head": "Ndiyo, ukaguzi wa kila mwaka wa OSHA ni WA LAZIMA chini ya Sheria ya A"
+  },
+  {
+   "id": "eval_215",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mteja anasema haitaji risiti kwa sababu amelipa kwa mobile money — je bado nina wajibu wa ",
+   "reply_head": "Ndiyo — malipo ya mobile money hayabadilishi wajibu wa kutoa risiti ya"
+  },
+  {
+   "id": "eval_225",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Je, kuomba kuongezewa muda wa siku 30 wa kuwasilisha pingamizi ni jambo la nadra sana?",
+   "reply_head": "Hapana, si jambo la nadra. Ni haki ya msingi ya kisheria inayotolewa n"
+  },
+  {
+   "id": "eval_254",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Bei ya soko ya duka langu ni TZS 25,000,000, WCF nailipa kutokana na thamani hiyo?",
+   "reply_head": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanya"
+  },
+  {
+   "id": "eval_258",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nalipa kodi ya pango TZS 850,000 kwa mwezi kwa ofisi, hii inaingia kwenye hesabu ya SDL?",
+   "reply_head": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanya"
+  },
+  {
+   "id": "eval_261",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Gharama za umeme mwezi huu ni TZS 1,200,000, je zinabadilisha kiasi cha SDL ninachodaiwa?",
+   "reply_head": "Hapana. SDL inatozwa kwa asilimia 3.5 ya jumla ya mishahara ya wafanya"
+  },
+  {
+   "id": "eval_266",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kampuni yangu ina magari 14, WCF inahesabiwa kwa kila gari?",
+   "reply_head": "Hapana. WCF inatozwa kwa asilimia 0.5 ya jumla ya mishahara ya wafanya"
+  },
+  {
+   "id": "eval_268",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nina wateja 1,500 kwa mwezi, je hii inanifanya nilazimike kusajili VAT?",
+   "reply_head": "Hapana, kwa sasa unauza chini ya kiwango cha VAT cha asilimia 18% (TZS"
+  },
+  {
+   "id": "eval_308",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, kama nina wafanyakazi 8 tu, bado nalazimika kulipa NSSF?",
+   "reply_head": "Ndiyo, kwa kuwa hakuna kikomo cha chini cha idadi ya wafanyakazi kinac"
+  },
+  {
+   "id": "eval_310",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Nina wafanyakazi 6 na mishahara ya TZS 2,400,000, je nalazimika kusajili mahali pa kazi na",
+   "reply_head": "Ndiyo, unatakiwa kusajili mahali pako pa kazi na OSHA. Sheria ya Afya "
+  },
+  {
+   "id": "eval_311",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Nina mfanyakazi mmoja tu anayelipwa TZS 500,000, je bado nachangia WCF?",
+   "reply_head": "Ndiyo, unachangia WCF kwa asilimia 0.5 ya jumla ya mishahara. Thibisha"
+  },
+  {
+   "id": "eval_331",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mauzo yangu ni TZS 9,000,000 kwa mwaka na sina VAT, je nahitaji EFD na kama ndiyo nitoe ri",
+   "reply_head": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi"
+  },
+  {
+   "id": "eval_332",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "Kama mgeni je naweza kufanya biashara ya jumla (wholesale) na je adhabu yangu ikikutwa ni ",
+   "reply_head": "Ndiyo, kulingana na Taarifa ya Serikali Na. 487A (GN487A), shughuli ya"
+  },
+  {
+   "id": "eval_335",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kiwango cha WCF ni asilimia 3.5 ya mishahara, sivyo?",
+   "reply_head": "Hapana. Kiwango cha WCF ni asilimia 0.5 ya mishahara ghafi (gross payr"
+  },
+  {
+   "id": "eval_336",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "GN 605A ndiyo inayozuia biashara za wageni Tanzania, sivyo?",
+   "reply_head": "Hapana. GN 605A inazuia shughuli za kiutawala katika sekta ya umma (go"
+  },
+  {
+   "id": "eval_338",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "VAT withholding kwa huduma ni asilimia 18 kama kiwango cha kawaida, sivyo?",
+   "reply_head": "Hapana. Kiwango cha VAT kwa huduma ni asilimia 18 kama kiwango cha kaw"
+  },
+  {
+   "id": "eval_339",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "GN 487A ilianza kutumika Januari 2026, sivyo?",
+   "reply_head": "Hapana. GN 487A ilianza kutumika tarehe 28 Julai 2025 — si Januari 202"
+  },
+  {
+   "id": "eval_340",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Ada ya kuwasilisha annual return BRELA ni TZS 2,500, sivyo?",
+   "reply_head": "Hapana — ada ya kuwasilisha annual return BRELA ni TZS 22,000, si TZS "
+  },
+  {
+   "id": "eval_341",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+   "reply_head": "Hapana. Kizingiti cha SDL ni wafanyakazi 10 AU ZAIDI — si 4. Thibitish"
+  },
+  {
+   "id": "eval_342",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kiwango cha juu kabisa cha PAYE ni asilimia 25, sivyo?",
+   "reply_head": "Hapana, kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 30, si as"
+  },
+  {
+   "id": "eval_343",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Ajali ya kazini WCF lazima itolewe taarifa ndani ya siku 30, sivyo?",
+   "reply_head": "Hapana, taarifa ya ajali kwa WCF inatakiwa ndani ya siku 7 za kazi, si"
+  },
+  {
+   "id": "eval_344",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+   "reply_head": "Hapana, si asilimia 30. Kwa wakazi wa Tanzania, kiwango cha juu kabisa"
+  },
+  {
+   "id": "eval_345",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",
+   "reply_head": "Hapana. SDL inalipwa ifikapo tarehe 7 ya mwezi unaofuata — si tarehe 2"
+  },
+  {
+   "id": "eval_346",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Adhabu ya raia wa Tanzania anayemsaidia mgeni chini ya GN 487A ni TZS 10,000,000, sivyo?",
+   "reply_head": "Hapana — adhabu ya Msaidizi ni TZS 5,000,000 AU kifungo cha miezi 3, s"
+  },
+  {
+   "id": "eval_348",
+   "gold": "N",
+   "reply": "Y",
+   "inverted": true,
+   "q": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+   "reply_head": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na m"
+  },
+  {
+   "id": "eval_349",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kizingiti cha usajili wa VAT kwa mwaka mzima ni TZS 100,000,000, sivyo?",
+   "reply_head": "Hapana — kizingiti sahihi cha mwaka ni TZS 200,000,000. Kizingiti cha "
+  },
+  {
+   "id": "eval_350",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Kima cha chini cha mshahara cha GN 605A kilianza kutumika Julai 2025, sivyo?",
+   "reply_head": "Hapana. GN 605A iligazetishwa tarehe 13 Oktoba 2025 na ilikuwa na tare"
+  },
+  {
+   "id": "eval_351",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mapato yangu yamefika TZS 200,000,000 kamili kwa mwaka, je nalazimika kusajili VAT?",
+   "reply_head": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 200,000,000 kwa mie"
+  },
+  {
+   "id": "eval_353",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Mapato yangu ni TZS 199,000,000 kwa mwaka na TZS 99,000,000 kwa miezi 6 — je nasajili VAT?",
+   "reply_head": "Hapana — bado haujafika kizingiti cha TZS 200M/12 miezi au TZS 100M/6 "
+  },
+  {
+   "id": "eval_354",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mauzo yangu ni TZS 11,000,000 kamili kwa mwaka, je nalazimika kutumia EFD?",
+   "reply_head": "Ndiyo, unatakiwa kuwa na mashine ya EFD kwa default, bila kujali kiasi"
+  },
+  {
+   "id": "eval_355",
+   "gold": "Y",
+   "reply": "N",
+   "inverted": true,
+   "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+   "reply_head": "Hapana, kwa sababu umefika chini ya kizingiti cha TZS 11M. Thibitisha "
+  },
+  {
+   "id": "eval_363",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Nina wafanyakazi 9 na mishahara TZS 3,600,000 — je SDL inanihusu?",
+   "reply_head": "Hapana. Una wafanyakazi 9, chini ya kiwango cha 10. SDL inatakiwa tu p"
+  },
+  {
+   "id": "eval_366",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mzunguko wangu umefika TZS 200,000,000, lakini nasema sijavuka, nimefikia tu — je bado nas",
+   "reply_head": "Ndiyo, lazima usajili VAT haraka. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_370",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Mzunguko wangu wa miezi 6 umefika TZS 100,500,000 — je nimevuka kizingiti cha VAT?",
+   "reply_head": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 100,500,000 kwa mie"
+  },
+  {
+   "id": "eval_389",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mgeni HARUHUSIWI kufanya biashara ya rejareja Tanzania?",
+   "reply_head": "Ndiyo — mgeni haruhusiwi kufanya biashara ya rejareja (activity 1) nch"
+  },
+  {
+   "id": "eval_391",
+   "gold": "N",
+   "reply": "N",
+   "inverted": false,
+   "q": "Si lazima kusajili mahali pa kazi na OSHA kama nina mfanyakazi mmoja tu, sivyo?",
+   "reply_head": "Hapana, si sahihi. Sheria ya Afya na Usalama Mahali pa Kazi Na.5 ya 20"
+  },
+  {
+   "id": "eval_392",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, mfanyakazi asiye mkazi HALIPI mabano ya kawaida ya PAYE?",
+   "reply_head": "Ndiyo, kwa sababu si mkazi, mabano hayo huwa hayatumiki. Thibitisha na"
+  },
+  {
+   "id": "eval_393",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Kampuni yenye wafanyakazi 9 haitakiwi kulipa SDL, sivyo?",
+   "reply_head": "Ndiyo, ni kweli — SDL haihusiki: una wafanyakazi 9 (chini ya 10). SDL "
+  },
+  {
+   "id": "eval_394",
+   "gold": "Y",
+   "reply": "Y",
+   "inverted": false,
+   "q": "Je, NSSF si ya hiari kwa mwajiri anayestahili?",
+   "reply_head": "Ndiyo, ni kweli — NSSF si ya hiari kwa mwajiri anayestahili — ni LAZIM"
+  }
+ ]
+}

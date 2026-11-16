@@ -1,0 +1,19 @@
+{"id": "cv_01", "kind": "topic", "want": "wcf_disease_reporting", "question": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?", "guards_against": "FOUNDING: eval_239"}
+{"id": "cv_02", "kind": "topic", "want": "wcf_disease_reporting", "question": "Mfanyakazi amepata ugonjwa kutokana na kazi, mwajiri apeleke taarifa WCF ndani ya siku ngapi?", "guards_against": "natural phrasing"}
+{"id": "cv_03", "kind": "topic", "want": "wcf_accident_reporting", "question": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali", "guards_against": "an ACCIDENT must keep its own route"}
+{"id": "cv_04", "kind": "none", "want": null, "question": "Mfanyakazi amefariki kazini, nitoe taarifa WCF ndani ya muda gani?", "guards_against": "death is a different limb: not swallowed by the disease cue"}
+{"id": "cv_05", "kind": "none", "want": null, "question": "Likizo ya ugonjwa ni siku ngapi?", "guards_against": "sick leave is not occupational disease"}
+{"id": "cv_06", "kind": "none", "want": null, "question": "Fidia ya ugonjwa wa kazini ni kiasi gani?", "guards_against": "compensation amount, not the reporting chain"}
+{"id": "cv_07", "kind": "none", "want": null, "question": "Ugonjwa wa kazini na ajali ni tofauti gani?", "guards_against": "two topics / a comparison"}
+{"id": "cv_08", "kind": "topic", "want": "nssf_split", "question": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?", "guards_against": "FOUNDING: eval_348 (negated/false-premise form is answered whole, not by polarity)"}
+{"id": "cv_09", "kind": "topic", "want": "nssf_split", "question": "Naweza kulipa NSSF kwa mgawanyo wa 15 kwa 5?", "guards_against": "plain ask"}
+{"id": "cv_10", "kind": "none", "want": null, "question": "Adhabu ya kuchelewa kulipa NSSF ni nini?", "guards_against": "penalty, not the split"}
+{"id": "cv_11", "kind": "none", "want": null, "question": "Mgao wa faida kwa wanahisa baada ya kodi ni upi?", "guards_against": "no NSSF: 'mgao' alone is not the split"}
+{"id": "cv_12", "kind": "intent", "want": "nssf", "question": "Mshahara ni TZS 700,000 na tumekubaliana mgao wa 15% mwajiri na 5% mfanyakazi — kila upande ni ngapi?", "guards_against": "FOUNDING: eval_398, a split WITH a figure computes"}
+{"id": "cv_13", "kind": "intent", "want": "nssf", "question": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?", "guards_against": "control: a plain NSSF compute is unchanged"}
+{"id": "cv_14", "kind": "topic", "want": "paye_band_table", "question": "Mfumo wa mabano ya PAYE ya kila mwezi unafuata mpangilio gani wa viwango?", "guards_against": "FOUNDING: eval_229"}
+{"id": "cv_15", "kind": "topic", "want": "paye_band_table", "question": "Viwango vya PAYE ni vipi?", "guards_against": "plain ask"}
+{"id": "cv_16", "kind": "none", "want": null, "question": "PAYE inalipwa lini?", "guards_against": "deadline, not the table"}
+{"id": "cv_17", "kind": "intent", "want": "paye", "question": "Mshahara wa mfanyakazi ni TZS 800,000, PAYE ni ngapi?", "guards_against": "control: a PAYE compute is unchanged"}
+{"id": "cv_18", "kind": "none", "want": null, "question": "Mabano ya kodi ya makadirio ni yapi?", "guards_against": "presumptive bands, no PAYE token"}
+{"id": "cv_19", "kind": "none", "want": null, "question": "Adhabu ya kuchelewa kulipa PAYE ni nini?", "guards_against": "penalty"}
