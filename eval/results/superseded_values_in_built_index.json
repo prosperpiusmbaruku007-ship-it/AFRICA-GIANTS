@@ -5,8 +5,8 @@
     "arm1_own_row": "BLOCKING. A fact's superseded figure in the row that renders that fact has no innocent reading.",
     "arm2_whole_index": "REPORTING ONLY. Figure collisions across subjects are expected: TZS 22,000 is the superseded special-report fee AND the current annual-return fee. A figure test is context-blind by construction, not by being too narrow."
   },
-  "rows_in_built_index": 184,
-  "facts_declaring_a_supersession": 11,
+  "rows_in_built_index": 211,
+  "facts_declaring_a_supersession": 12,
   "arm1_blocking": [],
   "arm1_clean": [
     {
@@ -119,6 +119,13 @@
       "mentioned_under_negation": [
         "USD 25"
       ]
+    },
+    {
+      "fact": "wcf_accident_reporting_deadline",
+      "row_key": "wcf_accident_reporting_deadline",
+      "verdict": "CLEAN",
+      "superseded_tokens_checked": [],
+      "mentioned_under_negation": []
     }
   ],
   "arm2_reporting": [
