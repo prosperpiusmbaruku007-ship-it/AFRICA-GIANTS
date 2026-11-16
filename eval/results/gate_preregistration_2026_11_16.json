@@ -1,0 +1,64 @@
+{
+ "_what": "The expectation for the THIRD full gate (first since 0e11c3d, 2026-10-09), written and COMMITTED BEFORE it is launched so the result cannot be read backwards into it. Check with `git log --diff-filter=A -- eval/results/gate_preregistration_2026_11_16.json` against the results artifact's add-commit.",
+ "run": {
+  "harness": "kaggle/eval_gate_production_2026_10_09.py (HEAD at launch)",
+  "n_questions": 400,
+  "configuration": "production single-arm retriever over the 211-row index (sha256 cfaaa6f1...), D-FIDELITY-7/8/9/10 wired, statement route and fixed-statement route live, R44 strips in served text",
+  "judge": "MANDATORY; the bracket is the headline, the regex figure beside it (R12b)",
+  "deployed_build_verified_live": "0a12a4e (served index identity == committed, 211 rows)"
+ },
+ "baseline": {
+  "commit": "0e11c3d",
+  "index_rows": 184,
+  "in_corpus_raw": "316/384 = 82.3%",
+  "A1_wrong": "45 (11.7%)",
+  "no_answer": 23,
+  "judge_augmented": "303/370 = 81.9%",
+  "hand_adjudicated_overall": "~78-79%",
+  "fact_path_190_raw": "85.2%"
+ },
+ "enumerated_blast_radius": {
+  "instrument": "eval/controls/gate_blast_radius_2026_11_16.py -> eval/results/gate_blast_radius_2026_11_16.json (prompt-level, both trees in separate processes, each with its own committed index and the production single-arm retriever)",
+  "summary": {
+   "head": "0a12a4e",
+   "baseline": "0e11c3d",
+   "n": 400,
+   "index_rows": {
+    "before": 184,
+    "after": 211
+   },
+   "changed": 180,
+   "unchanged": 220,
+   "changed_by_reason": {
+    "route": 8,
+    "prompt_only": 169,
+    "model_free_text_only": 3
+   },
+   "changed_baseline": {
+    "PASS": 148,
+    "FAIL": 32
+   },
+   "unchanged_baseline": {
+    "PASS": 184,
+    "FAIL": 36
+   },
+   "errors": 0
+  },
+  "reading": "180 of 400 rows can have moved: 8 by ROUTE (all model-free now), 3 by model-free TEXT only, 169 by PROMPT only (the retrieved facts/ordering changed because the index grew 184->211 and 32+ rows were rewritten). 220 rows (184 PASS / 36 FAIL at baseline) have a byte-identical prompt and cannot move. The prompt-only term is 42% of the corpus: index composition perturbs neighbours (nat_23 45->46 is the standing precedent) and this term is UNSIGNED."
+ },
+ "predictions": {
+  "P1_control_arm": "The 220 unchanged rows: ZERO pass/fail flips and zero changed replies beyond whitespace-level drift (tolerance: at most 3 rows whose reply text differs, none whose verdict differs). A verdict flip in an unchanged row FALSIFIES the enumeration (R12c step 2): the blast radius is then unbounded and the run is read as a batch of unknowns.",
+  "P2_deterministic_rows": "The 11 model-free rows (eval_086/087/111/112/130/209/233/305/314/364/394), scored by the package's own scorer on the stored deterministic text BEFORE the run: 10 PASS (unchanged), eval_364 FAIL (a regex yes/no polarity artifact: the text leads 'Ndiyo', the gold 'Inakuhusu'; the judge already called its baseline reply correct). So the REGEX headline moves by 0 from these rows; the JUDGE bracket's lower bound rises by 3 (eval_086, eval_130, eval_394 were adjudicated FALSE_PASS at baseline and are now model-free and correct).",
+  "P3_prompt_only_169": "138 were PASS and 31 FAIL at baseline (the 31: vat_registration 11, vat_withholding 6, nssf 4, efd 3, osha 3, sdl 2, paye 1, gn487a 1, wcf 1 -- the coverage batch's subjects). Gains are bounded by 31 (+8.1 pts) and exposure by 138. Central expectation: 6-12 of the 31 flip to PASS (the governing fact now reaches the top 3 but the model ceiling -- the fact served and contradicted -- caps it: 5 of ~24 new-fact answers were wrong AT RANK 1 on 2026-11-13, 3 of 8 changed answers today), and 3-8 of the 138 regress (index-perturbation precedent). NET +0 to +9 rows, central +4.",
+  "P4_headline": "In-corpus raw A2 82.3% -> central 83.3% (320/384), plausible band 81.5% - 85.0%. I am NOT predicting Gate 1 clears 85%: the probability of >=85.0% raw is low (about 1 in 10) and the fact-path bucket sat ON the line (85.2%) at the baseline, not clear of it.",
+  "P5_A1_and_no_answer": "A1 (confident wrong) 11.7% -> about 10-11%; no_answer 23 -> 24-30 (guards convert wrong answers to non-answers). Reported separately, never netted (A1 falling is not A2 rising).",
+  "P6_judge_bracket": "Baseline bracket upper 81.9% (every queued candidate survives) / lower with the queue fully upheld. Expected: lower bound +3 rows from P2, upper bound within the P4 band. ONLY hand adjudication of the new disagreement queue moves the true figure.",
+  "P7_rows_to_read_first": "eval_347 must remain outcome NO_ANSWER with guard D-FIDELITY-7 (a FAIL that is a WIN); eval_086/130/394 must be correct; eval_364 FAIL is expected (artifact); the 31 changed baseline-FAIL rows are the A2 population; any baseline-PASS row that flips to FAIL inside the 169 is read by hand BEFORE any aggregate is quoted.",
+  "P8_gate_2": "The package scores only the 16 out_of_corpus rows of the 400 (its own header says Gate 2 is NOT measured by it): expected 16/16, since no OOC list, classifier or refusal copy changed since 0e11c3d (git diff of chike_config ooc/in_scope phrases: 0 lines; classification.py unchanged). That figure is a floor on an instrument the project already measured at a 37x corpus-vs-held-out gap (R21): 16/16 on rows that share vocabulary with the facts says nothing about a stranger's out-of-scope question. The real Gate 2 is the frozen held-out set plan below, for the founder's decision; no new refusal mechanism is built.",
+  "P9_what_would_change_my_reading": "(a) any flip in the 220 control rows; (b) more than 12 regressions among the 138; (c) A1 rising; (d) eval_347 asserting the fabricated threshold; (e) the served index identity at run time differing from cfaaa6f1... (the package's own pre-flight refuses that)."
+ },
+ "known_open_before_the_run": [
+  "Three of eight changed answers read wrong at rank 1 in the live check of 2026-11-16 (voluntary VAT registration x2, WCF 'counted from the accident day', VAT-withholding mixed supply naming the RATE as apportioned): generation defects on correct rank-1 rows, the class no index edit reaches. Statement routes for them are proposed to the founder and NOT built, so this gate measures the system WITHOUT them.",
+  "The SFT training corpus carries 'siku 7 baada ya ajali' pairs (5 rows in train_sft.jsonl, 13 files) that teach the superseded WCF trigger; no retrain is planned, so quarantining them changes nothing until one."
+ ]
+}

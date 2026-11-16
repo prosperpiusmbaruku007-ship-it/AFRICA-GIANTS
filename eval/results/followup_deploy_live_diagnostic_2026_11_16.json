@@ -1,0 +1,38 @@
+{
+ "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?": {
+  "reply": "Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).",
+  "facts": [
+   "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango? Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+   "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti.",
+   "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako."
+  ],
+  "answer_path": null,
+  "path": "fact",
+  "model_calls": 1,
+  "guards": []
+ },
+ "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?": {
+  "reply": "Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).",
+  "facts": [
+   "Ajali kazini, taarifa WCF ni ndani ya siku ngapi? Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
+   "wcf accident reporting deadline: Mfanyakazi ameumia, nina siku ngapi za kupeleka taarifa ya ajali? Mwajiri aijulishe WCF ndani ya siku 7 tangu apokee taarifa ya ajali (au ajue ajali) -- SI tangu tarehe ya ajali; mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi.",
+   "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (Sheria ya OSHA Na.5 ya 2003), hukagua, na hutoa leseni ya utii kila mwaka — OSHA HAILIPI fidia ya ajali. Fidia ya ajali na magonjwa ya kazini hulipwa na WCF (mwajiri huchangia 0.5% ya mishahara). Usajili wa OSHA na wa WCF ni tofauti; vyote vinahitajika. WCF huanza tangu mfanyakazi wa kwanza — HAKUNA kizingiti cha wafanyakazi wawili."
+  ],
+  "answer_path": null,
+  "path": "fact",
+  "model_calls": 1,
+  "guards": []
+ },
+ "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?": {
+  "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).",
+  "facts": [
+   "Nauza bidhaa na huduma pamoja (mfano mkandarasi anayetoa vifaa na kazi), VAT ya zuio inakatwaje? VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti.",
+   "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanzania Bara, tangu 2015 (VAT Act Cap.148 s.5(1)). SIYO 14%. Kuna ubaguzi finyu wa asilimia 16 kwa malipo ya kielektroniki kwa mteja wa kawaida (si VAT), kuanzia 1 Septemba 2025 (Finance Act 2025) -- hauhusu B2B, mauzo nje ya nchi, wala malipo taslimu."
+  ],
+  "answer_path": null,
+  "path": "fact",
+  "model_calls": 1,
+  "guards": []
+ }
+}

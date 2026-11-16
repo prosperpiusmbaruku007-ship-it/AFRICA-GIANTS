@@ -24,7 +24,9 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, REPO)
 import verify_coverage_deploy_live_2026_11_13 as prior          # noqa: E402
 
-OUT = os.path.join(REPO, "eval", "results", "fixed_statements_deploy_live_2026_11_16.json")
+# CHIKE_VERIFY_OUT lets a RE-RUN against a later deploy write its own artifact (this harness resumes from OUT, so re-running over the old file would skip every
+# row): 2026-11-16 ran it again after the 211-row follow-up deploy (statement text changed under R44) into ..._after_211.json.
+OUT = os.environ.get("CHIKE_VERIFY_OUT") or os.path.join(REPO, "eval", "results", "fixed_statements_deploy_live_2026_11_16.json")
 
 # (arm, question, [regexes that must ALL match], [regexes that must NOT match], expect_path_prefix or None)
 CASES = [

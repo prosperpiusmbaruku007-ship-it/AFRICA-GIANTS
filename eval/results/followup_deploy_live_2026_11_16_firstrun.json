@@ -1,0 +1,298 @@
+{
+ "identity": {
+  "served": {
+   "build": "0a12a4e",
+   "rag_rows_loaded": 211,
+   "rag_embeddings_shape": [
+    211,
+    768
+   ],
+   "rag_facts_text_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+   "config_rag_fact_count": 211,
+   "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+   "coldstart": {
+    "container_import_ts": 1794838249.104,
+    "enter_started_ts": 1794838249.111,
+    "enter_done_ts": 1794838284.902,
+    "import_to_enter_s": 0.0,
+    "load_s": 35.8,
+    "gpu": "Tesla T4"
+   }
+  },
+  "committed_rows": 211,
+  "committed_sha256": "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b",
+  "took_s": 50.3
+ },
+ "rows": [
+  {
+   "arm": "NEW",
+   "q": "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?",
+   "reply": "Ndiyo, kwa mujibu wa sheria, unaweza kujisajili VAT kwa hiari hata ukiwa chini ya kiwango cha lazima. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 13.9
+  },
+  {
+   "arm": "NEW",
+   "q": "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?",
+   "reply": "Kulingana na sheria, lazima uwe umefikia kiwango cha mauzo cha shilingi milioni 200 katika kipindi cha miezi 12 ili usajiliwe kwa hiari. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 6.4
+  },
+  {
+   "arm": "NEW",
+   "q": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali",
+   "reply": "Mwajiri aijulishe WCF ndani ya siku 7 tangu apokee taarifa ya ajali (au ajue ajali). Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 5.6
+  },
+  {
+   "arm": "NEW",
+   "q": "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?",
+   "reply": "Mwajiri aijulishe WCF ndani ya siku 7 tangu apokee taarifa ya ajali (au ajue ajali). Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 5.9
+  },
+  {
+   "arm": "NEW",
+   "q": "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?",
+   "reply": "Taarifa ya ajali kwa WCF inaanza kuhesabiwa tangu siku ya ajali au siku ambayo mwajiri alipata habari za ajali hiyo. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 6.3
+  },
+  {
+   "arm": "NEW",
+   "q": "Namlipa mkandarasi wa ujenzi, nakata kodi ya zuio asilimia ngapi?",
+   "reply": "Kodi ya zuio kwa huduma za kitaalamu zinazohusisha ujenzi ni asilimia 5% kwa mkazi na asilimia 15% kwa asiye mkazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.9
+  },
+  {
+   "arm": "NEW",
+   "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 8.1
+  },
+  {
+   "arm": "NEW",
+   "q": "Mkandarasi anatoa vifaa na kazi, VAT ya zuio inahesabiwaje?",
+   "reply": "Kwa huduma zenye vifaa na huduma pamoja, sheria inasema unagawanya thamani iliyozuiwa katika uwiano wa 3:2 (bidhaa: huduma). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.4
+  },
+  {
+   "arm": "R44",
+   "q": "Notisi ya kuachisha mfanyakazi wa kila mwezi ni siku ngapi?",
+   "reply": "Notisi ya kuacha au kuachishwa kazi: mwezi wa kwanza ni siku 7. Baada ya hapo: siku 4 kwa mfanyakazi wa kila siku au kila wiki, siku 28 kwa wa kila mwezi. Mkataba unaweza kuweka muda mrefu zaidi ikiwa ni sawa kwa mwajiri na mfanyakazi. Notisi iandikwe ikitaja sababu na tarehe; mwajiri anaweza kulipa mshahara wa kipindi cha notisi badala yake (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 5.2
+  },
+  {
+   "arm": "R44",
+   "q": "Likizo ya uzazi ni siku ngapi?",
+   "reply": "Thibitisha na ELRA.Siku 84 zenye malipo kwa kawaida, lakini inaweza kuwa siku 100 kwa wazazi wenye watoto zaidi ya mmoja kwa pamoja. Thibitisha na ELRA (elra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.0
+  },
+  {
+   "arm": "R44",
+   "q": "PAYE inalipwa lini?",
+   "reply": "Hapana — tarehe 20 ni tarehe ya kufungua faili ya PAYE (si malipo). PAYE inalipwa ndani ya siku 7 baada ya mwisho wa mwezi, yaani ifikapo tarehe 7 ya mwezi unaofuata. Tarehe 20 ni tarehe tofauti kabisa — si sahihi kwa PAYE. Thibitisha na TRA tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 11.0
+  },
+  {
+   "arm": "R44",
+   "q": "Kodi ya zuio kwa mshauri wa kodi ni asilimia ngapi?",
+   "reply": "Kodi ya zuio kwa malipo ya huduma za kodi (tax consultancy fees) ni asilimia 5 kwa mkazi na asilimia 15 kwa asiye mkazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 6.3
+  },
+  {
+   "arm": "R44",
+   "q": "Je, mfanyabiashara mpya mwenye TIN mpya ana msamaha wa kodi ya makadirio?",
+   "reply": "Hapana kwa msamaha wa moja kwa moja. TIN haikupi msamaha wowote wa kodi. Msamaha unapatikana kupitia ombi rasmi kwa Kamishna wa TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 6.7
+  },
+  {
+   "arm": "R44",
+   "q": "Nikichelewa kulipa PAYE adhabu ni nini?",
+   "reply": "Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi ambacho hakijalipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 7.8
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "SDL ni asilimia ngapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 3.3
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kiwango cha VAT ni asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha VAT ni asilimia 18. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 4.5
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "VAT ya zuio kwa bidhaa ni asilimia ngapi?",
+   "reply": "Kiwango cha VAT ya zuio kwa bidhaa ni asilimia 3, kulingana na Sheria ya Fedha ya 2026. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 5.8
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi. PAYE ni kiasi gani?",
+   "reply": "Hesabu:\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000)\n= TZS 68,000 + 25% × TZS 40,000\n= TZS 68,000 + TZS 10,000\n= TZS 78,000\nKumbuka: TZS 760,000 ni kiwango cha pili cha PAYE (8%), na TZS 40,000 ni ziada juu ya hapo. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true,
+   "took_s": 22.1
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Overtime inalipwa kiasi gani?",
+   "reply": "Overtime (saa za ziada) inalipwa angalau mara 1.5 ya mshahara wa msingi. Overtime ni kwa makubaliano tu, na isizidi saa 50 kwa kila wiki 4 (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls_0": true
+   },
+   "ok": true,
+   "took_s": 2.7
+  }
+ ]
+}
