@@ -305,6 +305,12 @@ DECLARED = {
         'superseded_by': 'Cap. 101 R.E. 2023, brela/business_licensing_act_cap101_re2023.pdf (sha256 650aa1c7...). s.7 (Validity of licences) was amended by Act 2 of 2014 s.6 to twelve months from issuance; the section number did not move (s.7 in both).',
         'do_not_verify_against': 'THIS EDITION PRODUCED THE 30 JUNE ERROR in locked fact business_licence_expiry_30_june, which read CONFIRMED for three months. s.7 here says 30 June; s.7 of R.E.2023 says twelve months. The chapter number also changed (208 -> 101), so a search for Cap.208 now finds a different Act.',
     },
+    'brela/companies_act_cap212_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "page header on every page: 'THE COMPANIES ACT [CAP. 212 R.E. 2023]'; cover 'CHAPTER 212 THE COMPANIES ACT [PRINCIPAL LEGISLATION]'. Read 2026-11-17 for the annual-return deadline: Part 'ANNUAL RETURN', s.131(1) 'A company shall deliver to the Registrar, successive annual returns each of which is made up to a date not later than the \"return date\", that is- (a) the anniversary of the company's incorporation; or (b) if the company's last return ... was made up to a different date, the anniversary of that date'; s.131(3) 'fails to deliver an annual return in accordance with this Chapter within twenty eight days of the return date, the company and every officer of the company who is in default shall be liable to a fine'. The file's own page furniture carries a 2025 OAG copyright watermark, so the text extraction is scrambled in layout mode: read in raw mode.",
+        'superseded': False,
+    },
     'brela/brela_matrix_business_licensing_act_2021.pdf': {
         'kind': 'portal',
         'edition': 'BRELA proposed-amendments matrix, 25 Nov 2021',

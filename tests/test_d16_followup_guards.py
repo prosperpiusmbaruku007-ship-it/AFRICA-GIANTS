@@ -193,7 +193,8 @@ def test_prospective_index_rows_carry_the_corrected_content_and_clear_their_own_
             assert not re.search(w, by[k], re.IGNORECASE | re.DOTALL), f"index row {k} matches its own wrong_pattern {w!r}"
         assert "Kifungu" not in by[k] and "Vifungu" not in by[k], f"R44 {k}"
     # the four NEW rows trail the index: no existing row number moves
-    assert keys[-4:] == ["corporate_income_tax_return", "business_licence_authority", "gn605a_issuer", "severance_pay_income_tax"]
+    assert keys[211:215] == ["corporate_income_tax_return", "business_licence_authority", "gn605a_issuer", "severance_pay_income_tax"]    # 2026-11-17 batch 3 appended row 215 after these four (company_annual_return_deadline), so "the last four" is now an explicit slice
+    assert keys[215:] == ["company_annual_return_deadline"]
     assert keys.index("business_licence_expiry_30_june") == 168
 
 

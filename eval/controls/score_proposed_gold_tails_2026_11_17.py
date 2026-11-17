@@ -12,6 +12,8 @@ import sys
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO)
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import atomic_artifact  # noqa: E402  (2026-11-17: the artifact is written ATOMICALLY: temp file + os.replace)
 from chike import fidelity, judge, scoring                                              # noqa: E402
 
 OUT = os.path.join(REPO, "eval", "results", "proposed_gold_tails_scored_2026_11_17.json")
@@ -50,7 +52,7 @@ def main():
             s["judge_old_on_repaired"] = judge.judge_majority(p["question"], p["old_sw"], repaired, api_key=key)
             s["judge_new_on_repaired"] = judge.judge_majority(p["question"], p["new_sw"], repaired, api_key=key)
             rec["scores"][gname] = s
-            io.open(OUT, "w", encoding="utf-8").write(json.dumps(out, ensure_ascii=False, indent=1))
+            atomic_artifact.write_json(OUT, out, ensure_ascii=False, indent=1)
     for rid, rec in out["rows"].items():
         for g, s in rec["scores"].items():
             print(rid, g, "regex old/new", s["regex_old"], s["regex_new"], "| judge old/new", s["judge_old"]["verdict"], s["judge_new"]["verdict"], s["judge_old"]["votes"], s["judge_new"]["votes"])

@@ -1131,6 +1131,18 @@ _FOLLOWUP_2026_11_17 = {
 _COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('corporate_income_tax_return', 'business_licence_authority', 'gn605a_issuer', 'severance_pay_income_tax')
 CONCISE_BILINGUAL_FACTS.update(_FOLLOWUP_2026_11_17)
 
+# ─── 2026-11-17 BATCH 3: the company annual-return deadline (queued in kaggle/NEXT_REGEN_QUEUE.md, founder-approved) ─────────────────────────────────────
+# ONE NEW row, appended after row 214 so no existing row number moves. Ask-aligned lead (the asker's words first, R15), the value, then the qualifier; NO section number in the Swahili text (R44: it lives in locked_facts metadata).
+# Companies Act Cap.212 R.E.2023: each annual return is made up to the anniversary of incorporation (or of the last return's date) and delivered within 28 days of that return date. The wrong claims it exists to displace
+# are 'ndani ya miezi 12 tangu usajili' (a live reply, gate c2143c0 / 0e11c3d eval_072) and '30 Septemba'; the row names both to deny them, and the fact's own wrong_patterns are shown NOT to match it (check_correction_sync).
+_BATCH3_2026_11_17 = {
+    'company_annual_return_deadline':
+        'Annual return ya BRELA kwa kampuni inapaswa kuwasilishwa lini? Kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). '
+        'Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba.',
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('company_annual_return_deadline',)
+CONCISE_BILINGUAL_FACTS.update(_BATCH3_2026_11_17)
+
 
 def build_fact_text(key: str, value: str) -> str:
     # Concise Swahili-dominant text for high-stakes facts (short — no long English tail).

@@ -410,6 +410,9 @@ critical_queries = [
     ('Individual return still reachable', 'query: Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?', ['Mkazi asiye na kodi ya kulipa']),
     ('GN 605A issuer', 'query: Jedwali la GN 605A limetolewa na nani?', ['Si PKF wala kampuni ya ushauri']),
     ('Severance tax', 'query: Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?', ['hakuna kiwango maalum cha asilimia 15']),
+    # 2026-11-17 batch 3: the company annual-return deadline (Companies Act Cap.212 R.E.2023: the anniversary of incorporation, 28 days from the return date). The anchor is the PHRASE that carries the rule, not a bare number.
+    ('BRELA annual return deadline', 'query: Annual return ya BRELA inapaswa kuwasilishwa lini?', ['siku 28 baada ya tarehe hiyo']),
+    ('BRELA annual return frequency', 'query: Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return?', ['siku 28 baada ya tarehe hiyo']),
     # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
     # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
     # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:

@@ -21,6 +21,8 @@ import sys
 import time
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import atomic_artifact  # noqa: E402  (2026-11-17: the artifact is written ATOMICALLY: temp file + os.replace)
 REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 OUT = os.path.join(REPO, "eval", "results", "np_batch_deploy_live_2026_11_17.json")
 FS = "engine:fixed_statement"
@@ -70,7 +72,7 @@ def main():
     done = {r["q"] for r in art["rows"]}
 
     def save():
-        json.dump(art, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        atomic_artifact.write_json(OUT, art, ensure_ascii=False, indent=1)
 
     if not art.get("identity"):
         t0 = time.time()

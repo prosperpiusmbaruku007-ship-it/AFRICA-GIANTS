@@ -1,0 +1,21 @@
+{
+ "date": "2026-11-17",
+ "edited": [
+  {
+   "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "line": 67,
+   "old_sha256": "bdfd246c39dda3c0",
+   "new_sha256": "7c5fc2e107ad0452",
+   "old": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) kwa tarehe yako halisi. Kanuni ya jumla: wasilisha annual return ndani ya miezi 12 ya mwisho wa mwaka wa biashara wako. Thibitisha tarehe yako halisi kupitia akaunti yako ya BRELA online.",
+   "new": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) kwa tarehe yako halisi. Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo ya return, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Thibitisha tarehe yako halisi kupitia akaunti yako ya BRELA online."
+  },
+  {
+   "file": "datasets/tier1a/sft/train_sft.jsonl",
+   "line": 1540,
+   "old_sha256": "bdfd246c39dda3c0",
+   "new_sha256": "7c5fc2e107ad0452",
+   "old": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) kwa tarehe yako halisi. Kanuni ya jumla: wasilisha annual return ndani ya miezi 12 ya mwisho wa mwaka wa biashara wako. Thibitisha tarehe yako halisi kupitia akaunti yako ya BRELA online.",
+   "new": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) kwa tarehe yako halisi. Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo ya return, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Thibitisha tarehe yako halisi kupitia akaunti yako ya BRELA online."
+  }
+ ]
+}

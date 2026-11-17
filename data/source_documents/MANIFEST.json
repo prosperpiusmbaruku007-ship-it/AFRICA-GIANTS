@@ -4,8 +4,8 @@
   "_contract": "Any check that reads a cached source MUST call assert_edition(path, expected) first. A file whose edition is UNDECLARED may not be used to settle a figure.",
   "_generated_by": "scripts/check_source_editions.py --build",
   "counts": {
-    "files": 87,
-    "declared": 35,
+    "files": 88,
+    "declared": 36,
     "undeclared": 52,
     "superseded": 3
   },
@@ -132,6 +132,15 @@
       "superseded": true,
       "superseded_by": "Cap. 101 R.E. 2023, brela/business_licensing_act_cap101_re2023.pdf (sha256 650aa1c7...). s.7 (Validity of licences) was amended by Act 2 of 2014 s.6 to twelve months from issuance; the section number did not move (s.7 in both).",
       "do_not_verify_against": "THIS EDITION PRODUCED THE 30 JUNE ERROR in locked fact business_licence_expiry_30_june, which read CONFIRMED for three months. s.7 here says 30 June; s.7 of R.E.2023 says twelve months. The chapter number also changed (208 -> 101), so a search for Cap.208 now finds a different Act."
+    },
+    "brela/companies_act_cap212_re2023.pdf": {
+      "sha256": "3bce27e43b7a9d68ff3d86eaef08f77f61aef93dc0f9353b21cf65d5f18881a2",
+      "bytes": 3215470,
+      "captured_local_mtime_utc": "2026-11-17T19:35:29Z",
+      "kind": "statute",
+      "edition": "R.E. 2023",
+      "edition_evidence": "page header on every page: 'THE COMPANIES ACT [CAP. 212 R.E. 2023]'; cover 'CHAPTER 212 THE COMPANIES ACT [PRINCIPAL LEGISLATION]'. Read 2026-11-17 for the annual-return deadline: Part 'ANNUAL RETURN', s.131(1) 'A company shall deliver to the Registrar, successive annual returns each of which is made up to a date not later than the \"return date\", that is- (a) the anniversary of the company's incorporation; or (b) if the company's last return ... was made up to a different date, the anniversary of that date'; s.131(3) 'fails to deliver an annual return in accordance with this Chapter within twenty eight days of the return date, the company and every officer of the company who is in default shall be liable to a fine'. The file's own page furniture carries a 2025 OAG copyright watermark, so the text extraction is scrambled in layout mode: read in raw mode.",
+      "superseded": false
     },
     "general/jamiiforums_kufungua_kampuni.html": {
       "sha256": "6b05b56a869b4e0d00d35d275b44c9b2ecfe474b00f260f4df85043e9704cda4",

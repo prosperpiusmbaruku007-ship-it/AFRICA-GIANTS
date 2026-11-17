@@ -2662,8 +2662,9 @@ _FS_TOPICS = (
      re.compile(r"cheti|zimamoto|usalama|afya|(?<![a-z])tin(?![a-z])|efd|(?<![a-z])tra(?![a-z])|mgeni|wageni|uhamiaji|gn\s*487|kibali|(?<![a-z])visa|adhabu|faini|penalty|kuchelewa|kuchelewesha|nipate|kupata|kuomba|naombaje|nitaombaje|wapi|mchakato|hatua|nyaraka|vigezo|requirements|usajili\s+wa|kusajili|jina\s+la\s+biashara|kampuni|kufuta|kufutwa|kufungwa|nani\s+anatoa|inatolewa\s+na\s+nani")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
-     re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))", re.S),
-     re.compile(r"cheti|certificate|tarehe|deadline|remit|ndani\s+ya\s+siku|lini|inalipwa|inapelekwa|kuwasilisha|kulipa|nssf|paye|sdl|wcf|makato|makadirio|sivyo|si\s+kweli|ni\s+kweli")),
+     re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
+                r"(?=.*(?:pamoja|mchanganyiko|mixed|combined|zote\s+mbili|(?:ankara|invoice|mkataba|oda|order)\s+(?:moja|mmoja)|mauzo\s+yenye|mauzo\s+ya\s+(?:bidhaa|huduma)\s+na|(?:kuuza|nauza|natoa|kutoa|ninauza|ninatoa)\s+(?:bidhaa|huduma|vifaa|kazi)\s+na|inajumuisha|zinajumuisha|kwa\s+pamoja|(?:mkataba|ankara|invoice|oda|order|mradi|kazi|mauzo)\s+(?:wenye|yenye|una|lenye|unaojumuisha|uliojumuisha)))", re.S),   # 2026-11-17 (founder, gate-4 verification, eval_039): the question must NAME a COMBINED sale; "do the rates differ for goods vs services?" goes back to its previous path
+     re.compile(r"cheti|certificate|tarehe|deadline|remit|ndani\s+ya\s+siku|lini|inalipwa|inapelekwa|kuwasilisha|kulipa|nssf|paye|sdl|wcf|makato|makadirio|sivyo|si\s+kweli|ni\s+kweli|ni\s+sawa|sawa\s+kwa|sawa\s+na|tofauti|differ|same\s+(?:rate|for)|linganish")),
 )
 
 

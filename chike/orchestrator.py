@@ -1223,6 +1223,8 @@ class Orchestrator:
         repaired = fidelity.repair_firm_authority(sub.sub_question.text, repaired)
         # 2026-11-17 (D-FIDELITY-19): a BACKWARDS comparison between two figures the body itself states ("TZS 216,000,000 ... Hii ni chini ya kiwango cha milioni 200") has its comparator flipped so the sentence is true of its own figures. Constants (R19), fact path included, repaired never withheld. R25 block at fidelity.repair_comparisons.
         repaired = fidelity.repair_comparisons(repaired)
+        # 2026-11-17 (D-FIDELITY-21): a wrong GN 605A SECTOR count ("sekta 15"; the Order's First Schedule lists sixteen) is corrected to 16 where the question asks for it. One number changes, nothing is blocked. R25 block at fidelity.repair_gn605a_sector_count.
+        repaired = fidelity.repair_gn605a_sector_count(sub.sub_question.text, repaired)
         # 2026-11-17 (D-FIDELITY-17): a personal name in the body that the question and the served facts do not carry is removed (an office, an institution or an Act is never judged). R25 block at fidelity.strip_unsupported_names.
         repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
         if repaired != cleaned:

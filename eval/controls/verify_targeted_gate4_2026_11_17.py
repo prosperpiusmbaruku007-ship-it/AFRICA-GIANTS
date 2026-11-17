@@ -24,6 +24,8 @@ import sys
 import time
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import atomic_artifact  # noqa: E402  (2026-11-17: the artifact is written ATOMICALLY: temp file + os.replace)
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO)
 OUT = os.path.join(REPO, "eval", "results", "targeted_gate4_2026_11_17.json")
@@ -94,7 +96,7 @@ def main():
     assert art["seed"] == SEED and art["control_sample"] == sample, "a resumed artifact must use the same seed and sample"
     art["rows"] = [r for r in art["rows"] if "error" not in r]
     done = {r["id"] for r in art["rows"]}
-    save = lambda: io.open(OUT, "w", encoding="utf-8").write(json.dumps(art, ensure_ascii=False, indent=1))   # noqa: E731
+    save = lambda: atomic_artifact.write_json(OUT, art, ensure_ascii=False, indent=1)   # noqa: E731
     if not art.get("identity"):
         art["identity"] = m.served_index_identity.remote()
         save()

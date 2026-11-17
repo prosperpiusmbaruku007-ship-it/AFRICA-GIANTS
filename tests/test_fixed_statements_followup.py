@@ -224,7 +224,7 @@ def test_positive_control_a_model_free_allowlisted_route_is_still_eligible():
 FALLTHROUGH = [
     (VOL, "Kuhusu usajili wa VAT wa hiari, maelezo yako.", LIVE_VOL),
     (WCF, "Mfanyakazi wangu amepata ajali kazini na nimepeleka taarifa WCF siku mbili zilizopita.", LIVE_WCF),
-    (MIX, "Kuhusu VAT ya zuio kwa bidhaa na huduma, niambie.", LIVE_MIX),
+    (MIX, "Kuhusu VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja, niambie.", LIVE_MIX),   # 2026-11-17: the vehicle now NAMES a combined sale (the narrowed route/guard cue); the bare "kwa bidhaa na huduma" form goes back to its previous path (eval_039)
 ]
 
 

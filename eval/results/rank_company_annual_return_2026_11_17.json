@@ -1,0 +1,115 @@
+{
+ "rows": 216,
+ "row": 215,
+ "key": "company_annual_return_deadline",
+ "queries": [
+  {
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     100,
+     "annual_return_filing_fee"
+    ],
+    [
+     198,
+     "individual_income_tax_return"
+    ]
+   ]
+  },
+  {
+   "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     100,
+     "annual_return_filing_fee"
+    ],
+    [
+     44,
+     "brela_striking_off_non_filing"
+    ]
+   ]
+  },
+  {
+   "q": "Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     211,
+     "corporate_income_tax_return"
+    ],
+    [
+     198,
+     "individual_income_tax_return"
+    ]
+   ]
+  },
+  {
+   "q": "Kampuni yangu ilisajiliwa Machi, annual return ni lini?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     211,
+     "corporate_income_tax_return"
+    ],
+    [
+     198,
+     "individual_income_tax_return"
+    ]
+   ]
+  },
+  {
+   "q": "Nikichelewa kuwasilisha annual return BRELA nitatozwa nini?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     100,
+     "annual_return_filing_fee"
+    ],
+    [
+     99,
+     "late_filing_penalty_monthly_fee"
+    ]
+   ]
+  },
+  {
+   "q": "Je, annual return ya BRELA inawasilishwa ndani ya miezi 12 baada ya usajili?",
+   "rank": 1,
+   "top3": [
+    [
+     215,
+     "company_annual_return_deadline"
+    ],
+    [
+     100,
+     "annual_return_filing_fee"
+    ],
+    [
+     44,
+     "brela_striking_off_non_filing"
+    ]
+   ]
+  }
+ ]
+}

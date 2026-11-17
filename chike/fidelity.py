@@ -2223,3 +2223,31 @@ def repair_comparisons(body: str) -> str:
             flipped = flipped[:1].upper() + flipped[1:]
         body = body[:m.start()] + flipped + body[m.end():]
     return body
+
+
+# ---- D-FIDELITY-21 (2026-11-17, founder-approved, item 5 of the batch after the targeted verification): THE GN 605A SECTOR COUNT. A CONSTANT (R19), A ONE-TOKEN REPAIR.
+#   specimen (live, build e9e429e, eval_117): "GN 605A inashughulikia sekta 15 na sekta ndogo 46 za mishahara ya chini."   (judge wrong 5/5; the baseline said 16)
+#   the Order (kazi.go.tz official copy, GN No. 605A, 13/10/2025, edition asserted, read 2026-11-17): the FIRST SCHEDULE lists exactly SIXTEEN sectors and areas, the sixteenth being "Other sectors or areas not specified in this Order".
+#   NOT guarded: the "46 sub-sectors". It is PKF's figure and the Order does not settle it mechanically: counting its lettered rows gives 44, or 48 if a sector with a single row counts once, depending on what a "sub-sector" is.
+# R25. (1) Defect: a confident wrong count on the model path (the fact "16 sectors" is served; the model's reply still said 15). (2) What CORRECT output could it damage: only a sentence that carries "sekta N" / "N sectors" with N != 16
+#   for a question that asks how many sectors GN 605A covers; a NEGATION ("si sekta 15") is left alone (rewriting its number would turn a denial into a falsehood), a sentence that already says 16 is untouched, "sekta ndogo N" (sub-sectors)
+#   is never matched, and any question that is not about the GN 605A sector count is untouched. The repair changes ONE number and blocks nothing; idempotent.
+_D21_Q = re.compile(r"(?=.*(?:605\s*a|mshahara\s+wa\s+chini|minimum\s+wage))(?=.*(?:sekta\s+ngapi|ngapi\s+za\s+sekta|idadi\s+ya\s+sekta|sekta\s+zote\s+ni\s+ngapi|sekta\s+zipi\s+na\s+ngapi|how\s+many\s+(?:main\s+)?sectors|number\s+of\s+sectors))", re.IGNORECASE | re.DOTALL)   # the QUESTION must ask for the NUMBER OF SECTORS: "mshahara wa chini wa sekta ya madini ni ngapi?" asks for a wage and a reply's "sekta 10" there is the mining sector's NUMBER
+_D21_COUNT = re.compile(r"(?<![a-z])(sekta\s+)(\d{1,2})(?![\d,.]|\s+ndogo)|(?<![\d,.])(\d{1,2})(\s+(?:sekta|sectors?)(?![a-z]*\s+ndogo))", re.IGNORECASE)
+_D21_SECTORS = 16
+
+
+def repair_gn605a_sector_count(question: str, body: str) -> str:
+    """The body with a wrong GN 605A SECTOR count corrected to 16 where the question asks for it; unchanged otherwise."""
+    if not body or not _D21_Q.search(question or ""):
+        return body
+
+    def fix(m):
+        n = int(m.group(2) or m.group(3))
+        if n == _D21_SECTORS or n < 1 or n > 40:
+            return m.group(0)
+        return (m.group(1) + str(_D21_SECTORS)) if m.group(2) else (str(_D21_SECTORS) + m.group(4))
+    out = []
+    for part in re.split(r"(?<=[.!?\n])", body):
+        out.append(part if _D16_NEG.search(part) else _D21_COUNT.sub(fix, part))
+    return "".join(out)

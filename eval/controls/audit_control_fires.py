@@ -1361,6 +1361,35 @@ def audit_unexercisable():
            'a confident wrong annual-return deadline ("hasa ndani ya miezi 12 kutoka tarehe ya usajili wake") on the fact path',
            _v, 'the stored gate reply to eval_072 (c2143c0 and 0e11c3d)', 'a negation of 30 September, the anniversary / 28-day frame, a tax-return question, fee and penalty sentences', _note)
 
+    # ── 2026-11-17 batch 3 (PROGRESS 4ay): D-FIDELITY-21 (a wrong GN 605A SECTOR count -> 16) and the NARROWED mixed-supply statement route (eval_039). PLANTED on the live replies / gold row of the targeted verification.
+    try:
+        from chike import fidelity as _f21, routing as _r21
+        _live21 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'targeted_gate4_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _gold21 = {}
+        for _fn in ('eval_questions_001', 'eval_questions_002_additions', 'eval_questions_003'):
+            for _ln in open(os.path.join(REPO, 'eval', 'accuracy_gate', _fn + '.jsonl'), encoding='utf-8'):
+                if _ln.strip():
+                    _row = json.loads(_ln)
+                    _gold21[_row['id']] = _row
+        _q117, _rep117 = _gold21['eval_117']['question_sw'], _live21['eval_117']['reply']
+        _fixed21 = _f21.repair_gn605a_sector_count(_q117, _rep117)
+        _spec21 = {'the live eval_117 reply says "sekta 15" and is repaired to 16': 'sekta 15' in _rep117 and 'sekta 16' in _fixed21 and 'sekta ndogo 46' in _fixed21,
+                   'eval_039 (a plain goods-vs-services rate question) is NO LONGER diverted to the mixed-supply statement': _r21.fixed_statement_topic(_gold21['eval_039']['question_sw']) != 'vat_withholding_mixed_supply',
+                   'a question naming a COMBINED sale still routes to it': _r21.fixed_statement_topic('Nauza bidhaa na huduma kwa ankara moja, VAT ya zuio inakatwaje?') == 'vat_withholding_mixed_supply'}
+        _clean21 = [_f21.repair_gn605a_sector_count(_q117, 'Si sekta 15, ni sekta 16.') == 'Si sekta 15, ni sekta 16.',
+                    _f21.repair_gn605a_sector_count('Mshahara wa chini wa GN 605A kwa sekta ya madini (sekta 10) ni ngapi?', 'Sekta 10 ni madini.') == 'Sekta 10 ni madini.',
+                    _f21.repair_gn605a_sector_count(_q117, 'GN 605A inashughulikia sekta 16 na sekta ndogo 46.') == 'GN 605A inashughulikia sekta 16 na sekta ndogo 46.']
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code21 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired21 = 'fidelity.repair_gn605a_sector_count(' in _code21
+        _v = ('FIRES' if (all(_spec21.values()) and all(_clean21) and _wired21) else 'NOT_WIRED' if (all(_spec21.values()) and all(_clean21)) else 'ERROR')
+        _note = (f'specimens: {_spec21}; clean limbs (must all be True): {_clean21}; wired (comments stripped): {_wired21}. Priced (eval/results/price_d21_2026_11_17.json): 0 changes in 2,427 stored replies, 562 gold answers, 8,754 training pairs (only the live specimen).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 batch 3: D-FIDELITY-21 GN 605A sector count (16) + the mixed-supply statement route narrowed to a COMBINED sale (eval_039)', 'fidelity',
+           'a confident wrong sector count ("sekta 15") on the model path; a plain goods-vs-services rate question diverted to the mixed-supply 3:2 statement',
+           _v, 'the live eval_117 reply and the eval_039 gold row (targeted verification, build e9e429e)', 'a negated count, a sub-sector number, a count already right, a mining-sector wage question, a question naming a combined sale', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

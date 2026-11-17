@@ -3,6 +3,8 @@
 artifact written after every row. must/must_not are INDICATIVE (R38); replies, path, model_calls, guards are stored for READING.   python eval/controls/verify_wrongtopic_deploy_live_2026_11_17.py"""
 import json, os, re, sys, time
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import atomic_artifact  # noqa: E402  (2026-11-17: the artifact is written ATOMICALLY: temp file + os.replace)
 REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 OUT = os.path.join(REPO, "eval", "results", "wrongtopic_deploy_live_2026_11_17.json")
 # (arm, question, must, must_not, path_forbidden_prefix, path_required_prefix)
@@ -29,7 +31,7 @@ def main():
     art = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {"identity": None, "rows": []}
     art["rows"] = [r for r in art["rows"] if "error" not in r]
     done = {r["q"] for r in art["rows"]}
-    save = lambda: json.dump(art, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    save = lambda: atomic_artifact.write_json(OUT, art, ensure_ascii=False, indent=1)
     if not art.get("identity"):
         art["identity"] = m.served_index_identity.remote(); save()
     print("served identity:", {k: art["identity"].get(k) for k in ("build", "rag_rows_loaded")})

@@ -446,24 +446,19 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    # TWENTY-FIFTH FLIP (2026-11-17, batch 2), back to FRESH: the batch-2 regen shipped (HF dataset commit 9882b1b7, built from 8c9ecfd, correction_sync=CLEAN; fetched files verified IDENTICAL, rows and order, to the
-    # local build, and verified to differ from the previously served index at row 213 ONLY) and was dual-committed. (Twenty-fourth flip, kept for provenance: PENDING, one row differing.)
-    assert ok is True, (
-        f"the live repo reports STALE after the batch-2 regen's dual-commit. The content limb IS the verdict, so this means "
-        f"build_fact_texts() over this tree no longer equals a served file -- do not flip this back to False to make it green; "
-        f"find what moved: {report}")
-    assert report["content_matches"] is True, report
-    assert report["content_build_error"] is None, report
-    assert report["diverging"] == {}, report["diverging"]
+    # TWENTY-SIXTH FLIP (2026-11-17, batch 3), back to PENDING: ONE new row (company_annual_return_deadline, the company annual-return deadline) is built at index 215 but NOT yet served. 216 built vs 215 served; the first 215 are
+    # IDENTICAL. (Twenty-fifth flip, kept for provenance: FRESH after the batch-2 regen, HF dataset commit 9882b1b7, built from 8c9ecfd.) The served files must still be the 215-row index until the regen lands.
+    assert ok is False, (
+        f"the live repo reports FRESH: the batch-3 regen has landed. Flip back to `ok is True` / 216 rows, delete the pending_r15 pin for company_annual_return_deadline in scripts/check_facts_index_sync.py, and re-assert the specifics: {report}")
+    assert report["content_matches"] is False, report
     for _d in ("kaggle", "chike-inference"):
         with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
             _served = json.load(_fh)
         assert len(_served) == 215, (_d, len(_served))
-        assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], _served[9][:200]
-        assert "halali kwa miezi 12 tangu tarehe ilipotolewa" in _served[168] and "30 June" not in _served[168], (_d, "row 168 is the corrected licence row")
-        assert "Waziri anayehusika na masuala ya kazi" in _served[213] and "iliyotolewa na Serikali chini" not in _served[213], (_d, "row 213 states the issuer BY OFFICE")
-    assert report["embedding_rows_match"] is True, report
-    assert report["built_rows"] == 215, report["built_rows"]
+        assert not any("siku 28 baada ya tarehe hiyo" in t for t in _served), (_d, "the annual-return row must NOT be served until the regen lands")
+        assert "Waziri anayehusika na masuala ya kazi" in _served[213], (_d, "row 213 still states the issuer BY OFFICE")
+    assert report["embedding_rows_match"] is False, report      # 216 built rows vs 215 shipped embedding rows: pending, same flip
+    assert report["built_rows"] == 216, report["built_rows"]
     assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
         f"a missing file is a setup bug, not a stale index: {report}")
@@ -486,7 +481,7 @@ def _real_texts():
     spec.loader.exec_module(mod)
     texts, err = mod.built_fact_texts(REPO)
     assert err is None, f"the builder itself failed, so these arms cannot run: {err}"
-    assert texts and len(texts) == 215, f"unexpected builder output: {texts and len(texts)}"
+    assert texts and len(texts) == 216, f"unexpected builder output: {texts and len(texts)}"   # 215 -> 216 (batch 3: the company annual-return row, PENDING the Kaggle regen)
     return texts
 
 
@@ -521,13 +516,15 @@ def test_content_limb_passes_on_the_real_built_texts():
     row 9 still carries the BASE/SOURCE separation (seventeenth flip). (Eighteenth flip, kept for provenance: PENDING that regen --
     208 built vs 184 served, the first 184 differing only at rows 1, 26, 58, 90, 95.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    # TWENTY-FIFTH FLIP (2026-11-17, batch 2), back to FRESH -- the batch-2 regen shipped. 215 rows, REAL == SERVED. (Twenty-fourth flip, kept for provenance: PENDING, 215 built vs 215 served, differing ONLY at row 213.)
-    assert ok is True, (
-        f"the real builder's output no longer matches the served index. If a fact or the builder has changed, an R15 regen is owed and "
-        f"THAT is the fix -- not flipping this: {rep}")
-    assert rep["content_matches"] is True
-    assert rep["diverging"] == {}, rep["diverging"]
-    assert len(REAL_TEXTS) == 215 and len(SERVED_TEXTS) == 215 and REAL_TEXTS == SERVED_TEXTS
+    # TWENTY-SIXTH FLIP (2026-11-17, batch 3), back to PENDING: 216 built vs 215 served, the first 215 IDENTICAL and ONE new row appended (the company annual-return deadline). Asserted row by row so that "PENDING" cannot quietly
+    # become "something else changed". (Twenty-fifth flip, kept for provenance: FRESH after the batch-2 regen -- 215 rows, REAL == SERVED.)
+    assert ok is False, (
+        f"the real builder's output now matches the served index: the batch-3 regen has landed. Flip back to `ok is True`, 216 rows, and re-assert the specifics: {rep}")
+    assert rep["content_matches"] is False
+    assert len(REAL_TEXTS) == 216 and len(SERVED_TEXTS) == 215
+    _moved = [i for i in range(215) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
+    assert _moved == [], _moved
+    assert REAL_TEXTS[215].startswith("Annual return ya BRELA kwa kampuni inapaswa kuwasilishwa lini?") and "siku 28 baada ya tarehe hiyo" in REAL_TEXTS[215] and "Kifungu" not in REAL_TEXTS[215]
     assert "Waziri anayehusika na masuala ya kazi" in SERVED_TEXTS[213] and "Ofisi ya Waziri Mkuu" in SERVED_TEXTS[213]
     import re as _re
     assert not _re.search(r"MHE|Mheshimiwa|Simbachawene|Majaliwa", SERVED_TEXTS[213]), "the served row states the issuer BY OFFICE: no personal name"
@@ -581,7 +578,7 @@ def test_a_row_count_mismatch_with_the_embeddings_BLOCKS():
     """A half-shipped index: the text file and the embedding matrix disagreeing on how many
     rows there are. Checkable locally even though the embeddings themselves cannot be rebuilt
     here, and it is the one property a content change would always break."""
-    short = list(REAL_TEXTS)[:-1]
+    short = list(SERVED_TEXTS)[:-1]      # 2026-11-17 (batch 3): the SERVED rows minus one, so the mismatch against the shipped embeddings holds whether the builder is pending (216) or fresh; it was REAL_TEXTS[:-1], which equalled the 215 served rows exactly when the batch-3 row was added
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (short, None))
     assert ok is False
     assert rep["embedding_rows_match"] is False, rep["embedding_rows"]
