@@ -199,7 +199,7 @@ SOURCE_FILES = [
 # 48cb213 also carries scripts/rag_payload_gates.py, which this file now imports as a hard
 # dependency and refuses to run without -- so it belongs on this floor on the ordinary
 # "cannot run at all" ground as well.
-EXPECTED_HEAD = '1fa49c8'
+EXPECTED_HEAD = 'b0ef5e9'
 
 
 def _assert_expected_head_present(local_head, live_sha):
