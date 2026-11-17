@@ -1,0 +1,254 @@
+{
+ "identity": {
+  "build": "7b94236",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794948155.335,
+   "enter_started_ts": 1794948155.344,
+   "enter_done_ts": 1794948200.082,
+   "import_to_enter_s": 0.0,
+   "load_s": 44.7,
+   "gpu": "NVIDIA L4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "072",
+   "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+   "reply": "Kampuni iliyosajiliwa na BRELA inatakiwa kuwasilisha annual return kila mwaka, na kuna adhabu ikiwa itachelewa. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "072",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya BRELA inawasilishwa katika mwaka wa kalenda unaofuatia tarehe ya usajili wa kampuni. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "072",
+   "q": "Kampuni yangu ilisajiliwa Machi, annual return ni lini?",
+   "reply": "Annual return ya kampuni inatarajiwa karibu na tarehe ya kumbukumbu ya usajili wa kampuni (anniversary date). Thibitisha na BRELA (brela.go.tz) kwa tarehe kamili ya annual return yako. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "072-NEG",
+   "q": "Return ya kodi ya mapato ya kampuni ni lini?",
+   "reply": "Kampuni ya kawaida (mwezi 6): kodi ya mapato ya kampuni inawasilishwa ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato, ambao mara nyingi huwa Desemba 31. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": false,
+    "model_calls": false
+   },
+   "ok": false
+  },
+  {
+   "arm": "039",
+   "q": "Je, kiwango cha VAT withholding ni sawa kwa bidhaa na huduma?",
+   "reply": "Hapana. Bidhaa: 3%; Huduma: 6%. Tofauti hii imetokana na utaratibu wa kugawa VAT uliotumika katika Sheria ya Fedha 2026. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "039-NEG",
+   "q": "Nauza bidhaa na huduma kwa ankara moja, VAT ya zuio inakatwaje?",
+   "reply": "VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "041",
+   "q": "Je, utaratibu wa VAT withholding wa Finance Act 2025 ulianza kutumika tangu 1 Januari 2025?",
+   "reply": "VAT ya zuio (3% kwa bidhaa, 6% kwa huduma) ilianza kutumika tarehe 1 Julai 2025 pamoja na Sheria ya Fedha 2025; sheria haina kuahirishwa kwa kifungu hicho. Tarehe 1 Septemba 2025 ni ya kifungu kingine cha sheria hiyo hiyo (VAT ya 16% kwa malipo kupitia benki au mfumo wa kielektroniki), si ya VAT ya zuio. Anayezuia VAT ni wakala wa zuio: wizara ya fedha, taasisi ya Serikali inayobakiza mapato yake, au mtu aliyesajiliwa anayeteuliwa na Kamishna Mkuu kwa taarifa. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "041-NEG",
+   "q": "VAT ya 16% kwa malipo ya kielektroniki kutoka kwa wateja wasio na usajili inaanza lini?",
+   "reply": "Kiwango cha 16% kinatumika kwa malipo ya kielektroniki kwa wateja wasio na usajili wa VAT, kuanzia 1 Septemba 2025. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "117",
+   "q": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+   "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "117-NEG",
+   "q": "Sekta ya madini ina sekta ndogo ngapi kwenye GN 605A?",
+   "reply": "Kulingana na GN 605A, kuna sekta ndogo 46 katika sekta ya madini peke yake. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Mapato yangu ni TZS 120,000,000 katika miezi 6 lakini kwa mwaka mzima ni TZS 190,000,000 — je nasajili VAT na kwa kigezo kipi?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Ingawa kigezo cha miezi 12 (TZS 190,000,000) hakijafikia TZS 200,000,000, kigezo cha miezi 6 mfululizo kimefikiwa: TZS 120,000,000 dhidi ya kizingiti cha TZS 100,000,000. Kigezo kimoja tu kinatosha kulazimisha usajili. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Biashara yangu inauza kwa wastani wa milioni 18 kila mwezi. Je nijisajili VAT?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 18,000,000 kila mwezi kwa wastani, yaani TZS 18,000,000 × 12 = TZS 216,000,000 kwa miezi 12, yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hii inadhani wastani huo unadumu miezi 12; mauzo halisi ya miezi 12 (au ya miezi 6 mfululizo) ndiyo yanayoamua. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?",
+   "reply": "Kulingana na taarifa uliyotoa, mauzo ya wastani ya milioni 18 kwa mwezi ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni zaidi ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Naomba TIN lini baada ya kuanza biashara?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara yote ya wafanyakazi 12. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,000,000 = TZS 140,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EARLIER",
+   "q": "Nani alisaini GN 605A?",
+   "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

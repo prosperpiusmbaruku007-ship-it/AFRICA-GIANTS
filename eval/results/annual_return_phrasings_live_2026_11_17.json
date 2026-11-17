@@ -1,0 +1,102 @@
+{
+ "identity": {
+  "build": "7b94236",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794948155.335,
+   "enter_started_ts": 1794948155.344,
+   "enter_done_ts": 1794948200.082,
+   "import_to_enter_s": 0.0,
+   "load_s": 44.7,
+   "gpu": "NVIDIA L4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "AR",
+   "q": "Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?",
+   "reply": "Annual return ya kampuni inatakiwa kuwasilishwa ndani ya siku 42 tangu tarehe ya kumbukumbu ya usajili wa kampuni yako. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "AR",
+   "q": "Nikichelewa kuwasilisha annual return BRELA nitatozwa nini?",
+   "reply": "Kuna adhabu ya faini ya TZS 2,500 kwa kila mwezi wa kuchelewa kuwasilisha annual return. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR",
+   "q": "Je, annual return ya BRELA inawasilishwa ndani ya miezi 12 baada ya usajili?",
+   "reply": "Hapana — hakuna kikomo cha miezi 12. Annual return inawasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima miaka 12. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR",
+   "q": "Annual return ya BRELA ni mwisho wa mwaka wa fedha, sivyo?",
+   "reply": "Hapana. Annual return ya BRELA ni tarehe ya kumbukumbu ya kuanzishwa kwa kampuni, si mwisho wa mwaka wa fedha. Kampuni inapaswa kuwasilisha annual return katika mwezi unaokaribiana na tarehe ya kumbukumbu yake ya kuanzishwa (anniversary date). Thibitisha na BRELA.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR",
+   "q": "Kampuni ilisajiliwa tarehe 10 Machi 2025. Annual return inapaswa kuwasilishwa lini?",
+   "reply": "Annual return inapaswa kuwasilishwa katika mwaka wa kumbukumbu ya usajili wa kampuni (anniversary date). Tarehe halisi inategemea tarehe ya usajili wa kampuni yako. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya BRELA inawasilishwa katika mwaka wa kalenda unaofuatia tarehe ya usajili wa kampuni. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  }
+ ],
+ "identity_ok": true
+}
