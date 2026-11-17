@@ -973,6 +973,28 @@ The founder's changes: `s2_15` and `s2_18` NONE -> WRONG (a confident wrong-topi
 
 **Sequence once the founder says go (R12c: targeted, not the full gate).** Commit + push; **no index change, so no regen**; one R16 window for **`chike-inference` ONLY** (the WhatsApp image bakes `chike-whatsapp/`, nothing under it changed); live checks that exercise each change with negatives: the three TIN premise rows and a TIN how-to (model path), np_22 (engine, "lazima"), a two-part licence question (both limbs, 0 calls) and a fee-only one (model path), "Nani alisaini GN 605A?" (no firm), the lost-licence reply (no repeat, no `lga.go.tz`), and the monthly-rate VAT question (still asks).
 
+### 4as. 2026-11-17 — NEXT SMALL BATCH COMMITTED (`d644c71`), DEPLOYED (`chike-inference` ONLY) AND VERIFIED LIVE; **ONE WRONG LIVE ANSWER FOUND BY READING, NOT CAUSED BY THIS BATCH**
+
+**Sequence.** Founder's GO -> commit + push (`d644c71`, on origin; the pre-push suite rewrote the usual result files, restored before pre-flight) -> pre-flight 3 gates green -> `chike-whatsapp` `/health` read `pending 0` immediately before the stop -> `app stop`, deploy (7.7 s) -> `/health` web build `d644c71`; the harness read the GPU tier's identity: **build `d644c71`, 215 rows, served digest == local**. `chike-whatsapp` NOT redeployed (nothing under `chike-whatsapp/` changed; live `a2e6611`). **No index change, no regen.**
+
+**Live check: `eval/controls/verify_batch3_deploy_live_2026_11_17.py` -> `eval/results/batch3_deploy_live_2026_11_17.json` (21 rows, every reply read).** 20 of 21 pass their indicative checks; the one miss is real and is described below.
+
+| item | live result (read) |
+|---|---|
+| TIN premise rows `np_14`, `np_26`, `s2_08` (VERBATIM) + "Naomba TIN lini baada ya kuanza biashara?" | all four `engine:fixed_statement`, **0 model calls**, the full statement (15 days from starting, NIDA-linked TIN, TRA may issue within 7 days). **None says "Hapana, hakuna siku 15"** (the s2_08 inversion). NOTE: the statement states the window and does not open with an explicit yes/no to "sivyo?" — correct and not inverted, but it answers by stating the rule |
+| TIN how-to ("Nitapataje TIN?", "TIN ni nini?", bank account) | **model path, 1 call**, answers from the fact — the narrowed route correctly declines them |
+| `np_22` VERBATIM | **`engine:vat_registration`, 0 calls: "Hapana. Unatakiwa kujisajili VAT. Mauzo yako ya TZS 110,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA."** The "Hapana" correctly answers the negated "siyo?" |
+| two-part licence question (two phrasings) | `engine:fixed_statement`, 0 calls, **both limbs**: the fee limb (national schedule, varies by trade and area, ask the council; no figure) and "miezi 12 tangu tarehe ilipotolewa", Category A by BRELA / B by the council. No `lga.go.tz`, no contradiction on who issues |
+| fee-only "Ada ya leseni ya biashara ni kiasi gani?" | model path, 1 call, "hutofautiana … Thibitisha na halmashauri husika (LGA)" — not hijacked |
+| "Nani alisaini GN 605A?" | `guards: ['repaired']`: "…ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na Ofisi ya Kazi (kazi.go.tz)." — the VELMA/PKF tail is gone. **"Waziri wa Kazi" is still the logged open item** (a model-written office, not the Order's exact office) |
+| "GN 605A ilianza kutumika lini?", "…umepanda kwa wastani gani?" | repaired: "Thibitisha na Ofisi ya Kazi (kazi.go.tz)" / "Thibitisha na TanzLII" (the whitelisted source survived the firm removal, as designed) |
+| lost-licence reply | `guards: ['repaired']`: **one** confirm clause, no repeat, no `lga.go.tz` |
+| negatives (SDL, WCF, renewal-only, "Ada…", "Leseni…inaisha lini") | as before |
+
+**⛔ THE ONE MISS — A WRONG LIVE ANSWER ON THE MODEL PATH, FOUND BY READING.** "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?" -> `fact`, 1 call: **"…ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni chini ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT."** **216M is ABOVE 200M; the model's own sentence states the figure and then calls it below.** The batch did exactly what was designed here: the resolver returned None (a monthly rate is never a registration turnover), so the question fell to the path it always took, and the model made the comparison error. **The question did not ASK, as the founder's check expected; it went to the fact path, which has never asked about a rate with a bound.** This is not a regression I can prove or disprove without the pre-batch reply: the route is unchanged for this question, so by R12c's own premise the pre-batch reply was the same path, but that is an inference, not a measurement. It is a **confident wrong answer (A1) on a supervised cohort**, so a reviewer reads it before it sends; it is also precisely the class of the priced training question that surfaced the resolver defect (the figure is 216M and the model says "below"). **Not fixed in this batch; proposed for the next one:** a deterministic arithmetic-comparison route for "rate x period vs a bound" (the VAT engine already holds the bounds), or a model-free "this is 216M a year, above 200M" statement. Needs the founder's decision.
+
+**Also read, not defects of this batch:** the model wrote a title for GN 605A ("Amri ya Mishahara ya Sekta Binafsi (Private Sector Salary Order)") in the "ilianza lini" reply — unverified wording, not from a locked fact.
+
 ### 5. Open — **REWRITTEN 2026-11-13; the earlier list was stale (most of it was resolved in 4b–4r). Resolved items are kept, marked, not deleted.**
 
 **OPEN**

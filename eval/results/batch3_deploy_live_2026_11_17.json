@@ -1,0 +1,332 @@
+{
+ "identity": {
+  "build": "d644c71",
+  "rag_rows_loaded": 215,
+  "rag_embeddings_shape": [
+   215,
+   768
+  ],
+  "rag_facts_text_sha256": "456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13",
+  "config_rag_fact_count": 215,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794927426.663,
+   "enter_started_ts": 1794927426.67,
+   "enter_done_ts": 1794927462.905,
+   "import_to_enter_s": 0.0,
+   "load_s": 36.2,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "TIN-STMT",
+   "q": "Sina haja ya kuwa na TIN kwa sababu biashara yangu ni ndogo na ndiyo kwanza naanza, sivyo?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-STMT",
+   "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-STMT",
+   "q": "Nimeanza biashara ya kuuza vifaa vya ujenzi wiki iliyopita. Nimesikia nina siku 15 za kuomba TIN, kwa hiyo sihitaji kuwa nayo siku ya kwanza kabisa, ni kweli?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-STMT",
+   "q": "Naomba TIN lini baada ya kuanza biashara?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VAT",
+   "q": "Mimi nina biashara ya kuuza vifaa, mauzo yangu ya mwaka bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110. Sihitaji kujisajili VAT kwa sababu mwaka bado haujaisha, siyo?",
+   "reply": "Hapana. Unatakiwa kujisajili VAT. Mauzo yako ya TZS 110,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VAT-NEG",
+   "q": "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?",
+   "reply": "Kulingana na taarifa uliyotoa, mauzo ya wastani ya milioni 18 kwa mwezi ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni chini ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": false
+   },
+   "ok": false
+  },
+  {
+   "arm": "VAT-NEG",
+   "q": "Nauza milioni 20 kwa mwezi, na mauzo yangu hayajafika milioni 200. Je VAT?",
+   "reply": "Kwa mauzo ya milioni 20 kwa mwezi, umepita kizingiti cha TZS 100M/miezi 6. Lazima usajili VAT. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TWO-PART",
+   "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+   "reply": "Kuhusu ada: ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo (jiji/manispaa, wilaya/mji, au kijiji) na kama ni leseni kuu au ya tawi; uliza halmashauri yako kwa ada ya aina yako. Kuhusu muda: leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TWO-PART",
+   "q": "Ada ya leseni ya duka langu ni ngapi na huisha lini?",
+   "reply": "Kuhusu ada: ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo (jiji/manispaa, wilaya/mji, au kijiji) na kama ni leseni kuu au ya tawi; uliza halmashauri yako kwa ada ya aina yako. Kuhusu muda: leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Ada ya leseni ya biashara ni kiasi gani?",
+   "reply": "Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika (LGA).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Leseni ya biashara inaisha lini?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-HOWTO",
+   "q": "Nitapataje TIN?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-HOWTO",
+   "q": "TIN ni nini?",
+   "reply": "TIN (Taxpayer Identification Number) ni nambari yako ya mlipa kodi. Inatumika katika malipo yote ya kodi, return zako, na hati za kodi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "TIN-HOWTO",
+   "q": "Je, ninahitaji TIN kufungua akaunti ya benki ya biashara?",
+   "reply": "Ndiyo, unapaswa kuwa na TIN iliyothibitishwa kabla ya kufungua akaunti ya benki ya biashara. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIRM",
+   "q": "Nani alisaini GN 605A?",
+   "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIRM",
+   "q": "GN 605A ilianza kutumika lini?",
+   "reply": "GN 605A ilianza kutumika rasmi tarehe 1 Januari 2026. Amri hiyo iliitwa 'Amri ya Mishahara ya Sekta Binafsi' (Private Sector Salary Order). Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIRM",
+   "q": "Mshahara wa chini kwa sekta binafsi umepanda kwa wastani gani?",
+   "reply": "Kulingana na taarifa rasmi, wastani wa ongezeko la mshahara wa chini wa sekta binafsi ulipanda kwa asilimia 33.4, kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "DEDUPE",
+   "q": "Leseni yangu ya biashara nikiipoteza nifanyeje?",
+   "reply": "Kupoteza leseni ni tatizo. Thibitisha na halmashauri husika ili kujua utaratibu sahihi wa kuitafuta upya.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara yote ya wafanyakazi 12. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,000,000 = TZS 140,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nikate WCF kwenye mshahara wa mfanyakazi?",
+   "reply": "Hapana — WCF haikatwi kwenye mshahara. Ni gharama ya mwajiri pekee, inayolipwa moja kwa moja kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}
