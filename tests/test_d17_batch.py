@@ -194,3 +194,28 @@ def test_the_licence_authority_repair_is_idempotent_and_never_names_lga():
         once = fidelity.repair_licence_authority(p["question"], p["body"])
         assert fidelity.repair_licence_authority(p["question"], once) == once
         assert "lga.go.tz" not in once and "mlywf.go.tz" not in once
+
+
+def test_stripping_a_name_leaves_no_dangling_comma():
+    """LIVE (build 36a5144): 'Waziri wa Kazi,.' and 'Waziri wa Kazi,, katika' -- the comma that introduced the name goes with it."""
+    for pid in ("d17_nm_01", "d17_nm_08", "d17_nm_09"):
+        p = _spec(pid)
+        out, rem = fidelity.strip_unsupported_names(p["body"], p["question"], "")
+        assert rem and not re.search(r",\s*[.,;:!?]", out), (pid, out)
+    out, _ = fidelity.strip_unsupported_names(_spec("d17_nm_09")["body"], "x", "")
+    assert out == "Kilitangazwa na Waziri wa Kazi, katika Gazeti Rasmi tarehe 13 Oktoba 2025.", out   # ONE ordinary comma remains; the doubled / dangling ones are the defect
+
+
+def test_a_dead_host_is_removed_even_when_the_body_already_names_the_council():
+    p = _spec("d17_cue_14")
+    out = fidelity.repair_licence_authority(p["question"], p["body"])
+    assert "lga.go.tz" not in out and "halmashauri husika" in out, out
+    assert fidelity.repair_licence_authority(p["question"], out) == out, "idempotent"
+
+
+def test_planted_the_skip_restored_recreates_the_live_miss(monkeypatch):
+    """With the old early return (a body naming halmashauri is skipped) the live reply keeps lga.go.tz."""
+    real = fidelity.repair_licence_authority
+    monkeypatch.setattr(fidelity, "repair_licence_authority", lambda q, b: b if "halmashauri" in b.lower() else real(q, b))
+    p = _spec("d17_cue_14")
+    assert "lga.go.tz" in fidelity.repair_licence_authority(p["question"], p["body"])

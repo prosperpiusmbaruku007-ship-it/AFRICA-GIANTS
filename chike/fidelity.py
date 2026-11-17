@@ -1916,14 +1916,21 @@ _D16_LICENCE_Q = re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)
 # 2026-11-17: the first form needed "biashara"/"duka" IMMEDIATELY after ya|yangu|za, so "Leseni yangu ya biashara" (live np_13) escaped the repair; the repeated (yangu|ya ...) group fixes it and the trade words
 # a participant actually uses (mgahawa, saluni, kioski ...) are listed. A bare "leseni" stays unjudged: it is also a driving, mining or fishing licence.
 _D16_LICENCE_LABEL = "halmashauri yako, au BRELA kwa kundi A"
+_D16_NO_DNS_HOSTS = ("lga.go.tz", "mlywf.go.tz")
 _D16_NON_LICENCE_HOSTS = ("tra.go.tz", "kazi.go.tz", "osha.go.tz", "nssf.go.tz", "wcf.go.tz", "immigration.go.tz", "lga.go.tz", "mlywf.go.tz")
 # lga.go.tz and mlywf.go.tz: NO DNS RECORD (NXDOMAIN via the local resolver and 8.8.8.8 on 2026-11-17; tra.go.tz, brela.go.tz, tamisemi.go.tz resolved as controls). The model cites lga.go.tz as a licence authority in live replies.
 
 
 def repair_licence_authority(question: str, body: str) -> str:
     """For a business-LICENCE question, the one citation host rewritten to 'halmashauri yako, au BRELA kwa kundi A (brela.go.tz)' when it is BRELA alone or a non-licence authority; unchanged otherwise (R25 block above)."""
-    if not question or not body or not _D16_LICENCE_Q.search(question) or _AUTH_REFUSAL.search(body) or re.search(r"halmashauri", body, re.IGNORECASE):
+    if not question or not body or not _D16_LICENCE_Q.search(question) or _AUTH_REFUSAL.search(body):
         return body
+    if re.search(r"halmashauri", body, re.IGNORECASE):
+        # 2026-11-17 live (build 36a5144): "Thibitisha na halmashauri husika (lga.go.tz)" kept the host that has NO DNS record, because a body that already names the council was skipped as already right. It is only already
+        # right when it cites no dead host: for lga.go.tz / mlywf.go.tz the host (and its parenthesis) is removed and the council wording is left as the model wrote it.
+        dead = "|".join(re.escape(h) for h in _D16_NO_DNS_HOSTS)
+        fixed = re.sub(r"\s*\(\s*(?:https?://)?(?:www\.)?(?:%s)\s*\)" % dead, "", body, flags=re.IGNORECASE)
+        return re.sub(r"(?<![a-z0-9.-])(?:%s)(?![a-z0-9-])" % dead, "halmashauri yako", fixed, flags=re.IGNORECASE)
     if any(t[1].search(question) for t in _AUTH_TOPICS):
         return body                                       # the question carries another topic cue: ambiguous, not judged
     hosts = {m.group(1).lower() for m in _AUTH_HOST.finditer(body)}
@@ -2013,6 +2020,9 @@ def strip_unsupported_names(body, question="", supported=""):
         out = re.sub(r"\(\s*\)", "", out)
         out = re.sub(r"[ \t]{2,}", " ", out)
         out = re.sub(r"\s+([,.;:])", r"\1", out)
+        # 2026-11-17 live (build 36a5144): "Waziri wa Kazi, <name>." became "Waziri wa Kazi,." and "..., <name>, katika" became "Waziri wa Kazi,, katika". The comma that introduced the name goes with it.
+        out = re.sub(r",\s*(?=[.;:!?])", "", out)
+        out = re.sub(r",(\s*,)+", ",", out)
     return out, removed
 
 

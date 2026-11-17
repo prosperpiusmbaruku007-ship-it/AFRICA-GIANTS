@@ -25,7 +25,7 @@ CASES = [
     ("NAME", "Kima cha chini cha mshahara GN 605A kilitangazwa na waziri yupi?", [], [PERSON, r"Mawasiliano na Uchukuzi"], None, None, None),
     # --- licence validity: statement route, plain + premise phrasings (model-free) ---
     ("LICENCE-STMT", "Leseni ya biashara inaisha lini?", [r"miezi 12"], [r"ifikapo tarehe 30 Juni"], None, "engine:fixed_statement", 0),
-    ("LICENCE-STMT", "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?", [r"miezi 12"], [r"31 Machi"], None, "engine:fixed_statement", 0),
+    ("LICENCE-STMT", "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?", [r"miezi 12"], [r"ifikapo tarehe 31 Machi", r"inatakiwa kuwa updated"], None, "engine:fixed_statement", 0),   # the first draft said [r"31 Machi"]: the CORRECT statement names it under negation (R38: the probe was wrong)
     ("LICENCE-STMT", "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?", [r"miezi 12"], [r"ifikapo tarehe 30 Juni"], None, "engine:fixed_statement", 0),
     ("LICENCE-STMT", "Leseni ya biashara ya LGA inahuishwa lini?", [r"miezi 12", r"halmashauri"], [r"siku 90", r"lga\.go\.tz"], None, "engine:fixed_statement", 0),
     ("LICENCE-STMT", "Leseni ya duka langu inaisha mwezi gani?", [r"miezi 12"], [], None, "engine:fixed_statement", 0),
