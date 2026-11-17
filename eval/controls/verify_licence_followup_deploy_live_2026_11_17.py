@@ -40,7 +40,7 @@ CASES = [
     ("NEGATIVE", "Ada ya huduma kwa kampuni ya nje ni asilimia ngapi kodi ya zuio?", [r"15"], [], None, None),
     ("NEGATIVE", "Nawezaje kusajili kampuni?", [], [r"halmashauri yako, au BRELA kwa kundi A"], None, None),
     ("NEGATIVE", "Kodi ya mapato ya kampuni ni asilimia ngapi?", [r"30"], [], None, "engine:corporate_tax"),
-    ("NEGATIVE", "Mishahara ya wafanyakazi wangu ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?", [r"140,000"], [], None, "engine:sdl"),
+    ("NEGATIVE", "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?", [r"140,000"], [], None, "engine:sdl"),   # the first draft omitted the headcount; the engine correctly ASKED for it (R38: the probe was wrong)
     ("NEGATIVE", "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?", [r"80,000"], [], None, "engine:nssf"),
     ("NEGATIVE", "Nikate WCF kwenye mshahara wa mfanyakazi?", [r"(?i)hapana|haikatwi|mwajiri"], [r"unapaswa kuikata"], None, None),
 ]
@@ -59,9 +59,9 @@ def main():
     ident = art["identity"]
     local = json.load(open(os.path.join(REPO, "chike-inference", "rag_facts_text.json"), encoding="utf-8"))
     local_sha = hashlib.sha256(json.dumps(local, ensure_ascii=False).encode("utf-8")).hexdigest()
-    print("served identity:", {k: ident.get(k) for k in ("build", "rag_rows_loaded", "sha256", "config_rag_fact_count")})
-    ident_ok = ident.get("build") == EXPECT_BUILD and ident.get("rag_rows_loaded") == EXPECT_ROWS and ident.get("sha256") == local_sha
-    print(f"IDENTITY build=={EXPECT_BUILD}: {ident.get('build') == EXPECT_BUILD}; rows=={EXPECT_ROWS}: {ident.get('rag_rows_loaded') == EXPECT_ROWS}; served digest == local digest: {ident.get('sha256') == local_sha}")
+    print("served identity:", {k: ident.get(k) for k in ("build", "rag_rows_loaded", "rag_facts_text_sha256", "config_rag_fact_count")})
+    ident_ok = ident.get("build") == EXPECT_BUILD and ident.get("rag_rows_loaded") == EXPECT_ROWS and ident.get("rag_facts_text_sha256") == local_sha
+    print(f"IDENTITY build=={EXPECT_BUILD}: {ident.get('build') == EXPECT_BUILD}; rows=={EXPECT_ROWS}: {ident.get('rag_rows_loaded') == EXPECT_ROWS}; served digest == local digest: {ident.get('rag_facts_text_sha256') == local_sha}")
     for arm, q, must, must_not, forbid, require in CASES:
         if q in done:
             continue
@@ -94,7 +94,8 @@ def main():
                 r["checks"], r["ok"] = ck, all(ck.values())
     art["identity_ok"] = ident_ok
     save()
-    bad = [r for r in art["rows"] if r.get("ok") is False or "error" in r]
+    live_qs = {c[1] for c in CASES}
+    bad = [r for r in art["rows"] if r["q"] in live_qs and (r.get("ok") is False or "error" in r)]   # a row whose probe was superseded (the headcount-less SDL question) stays in the artifact for reading but is not counted
     print(f"\n{len(art['rows'])} rows; identity_ok={ident_ok}; automated misses {len(bad)} (READ every reply)")
     sys.exit(0 if ident_ok and not bad else 1)
 

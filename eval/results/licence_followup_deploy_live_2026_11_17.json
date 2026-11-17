@@ -1,0 +1,336 @@
+{
+ "identity": {
+  "build": "a2e6611",
+  "rag_rows_loaded": 215,
+  "rag_embeddings_shape": [
+   215,
+   768
+  ],
+  "rag_facts_text_sha256": "97696157be5acb0d98ac1654bae924301b55ea1ca9d962888f05e3253de680c7",
+  "config_rag_fact_count": 215,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794895770.926,
+   "enter_started_ts": 1794895770.932,
+   "enter_done_ts": 1794895805.897,
+   "import_to_enter_s": 0.0,
+   "load_s": 35.0,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "LICENCE",
+   "q": "Leseni ya biashara inaisha lini?",
+   "reply": "Ni halali kwa miezi 12 tangu tarehe ilipotolewa, si tarehe maalum ya kalenda: SI 30 Juni wala 31 Machi (sheria ya zamani, ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Thibitisha na halmashauri yako (lga.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE",
+   "q": "Leseni yangu ya biashara huisha tarehe 30 Juni kila mwaka, sivyo?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Thibitisha na mamlaka yako ya leseni: halmashauri yako, au BRELA kwa leseni za kundi A (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE",
+   "q": "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?",
+   "reply": "Hapana, leseni ya biashara huwa inafanyiwa upya kila mwaka, na unapaswa kuwasilisha taarifa za kila mwaka kwa BRELA. Thibitisha na halmashauri yako, au BRELA kwa kundi A (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "LICENCE",
+   "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+   "reply": "Hapana, leseni ya biashara inatakiwa kuomba upya kila mwaka, na huisha ikiwa itakuwa imefutwa. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "LICENCE",
+   "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+   "reply": "Leseni ya biashara ya LGA huisha mwaka wake ndani ya siku 90 tangu tarehe ya kuomba upya. Thibitisha na LGA (lga.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "Nataka leseni ya biashara ya duka langu, nipate wapi?",
+   "reply": "Leseni za biashara zinapatikana kupitia halmashauri husika. Thibitisha na halmashauri yako (manispaa, wilaya).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "DIVIDEND",
+   "q": "Gawio kwa mwekezaji asiye mkazi linakatwa zuio asilimia ngapi?",
+   "reply": "Kiwango cha zuio kwa gawio kwa mwekezaji asiye mkazi ni asilimia 10. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:corporate_tax": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "DIVIDEND",
+   "q": "Kampuni yangu haijaorodheshwa kwenye soko la hisa la DSE. Nikigawa gawio kwa wanahisa, withholding tax yake ni 10%, si ndiyo?",
+   "reply": "Kwa kampuni ambayo haijaorodheshwa kwenye soko la hisa la DSE, kiwango cha withholding tax kwa gawio ni 10% kwa wakazi na 10% kwa wasio wakazi. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:corporate_tax": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RETURN",
+   "q": "Muda wa mwisho wa kuwasilisha return ya kodi ya mapato ya kampuni TRA ni lini?",
+   "reply": "Kampuni inawasilisha return ya kodi ya mapato ndani ya miezi 6 baada ya mwisho wa mwaka wake wa mapato. Mwaka wa mapato wa kampuni ni mwaka wake wa shughuli — si lazima mwaka wa kalenda. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:corporate_tax": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RETURN",
+   "q": "Kampuni yangu ina mwaka wa kalenda. Return ya kodi ya mapato ninaiwasilisha lini?",
+   "reply": "Return ya kodi ya mapata ya kampuni (annual income tax return) inawasilishwa ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato, yaani ifikapo 30 Juni ya mwaka unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi — je, ni kweli?",
+   "reply": "Hapana, si kweli. Malipo ya fidia ya kuachishwa kazi ni mapato ya ajira yanayopigwa kodi. Kwa mfanyakazi mkazi, PAYE hukokotolewa kwa viwango vya kawaida vya mshahara. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?",
+   "reply": "Malipo ya kuachishwa kazi yanaweza kuwa sehemu ya mapato ya ajira yanayotozwa kodi. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PKF",
+   "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+   "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa ili kuamua kiwango sahihi cha mshahara kwa kila mfanyakazi. Thibitisha na GN 605A (sekta na sub-sector husika).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PKF",
+   "q": "GN 605A ilitolewa na nani?",
+   "reply": "GN 605A ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. George Simbachawene) kwa Tangazo Rasmi la Serikali Na. 605A, tarehe 13 Oktoba 2025. Ilianza kutumika tarehe 1 Januari 2026. Thibitisha na TanzLII.org.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Return ya kodi ya mapato ya mtu binafsi ni lini?",
+   "reply": "Kiwango cha kodi ya mapato ya mtu binafsi ni asilimia 0%. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kodi ya awamu (provisional tax) inalipwa lini?",
+   "reply": "Kodi ya awamu inalipwa kwa awamu 4 sawa katika mwaka wa mapato: tarehe 31 Machi, 30 Juni, 30 Septemba, na 31 Desemba. Kila awamu ni sawa na robo ya kodi halisi inayokadiriwa. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Ada ya huduma kwa kampuni ya nje ni asilimia ngapi kodi ya zuio?",
+   "reply": "Kampuni ya nje (non-resident) inalipa kodi ya zuio ya asilimia 15 kwenye ada ya huduma. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nawezaje kusajili kampuni?",
+   "reply": "Kuna njia mbili za kawaida za kusajili kampuni: (1) kupitia BRELA online portal (brela.go.tz); (2) kwa njia ya kawaida ya ofisi. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kodi ya mapato ya kampuni ni asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa. Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+   "path": "engine:corporate_tax",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mishahara ya wafanyakazi wangu ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+   "path": "engine:sdl:ask",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true,
+    "path": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?",
+   "reply": "NSSF ya mfanyakazi: mwajiri analipa 10% na mfanyakazi anachangia 10%, jumla 20%. Kwa mshahara wa TZS 800,000: mfanyakazi analipa TZS 80,000 (10%) na mwajiri analipa TZS 80,000 (10%). Jumlisha unapopata: NSSF ya mfanyakazi = TZS 80,000. Thibitisha na nssf.go.tz.\nNSSF (sehemu ya mfanyakazi) = 10% × TZS 800,000 = TZS 80,000 — jumla ya NSSF ni 20% (mwajiri TZS 80,000 + mfanyakazi TZS 80,000)",
+   "path": "engine:nssf",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara yote ya wafanyakazi 12. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,000,000 = TZS 140,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nikate WCF kwenye mshahara wa mfanyakazi?",
+   "reply": "Hapana — WCF haikatwi kwenye mshahara. Ni gharama ya mwajiri pekee, inayolipwa moja kwa moja kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

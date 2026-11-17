@@ -1,0 +1,94 @@
+{
+ "BEFORE (211 rows, 8452139)": {
+  "Return ya kodi ya mapato ya mtu binafsi ni lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": null,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "presumptive tax ceiling 100m: Kodi ya makadirio hutumika tu kwa mtu binafsi mwenye mauzo y"
+   ]
+  },
+  "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": null,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon",
+    "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho"
+   ]
+  },
+  "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": null,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya map",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon"
+   ]
+  },
+  "Kampuni inawasilisha return ya kodi ya mapato lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": null,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya map"
+   ]
+  }
+ },
+ "AFTER (215 rows, a2e6611)": {
+  "Return ya kodi ya mapato ya mtu binafsi ni lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": 2,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mw",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod"
+   ]
+  },
+  "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": 2,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mw",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon"
+   ]
+  },
+  "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?": {
+   "individual_row_rank": 1,
+   "company_row_rank": 2,
+   "top5": [
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mw",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod",
+    "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya map"
+   ]
+  },
+  "Kampuni inawasilisha return ya kodi ya mapato lini?": {
+   "individual_row_rank": 2,
+   "company_row_rank": 1,
+   "top5": [
+    "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mw",
+    "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada",
+    "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au",
+    "Kodi ya mapato kwa awamu (provisional tax, instalment) inalipwa lini? Kwa awamu 4: mwishon",
+    "Maombi ya kurejeshewa VAT yawasilishwe ndani ya miaka 3 baada ya mwisho wa kipindi cha kod"
+   ]
+  }
+ }
+}
