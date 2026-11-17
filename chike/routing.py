@@ -907,7 +907,7 @@ def turnover_pair_with_periods(text: str):
     six = located[nearest.index("six_month")][1]
     if annual == 200_000_000 and six == 100_000_000:
         return None
-    return annual, six
+    return annual, six
 
 
 # ── THE MIRROR: A LOWER BOUND IS "AT LEAST B", NOT "B" (2026-11-12) ────────────────────────────────
