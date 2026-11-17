@@ -812,10 +812,16 @@ def turnover_with_local_period(text: str):
         return None
     pos, amt = keep[0]
     ql = text.lower()
+    end = pos + _amount_token_len(text, pos)            # distances run from the figure's EDGES, never across the figure itself (PROGRESS 4at: "within 30 characters of the figure")
     cues = []
+    # a cue that is the SUBJECT of a bound's own verb belongs to the bound, not to the figure: "mauzo yangu ya mwaka bado hayajafika milioni 200" -- its "ya mwaka" sits within 25 characters BEFORE "hayajafika" (PROGRESS 4at).
+    # A fronted adverbial after the bound ("ila ndani ya miezi 6 au mwaka mmoja nimeuza milioni 110") precedes no bound verb and stays with the figure.
+    bound_verbs = [bm.start() for rx in (_BOUND_VERB_RE, _LOWER_VERB_RE) for bm in rx.finditer(ql)]
     for period, pat in _LOCAL_PERIOD_CUES:
         for m in re.finditer(pat, ql):
-            d = min(abs(m.start() - pos), abs(m.end() - pos))
+            d = max(0, m.start() - end) if m.start() >= pos else max(0, pos - m.end())
+            if any(0 <= bv - m.end() <= 25 and not (m.end() <= pos < bv) for bv in bound_verbs):      # ... unless the FIGURE sits between the cue and the verb ("mauzo yangu ya mwaka ni TZS 150 milioni, hayajafika TZS 200 milioni")
+                continue
             if d <= 70:
                 cues.append((d, period))
     if not cues:
@@ -823,9 +829,43 @@ def turnover_with_local_period(text: str):
     cues.sort()
     best = cues[0]
     # a rate (monthly / weekly / average) is never a turnover for a registration period; and if a DIFFERENT period's cue is ALSO within 30 characters of the figure, its period is ambiguous: the engine asks, as before
-    if best[1] == "monthly" or (best[0] <= 30 and any(p != best[1] and d <= 30 for d, p in cues[1:])):
+    # 2026-11-17 (founder, PROGRESS 4at): a STATED AVERAGE monthly figure ("kwa wastani wa milioni 18 kila mwezi") is annualised by the engine (registration_thresholds.vat_registration_monthly_average, working shown) -- but ONLY when
+    # (a) an explicit average cue sits within 70 characters of the figure and (b) no OTHER period's cue is also within 30 characters (monthly and annual cues that compete keep the earlier block: the engine asks). A bare monthly figure
+    # ("milioni 25 kila mwezi") is still a rate and still returns None.
+    # a NEAR-TIE: the next-nearest cue of a DIFFERENT period within 15 characters of the nearest. An annual cue that belongs to the bound clause ("mauzo yangu ya mwaka bado hayajafika milioni 200") sits further away and does not compete.
+    others_close = any(p != best[1] and (d - best[0]) <= 15 for d, p in cues[1:])
+    if best[1] == "monthly":
+        if _average_near(text, pos) and not others_close:
+            return (amt, "monthly_average")
+        return None
+    if others_close:
         return None
     return (amt, best[1])
+
+
+_AVERAGE_CUE = re.compile(r"kwa\s+wastani|wastani\s+wa|\baverage\b|on\s+average", re.IGNORECASE)
+
+
+_AMOUNT_TOKEN = re.compile(r"(?:(?:milioni|bilioni|elfu|laki)\s*)?\d[\d,.]*\s*(?:milioni|bilioni|elfu|m\b|bn\b)?", re.IGNORECASE)
+
+
+def _amount_token_len(text: str, pos: int) -> int:
+    m = _AMOUNT_TOKEN.match(text, pos)
+    return len(m.group(0)) if m else 0
+
+
+def _average_near(text: str, pos: int, radius: int = 70) -> bool:
+    end = pos + _amount_token_len(text, pos)
+    return any((max(0, m.start() - end) if m.start() >= pos else max(0, pos - m.end())) <= radius for m in _AVERAGE_CUE.finditer(text))
+
+
+def monthly_average_stated(text: str) -> bool:
+    """True when the text states an AVERAGE monthly figure with no six-month / annual period cue ANYWHERE in it (a single-amount question). Used only after `turnover_period` returned 'monthly'; anything else keeps the engine's
+    never-guess exit for a rate (PROGRESS 4at)."""
+    ql = text.lower()
+    if not _AVERAGE_CUE.search(ql):
+        return False
+    return not any(re.search(pat, ql) for period, pat in _TURNOVER_PERIOD_CUES if period in ("six_month", "annual"))
 
 
 # ── THE MIRROR: A LOWER BOUND IS "AT LEAST B", NOT "B" (2026-11-12) ────────────────────────────────

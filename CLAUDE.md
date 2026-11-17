@@ -451,7 +451,7 @@ All facts below are locked from verified primary sources. Encode these exactly.
 - GN 605A gazetted: 13 Oct 2025; effective: 1 Jan 2026
 - Average private sector increase: 33.4% — TZS 275,060 → TZS 358,322/month
 - Sectors/sub-sectors covered: 16 sectors, 46 sub-sectors
-- Range: ~TZS 175,000 (general) to TZS 765,900 (international mining/energy)
+- Range: ~TZS 175,000 (general) to TZS 765,900 (**energy sector, international companies** -- NOT "mining/energy": mining and prospecting minerals is **TZS 695,000**). *(Corrected 2026-11-17 from the Order itself, kazi.go.tz official copy, edition asserted; the conflation had spread into gold keys and training pairs. The Order's lowest monthly rate is TZS 80,000, "other domestic workers"; 175,000 is the default for sectors it does not specify -- the low-end wording is pending a separate decision.)*
 - Public sector: TZS 500,000/month from Jul 2025 (President Samia, 1 May 2025)
 - Source: PKF Eastern Africa; VELMA Law; The Citizen 17 Oct 2025; TanzLII GN 605A
 - WARNING: 2022 wage order REVOKED effective 1 Jan 2026. Never cite old rates.

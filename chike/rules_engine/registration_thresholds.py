@@ -170,6 +170,38 @@ def vat_registration(turnover, period: str) -> ComputationResult:
     )
 
 
+def vat_registration_monthly_average(monthly) -> ComputationResult:
+    """VAT registration from an AVERAGE MONTHLY turnover the trader STATES ("wastani wa milioni 18 kila mwezi") -- founder-approved 2026-11-17, a NARROWED reversal of the "never annualise" rule above.
+
+    The module docstring's rule (a monthly figure is a rate and is never annualised) stands for a bare monthly figure ("milioni 25 kila mwezi"), which may be one month, a peak or a
+    guess. It is reversed ONLY for an explicitly stated AVERAGE ("wastani wa ... kila mwezi"), where the trader has already smoothed the seasonality: X x 12 is compared with the
+    12-month threshold and the working SHOWS the multiplication and states the assumption. A uniform monthly rate crosses both limbs together (6X >= 100M exactly when 12X >= 200M),
+    so one comparison settles both and no conditional is needed. The caller guarantees the period is not ambiguous (no competing annual / six-month cue near the figure).
+    `inputs.annualised` is True so a reader of the result can see this was derived, not stated.
+    """
+    monthly = Decimal(monthly)
+    annual = monthly * 12
+    over = annual >= VAT_ANNUAL                      # INCLUSIVE, as vat_registration (the boundary figure is liable)
+    arithmetic = f"{tzs(monthly)} kila mwezi kwa wastani, yaani {tzs(monthly)} × 12 = {tzs(annual)} kwa miezi 12"
+    assumption = ("Hii inadhani wastani huo unadumu miezi 12; mauzo halisi ya miezi 12 (au ya miezi 6 mfululizo) ndiyo yanayoamua.")
+    if over:
+        working = (f"Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya {arithmetic}, yamefikia au kuzidi kizingiti cha {tzs(VAT_ANNUAL)}, hivyo usajili ni wa LAZIMA. "
+                   f"{assumption} Hatua ya kwanza ni kuomba usajili wa VAT TRA. {_CONFIRM}")
+    else:
+        working = (f"Kwa wastani huo, hapana: mauzo yako ya {arithmetic}, hayajafikia kizingiti cha {tzs(VAT_ANNUAL)} (wala {tzs(VAT_SIX_MONTH)} katika miezi 6: {tzs(monthly * 6)}). "
+                   f"LAKINI hii ni makadirio ya wastani: usajili wa VAT ni wa lazima IKIWA mauzo halisi yatafikia {tzs(VAT_ANNUAL)} katika miezi 12, AU {tzs(VAT_SIX_MONTH)} katika miezi 6 mfululizo. "
+                   f"Niambie jumla halisi ya mauzo yako nami nitathibitisha. {_CONFIRM}")
+    return ComputationResult(
+        computation=COMPUTATION_VAT,
+        applicable=over,
+        amount=None,
+        working=working,
+        inputs={"monthly_average": monthly, "annualised": True, "turnover": annual, "period": ANNUAL, "threshold": VAT_ANNUAL, "limb_tested": ANNUAL, "limb_untested": None},
+        note=("over the VAT threshold on an annualised STATED monthly average" if over else "below the VAT threshold on an annualised STATED monthly average; actual turnover decides"),
+        lead_claim=(premise.OBLIGATION_APPLIES, True) if over else None,
+    )
+
+
 def efd_required(vat_registered: bool = False) -> ComputationResult:
     """Does this business need an EFD machine?
 

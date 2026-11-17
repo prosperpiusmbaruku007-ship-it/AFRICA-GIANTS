@@ -1,0 +1,797 @@
+{
+ "rows": {
+  "eval_116": {
+   "question": "Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia ngapi?",
+   "old_sw": "Asilimia 33.4. Mshahara wa wastani ulipanda kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha takwimu hizi na PKF Eastern Africa.",
+   "new_sw": "Asilimia 33.4. Mshahara wa wastani ulipanda kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha takwimu hizi na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "scores": {
+    "c2143c0": {
+     "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "correct",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the 33.4% average increase and clarifies it is not 33.5%, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2345,
+      "pout": 234,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 3,
+       "correct": 2
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states the average increase as 33.4% without specifying it is for the private sector, and adds misleading information about a 33.5% national average not in the referen",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2405,
+      "pout": 262,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "correct",
+       "wrong",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer contradicts the reference by providing a range of salary increases (TZS 20,000 to TZS 195,000) instead of the specific average increase of TZS 83,262 mentioned in the reference.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2320,
+      "pout": 394,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 4,
+       "wrong": 1
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states the 33.4% average increase and clarifies sector variation without contradicting the reference.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2380,
+      "pout": 219,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "wrong",
+       "correct",
+       "correct"
+      ]
+     }
+    },
+    "0e11c3d": {
+     "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "correct",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the 33.4% average increase and clarifies it is not 33.5%, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2345,
+      "pout": 252,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 4,
+       "correct": 1
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states the average increase as 33.4% without specifying it is for the private sector and provides vague and conflicting figures for the increase range.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2405,
+      "pout": 262,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states the average increase as 33.4% without specifying it is for the private sector and introduces conflicting figures (TZS 20,000 to TZS 195,000) not in the referenc",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2320,
+      "pout": 333,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 3,
+       "wrong": 2
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states the 33.4% average increase for the private sector, clarifies it is not 33.5%, and provides additional context without contradicting the reference.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2380,
+      "pout": 232,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "wrong",
+       "correct",
+       "correct",
+       "wrong"
+      ]
+     }
+    }
+   }
+  },
+  "eval_117": {
+   "question": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+   "old_sw": "Sekta 16 na sekta ndogo (sub-sectors) 46. Kila sub-sector ina kiwango chake maalum cha mshahara wa chini. Thibitisha orodha kamili na PKF Eastern Africa au TanzLII.",
+   "new_sw": "Sekta 16 na sekta ndogo (sub-sectors) 46. Kila sub-sector ina kiwango chake maalum cha mshahara wa chini. Thibitisha orodha kamili na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "scores": {
+    "c2143c0": {
+     "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "correct",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors covered by GN 605A, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1910,
+      "pout": 244,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors in GN 605A and provides a valid source for verification.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1950,
+      "pout": 222,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors in GN 605A and mentions TanzLII as a source, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1885,
+      "pout": 234,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors and mentions TanzLII for verification, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1925,
+      "pout": 210,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     }
+    },
+    "0e11c3d": {
+     "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "correct",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors covered by GN 605A and mentions the same verification sources as the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1910,
+      "pout": 246,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors in GN 605A and provides a valid source for verification.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1950,
+      "pout": 233,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors in GN 605A and mentions a valid source for verification.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1885,
+      "pout": 219,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the number of sectors and sub-sectors and mentions TanzLII for verification, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 1925,
+      "pout": 210,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     }
+    }
+   }
+  },
+  "eval_120": {
+   "question": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+   "old_sw": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya madini na nishati ya kimataifa (international mining/energy). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na PKF Eastern Africa au Clyde & Co.",
+   "new_sw": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya nishati, kampuni za kimataifa (international energy companies). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "scores": {
+    "c2143c0": {
+     "reply": "Kiwango cha juu zaidi ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Ni kiwango cha wastani cha sekta hiyo, si cha juu kabisa. Hakuna kiwango cha juu kabisa cha kisheria katika GN 605A — viwango vinatofautiana sana kulingana na sekta na sub-sector. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "wrong",
+     "judge_old": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states that there is no maximum salary under GN 605A and that the figure is an average, contradicting the reference which clearly identifies TZS 765,900 as the highest",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2385,
+      "pout": 344,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states there is no maximum level in GN 605A and misrepresents the figure as an average, whereas the reference answer clearly identifies it as the highest level for the",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2425,
+      "pout": 312,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "reply_repaired_now": "Kiwango cha juu zaidi ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Ni kiwango cha wastani cha sekta hiyo, si cha juu kabisa. Hakuna kiwango cha juu kabisa cha kisheria katika GN 605A — viwango vinatofautiana sana kulingana na sekta na sub-sector. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states there is no maximum salary in GN 605A and that the figure is an average, while the reference clearly identifies TZS 765,900 as the highest maximum salary in the",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2360,
+      "pout": 338,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly states that there is no highest level in GN 605A and that 765,900 is an average, contradicting the reference which identifies it as the highest level for the internati",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2400,
+      "pout": 350,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     }
+    },
+    "0e11c3d": {
+     "reply": "Kiwango cha JUU KABISA (maximum) chini ya GN 605A ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Hakuna kiwango cha juu zaidi kuliko hicho katika GN 605A. Viwango vyote vya sekta nyingine ni vidogo kuliko hivyo. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "undetermined",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the maximum salary level under GN 605A as TZS 765,900 for the international energy sector and implies it is the highest, aligning with the reference answer.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2355,
+      "pout": 301,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 4,
+       "wrong": 1
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the maximum salary level under GN 605A as TZS 765,900 for the international energy sector and accurately notes that no higher level exists in this guideline.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2395,
+      "pout": 310,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "wrong",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "Kiwango cha JUU KABISA (maximum) chini ya GN 605A ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Hakuna kiwango cha juu zaidi kuliko hicho katika GN 605A. Viwango vyote vya sekta nyingine ni vidogo kuliko hivyo. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the maximum salary level under GN 605A as TZS 765,900 for the international energy sector and accurately notes that no higher level exists in this guideline.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2330,
+      "pout": 290,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "The generated answer correctly states the maximum salary level under GN 605A as TZS 765,900 and correctly identifies it as being for the international energy sector, aligning with the reference answer",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2370,
+      "pout": 299,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     }
+    }
+   }
+  },
+  "eval_126": {
+   "question": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+   "old_sw": "Hapana. Mshahara wa TZS 500,000 kwa sekta ya umma ulitangazwa na Rais Samia tarehe 1 Mei 2025, ukianza Julai 2025 — ni agizo tofauti la serikali, si GN 605A. GN 605A inashughulikia sekta binafsi peke yake. Thibitisha tofauti hizi na Clyde & Co au VELMA Law. Thibitisha tofauti hii na VELMA Law au Clyde and Co ambao wameandika uchambuzi wa kina wa mabadiliko haya.",
+   "new_sw": "Hapana. Mshahara wa TZS 500,000 kwa sekta ya umma ulitangazwa na Rais Samia tarehe 1 Mei 2025, ukianza Julai 2025 — ni agizo tofauti la serikali, si GN 605A. GN 605A inashughulikia sekta binafsi peke yake. Thibitisha tofauti hizi na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "scores": {
+    "c2143c0": {
+     "reply": "Hapana. Hazarau ya TZS 500,000 kwa mwezi haikutolewa na GN 605A. Hazarau hiyo imetolewa na Rais Samia katika hotuba yake ya 31 Julai 2025, lakini haijawa amri rasmi bado. Amri rasmi ni ile iliyotolewa na Waziri Mkuu Kassim Majaliwa kupitia GN 605A, ambayo ina viwango vilivyothibitishwa. Subiri taarifa rasmi kutoka Serikalini.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "wrong",
+     "judge_old": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "Generated answer incorrectly attributes the official announcement of the 500,000 TZS minimum wage to Prime Minister Kassim Majaliwa via GN 605A, while the reference clearly states it was announced by ",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2915,
+      "pout": 370,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly attributes the official announcement of the TZS 500,000 minimum wage to Prime Minister Kassim Majaliwa via GN 605A, whereas the reference clarifies it was announced by",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2755,
+      "pout": 400,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "reply_repaired_now": "Hapana. Hazarau ya TZS 500,000 kwa mwezi haikutolewa na GN 605A. Hazarau hiyo imetolewa na Rais Samia katika hotuba yake ya 31 Julai 2025, lakini haijawa amri rasmi bado. Amri rasmi ni ile iliyotolewa na Waziri Mkuu Kassim Majaliwa kupitia GN 605A, ambayo ina viwango vilivyothibitishwa. Subiri taarifa rasmi kutoka Serikalini.",
+     "judge_old_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "Generated answer incorrectly attributes the official announcement to GN 605A and the Prime Minister, while the reference clearly states that the 500,000 TZS minimum wage for the public sector was anno",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2915,
+      "pout": 397,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "wrong",
+      "tie": false,
+      "votes": {
+       "wrong": 5
+      },
+      "n": 5,
+      "justification": "The generated answer incorrectly attributes the official announcement of the TZS 500,000 minimum wage to Prime Minister Kassim Majaliwa via GN 605A, whereas the reference clarifies it was announced by",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2755,
+      "pout": 396,
+      "err_count": 0,
+      "per_call": [
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong",
+       "wrong"
+      ]
+     }
+    },
+    "0e11c3d": {
+     "reply": "Hapana. Hazungumziwi katika GN 605A. Amri hiyo inazungumzia tu viwango vya sekta binafsi. Viwango vya watumishi wa serikali havitolewi na GN 605A, bali na Rais Samia kupitia Tangazo Rasmi la Serikali Na. 605A. Thibitisha na PKF Eastern Africa au TanzLII.",
+     "regex_old": true,
+     "regex_new": true,
+     "stored_judge": "undetermined",
+     "judge_old": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states that the minimum salary of TZS 500,000 for the public sector is not covered by GN 605A and was announced by President Samia through an official government gazette.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2730,
+      "pout": 348,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states that the minimum wage of TZS 500,000 for the public sector is not covered by GN 605A and clarifies it was announced by President Samia through an official government ",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2570,
+      "pout": 315,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "reply_repaired_now": "Hapana. Hazungumziwi katika GN 605A. Amri hiyo inazungumzia tu viwango vya sekta binafsi. Viwango vya watumishi wa serikali havitolewi na GN 605A, bali na Rais Samia kupitia Tangazo Rasmi la Serikali Na. 605A. Thibitisha na TanzLII.",
+     "judge_old_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states that the TZS 500,000 minimum salary for the public sector is not covered by GN 605A and was announced by President Samia through an official government gazette.",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2705,
+      "pout": 333,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     },
+     "judge_new_on_repaired": {
+      "verdict": "correct",
+      "tie": false,
+      "votes": {
+       "correct": 5
+      },
+      "n": 5,
+      "justification": "Generated answer correctly states that the minimum wage of TZS 500,000 for the public sector is not covered by GN 605A, which applies only to the private sector, and correctly attributes the announcem",
+      "providers": [
+       "DeepInfra"
+      ],
+      "pin": 2545,
+      "pout": 330,
+      "err_count": 0,
+      "per_call": [
+       "correct",
+       "correct",
+       "correct",
+       "correct",
+       "correct"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

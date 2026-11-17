@@ -719,6 +719,9 @@ class Orchestrator:
             # 2026-11-17 (np_22): TWO amounts, one of them a bound ("bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110"): the other is the turnover and its period is the cue next to it.
             resolved = routing.turnover_with_local_period(sq.text)
             if resolved is not None:
+                if resolved[1] == "monthly_average":
+                    # 2026-11-17 (founder): a STATED average monthly figure is annualised, working shown (registration_thresholds.vat_registration_monthly_average)
+                    return self._deterministic_answer(sq, rules_engine.vat_registration_monthly_average(resolved[0]))
                 return self._deterministic_answer(sq, rules_engine.vat_registration(resolved[0], resolved[1]))
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_TURNOVER,
                              needs_clarification=True)
@@ -748,6 +751,9 @@ class Orchestrator:
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_PERIOD,
                              needs_clarification=True)
         if period == rules_engine.registration_thresholds.MONTHLY:
+            if routing.monthly_average_stated(sq.text):
+                # 2026-11-17 (founder): "kwa wastani wa X kila mwezi" with no competing period cue anywhere -> X x 12, working shown. A BARE monthly figure still gets the exit below.
+                return self._deterministic_answer(sq, rules_engine.vat_registration_monthly_average(turnover))
             return SubAnswer(sub_question=sq, text=clarification.VAT_PERIOD_IS_A_RATE,
                              needs_clarification=True)
         return self._deterministic_answer(
@@ -1211,6 +1217,8 @@ class Orchestrator:
         repaired = fidelity.repair_licence_authority(sub.sub_question.text, fidelity.repair_gn605a_issuer(sub.sub_question.text, repaired))
         # 2026-11-17 (D-FIDELITY-18): a practitioner FIRM named in words as the authority to confirm with ("Thibitisha na VELMA Law au PKF Eastern Africa") is replaced by the topic's authority. R25 block at fidelity.repair_firm_authority.
         repaired = fidelity.repair_firm_authority(sub.sub_question.text, repaired)
+        # 2026-11-17 (D-FIDELITY-19): a BACKWARDS comparison between two figures the body itself states ("TZS 216,000,000 ... Hii ni chini ya kiwango cha milioni 200") has its comparator flipped so the sentence is true of its own figures. Constants (R19), fact path included, repaired never withheld. R25 block at fidelity.repair_comparisons.
+        repaired = fidelity.repair_comparisons(repaired)
         # 2026-11-17 (D-FIDELITY-17): a personal name in the body that the question and the served facts do not carry is removed (an office, an institution or an Act is never judged). R25 block at fidelity.strip_unsupported_names.
         repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
         if repaired != cleaned:

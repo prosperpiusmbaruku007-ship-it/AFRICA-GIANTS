@@ -1,0 +1,45 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2398,
+   "flags": 1,
+   "rows": [
+    {
+     "src": "batch3_deploy_live_2026_11_17.json",
+     "q": "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?",
+     "violations": [
+      [
+       "216000000",
+       "200000000",
+       "chini ya"
+      ]
+     ],
+     "reply": "Kulingana na taarifa uliyotoa, mauzo ya wastani ya milioni 18 kwa mwezi ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni chini ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT. Thibitisha na tra.go.tz."
+    }
+   ]
+  },
+  "GOLD": {
+   "pairs": 562,
+   "flags": 0,
+   "rows": []
+  },
+  "TRAINING": {
+   "pairs": 8756,
+   "flags": 0,
+   "rows": []
+  }
+ },
+ "monthly_average": {
+  "questions_swept": 8605,
+  "resolved_any": 6,
+  "resolved_monthly_average": [
+   {
+    "q": "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 18000000
+   }
+  ]
+ },
+ "monthly_average_single_amount": []
+}

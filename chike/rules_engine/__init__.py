@@ -29,7 +29,7 @@ from .rate_statement import (levy_rate_statement, levy_threshold_statement,
 from .paye import compute_paye, compute_paye_each
 from .wcf import compute_wcf, wcf_applies
 from .minimum_wage import compare_to_floor, sector_rates_statement
-from .registration_thresholds import vat_registration, efd_required
+from .registration_thresholds import vat_registration, vat_registration_monthly_average, efd_required
 from .presumptive import compute_presumptive, records_status_matters
 from .corporate_tax import corporate_tax_rate_statement, partnership_tax_statement
 from .rent_wht import rent_wht_statement
@@ -103,6 +103,7 @@ __all__ = [
     "sector_rates_statement",
     "wage_schedule",
     "vat_registration",
+    "vat_registration_monthly_average",
     "efd_required",
     "registration_thresholds",
     "corporate_tax_rate_statement",

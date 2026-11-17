@@ -1263,7 +1263,7 @@ def audit_unexercisable():
         _clean18 = [_r18.fixed_statement_topic('TIN ni nini?') is None,
                     _r18.fixed_statement_topic('Nitapataje TIN?') is None,
                     _r18.fixed_statement_topic('Ada ya leseni ya biashara ni kiasi gani?') is None,
-                    _r18.turnover_with_local_period('Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?') is None,
+                    (_r18.turnover_with_local_period('Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?') or (0, ''))[1] == 'monthly_average' and _r18.turnover_with_local_period('Nauza milioni 20 kwa mwezi, na mauzo yangu hayajafika milioni 200. Je VAT?') is None,   # 2026-11-17 (4at): a STATED AVERAGE is annualised (never read as annual-as-stated); a BARE monthly rate still asks
                     _f18.repair_firm_authority('Nani alisaini GN 605A?', 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani ni 33.4%. Thibitisha na TRA (tra.go.tz).') == 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani ni 33.4%. Thibitisha na TRA (tra.go.tz).',
                     _f18._drop_redundant_confirm_tail('Thibitisha na halmashauri yako. Thibitisha na BRELA kwa leseni za kundi A.') == 'Thibitisha na halmashauri yako. Thibitisha na BRELA kwa leseni za kundi A.']
         with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
@@ -1278,6 +1278,35 @@ def audit_unexercisable():
     record('2026-11-17 next small batch: TIN-window + fee/renewal statement routes, VAT two-amount resolver (np_22), firm-as-authority repair, confirm-sentence dedupe', 'fidelity',
            'a premise check answered "Hapana, hakuna siku 15" (TIN), a two-part licence question answered with the fee only, np_22 asked for sales figures it had been given, a consultancy named as the authority, a confirm sentence repeated',
            _v, 'np_14, np_22, np_26, s2_08, the 36a5144 live replies', 'a TIN definition / how-to, a fee-only question, a MONTHLY rate beside a bound, an analysis citing a firm as an analysis, two different confirm sentences', _note)
+
+    # ── 2026-11-17 decision 4 (PROGRESS 4at): D-FIDELITY-19 comparison fidelity + the VAT engine annualising a STATED AVERAGE monthly figure. PLANTED on the LIVE reply of build d644c71 (the founding specimen).
+    try:
+        from chike import fidelity as _f19, routing as _r19
+        from chike import rules_engine as _re19
+        _live19 = json.load(open(os.path.join(REPO, 'eval', 'results', 'batch3_deploy_live_2026_11_17.json'), encoding='utf-8'))['rows']
+        _q19 = 'Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?'
+        _rep19 = next(r['reply'] for r in _live19 if r['q'] == _q19)
+        _fixed19 = _f19.repair_comparisons(_rep19)
+        _spec19 = {'the live reply compares 216M "chini ya" 200M and is flagged': bool(_f19.comparison_violations(_rep19)),
+                   'the repair makes it true of its own figures and is idempotent': 'Hii ni zaidi ya kiwango cha milioni 200' in _fixed19 and not _f19.comparison_violations(_fixed19) and _f19.repair_comparisons(_fixed19) == _fixed19,
+                   'a stated average resolves to monthly_average': (_r19.turnover_with_local_period(_q19) or (0, ''))[1] == 'monthly_average',
+                   'the engine annualises 18M x 12 = 216M and says register': (lambda r: r.applicable is True and 'TZS 216,000,000' in r.working and '× 12' in r.working)(_re19.vat_registration_monthly_average(18_000_000))}
+        _clean19 = [not _f19.comparison_violations('TZS 270,001 hadi 520,000: 8%. Zaidi ya TZS 270,000 lakini chini ya TZS 520,000.'),
+                    not _f19.comparison_violations('Mauzo yako ya TZS 150,000,000 ni chini ya kizingiti cha TZS 200,000,000.'),
+                    not _f19.comparison_violations('Mauzo ya TZS 200,000,000 ni zaidi ya TZS 200,000,000.'),
+                    _r19.turnover_with_local_period('Nauza milioni 20 kwa mwezi, na mauzo yangu hayajafika milioni 200. Je VAT?') is None,
+                    _r19.monthly_average_stated('Nauza milioni 18 kila mwezi. Je VAT?') is False]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code19 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired19 = 'fidelity.repair_comparisons(' in _code19 and 'rules_engine.vat_registration_monthly_average(' in _code19
+        _v = ('FIRES' if (all(_spec19.values()) and all(_clean19) and _wired19) else 'NOT_WIRED' if (all(_spec19.values()) and all(_clean19)) else 'ERROR')
+        _note = (f'specimens: {_spec19}; clean limbs (must all be True): {_clean19}; wired (comments stripped): {_wired19}. Priced (eval/results/price_d19_2026_11_17.json): D-FIDELITY-19 flags 1 of 2,398 stored replies (the founding specimen), 0 of 562 gold answers, 0 of 8,756 training pairs; '
+                 'the monthly-average resolver resolves 1 of 8,605 held questions (the priced specimen), the single-amount route 0.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 decision 4: D-FIDELITY-19 comparison fidelity + VAT engine annualises a STATED AVERAGE monthly figure', 'fidelity',
+           'a confident BACKWARDS comparison between two figures the reply itself states ("TZS 216,000,000 ... Hii ni chini ya kiwango cha milioni 200"); a stated average monthly turnover not compared with the 12-month threshold',
+           _v, 'the live d644c71 reply to the 18M-a-month question', 'a correct comparison, ranges and bands, equal figures, a percentage, a BARE monthly rate (still asks), competing monthly/annual cues (still ask)', _note)
 
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:

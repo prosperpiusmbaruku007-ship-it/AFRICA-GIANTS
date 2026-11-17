@@ -2122,3 +2122,76 @@ def _drop_redundant_confirm_tail(body):
         if re.search(r"thibitisha\s+(?:na|kwa)\s+" + re.escape(target), e):
             return " ".join(parts[:-1])
     return body
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# D-FIDELITY-19 (2026-11-17, founder-approved): COMPARISON FIDELITY -- "A ni chini ya B" when A > B, "A ni zaidi ya B" when A < B.
+#
+# Founding specimen, LIVE build d644c71 (eval/results/batch3_deploy_live_2026_11_17.json): "...ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni chini ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT."
+# 216,000,000 is ABOVE 200,000,000; the model states both figures and then compares them backwards, which tells a liable business it is below the VAT threshold.
+#
+# R19 (constant vs derived): BOTH numbers are in the text, so this is a comparison of two stated constants -- buildable. It needs no engine result, so it works on the fact path too, where the other D-FIDELITY rules are
+# vacuous. It REPAIRS (flips the comparator so the sentence is true of its own figures) and never withholds: blanking would ship silence on the fact path.
+#
+# R25 (written before it was wired): (1) the corpus defect repaired: one confident backwards comparison in production; priced on every stored reply, gold answer and training pair (eval/results/price_d19_2026_11_17.json).
+# (2) the CORRECT output it could damage: any sentence whose comparison is TRUE is untouched by construction (it fires only when the words contradict the two stated figures). The shapes at risk are ranges and bands, which
+# contain comparator words but no "A ni <comparator> B" predicate: "TZS 270,001 hadi 520,000: 8%", "zaidi ya TZS 270,000 lakini chini ya TZS 520,000", "chini ya TZS 270,000: 0%". The predicate (A, optionally a sentence break and a
+# demonstrative bridge "Hii ni", then ni/iko/ipo) is REQUIRED, A must be the nearest figure before the comparator, B the first after it within five filler words, both >= TZS 10,000 (so a percentage, a count or a date is never
+# compared). EQUAL figures are never flagged (the boundary is the statute's, not the model's). LIMITATION, stated: flipping the comparator makes the sentence true; a CONCLUSION elsewhere in the body that followed the wrong
+# comparison ("kwa hiyo hauhitaji kusajili") is not rewritten -- the review card shows guard 'repaired'.
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+_D19_LT = r"chini\s+ya|pungufu\s+ya|ndogo\s+kuliko|chini\s+kuliko|less\s+than|lower\s+than|below"
+_D19_GT = r"zaidi\s+ya|juu\s+ya|kubwa\s+kuliko|juu\s+kuliko|more\s+than|higher\s+than|above"
+_D19_CMP = re.compile(rf"(?<![A-Za-z])(?P<lt>{_D19_LT})(?![A-Za-z])|(?<![A-Za-z])(?P<gt>{_D19_GT})(?![A-Za-z])", re.IGNORECASE)
+_D19_FLIP = {"chini ya": "zaidi ya", "pungufu ya": "zaidi ya", "ndogo kuliko": "kubwa kuliko", "chini kuliko": "juu kuliko", "less than": "more than", "lower than": "higher than", "below": "above",
+             "zaidi ya": "chini ya", "juu ya": "chini ya", "kubwa kuliko": "ndogo kuliko", "juu kuliko": "chini kuliko", "more than": "less than", "higher than": "lower than", "above": "below"}
+_D19_MONEY_FLOOR = 10_000
+_D19_LEAD_TOKEN = re.compile(r"^(?:(?:milioni|bilioni|elfu|laki)\s*)?\d[\d,.]*\s*(?:milioni|bilioni|elfu|m\b|bn\b|k\b)?", re.IGNORECASE)
+_D19_BRIDGE = re.compile(r"[.!?]\s+(?:Hii|Hiyo|Hiki|Hicho|Hizo|Hivyo|Kiasi\s+hiki|Kiasi\s+hicho|Jumla\s+hii)\s+(?:ni\s+|iko\s+|ipo\s+)?$", re.IGNORECASE)
+_D19_PREDICATE = re.compile(r"(?:^|\s)(?:ni|iko|ipo|ziko|yako|is|are)\s+(?:bado\s+|pia\s+|tu\s+)?$", re.IGNORECASE)
+
+
+def _d19_pairs(body):
+    """[(cmp_match, A, B, kind)] for every 'A ni <comparator> B' whose words contradict its own figures."""
+    from . import swahili_numbers as swn
+    located = [(p, a) for p, a in swn.parse_amounts_located(body) if a >= _D19_MONEY_FLOOR]
+    out = []
+    for m in _D19_CMP.finditer(body):
+        before = [(p, a) for p, a in located if p < m.start()]
+        after = [(p, a) for p, a in located if p >= m.end()]
+        if not before or not after:
+            continue
+        pa, a = before[-1]
+        pb, b = after[0]
+        lead = _D19_LEAD_TOKEN.match(body[pa:m.start()])
+        gap = body[pa + (lead.end() if lead else 0):m.start()]
+        if len(gap) > 90 or re.search(r"\d", gap):
+            continue
+        if not (_D19_PREDICATE.search(gap) or (_D19_BRIDGE.search(gap) and not re.search(r"[.!?;:]\s", gap[: _D19_BRIDGE.search(gap).start()] + " "))):
+            continue
+        mid = body[m.end():pb]
+        if len(mid.split()) > 5 or re.search(r"[\d.;:?!]", mid):
+            continue
+        kind = "lt" if m.group("lt") else "gt"
+        if (kind == "lt" and a > b) or (kind == "gt" and a < b):
+            out.append((m, a, b, kind))
+    return out
+
+
+def comparison_violations(body: str):
+    """[(A, B, comparator_text)] for each backwards comparison between two stated figures; [] when none. Pure, idempotent after repair."""
+    return [(a, b, m.group(0)) for m, a, b, _ in _d19_pairs(body or "")]
+
+
+def repair_comparisons(body: str) -> str:
+    """The body with each backwards comparator flipped so the sentence is true of its own two figures; unchanged when there is none."""
+    if not body:
+        return body
+    hits = _d19_pairs(body)
+    for m, _a, _b, _k in sorted(hits, key=lambda h: -h[0].start()):
+        word = m.group(0)
+        flipped = _D19_FLIP[re.sub(r"\s+", " ", word.lower())]
+        if word[:1].isupper():
+            flipped = flipped[:1].upper() + flipped[1:]
+        body = body[:m.start()] + flipped + body[m.end():]
+    return body
