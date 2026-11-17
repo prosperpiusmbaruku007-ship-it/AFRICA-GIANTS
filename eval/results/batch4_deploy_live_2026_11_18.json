@@ -1,0 +1,213 @@
+{
+ "identity": {
+  "build": "1c7582c",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794950212.31,
+   "enter_started_ts": 1794950212.317,
+   "enter_done_ts": 1794950248.725,
+   "import_to_enter_s": 0.0,
+   "load_s": 36.4,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "AR-STMT",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-STMT",
+   "q": "Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-STMT",
+   "q": "Je, annual return ya BRELA inawasilishwa ndani ya miezi 12 baada ya usajili?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-STMT",
+   "q": "Annual return ya BRELA ni mwisho wa mwaka wa fedha, sivyo?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-STMT",
+   "q": "Kampuni ilisajiliwa tarehe 10 Machi 2025. Annual return inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-STMT",
+   "q": "Nimeambiwa annual return ya BRELA inaisha 30 Septemba — ni kweli?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Ada ya annual return BRELA ni shilingi ngapi?",
+   "reply": "Ada ya kuwasilisha annual return kwa kampuni ya ndani ni TZS 22,000. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Nikichelewa kuwasilisha annual return, faini ni kiasi gani kwa mwezi?",
+   "reply": "Kwa kampuni za kawaida, faini ya kuchelewa kuwasilisha annual return ni TZS 2,500 kwa kila mwezi. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Return ya kodi ya mapato ya kampuni ni lini?",
+   "reply": "Kampuni ya kawaida (mwezi 6): kodi ya mapato ya kampuni inawasilishwa ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato, ambao mara nyingi huwa Desemba 31. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+   "reply": "Kampuni iliyosajiliwa na BRELA inatakiwa kuwasilisha annual return kila mwaka, na kuna adhabu ikiwa itachelewa. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D23",
+   "q": "Sekta ya madini ina sekta ndogo ngapi kwenye GN 605A?",
+   "reply": "Agizo la Kima cha Chini cha Mshahara kwa Sekta Binafsi (GN 605A) lina sekta 16 katika Ratiba yake ya Kwanza. Sekta ya Madini (kipengele cha 10) ina vipengele vinne tu, kila kimoja na kiwango chake: uchimbaji na utafutaji wa madini, leseni ya msingi ya uchimbaji, leseni ya wauzaji (dealer), na leseni za madalali (brokers). Idadi ya 46 ni takwimu ya sekta ndogo kwa sekta zote kwa pamoja (kutoka PKF), si ya sekta ya madini peke yake, na Agizo lenyewe halitaji idadi hiyo: thibitisha na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D23-NEG",
+   "q": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+   "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D23-NEG",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya madini na nishati ni karibu TZS 765,900 kwa mwezi. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  }
+ ],
+ "identity_ok": true
+}
