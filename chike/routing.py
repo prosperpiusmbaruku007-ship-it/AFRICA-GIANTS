@@ -867,6 +867,48 @@ def monthly_average_stated(text: str) -> bool:
         return False
     return not any(re.search(pat, ql) for period, pat in _TURNOVER_PERIOD_CUES if period in ("six_month", "annual"))
 
+# ── TWO PERIOD-LABELLED TURNOVER FIGURES, NO BOUND (2026-11-17, founder-approved after the gate-4 enumeration found eval_333 / eval_353 regressed) ──────────────────────────────────────────────────────────────────
+# "Mapato yangu ni TZS 199,000,000 kwa mwaka na TZS 99,000,000 kwa miezi 6 -- je nasajili VAT?" The route reaches the engine (the 'VAT route gaps' extension, 8ff677a) but the engine's two-amount reader only knew a BOUND plus one figure, so
+# it ASKED for figures the user had already given. Here each figure takes the period cue it is NEAREST to; exactly one must be ANNUAL and exactly one SIX-MONTH, so each limb can be tested against its own threshold.
+# NARROW BY CONSTRUCTION (R17): exactly TWO plausible amounts; neither governed by a bound/lower-bound cue (that is the other path); each with a period cue within 70 characters of its edge, assigned to the NEAREST amount; no monthly /
+# weekly cue anywhere near either figure; the pair must not BE the two statutory thresholds (TZS 200,000,000 AND TZS 100,000,000: "kizingiti ni 200M kwa mwaka au 100M kwa miezi 6?" states the thresholds, not a turnover).
+# Anything else returns None and the engine asks, exactly as before.
+def turnover_pair_with_periods(text: str):
+    """(annual_amount, six_month_amount) when the text states one ANNUAL and one SIX-MONTH turnover figure and nothing else; else None."""
+    located = [(pos, amt) for pos, amt in swn.parse_amounts_located(text) if amt >= swn.MIN_PLAUSIBLE_AMOUNT]
+    if len(located) != 2:
+        return None
+    if any(_bound_governed(text, pos, _BOUND_VERB_RE, _BOUND_PREP_RE) or _bound_governed(text, pos, _LOWER_VERB_RE, _LOWER_PREP_RE) for pos, _a in located):
+        return None
+    spans = [(pos, pos + _amount_token_len(text, pos)) for pos, _a in located]
+    ql = text.lower()
+
+    def edge(m, sp):
+        return max(0, m.start() - sp[1]) if m.start() >= sp[0] else max(0, sp[0] - m.end())
+
+    assigned = [[], []]
+    for period, pat in _LOCAL_PERIOD_CUES:
+        for m in re.finditer(pat, ql):
+            d = [edge(m, spans[0]), edge(m, spans[1])]
+            k = 0 if d[0] <= d[1] else 1
+            if d[k] <= 70:
+                assigned[k].append((d[k], period))
+    if any(not a for a in assigned):
+        return None
+    nearest = []
+    for a in assigned:
+        a.sort()
+        if a[0][1] == "monthly":
+            return None
+        nearest.append(a[0][1])
+    if sorted(nearest) != ["annual", "six_month"]:
+        return None
+    annual = located[nearest.index("annual")][1]
+    six = located[nearest.index("six_month")][1]
+    if annual == 200_000_000 and six == 100_000_000:
+        return None
+    return annual, six
+
 
 # ── THE MIRROR: A LOWER BOUND IS "AT LEAST B", NOT "B" (2026-11-12) ────────────────────────────────
 #

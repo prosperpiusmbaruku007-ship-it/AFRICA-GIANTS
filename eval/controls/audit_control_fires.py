@@ -1308,6 +1308,37 @@ def audit_unexercisable():
            'a confident BACKWARDS comparison between two figures the reply itself states ("TZS 216,000,000 ... Hii ni chini ya kiwango cha milioni 200"); a stated average monthly turnover not compared with the 12-month threshold',
            _v, 'the live d644c71 reply to the 18M-a-month question', 'a correct comparison, ranges and bands, equal figures, a percentage, a BARE monthly rate (still asks), competing monthly/annual cues (still ask)', _note)
 
+    # ── 2026-11-17 decision 1 (PROGRESS 4aw): the VAT engine reads an ANNUAL and a SIX-MONTH figure given together (eval_333 / eval_353 regressed at 8ff677a). PLANTED on the committed gold rows.
+    try:
+        from chike import routing as _r20
+        from chike import rules_engine as _re20
+        _g20 = {}
+        for _fn in ('eval_questions_001', 'eval_questions_002_additions', 'eval_questions_003'):
+            for _ln in open(os.path.join(REPO, 'eval', 'accuracy_gate', _fn + '.jsonl'), encoding='utf-8'):
+                if _ln.strip():
+                    _row = json.loads(_ln)
+                    _g20[_row['id']] = _row
+        _p333 = _r20.turnover_pair_with_periods(_g20['eval_333']['question_sw'])
+        _p353 = _r20.turnover_pair_with_periods(_g20['eval_353']['question_sw'])
+        _spec20 = {'eval_333 reads as (190M annual, 120M six-month)': _p333 is not None and int(_p333[0]) == 190_000_000 and int(_p333[1]) == 120_000_000,
+                   'eval_353 reads as (199M annual, 99M six-month)': _p353 is not None and int(_p353[0]) == 199_000_000 and int(_p353[1]) == 99_000_000,
+                   'eval_333 registers on the six-month limb': _re20.vat_registration_both_limbs(*_p333).applicable is True,
+                   'eval_353 is below BOTH limbs': _re20.vat_registration_both_limbs(*_p353).applicable is False}
+        _clean20 = [_r20.turnover_pair_with_periods('Mauzo yangu ni milioni 150 kwa mwaka na milioni 80 kwa mwaka. Je VAT?') is None,
+                    _r20.turnover_pair_with_periods('Kizingiti cha VAT ni TZS 200,000,000 kwa mwaka au TZS 100,000,000 kwa miezi 6, sivyo? Je VAT?') is None,
+                    _r20.turnover_pair_with_periods('Mauzo ni milioni 20 kwa mwezi na milioni 150 kwa mwaka. Je VAT?') is None,
+                    _r20.turnover_pair_with_periods('Mauzo yangu hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110. Je VAT?') is None]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code20 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired20 = 'routing.turnover_pair_with_periods(' in _code20 and 'rules_engine.vat_registration_both_limbs(' in _code20
+        _v = ('FIRES' if (all(_spec20.values()) and all(_clean20) and _wired20) else 'NOT_WIRED' if (all(_spec20.values()) and all(_clean20)) else 'ERROR')
+        _note = (f'specimens: {_spec20}; clean limbs (must all be True): {_clean20}; wired (comments stripped): {_wired20}. Priced (eval/results/price_vat_pair_2026_11_17.json): 4 of 8,613 held questions read as a pair, all genuine two-figure questions, every verdict correct.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 decision 1: VAT engine tests an ANNUAL and a SIX-MONTH figure given together against their own limbs (eval_333 / eval_353)', 'routing',
+           'a question that states an annual AND a six-month turnover answered by asking for the figures it already carries',
+           _v, 'eval_333, eval_353 (committed gold rows)', 'same period twice, a monthly figure, the two statutory thresholds themselves, a bound plus one figure', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

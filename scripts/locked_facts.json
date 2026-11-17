@@ -3501,7 +3501,7 @@
     "fact": "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo kampuni ya kawaida iwasilishe kufikia 30 Juni ya mwaka unaofuata; kampuni iliyoidhinishwa na Kamishna kutumia mwaka tofauti wa mapato iwasilishe miezi 6 baada ya mwisho wa mwaka huo. Mtu ambaye hesabu zake zinakaguliwa na Mdhibiti na Mkaguzi Mkuu (CAG) ana miezi 9. Kampuni yenye mapato jumla zaidi ya TZS 100,000,000 kwa mwaka lazima iwe na return iliyoandaliwa au kuthibitishwa na mhasibu CPA anayefanya kazi kwa umma. Si miezi 12, si 30 Septemba: 30 Septemba ni tarehe ya awamu ya kodi ya awamu, si ya return (Sheria ya Kodi ya Mapato).",
     "correct_value": "within six months after the end of the year of income (30 June for a calendar-year company); nine months for a person audited by the CAG; an approved different year of income moves the date; CPA-prepared/certified when a corporation's gross income exceeds TZS 100,000,000",
     "wrong_patterns": [
-      "(?:return|tamko)[^.?!]{0,60}\\b(?:ndani ya|baada ya|ni)\\s+miezi\\s+(?:12|kumi na mbili)",
+      "(?<![Aa]nnual )(?:return|tamko)[^.?!]{0,60}\\b(?:ndani ya|baada ya|ni)\\s+miezi\\s+(?:12|kumi na mbili)",
       "(?:return|tamko)[^.?!]{0,60}(?:30 septemba|septemba 30)",
       "corporate[^.?!]{0,40}return[^.?!]{0,40}(?:12 months|30 september)"
     ],

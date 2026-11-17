@@ -173,6 +173,38 @@ def vat_registration(turnover, period: str) -> ComputationResult:
     )
 
 
+def vat_registration_both_limbs(annual_turnover, six_month_turnover) -> ComputationResult:
+    """Is VAT registration compulsory, when the trader STATES BOTH an annual and a six-month turnover (founder-approved 2026-11-17; eval_333 / eval_353).
+
+    Each figure is tested against its OWN limb (12 months vs TZS 200,000,000, six consecutive months vs TZS 100,000,000, both INCLUSIVE as `vat_registration`). One limb crossing is sufficient (the Act's
+    'OR'), so crossing either gives the compulsory verdict and the other limb is moot; crossing neither gives the 'no' on BOTH limbs, which needs no untested-limb conditional because neither limb is untested.
+    The caller guarantees each figure carries its own period cue (routing.turnover_pair_with_periods). Nothing is annualised or inferred.
+    """
+    a, s = Decimal(annual_turnover), Decimal(six_month_turnover)
+    over_a, over_s = a >= VAT_ANNUAL, s >= VAT_SIX_MONTH
+    if over_a or over_s:
+        if over_a and over_s:
+            body = (f"Vigezo vyote viwili vimefikiwa: mauzo ya {tzs(a)} kwa miezi 12 (kizingiti {tzs(VAT_ANNUAL)}) na ya {tzs(s)} kwa miezi 6 mfululizo (kizingiti {tzs(VAT_SIX_MONTH)}).")
+        elif over_a:
+            body = (f"Kigezo cha miezi 12 kimefikiwa: {tzs(a)} dhidi ya kizingiti cha {tzs(VAT_ANNUAL)}. Cha miezi 6 ({tzs(s)}) bado hakijafikia {tzs(VAT_SIX_MONTH)}, lakini kigezo kimoja tu kinatosha kulazimisha usajili.")
+        else:
+            body = (f"Ingawa kigezo cha miezi 12 ({tzs(a)}) hakijafikia {tzs(VAT_ANNUAL)}, kigezo cha miezi 6 mfululizo kimefikiwa: {tzs(s)} dhidi ya kizingiti cha {tzs(VAT_SIX_MONTH)}. Kigezo kimoja tu kinatosha kulazimisha usajili.")
+        working = f"Ndiyo, unatakiwa kujisajili VAT. {body} Hatua ya kwanza ni kuomba usajili wa VAT TRA. {_CONFIRM}"
+    else:
+        working = (f"Hapana, bado hulazimiki kwa vigezo vyote viwili: mauzo ya miezi 12 ({tzs(a)}) yako chini ya {tzs(VAT_ANNUAL)}, na ya miezi 6 mfululizo ({tzs(s)}) yako chini ya {tzs(VAT_SIX_MONTH)}. "
+                   f"Ukivuka kimojawapo, ndipo usajili wa VAT unakuwa wa lazima. {_CONFIRM}")
+    over = over_a or over_s
+    return ComputationResult(
+        computation=COMPUTATION_VAT,
+        applicable=over,
+        amount=None,
+        working=working,
+        inputs={"turnover_annual": a, "turnover_six_month": s, "limbs_tested": [ANNUAL, SIX_MONTH], "threshold_annual": VAT_ANNUAL, "threshold_six_month": VAT_SIX_MONTH, "limb_untested": None},
+        note=("over the VAT threshold on at least one stated limb" if over else "below BOTH VAT limbs, each tested against its own stated figure"),
+        lead_claim=(premise.OBLIGATION_APPLIES, True) if over else None,
+    )
+
+
 def vat_registration_monthly_average(monthly) -> ComputationResult:
     """VAT registration from an AVERAGE MONTHLY turnover the trader STATES ("wastani wa milioni 18 kila mwezi") -- founder-approved 2026-11-17, a NARROWED reversal of the "never annualise" rule above.
 

@@ -723,6 +723,10 @@ class Orchestrator:
                     # 2026-11-17 (founder): a STATED average monthly figure is annualised, working shown (registration_thresholds.vat_registration_monthly_average)
                     return self._deterministic_answer(sq, rules_engine.vat_registration_monthly_average(resolved[0]))
                 return self._deterministic_answer(sq, rules_engine.vat_registration(resolved[0], resolved[1]))
+            # 2026-11-17 (founder, gate-4 enumeration: eval_333 / eval_353): ONE ANNUAL and ONE SIX-MONTH figure, no bound -- each is tested against its OWN limb. Anything else still asks.
+            pair = routing.turnover_pair_with_periods(sq.text)
+            if pair is not None:
+                return self._deterministic_answer(sq, rules_engine.vat_registration_both_limbs(pair[0], pair[1]))
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_TURNOVER,
                              needs_clarification=True)
         # A THRESHOLD NAMED INSIDE A NEGATED PREMISE IS A BOUND, NOT THE USER'S TURNOVER (2026-11-12).

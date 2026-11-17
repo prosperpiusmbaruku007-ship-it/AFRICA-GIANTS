@@ -1,0 +1,41 @@
+{
+ "questions_swept": 8613,
+ "hits": [
+  {
+   "q": "Mapato yangu ni TZS 120,000,000 katika miezi 6 lakini kwa mwaka mzima ni TZS 190,000,000 — je nasajili VAT na kwa kigezo kipi?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "intent": "vat_registration",
+   "annual": 190000000,
+   "six_month": 120000000,
+   "reaches_engine_pair_path": true,
+   "verdict": "register"
+  },
+  {
+   "q": "Mapato yangu ni TZS 199,000,000 kwa mwaka na TZS 99,000,000 kwa miezi 6 — je nasajili VAT?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "intent": "vat_registration",
+   "annual": 199000000,
+   "six_month": 99000000,
+   "reaches_engine_pair_path": true,
+   "verdict": "below both"
+  },
+  {
+   "q": "Mauzo yangu ni TZS 110M katika miezi 6 lakini TZS 160M kwa miezi 12. Je, lazima nisajili VAT?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "intent": "vat_registration",
+   "annual": 160000000,
+   "six_month": 110000000,
+   "reaches_engine_pair_path": true,
+   "verdict": "register"
+  },
+  {
+   "q": "Nilikuwa na mauzo ya TZS 90M kwa miezi 6 na TZS 185M kwa miezi 12. Je, ninahitaji kusajili VAT?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "intent": "none",
+   "annual": 185000000,
+   "six_month": 90000000,
+   "reaches_engine_pair_path": false,
+   "verdict": "below both"
+  }
+ ]
+}
