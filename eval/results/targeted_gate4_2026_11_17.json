@@ -1,0 +1,2404 @@
+{
+ "seed": 20261117,
+ "control_sample": [
+  "eval_006",
+  "eval_014",
+  "eval_035",
+  "eval_066",
+  "eval_086",
+  "eval_100",
+  "eval_122",
+  "eval_134",
+  "eval_148",
+  "eval_177",
+  "eval_182",
+  "eval_185",
+  "eval_207",
+  "eval_209",
+  "eval_215",
+  "eval_246",
+  "eval_281",
+  "eval_284",
+  "eval_289",
+  "eval_304"
+ ],
+ "blast_ids": [
+  "eval_013",
+  "eval_028",
+  "eval_033",
+  "eval_039",
+  "eval_041",
+  "eval_071",
+  "eval_073",
+  "eval_075",
+  "eval_080",
+  "eval_084",
+  "eval_085",
+  "eval_108",
+  "eval_115",
+  "eval_116",
+  "eval_117",
+  "eval_118",
+  "eval_119",
+  "eval_120",
+  "eval_125",
+  "eval_126",
+  "eval_131",
+  "eval_132",
+  "eval_133",
+  "eval_135",
+  "eval_138",
+  "eval_142",
+  "eval_143",
+  "eval_146",
+  "eval_160",
+  "eval_161",
+  "eval_172",
+  "eval_208",
+  "eval_210",
+  "eval_221",
+  "eval_223",
+  "eval_227",
+  "eval_229",
+  "eval_237",
+  "eval_238",
+  "eval_239",
+  "eval_240",
+  "eval_257",
+  "eval_302",
+  "eval_318",
+  "eval_321",
+  "eval_333",
+  "eval_339",
+  "eval_344",
+  "eval_348",
+  "eval_350",
+  "eval_353",
+  "eval_355",
+  "eval_376",
+  "eval_382",
+  "eval_392",
+  "eval_398"
+ ],
+ "rows": [
+  {
+   "id": "eval_013",
+   "arm": "blast",
+   "reply": "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that the VAT Act does not require voluntary registration for businesses below the threshold and accurately describes the categories eligible for voluntary registr",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3185,
+    "pout": 283,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_028",
+   "arm": "blast",
+   "reply": "Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that there is no formal expedited registration process for VAT for existing businesses below the threshold, aligning with the reference answer, and accurately men",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3190,
+    "pout": 298,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_033",
+   "arm": "blast",
+   "reply": "Ulilianza tarehe 1 Julai 2025. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the start date of the VAT withholding regime as 1 July 2025, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1845,
+    "pout": 224,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_039",
+   "arm": "blast",
+   "reply": "VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states the withholding rates and the implementation date, which directly contradicts the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2190,
+    "pout": 195,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_041",
+   "arm": "blast",
+   "reply": "Hapana. Utaratibu wa VAT withholding ulianza rasmi tarehe 1 Julai 2025, si 1 Januari 2025. Finance Act 2025 ilipanga mabadiliko hayo kuanzia 1 Julai 2025, lakini utekelezaji wake ulicheleweshwa hadi 1 Septemba 2025. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "Generated answer incorrectly states that implementation was delayed until September 2025, contradicting the reference which confirms it started on July 1, 2025.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2295,
+    "pout": 249,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_071",
+   "arm": "blast",
+   "reply": "BRELA inasajilisha aina TANO kuu za miundo ya biashara: 1. Jina la biashara (business name) 2. Alama ya biashara (trademark) 3. Hati miliki ya kiakili (copyright) 4. Muundo wa viwanda (industrial design) 5. Haki za matumizi ya programu (software rights). Hakuna aina nyingine ya sita au ya saba chini ya Companies Act Cap.212. Thibitisha na brela.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly lists five types of business structures under BRELA, including intellectual property rights, which are not business structures as per the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2400,
+    "pout": 223,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_073",
+   "arm": "blast",
+   "reply": "Jina la biashara la sole trader halisajiliwi rasmi na BRELA — unatumia jina lako kamili la kibinafsi. Iwapo una mpango wa kufanya biashara kwa jina lolote tofauti na lako, unapaswa kufuata utaratibu wa kampuni (limited company). Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states that a sole trader business name is not officially registered with BRELA and suggests using a personal name, while the correct answer states that it can be regi",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2280,
+    "pout": 310,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_075",
+   "arm": "blast",
+   "reply": "Ndiyo, kufanya shughuli za biashara chini ya jina lako kamili la kibinafsi kunahitaji usajilishaji wa jina la biashara ili kuonyesha umiliki wako rasmi. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that a sole proprietor must register their business name with BRELA, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2300,
+    "pout": 201,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_080",
+   "arm": "blast",
+   "reply": "BRELA ni Business Registrations and Licensing Agency — shirika la serikali la Tanzania linalosimamia usajili wa makampuni, majina ya biashara, milki ya akili, na huduma za leseni. Kazi yake kuu ni kusajili biashara rasmi ili ziwe na hadhi ya kisheria. Thibitisha na brela.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly identifies BRELA as the Business Registrations and Licensing Agency of Tanzania and accurately describes its main function of registering businesses formally, even with ",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2315,
+    "pout": 215,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_084",
+   "arm": "blast",
+   "reply": "Hatua za kusajilisha jina la biashara (sole trader): (1) angalia upatikanaji wa jina kwenye mfumo wa ORS (ors.brela.go.tz); (2) jaza fomu ya usajilishaji wa jina; (3) lipa ada husika; (4) pokea hati ya usajilishaji. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly outlines the main steps for registering a sole trader with BRELA, aligning with the reference answer's key points.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2490,
+    "pout": 205,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_085",
+   "arm": "blast",
+   "reply": "Kushindwa kuwasilisha annual return kunasababisha adhabu ya faini ya TZS 22,000 kwa kila mwezi wa kuchelewa, pamoja na riba. Kwa miaka 2, faini itakuwa angalau TZS 264,000 (miaka 24 × TZS 11,000). Pia hatari ya kampuni kufutwa kwenye daftari la BRELA inazidi kukua. Thibitisha na BRELA.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer provides a specific fine amount (TZS 22,000 per month) which contradicts the reference answer that does not mention such a specific figure and instead lists general consequences l",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2725,
+    "pout": 324,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_108",
+   "arm": "blast",
+   "reply": "NSSF haikutoa taarifa rasmi kuhusu kiwango cha riba kinachotozwa kwenye michango iliyochelewa. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer contradicts the reference by stating that NSSF does not provide an official interest rate, whereas the reference clearly states that NSSF charges 5% monthly interest.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2090,
+    "pout": 246,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_115",
+   "arm": "blast",
+   "reply": "GN 605A inaanza kutumika tarehe 1 Januari 2026. Thibitisha na TanzLII (tanzlii.org).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the effective date of GN 605A as 1 January 2026 and provides a valid source for verification.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2105,
+    "pout": 245,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the effective date of GN 605A as 1 January 2026, matching the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2070,
+    "pout": 240,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_116",
+   "arm": "blast",
+   "reply": "Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia 33.4%. Kutoka wastani wa zamani wa TZS 275,060 hadi TZS 358,322 kwa mwezi, siyo 30%. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the 33.4% increase and the average salary figures, aligning with the reference answer despite minor phrasing differences.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2245,
+    "pout": 222,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the 33.4% increase and the average salary figures, aligning with the reference answer despite minor phrasing differences.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2185,
+    "pout": 225,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_117",
+   "arm": "blast",
+   "reply": "GN 605A inashughulikia sekta 15 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states 15 sectors instead of the correct 16 sectors mentioned in the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1925,
+    "pout": 190,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states 15 sectors instead of the correct 16 sectors.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1885,
+    "pout": 186,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_118",
+   "arm": "blast",
+   "reply": "Kabla ya GN 605A (Januari 2026), wastani wa mshahara wa chini wa sekta binafsi Tanzania ulikuwa karibu TZS 275,060 kwa mwezi — si 358,322. Thibitisha na TanzLII. Thibitisha pia kuwa kiwango cha wastani kilichotajwa kinatumika kwa sekta yako mahususi.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the average minimum sectoral salary before GN 605A as approximately TZS 275,060 and notes it is not TZS 358,322, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2460,
+    "pout": 321,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the average minimum sectoral salary before GN 605A as approximately TZS 275,060, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2400,
+    "pout": 278,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_119",
+   "arm": "blast",
+   "reply": "Kulingana na GN 605A, wastani wa mshahara wa chini wa sekta binafsi ni:\n\nTZS 175,000 (sekta ya kilimo/ujenzi/mawasiliano)\nTZS 263,000 (maofisa waliosamehewa)\nTZS 358,322 (madini ya kimataifa)\nTZS 765,900 (nishati ya kimataifa)\n\nHii ndiyo wastani wa wastani — si wastani wa juu kabisa. Thibitisha kiwango halisi cha sekta yako na PKF Eastern Africa au TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer provides incorrect figures for the average minimum wages and misrepresents the data, directly contradicting the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2960,
+    "pout": 298,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly presents the average as specific sector figures and reverses the reference's highest and lowest values.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2755,
+    "pout": 275,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_120",
+   "arm": "blast",
+   "reply": "Kiwango cha juu kabisa ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Viwango vyote viko katika jedwali la GN 605A, si taarifa ya ziada. Thibitisha viwango vyote na PKF Eastern Africa au TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the highest salary level (TZS 765,900) and the sector (international energy companies), aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2310,
+    "pout": 243,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the highest salary level as TZS 765,900 for the international energy sector, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2230,
+    "pout": 249,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_125",
+   "arm": "blast",
+   "reply": "Hapana. Amri ya mishahara ya 2022 ILIFUTWA rasmi kuanzia 1 Januari 2026. GN 605A ndiyo amri MPYA inayotumika sasa badala yake. Kutumia viwango vya 2022 baada ya 1 Januari 2026 ni kosa la kisheria. Thibitisha na mamlaka husika.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the 2022 minimum wage order was officially revoked on 1 January 2026 and that using it after that date is illegal, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2585,
+    "pout": 302,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the 2022 minimum wage order was officially replaced on 1 January 2026 by GN 605A and using the 2022 rates after that date is illegal.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2550,
+    "pout": 311,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_126",
+   "arm": "blast",
+   "reply": "Hapana. Hazungumziwi katika GN 605A. Kwa sekta ya umma, Rais Samia alitangaza mshahara wa TZS 500,000 kwa wastani, si kwa amri rasmi. GN 605A inasema tu kuhusu sekta binafsi. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the minimum wage of TZS 500,000 for the public sector is not from GN 605A and accurately differentiates it from the private sector coverage of GN 605A.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2550,
+    "pout": 340,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the TZS 500,000 salary for the public sector is not in GN 605A and attributes it to President Samia, while noting GN 605A applies only to the private sector.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2710,
+    "pout": 336,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_131",
+   "arm": "blast",
+   "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa ili kuamua kiwango sahihi cha mshahara kwa kila mfanyakazi. Thibitisha na GN 605A (sekta na sub-sector husika).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly identifies the need to use GN 605A and verify the relevant sector and sub-sector, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2255,
+    "pout": 225,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_132",
+   "arm": "blast",
+   "reply": "Wasiliana na Inspekta wa Kazi katika ofisi yoyote ya kazi iliyo karibu nawe haraka iwezekanavyo. Thibitisha na inspekta huyo kuwa ulikuwa unakosa kulipa kulingana na GN 605A, na utapata taarifa rasmi ya adhabu. Lipa tofauti zilizokuwa zikisimama pamoja na riba mara moja. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer suggests contacting the labor inspector and implies legal penalties, but omits the key steps of calculating and paying backpay, and adjusting future salaries as per the reference ",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2725,
+    "pout": 240,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_133",
+   "arm": "blast",
+   "reply": "Kufanya kazi bila kulipa mshahara kamili kunaweza kuonekana kama ukiukwaji wa sheria ya kazi. Adhabu zinaweza kujumuisha malimbikizo ya malipo yaliyokosekana, faini, au mashitaka ya jinai. Thibitisha na mamlaka husika (wizara ya kazi).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly identifies the legal implications of non-payment of wages, including potential penalties and the need to involve the relevant authorities.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2460,
+    "pout": 205,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_135",
+   "arm": "blast",
+   "reply": "Hali yake ni ya kinyume kabisa na sheria. Amri ya mishahara ya 2022 ILIFUTWA rasmi kuanzia 1 Januari 2026. Tangu tarehe hiyo, amri hiyo haipo tena kisheria. Mwajiri anayeendelea kulipa viwango vya 2022 anaweza kukabili adhabu za kisheria ikiwa mfanyakazi atalalamika. Thibitisha na MLYWF.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the 2022 salary scales were officially revoked on 1 January 2026 and that using them is illegal, matching the reference answer's key facts and implications.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2750,
+    "pout": 284,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "judge_old_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that the 2022 salary scales were officially replaced on 1 January 2026 and that using them afterward is illegal and could lead to legal consequences.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2705,
+    "pout": 272,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": true
+  },
+  {
+   "id": "eval_138",
+   "arm": "blast",
+   "reply": "Kwa mujibu wa GN487A, mgeni anayekamatwa anaweza kupewa adhabu ya faini isiyo pungua TZS 10,000,000 AU kifungo cha miezi sita (6) — bila kutoa nafasi ya kuomba msamaha. Pia, visa yake inaweza kubatilishwa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that a foreigner can be detained for up to six months, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2020,
+    "pout": 218,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_142",
+   "arm": "blast",
+   "reply": "Zoezi la utekelezaji rasmi la GN 487A lilianza tarehe 11 Septemba 2025. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the date when the implementation exercise started, matching the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1745,
+    "pout": 187,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_143",
+   "arm": "blast",
+   "reply": "Zoezi la utekelezaji lilikuwa linasimamiwa na Idara ya Uhamiaji na lilifikia tamati rasmi tarehe 11 Septemba 2025. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer states the wrong date (11 Septemba 2025) for the completion of the implementation exercise, contradicting the reference answer of 8 Oktoba 2025.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1810,
+    "pout": 287,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_146",
+   "arm": "blast",
+   "reply": "Hapakuwa na tangazo rasmi la muda wa kujiandaa kabla ya agizo kuanza kutumika. Agizo lilianza mara moja tarehe 28 Julai 2025 bila muda wa mpito. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that there was no official announcement of a preparation period and that the directive came into effect immediately on 28 July 2025.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2015,
+    "pout": 240,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_160",
+   "arm": "blast",
+   "reply": "Chombo kinachohusika na utekelezaji wa GN 487A ni Idara ya Uhamiaji (Immigration Services Department) ndani ya Wizara ya Mambo ya Ndani. Zoezi la utekelezaji lilifanyika katika awamu mbalimbali kuanzia Septemba hadi Oktoba 2025. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly identifies the Immigration Services Department as the responsible body for implementing GN 487A.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2080,
+    "pout": 196,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_161",
+   "arm": "blast",
+   "reply": "Ni tofauti muhimu sana: BIASHARA YA JUMLA (wholesale): unauza bidhaa kwa wingi kwa maduka makubwa, wafanyabiashara wengine, au kwa jumla. BIASHARA YA REJAREJA (retail): unauza bidhaa moja kwa moja kwa wateja wa mwisho — hii imezuiliwa kwa wasio raia. Tofauti hii ni ngumu lakini muhimu sana kuelewa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states that retail business is restricted to non-citizens, contradicting the reference answer which says both are covered under GN 487A for citizens.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2520,
+    "pout": 271,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_172",
+   "arm": "blast",
+   "reply": "GN 487A inatekelezwa na taasisi mbalimbali za serikali ikiwemo Idara ya Uhamiaji, Polisi, na mahakama. Operesheni ya utekelezaji wa kwanza rasmi iliendeshwa na Idara ya Uhamiaji kuanzia Septemba hadi Oktoba 2025. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly identifies the Immigration Department as the main authority handling GN 487A, despite additional details.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2055,
+    "pout": 185,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_208",
+   "arm": "blast",
+   "reply": "Kwa upande wa miezi 6 mfululizo: hapana, mauzo yako ya TZS 95,000,000 hayajafikia kizingiti cha TZS 100,000,000. LAKINI hili halijamalizika: usajili wa VAT ni wa lazima pia IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12. Sijui mauzo yako ya miezi 12, hivyo kama yamefikia kiasi hicho, unatakiwa kujisajili. Niambie mauzo ya miezi 12 nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states the VAT registration threshold for 12 months is TZS 200 million, while the reference answer does not mention this and the correct 6-month threshold is TZS 100 m",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2750,
+    "pout": 305,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_210",
+   "arm": "blast",
+   "reply": "Hapana. Viwango vya 2022 vilikuwa vimeisha muda wake rasmi tarehe 31 Desemba 2025. Tangu 1 Januari 2026, viwango vipya vya GN 605A vina nguvu kamili ya kisheria. Viwango vya 2022 havitumiki tena — si kwa makosa, si kwa makusudi, si kwa mazoea. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that the 2022 minimum wage rates expired on 31 December 2025 and that GN 605A rates are now in full legal force from 1 January 2026.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2490,
+    "pout": 330,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_221",
+   "arm": "blast",
+   "reply": "GN 487A si amri ya vibali vya makazi — ni Amri ya Leseni za Biashara (Business Licensing Order). Inazuia watu wasio raia wa Tanzania kufanya shughuli fulani za biashara katika sekta 15 bila kujali hali yao ya makazi. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly identifies GN 487A as a business licensing order that restricts non-citizens from engaging in 15 specific business activities, and it does not concern residential permit",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2245,
+    "pout": 320,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_223",
+   "arm": "blast",
+   "reply": "Zana 4 za msingi za STR: (1) Common External Tariff (CET) — viwango vya forodha vilivyokubaliwa; (2) Simplified Certificate of Origin/Originating Status (SCO/OS) — hati inayothibitisha asili ya bidhaa; (3) Common List — orodha ya bidhaa ~370 zilizoidhinishwa; (4) Common External Transit Document (ECTD) — fomu rahisi ya forodha. Bidhaa lazima ziwe kwenye Common List na zithibitishe SCO/OS.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly identifies the four main components of STR, aligning with the reference answer despite some phrasing differences.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2495,
+    "pout": 194,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_227",
+   "arm": "blast",
+   "reply": "Kuna hatari ya kukosa nguvu ya kisheria dhidi ya watu wa tatu ikiwa utahamisha hisa bila kuwasilisha taarifa rasmi BRELA. Thibitisha na BRELA.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the legal risk of losing legal standing against third parties when transferring shares without informing BRELA and provides the correct verification link.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1935,
+    "pout": 240,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_229",
+   "arm": "blast",
+   "reply": "Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkazi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly outlines the PAYE tax brackets and rates for the 2025/26 fiscal year, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3715,
+    "pout": 274,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_237",
+   "arm": "blast",
+   "reply": "Kodi ya zuio lazima ilipwe TRA ndani ya siku 7 baada ya mwisho wa mwezi husika. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the 7-day deadline after the end of the calendar month for submitting withholding tax to TRA.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2035,
+    "pout": 215,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_238",
+   "arm": "blast",
+   "reply": "Kodi ya awali hulipwa kwa awamu 4 sawa katika mwaka wa fedha. Awamu huanza kulipwa katika miezi ya 3, 6, 9 na 12 kutoka mwanzo wa mwaka wa fedha. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that provisional tax is paid in four equal installments at the end of months 3, 6, 9, and 12 of the financial year.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2005,
+    "pout": 280,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_239",
+   "arm": "blast",
+   "reply": "Ugonjwa wa kazini unaripotiwa kwa hatua MBILI, si siku 7 moja kwa moja (Kanuni za Fidia kwa Wafanyakazi, 2016 — GN 185/2016, Kanuni ya 16): (1) mfanyakazi amjulishe mwajiri ndani ya siku 14 za kazi tangu ugonjwa kugunduliwa; (2) mwajiri aijulishe WCF ndani ya siku 7 za kazi tangu APOKEE taarifa hiyo ya mfanyakazi. Hivyo kutoka utambuzi hadi WCF inaweza kufikia siku 21 za kazi. Kifo kazini kiripotiwe WCF ndani ya miezi 12, na madai ya fidia yawasilishwe ndani ya miezi 12 tangu ajali au ugonjwa kugunduliwa. Thibitisha na WCF (wcf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly outlines the two-step reporting process, the timeframes for each step, and the total maximum time from diagnosis to WCF, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3785,
+    "pout": 343,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_240",
+   "arm": "blast",
+   "reply": "GN 605A iliongeza wastani wa kima cha chini cha sekta binafsi kwa asilimia 33.4 — kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the 33.4% increase in the average minimum wage from TZS 275,060 to TZS 358,322 per month as per GN 605A.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2220,
+    "pout": 277,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_257",
+   "arm": "blast",
+   "reply": "Hapana. NSSF inatozwa kwa asilimia 10 ya mshahara ghafi wa mfanyakazi (jumla asilimia 20 — mwajiri na mfanyakazi). Kiasi ulichotaja (TZS 12,300,000) si mshahara, hivyo hakitumiki kukokotoa NSSF. Nipe mshahara wa mwezi wa mfanyakazi. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "engine:nssf",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that NSSF is calculated on the employee's gross salary, not business income, and asks for the necessary information.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2525,
+    "pout": 213,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_302",
+   "arm": "blast",
+   "reply": "Siwezi kuthibitisha kiwango cha mauzo kwa usajili wa VAT, hivyo sitakitaja na sitakisii kingine. Thibitisha na TRA (tra.go.tz) — au niulize utaratibu bila kiasi, nikueleze hatua.",
+   "path": "clarification",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "judge_current_key": {
+    "verdict": "undetermined",
+    "tie": false,
+    "votes": {
+     "undetermined": 5
+    },
+    "n": 5,
+    "justification": "Generated answer is too vague and does not address the key fact that VAT registration depends on turnover, not the number of employees or their salaries.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2350,
+    "pout": 194,
+    "err_count": 0,
+    "per_call": [
+     "undetermined",
+     "undetermined",
+     "undetermined",
+     "undetermined",
+     "undetermined"
+    ]
+   },
+   "clarified": true,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_318",
+   "arm": "blast",
+   "reply": "SDL = 3.5% × TZS 5,500,000 = TZS 192,500\n\nNSSF = 20% × TZS 5,500,000 = TZS 1,100,000 (mwajiri TZS 550,000 + mfanyakazi TZS 550,000)\n\nIli nilinganishe na kizingiti cha VAT, niambie kiasi ulichotaja ni cha kipindi gani — je ni jumla ya miezi 12, au ya miezi 6 mfululizo? Vizingiti ni viwili tofauti: TZS 200,000,000 kwa miezi 12, na TZS 100,000,000 kwa miezi 6 mfululizo, hivyo jibu linategemea kipindi.",
+   "path": "engine:sdl+engine:nssf+engine:vat_registration:ask",
+   "model_calls": 4,
+   "guards": [
+    "blanked",
+    "blanked"
+   ],
+   "judge_current_key": {
+    "verdict": "undetermined",
+    "tie": false,
+    "votes": {
+     "undetermined": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly calculates SDL and NSSF but does not clearly confirm VAT registration due to asking for more information about the period instead of directly addressing the threshold.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3430,
+    "pout": 252,
+    "err_count": 0,
+    "per_call": [
+     "undetermined",
+     "undetermined",
+     "undetermined",
+     "undetermined",
+     "undetermined"
+    ]
+   },
+   "clarified": true,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_321",
+   "arm": "blast",
+   "reply": "Thibitisha na TRA (tra.go.tz).\nSDL inayolipwa ni TZS 0. Una wafanyakazi 8 (chini ya 10); SDL inahusu waajiri wenye wafanyakazi 10 au zaidi, hivyo jumla ya mishahara haibadilishi jibu.\n\nThibitisha na TRA (tra.go.tz).\nNSSF = 20% × TZS 3,200,000 = TZS 640,000 (mwajiri TZS 320,000 + mfanyakazi TZS 320,000)\n\nThibitisha na TRA (tra.go.tz).\nWCF = 0.5% × TZS 3,200,000 = TZS 16,000\n\nNdiyo, unatakiwa kusajili OSHA. Thibitisha na osha.go.tz.",
+   "path": "engine:sdl+engine:nssf+engine:wcf+fact",
+   "model_calls": 6,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that SDL is not applicable due to fewer than 10 employees, calculates NSSF and WCF accurately, and confirms the obligation to register for OSHA.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3185,
+    "pout": 290,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_333",
+   "arm": "blast",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Ingawa kigezo cha miezi 12 (TZS 190,000,000) hakijafikia TZS 200,000,000, kigezo cha miezi 6 mfululizo kimefikiwa: TZS 120,000,000 dhidi ya kizingiti cha TZS 100,000,000. Kigezo kimoja tu kinatosha kulazimisha usajili. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that VAT registration is required because the 6-month turnover exceeds TZS 100,000,000, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3020,
+    "pout": 265,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_339",
+   "arm": "blast",
+   "reply": "Hapana. GN 487A ilianza kutumika rasmi tarehe 28 Julai 2025 — si Januari 2026. Tarehe hiyo ndiyo 'effective date' rasmi iliyoainishwa katika amri. Januari 2026 ni tarehe ya shughuli nyingine kabisa — ni tarehe ya kuanza kwa GN 605A (Agizo la Mishahara la Sekta Binafsi). Usichanganye tarehe hizi mbili. Thibitisha na TanzLII (tanzlii.org).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states that GN 487A began on 28 July 2025, not January 2026, and correctly identifies January 2026 as the start date for GN 605A.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2415,
+    "pout": 332,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_344",
+   "arm": "blast",
+   "reply": "Hapana, si asilimia 30. Kwa wakazi wa Tanzania, kiwango cha kwanza cha PAYE ni asilimia 8. Kwa wasio wakazi, kiwango cha kwanza ni asilimia 15. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "wrong",
+    "tie": false,
+    "votes": {
+     "wrong": 5
+    },
+    "n": 5,
+    "justification": "The generated answer incorrectly states that the first PAYE rate for non-residents is 15%, but it fails to clarify that this is the final rate for non-resident workers, not the first bracket.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2030,
+    "pout": 316,
+    "err_count": 0,
+    "per_call": [
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong",
+     "wrong"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_348",
+   "arm": "blast",
+   "reply": "Jumla ya NSSF ni asilimia 20 ya mshahara ghafi daima. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, lakini si mgawanyo pekee halali: mwajiri anaweza kuchagua kuchangia kiwango kikubwa zaidi, hadi mchango wote, kwa hiyo 15% + 5% au 20% + 0% ni mifano ya chaguo hilo, si orodha kamili iliyotajwa na sheria. Chaguo hilo lina masharti kwa wanachama fulani (Sheria ya NSSF). Jumla haibadiliki — ni nani anabeba sehemu ndiyo hubadilika. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "Generated answer correctly states the total 20% NSSF contribution and valid splits, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2825,
+    "pout": 195,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_350",
+   "arm": "blast",
+   "reply": "Hapana, si sahihi. GN 605A iliingia rasmi kuanzia 1 Januari 2026 — si Julai 2025. Julai 2025 ndiyo tarehe ambayo amri ya 2022 ilimaliza nguvu (31 Desemba 2025). Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that GN 605A began on 1 January 2026, not July 2025, and accurately identifies the July 2025 reference as related to the 2022 order's extension.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2385,
+    "pout": 336,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_353",
+   "arm": "blast",
+   "reply": "Hapana, bado hulazimiki kwa vigezo vyote viwili: mauzo ya miezi 12 (TZS 199,000,000) yako chini ya TZS 200,000,000, na ya miezi 6 mfululizo (TZS 99,000,000) yako chini ya TZS 100,000,000. Ukivuka kimojawapo, ndipo usajili wa VAT unakuwa wa lazima. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that VAT registration is not required as both the 12-month and 6-month turnover thresholds are not met, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2765,
+    "pout": 243,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_355",
+   "arm": "blast",
+   "reply": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+   "path": "clarification",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that EFD is mandatory regardless of annual turnover and confirms there is no turnover threshold, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2265,
+    "pout": 235,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": true,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_376",
+   "arm": "blast",
+   "reply": "Kwa kuwa huna wafanyakazi, hakuna SDL unayolazimika kulipa. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that no SDL is required when there are no employees and refers to TRA for confirmation, aligning with the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 1800,
+    "pout": 196,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_382",
+   "arm": "blast",
+   "reply": "Kima cha juu kabisa ni TZS 765,900 (sekta ya nishati kimataifa). Kima cha chini kabisa cha default ni TZS 175,000 (wafanyakazi wa kilimo/jumla). Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the maximum and default minimum salary figures for GN 605A, despite minor phrasing differences.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2045,
+    "pout": 247,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_392",
+   "arm": "blast",
+   "reply": "Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkazi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states that a non-head-of-household pays a flat 15% rate (final tax bracket) without the usual PAYE brackets.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 3350,
+    "pout": 221,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_398",
+   "arm": "blast",
+   "reply": "Kwa hesabu sahihi: NSSF = 20% × TZS 700,000 = TZS 140,000 (mwajiri TZS 105,000 + mfanyakazi TZS 35,000). Thibitisha na nssf.go.tz.\nNSSF = 20% × TZS 700,000 = TZS 140,000 (mwajiri TZS 105,000 + mfanyakazi TZS 35,000)",
+   "path": "engine:nssf",
+   "model_calls": 2,
+   "guards": [],
+   "judge_current_key": {
+    "verdict": "correct",
+    "tie": false,
+    "votes": {
+     "correct": 5
+    },
+    "n": 5,
+    "justification": "The generated answer correctly states the total NSSF contribution and the respective shares of the employer and employee, matching the reference answer.",
+    "providers": [
+     "DeepInfra"
+    ],
+    "pin": 2635,
+    "pout": 195,
+    "err_count": 0,
+    "per_call": [
+     "correct",
+     "correct",
+     "correct",
+     "correct",
+     "correct"
+    ]
+   },
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_006",
+   "arm": "control",
+   "reply": "Kwa mauzo ya TZS 25,000,000 kwa mwezi, kuna hatari ya kufikia kizingiti cha VAT haraka sana. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_014",
+   "arm": "control",
+   "reply": "Ndiyo, wakili aliyesajiliwa (advocate) ana wajibu wa kusajilisha VAT bila kujali kiasi cha mapato yake. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_035",
+   "arm": "control",
+   "reply": "Kiasi cha VAT withholding ni 6% ya malipo ya huduma (services) — katika mfano huu, ni 6% × TZS milioni 3 = TZS 180,000. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_066",
+   "arm": "control",
+   "reply": "Hakuna 'kukubali' au 'kukataa' katika sheria ya EFD. Sheria inasema lazima utoe risiti ya EFD kwa kila muamala. Ikiwa mteja amekataa kupokea risiti, hiyo si sababu ya kutosha kwa sisi kutoa risiti. Tutaendelea kutoa risiti ya EFD kwa kila muamala. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_086",
+   "arm": "control",
+   "reply": "Sehemu ya mwajiri ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_100",
+   "arm": "control",
+   "reply": "Ndiyo — NSSF inahesabiwa kwenye mshahara mkubwa wa jumla bila kikomo cha juu. Kwa mshahara wa TZS 2,000,000: mwajiri analipa 10% (TZS 200,000); mfanyakazi analipa 10% (pia TZS 200,000). Jumlisha: NSSF ya jumla = TZS 400,000. Hakuna kikomo cha juu kwa hesabu ya NSSF — inakokotolewa kwenye mshahara wote uliolipwa.\nNSSF = 20% × TZS 2,000,000 = TZS 400,000 (mwajiri TZS 200,000 + mfanyakazi TZS 200,000)",
+   "path": "engine:nssf",
+   "model_calls": 2,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_122",
+   "arm": "control",
+   "reply": "Hapana. Ni mwajiri pekee anayelipa SDL — hakatiwi kutoka mshahara wa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_134",
+   "arm": "control",
+   "reply": "Kuna adhabu ya riba ya asilimia 2 kwa kila mwezi wa kuchelewa kulipa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_148",
+   "arm": "control",
+   "reply": "Ndiyo — biashara ya jumla (wholesale trade) ni mojawapo ya shughuli 15 zilizopigwa marufuku kwa wasio raia wa Tanzania chini ya GN487A. Maduka yanayouza bidhaa kwa wingi kwa maduka mengine, wauzaji wa jumla, na wazalishaji wanaouza moja kwa moja kwa wateja wanazuiliwa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_177",
+   "arm": "control",
+   "reply": "OSHA hufanya ukaguzi wa lazima kila mwaka (mara moja kwa mwaka) katika maeneo yote ya kazi Tanzania. Thibitisha na OSHA (osha.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_182",
+   "arm": "control",
+   "reply": "Ndiyo, ukaguzi wa OSHA wa kila mwaka ni WA LAZIMA (mandatory) kwa maeneo yote ya kazi yanayofikia wafanyakazi 10 au zaidi. Ukaguzi si wa hiari — sheria inamtaka mwajiri afanye ukaguzi wa mara kwa mara. Thibitisha na osha.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_185",
+   "arm": "control",
+   "reply": "Usajili wa BRELA unakupa cheti cha usajili wa kampuni au biashara, si cheti cha afya na usalama. Usajili wa OSHA ndio unaohusiana na afya na usalama wa mahali pa kazi, na unatakiwa kabla ya kuanza shughuli zozote. Thibitisha na BRELA (brela.go.tz) na OSHA (osha.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_207",
+   "arm": "control",
+   "reply": "Hapana — msambazaji bado ana haki ya kudai VAT ya pembejeo (input VAT credit) dhidi ya VAT ya matokeo (output VAT). VAT ya pembejeo inakusanywa kwenye VAT return yake kawaida. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_209",
+   "arm": "control",
+   "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa. Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+   "path": "engine:corporate_tax",
+   "model_calls": 0,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_215",
+   "arm": "control",
+   "reply": "Ndiyo — malipo ya mobile money hayabadilishi wajibu wa kutoa risiti ya EFD. Sheria ya EFD inatumika kwa biashara zilizolazimishwa bila kujali jinsi ya kulipa. Kila muamala unastahili risiti ya EFD. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_246",
+   "arm": "control",
+   "reply": "Kwa jumla ya mishahara ya TZS 10,000,000 na idadi ya waajiriwa 15, SDL ni asilimia 3.5 ya jumla hiyo: TZS 350,000 kwa mwezi. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 10,000,000 = TZS 350,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_281",
+   "arm": "control",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "engine:paye:ask",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": true,
+   "regex_pass_current_key": false,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_284",
+   "arm": "control",
+   "reply": "Kwa TZS 610,000/mwezi, PAYE = TZS 20,000 + 20% × (610,000 − 520,000) = TZS 38,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 20,000 + 20% × (TZS 610,000 − TZS 520,000) = TZS 38,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_289",
+   "arm": "control",
+   "reply": "NSSF (sehemu ya mwajiri) = 10% × TZS 7,000,000 = TZS 700,000 — jumla ya NSSF ni 20% (mwajiri TZS 700,000 + mfanyakazi TZS 700,000)",
+   "path": "engine:nssf",
+   "model_calls": 2,
+   "guards": [
+    "blanked"
+   ],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  },
+  {
+   "id": "eval_304",
+   "arm": "control",
+   "reply": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "clarified": false,
+   "regex_pass_current_key": true,
+   "regex_pass_old_key": null
+  }
+ ],
+ "identity": {
+  "build": "e9e429e",
+  "rag_rows_loaded": 215,
+  "rag_embeddings_shape": [
+   215,
+   768
+  ],
+  "rag_facts_text_sha256": "456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13",
+  "config_rag_fact_count": 215,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794937123.291,
+   "enter_started_ts": 1794937123.298,
+   "enter_done_ts": 1794937157.641,
+   "import_to_enter_s": 0.0,
+   "load_s": 34.3,
+   "gpu": "Tesla T4"
+  }
+ },
+ "complete": true
+}
