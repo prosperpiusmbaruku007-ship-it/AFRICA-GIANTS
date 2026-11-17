@@ -1449,6 +1449,8 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "nssf_split":
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
+        if topic == "brela_annual_return_deadline":
+            continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
         if topic == "paye_band_table":
             continue                # no ordinal guard by decision (tests/test_fixed_statements.py PAYE_NO_GUARD); D-FIDELITY-11 guards band edges on the compute path
         scope = _fd10_scope(topic, topics, body)
@@ -1919,6 +1921,28 @@ def vat_withholding_start_misstated(question: str, body: str):
             and not _D22_B2C.search(s) and not _D16_NEG.search(s)]
 
 
+# ---- D-FIDELITY-23 (2026-11-18, founder-approved, batch 4 item b): "46" AS THE SUB-SECTOR COUNT OF A SINGLE SECTOR. A CONSTANT (R19), FACT PATH.
+#   specimen (live, build 7b94236, PROGRESS 4az): "Kulingana na GN 605A, kuna sekta ndogo 46 katika sekta ya madini peke yake."
+#   the Order (kazi.go.tz official copy, GN No. 605A, 13/10/2025, edition asserted, read 2026-11-18): First Schedule item 10 "Mining Sector" has FOUR rows, (a)-(d). 46 is the claimed TOTAL across all sectors (PKF), which the Order does not settle.
+# R25. (1) Defect: a confident wrong sub-count for ONE sector on the fact path. (2) What CORRECT output could it damage: "46" stated as the OVERALL total (with or without its PKF source caveat: "kwa ujumla", "jumla", "zote", "sekta 16", "PKF", "total"),
+#   a negation ("si 46"), any sentence that does not carry the 46 as a sub-sector count, and any text not about the minimum-wage Order (the context must be GN 605A / kima cha chini / minimum wage, in the question OR the sentence).
+#   Names no single sector in particular: the claim is "this one sector has 46 sub-sectors", which no sector of the Order does (the largest has well under ten rows).
+_D23_COUNT = re.compile(r"sekta\s+ndogo\s+(?:za\s+)?46(?!\d|[,.]\d)|(?<![\d,.])46\s+(?:sekta\s+ndogo|sub-?sectors?)|(?<![\d,.])46\s+(?:za\s+)?(?:vipengele|aina\s+ndogo)", re.IGNORECASE)
+_D23_CTX = re.compile(r"605\s*a|kima\s+cha\s+chini|mshahara\s+wa\s+chini|minimum\s+wage", re.IGNORECASE)
+_D23_SINGLE = re.compile(r"(?:katika|ndani\s+ya|kwenye)\s+sekta\s+ya\s+[a-z]+|sekta\s+hiyo|sekta\s+hii|peke\s+yake|pekee|(?:in|within)\s+the\s+[a-z]+\s+sector|[a-z]+\s+sector\s+(?:alone|has|contains)", re.IGNORECASE)
+_D23_Q_SINGLE = re.compile(r"sekta\s+ya\s+[a-z]+\s+ina", re.IGNORECASE)
+_D23_TOTAL = re.compile(r"kwa\s+ujumla|(?<![a-z])jumla|(?<![a-z])zote|sekta\s+zote|kwa\s+pamoja|(?<![a-z])across|in\s+total|(?<![a-z])total|overall|(?<![a-z])pkf|sekta\s+16|16\s+sectors", re.IGNORECASE)
+
+
+def gn605a_subsector_count_misstated(question: str, body: str):
+    """[sentence] giving 46 as the sub-sector count of ONE sector of GN 605A. The overall total, a negation and any non-minimum-wage text are left alone."""
+    q = question or ""
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and _D23_COUNT.search(s) and (_D23_CTX.search(q) or _D23_CTX.search(s))
+            and (_D23_SINGLE.search(s) or (_D23_Q_SINGLE.search(q) and not _D23_TOTAL.search(s)))
+            and not _D23_TOTAL.search(s) and not _D16_NEG.search(s)]
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -1926,6 +1950,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("severance_flat_15", s) for s in severance_flat_15_asserted(question, body)]
     out += [("brela_annual_return_deadline", s) for s in brela_annual_return_deadline_misstated(question, body)]   # D-FIDELITY-20
     out += [("vat_withholding_start_date", s) for s in vat_withholding_start_misstated(question, body)]   # D-FIDELITY-22
+    out += [("gn605a_mining_subsector_count", s) for s in gn605a_subsector_count_misstated(question, body)]   # D-FIDELITY-23
     return out
 
 

@@ -48,6 +48,9 @@ LICENCE_VALIDITY = "business_licence_validity"
 # question (answered with the fee only, the renewal half silently dropped). Same discipline, same exclusion from auto-send.
 TIN_APPLY = "tin_apply_deadline"
 LICENCE_FEE_VALIDITY = "business_licence_fee_and_validity"
+# 2026-11-18 (founder, after the batch-3 live check): the COMPANY annual-return deadline. The row was at rank 1 and the model still stated "siku 42" / "mwaka wa kalenda unaofuatia" (4az), a different wrong value from the
+# ones D-FIDELITY-20 catches, so only a model-free statement reaches it. Same discipline, same exclusion from auto-send.
+ANNUAL_RETURN = "brela_annual_return_deadline"
 
 
 def _paye_bands_text() -> str:
@@ -163,6 +166,14 @@ STATEMENTS = {
         "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
         "Locked fact tin_apply_deadline (Tax Administration Act Cap.438 R.E.2023: apply within 15 days of starting business; one TIN per person; may be issued within 7 days). The 15 days is the window to APPLY, not a duty to hold a TIN on day one -- "
         "the point np_14 / np_26 / s2_08 got wrong or inverted",
+    ),
+    ANNUAL_RETURN: (
+        "company_annual_return_deadline",
+        "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). "
+        "Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+        "Locked fact company_annual_return_deadline (Companies Act Cap.212 R.E.2023, edition asserted: each return is made up to the anniversary of incorporation or of the previous return date; delivered within 28 days of that date; "
+        "the company and every officer in default are liable to a fine). The served row's own wording, whole. No fine AMOUNT is stated (the Act gives none here; the BRELA late-filing fee schedule is a separate fact). "
+        "Founding specimens: live replies 'siku 42' and 'mwaka wa kalenda unaofuatia' (PROGRESS 4az)",
     ),
     LICENCE_FEE_VALIDITY: (
         "business_licence_expiry_30_june",

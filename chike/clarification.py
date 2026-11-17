@@ -643,6 +643,11 @@ CONSTANT_RESTATEMENTS = {
                                    "Anayezuia VAT ni wakala wa zuio: wizara ya fedha, taasisi ya Serikali inayobakiza mapato yake, au mtu aliyesajiliwa anayeteuliwa na Kamishna Mkuu kwa taarifa. Thibitisha na TRA (tra.go.tz)."),
     "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
                            "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
+    # D-FIDELITY-23 (2026-11-18): "46" stated as the sub-sector count of the MINING sector alone. GN 605A (kazi.go.tz official copy, edition asserted in the manifest): the First Schedule lists sixteen sectors; item 10, Mining Sector, has FOUR rows
+    # ((a) mining and prospecting minerals, (b) primary mining licence, (c) dealer licence, (d) brokers licences). The 46 is PKF's figure for the sub-sectors across ALL sectors, and the Order does not settle it mechanically.
+    "gn605a_mining_subsector_count": ("Agizo la Kima cha Chini cha Mshahara kwa Sekta Binafsi (GN 605A) lina sekta 16 katika Ratiba yake ya Kwanza. Sekta ya Madini (kipengele cha 10) ina vipengele vinne tu, kila kimoja na kiwango chake: "
+                                      "uchimbaji na utafutaji wa madini, leseni ya msingi ya uchimbaji, leseni ya wauzaji (dealer), na leseni za madalali (brokers). "
+                                      "Idadi ya 46 ni takwimu ya sekta ndogo kwa sekta zote kwa pamoja (kutoka PKF), si ya sekta ya madini peke yake, na Agizo lenyewe halitaji idadi hiyo: thibitisha na kazi.go.tz."),
 }
 
 

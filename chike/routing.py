@@ -2660,6 +2660,16 @@ _FS_TOPICS = (
      re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)*(?:biashara|duka|maduka|mgahawa|saluni|kioski|genge|frem|banda|hoteli|baa)|licen[cs]e\s+ya\s+(?:biashara|duka)|business\s+licen[cs]e"),
      re.compile(r"(?=.*(?:(?<![a-z])ada(?![a-z])|gharama|inagharimu|gharimu|kiasi\s+gani|(?<![a-z])cost|how\s+much|(?<![a-z])bei(?![a-z])))(?=.*(?:isha|ishi|huisha|inaisha|upya|renew|expir|huhuishwa|inahuishwa|kuhuisha|muda\s+wa\s+leseni|halali))", re.S),
      re.compile(r"cheti|zimamoto|usalama|afya|(?<![a-z])tin(?![a-z])|efd|(?<![a-z])tra(?![a-z])|mgeni|wageni|uhamiaji|gn\s*487|kibali|(?<![a-z])visa|adhabu|faini|penalty|kuchelewa|kuchelewesha|nipate|kupata|kuomba|naombaje|nitaombaje|wapi|mchakato|hatua|nyaraka|vigezo|requirements|usajili\s+wa|kusajili|jina\s+la\s+biashara|kampuni|kufuta|kufutwa|kufungwa|nani\s+anatoa|inatolewa\s+na\s+nani")),
+    # ---- 2026-11-18 (founder): the COMPANY annual-return deadline ("annual return ya BRELA ... lini / ndani ya muda gani"). NARROW BY CONSTRUCTION (R17): subject cue + a COMPANY cue, a veto for every neighbour (any tax, a fee, a
+    # penalty AMOUNT, the form, how-to), and a TIME ask only. A premise check is accepted only when it also carries a time limb ("... miezi 12 ... sivyo?"): the statement is the whole rule.
+    ("brela_annual_return_deadline",
+     re.compile(r"annual\s+returns?(?![a-z])|ritani\s+ya\s+mwaka|ripoti\s+ya\s+kila\s+mwaka|tamko\s+la\s+mwaka"),
+     re.compile(r"brela|kampuni|company|msajili|registrar"),
+     re.compile(r"kodi|(?<![a-z])tax|(?<![a-z])tra(?![a-z])|paye|(?<![a-z])vat(?![a-z])|nssf|sdl|wcf|zuio|corporate|mapato|kizingiti|threshold|mauzo|turnover|"
+                r"(?<![a-z])ada(?![a-z])|gharama|(?<![a-z])fees?(?![a-z])|cost|bei(?![a-z])|inagharimu|adhabu|faini|penalty|riba|fomu|form(?![a-z])|namba|number|nawezaje|naweza\s+kuwasilisha|jinsi|namna|hatua|mchakato|nyaraka|documents|online|mtandaoni|leseni|licen[cs]e|"
+                r"kufuta|kufutwa|kubadili|mabadiliko|mkurugenzi|wakurugenzi|director|hisa|shares|mwanzo|kusajili\s+kampuni|jina\s+la|"
+                # added after the first corpus sweep (27 diversions, 5 not about the deadline): a payment / late / foreign / definition / strike-off question has its own fact
+                r"lip(?:a|wa|ia)(?![a-z])|lipaje|lipwaje|toz(?:wa|a)|chelewa|chelewesha|kigeni|foreign|ni\s+nini|what\s+is|(?:how|after\s+how)\s+many|fufuliwa|futwa|kufunguliwa|ufutwe|struck?\s+off|strike\s+off|consequences|matokeo|hatari|nitakayopata|nini\s+kitatokea")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
@@ -2695,8 +2705,13 @@ _FS_TOPIC_ASK = {
     "tin_apply_deadline": re.compile(r"lini|siku|muda|ndani\s+ya|haraka|kuomba|(?<![a-z])omba|ombi|kujiandikisha|kujisajili|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|haja|hitaji|lazima|kwanza|nipate|kupata|pata(?:je)?|(?<![a-z])je(?![a-z])|\?"),
     "business_licence_fee_and_validity": re.compile(r"lini|gani|ngapi|muda|(?<![a-z])je(?![a-z])|kiasi|how|when|\?"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
+    # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
+    "brela_annual_return_deadline": re.compile(r"(?<![a-z])lini(?![a-z])|muda\s+gani|ndani\s+ya|mwisho|deadline|tarehe|siku\s+ngapi|when|"
+                                               r"(?=.*(?:miezi|septemba|siku\s+\d|mwaka\s+wa\s+kalenda|mwaka\s+mmoja))(?=.*(?:sivyo|siyo|si\s+kweli|ni\s+kweli|ndiyo|je(?![a-z])))", re.S),
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
+# 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline"})
 _FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
@@ -2723,7 +2738,10 @@ def fixed_statement_topic(text: str):
     if len(hits) != 1:
         return None
     topic = hits[0]
-    if not (_FS_ASK.search(ql) or (topic in _FS_TOPIC_ASK and _FS_TOPIC_ASK[topic].search(ql))):
+    if topic in _FS_OWN_ASK_ONLY:
+        if not _FS_TOPIC_ASK[topic].search(ql):      # the global ask ("ni nini", "ngapi", "kiasi gani", "how many") admits questions this statement does not answer
+            return None
+    elif not (_FS_ASK.search(ql) or (topic in _FS_TOPIC_ASK and _FS_TOPIC_ASK[topic].search(ql))):
         return None
     if topic not in _FS_LEVY_EXEMPT and _FS_OTHER_LEVY.search(ql):
         return None

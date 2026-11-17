@@ -1412,6 +1412,41 @@ def audit_unexercisable():
            'a confident wrong start / deferral date for VAT withholding ("ulicheleweshwa hadi 1 Septemba 2025")',
            _v, 'the live eval_041 reply (targeted verification, build e9e429e)', 'the B2C e-payment 16% rule from 1 September 2025, a negation, the correct 1 July statement, an unrelated 1 September date', _note)
 
+    # ── 2026-11-18 batch 4 (PROGRESS 4ba): the annual-return STATEMENT route and D-FIDELITY-23 ("46" as the sub-sector count of ONE GN 605A sector). PLANTED on the live replies of the 2026-11-17 batch-3 verification.
+    try:
+        from chike import fidelity as _f23, routing as _r23, clarification as _c23, answer_trace as _at23
+        from chike.orchestrator import Orchestrator as _O23
+        _live23 = {r['q']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'batch6_deploy_live_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _arp23 = {r['q']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'annual_return_phrasings_live_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _q46 = 'Sekta ya madini ina sekta ndogo ngapi kwenye GN 605A?'
+        _rep46 = _live23[_q46]['reply']
+        _qar = 'Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?'
+        class _B23:
+            calls = 0
+            def generate(self, prompt, params=None):
+                _B23.calls += 1
+                return _arp23[_qar]['reply']
+        _o23 = _O23(_B23(), retriever=lambda q: ['x'], ooc_phrases=[], in_scope_phrases=[])
+        _t23 = _at23.trace(_o23.answer(_qar))
+        _spec23 = {'the live "siku 42" question routes to the statement, model-free': _r23.fixed_statement_topic(_qar) == 'brela_annual_return_deadline' and _t23['path'] == 'engine:fixed_statement' and _t23['model_calls'] == 0 and _B23.calls == 0,
+                   'the live "46 in mining alone" reply flags (D-FIDELITY-23)': bool(_f23.gn605a_subsector_count_misstated(_q46, _rep46)),
+                   'its restatement names the four mining rows and attributes 46 to PKF': all(x in _c23.CONSTANT_RESTATEMENTS['gn605a_mining_subsector_count'] for x in ('vipengele vinne', 'PKF', 'sekta 16'))}
+        _clean23 = [_r23.fixed_statement_topic('Annual return ya BRELA ada ni ngapi?') != 'brela_annual_return_deadline',
+                    _r23.fixed_statement_topic('Return ya kodi ya mapato ya kampuni ni lini?') != 'brela_annual_return_deadline',
+                    _f23.gn605a_subsector_count_misstated('GN 605A inashughulikia sekta ngapi?', 'GN 605A inashughulikia sekta 16 na sekta ndogo 46.') == [],
+                    _f23.gn605a_subsector_count_misstated('Kuna sekta ndogo ngapi kwenye GN 605A?', 'Kuna sekta ndogo 46 (takwimu ya PKF; Agizo halithibitishi).') == []]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code23 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired23 = 'fidelity.body_contradicts_d16(' in _code23 and '_answer_fixed_statement' in _code23
+        _v = ('FIRES' if (all(_spec23.values()) and all(_clean23) and _wired23) else 'NOT_WIRED' if (all(_spec23.values()) and all(_clean23)) else 'ERROR')
+        _note = (f'specimens: {_spec23}; clean limbs (must all be True): {_clean23}; wired (comments stripped): {_wired23}. Route blast radius (eval/results/sweep_annual_return_route_2026_11_18.json): 19 of 8,625 questions diverted, every one a deadline question. '
+                 'Guard priced (eval/results/price_d23_2026_11_18.json): 1 flag in 13,401 texts, the live specimen; 25 other statements of 46 untouched.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-18 batch 4: the company annual-return statement route + D-FIDELITY-23 (46 as the sub-sector count of one GN 605A sector)', 'fidelity',
+           'the model stating "siku 42" / "mwaka wa kalenda unaofuatia" for the BRELA annual-return deadline with the correct row at rank 1; "46 sub-sectors" attributed to the mining sector alone',
+           _v, 'the live replies of the 2026-11-17 batch-3 verification (build 7b94236)', 'a BRELA fee / penalty-amount / form / how-to / definition question, the corporate income-tax return, the overall 46 total with and without its PKF caveat, a negation', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

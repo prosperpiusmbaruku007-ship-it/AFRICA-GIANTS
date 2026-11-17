@@ -1,0 +1,315 @@
+{
+ "swept": 8625,
+ "diverted": [
+  {
+   "q": "Annual return ya kampuni inawasilishwa lini kwa BRELA?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini kila mwaka?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa kabla ya tarehe gani kila mwaka?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Kampuni yangu ilisajiliwa mwezi Machi — annual return yangu inaisha lini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Nimeambiwa annual return ya BRELA inaisha 30 Septemba — ni kweli?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "BRELA annual return — deadline ni wakati gani wa mwaka?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Kampuni yangu ina fiscal year inayoishia Desemba 31 — annual return BRELA inapaswa kuwasilishwa lini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Je, kuna tarehe moja inayotumika kwa kampuni zote za BRELA kwa annual returns?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa tarehe gani kila mwaka?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl"
+  },
+  {
+   "q": "Je, annual return ya BRELA inawasilishwa ndani ya siku 42 baada ya tarehe ya usajili?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl"
+  },
+  {
+   "q": "Kampuni yangu ilisajiliwa BRELA tarehe 15 Machi 2023 -- annual return yangu ya mwaka 2025 inaweza kuwa lini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl"
+  },
+  {
+   "q": "Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Je, annual return ya BRELA inawasilishwa ndani ya miezi 12 baada ya usajili?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Annual return ya BRELA ni mwisho wa mwaka wa fedha, sivyo?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Kampuni ilisajiliwa tarehe 10 Machi 2025. Annual return inapaswa kuwasilishwa lini?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Kampuni yangu ilisajiliwa Machi, annual return ni lini?",
+   "src": "results/batch6_deploy_live_2026_11_17.json"
+  },
+  {
+   "q": "When is a company's annual return submitted to BRELA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "ritani ya mwaka ya kampuni ninawasilisha kabla ya tarehe ngapi?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  }
+ ],
+ "mention_not_diverted": [
+  {
+   "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl"
+  },
+  {
+   "q": "Je, kampuni inaweza kufutwa usajilishaji wake BRELA kwa kushindwa kuwasilisha annual return?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA (ripoti ya kila mwaka) ni nini?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl"
+  },
+  {
+   "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl"
+  },
+  {
+   "q": "Ada ya kuwasilisha annual return BRELA ni TZS 2,500, sivyo?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl"
+  },
+  {
+   "q": "Je, ninahitaji kuwasilisha ripoti ya kila mwaka (annual return) kwa BRELA?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA ni tofauti na taarifa ya mwaka wa TRA — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA inawasilishwa kila mwaka hata kama kampuni haifanyi biashara?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+  },
+  {
+   "q": "BRELA inaweza kufuta usajili wa kampuni baada ya miaka mingapi bila annual return?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+  },
+  {
+   "q": "Kampuni yangu haikuwasilisha annual return BRELA kwa mwaka mmoja — nini kitatokea?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Ikiwa kampuni haikuwasilisha annual return BRELA kwa miaka 3 — ni faini ngapi jumla?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Kampuni iliyofutwa orodha BRELA kwa kutokuwasilisha annual return — inaweza kufufuliwa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Je, kampuni inayokosa kuwasilisha annual return BRELA inaweza bado kufungua akaunti ya benki?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Kama kampuni yangu imekuwa dormant (haifanyi biashara) kwa miaka 2 — bado inahitaji annual return BRELA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+  },
+  {
+   "q": "Nilichelewa annual return BRELA kwa miezi 3 — ninapaswa kulipa kiasi gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Nitakayopata kama ninachelewesha annual return ya BRELA kwa mwaka mmoja ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Kampuni yangu haijafanya annual return kwa miaka 3 — inaweza kufutwa BRELA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA imelipwa — faini ya kuchelewa ni ngapi kwa mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Kampuni yangu ilianza 2022 na haijawahi kuwasilisha annual return — hatari gani inanisubiri?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+  },
+  {
+   "q": "Annual return ya BRELA ni nini na hulipwa lini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl"
+  },
+  {
+   "q": "Kampuni yangu haijalipi annual return kwa miaka miwili — adhabu ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl"
+  },
+  {
+   "q": "Je, kampuni inayoshindwa kuwasilisha annual return BRELA kwa miaka 2 inaweza kukutana na matokeo gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl"
+  },
+  {
+   "q": "Adhabu ya kutolipa ada ya annual return ya BRELA kwa wakati ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl"
+  },
+  {
+   "q": "Habari Chike, kuhusu matakwa ya kisheria, hii 'annual return fee' ya 5000 TZS, ni lazima kila kampuni ilipe kila mwaka?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+  },
+  {
+   "q": "Naomba nijuze kuhusu ada ya BRELA ya annual return, inakuwaje?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+  },
+  {
+   "q": "Kama nitachelewa kulipa annual return kwa BRELA, kuna adhabu yoyote?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+  },
+  {
+   "q": "Huyu kwa BRELA, kama nitalipia annual return baadaye, hiyo ada ya TZS 2,500 kwa mwezi ni faini au ni ada ya ziada?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+  },
+  {
+   "q": "Je, ni kweli ada ya annual return ni TZS 22,000?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+  },
+  {
+   "q": "Ada ya kuwasilisha annual return BRELA ni kiasi gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Nikichelewa kuwasilisha annual return, faini ni kiasi gani kwa mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Namba ya fomu ya annual return ni ipi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni yangu haifanyi biashara (dormant) — je bado nawasilisha annual return?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Annual return yangu imechelewa miaka 3 — faini imefikia kiasi gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Annual return yangu imechelewa miaka 2 — faini ni kiasi gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Sijawasilisha annual return kwa miaka 3 — faini ya BRELA na hatari ya kufutwa ikoje?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni yangu ilisajiliwa lakini haijaanza kufanya kazi kwa miaka 2 — wajibu wa annual return, hali ya TIN na NSSF vikoje?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Wajibu wa annual return wa BRELA na ukaguzi wa mwaka wa OSHA vinakwendaje kwa pamoja?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni yenye wakurugenzi wawili — je kila mmoja anahitaji TIN, na je wote wanatakiwa kusaini annual return?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Nilisajili kampuni BRELA miezi 6 iliyopita bila kuanza kazi — je nimechelewa annual return, nadaiwa TRA, na NSSF ni lazima bila wafanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni ilisajiliwa miaka 3 iliyopita, haijawahi kuwasilisha annual return wala kusajili NSSF — adhabu za kila moja na niende wapi kurekebisha?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Naomba unieleze wajibu wa annual return wa BRELA, mara ngapi OSHA hukagua, na jinsi ya kukokotoa mchango wa mwaka wa WCF — wajibu wote watatu wa mwaka.",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni ya kigeni ikichelewa annual return inatozwa faini gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Kampuni ya kigeni ikichelewa annual return inatozwa kiasi gani kwa mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+  },
+  {
+   "q": "Nikichelewa kuwasilisha annual return BRELA nitatozwa nini?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json"
+  },
+  {
+   "q": "Ada ya annual return BRELA ni shilingi ngapi?",
+   "src": "results/brela_deploy_verification_2026_10_07.json"
+  },
+  {
+   "q": "query: Ada ya annual return BRELA ni shilingi ngapi?",
+   "src": "results/canary_post_r15_regen_deploy.json"
+  },
+  {
+   "q": "Annual return BRELA inawasilishwa lini na ada yake ni kiasi gani?",
+   "src": "results/coverage_batch_draft1.json"
+  },
+  {
+   "q": "Kampuni ya kigeni inachelewa kuwasilisha annual return, adhabu ni kiasi gani?",
+   "src": "results/coverage_batch_draft1.json"
+  },
+  {
+   "q": "Naomba namba tatu: ada ya BRELA ya annual return, ada ya mafunzo ya OSHA, na kiwango cha mchango wa WCF.",
+   "src": "results/precondition_quarantine_2026_10_08.json"
+  },
+  {
+   "q": "A company has failed to file its annual return for 2 years — what are the potential consequences?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "After how many years without an annual return can BRELA strike off a company?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "Can a company's BRELA registration be cancelled for failing to file annual returns?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "Do I need to file an annual return with BRELA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "How often must a BRELA-registered company file an annual return?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "Is the BRELA annual return different from the TRA annual tax return — is this true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "Is the BRELA annual return filed every year even if the company is not trading?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "The BRELA annual return filing fee is TZS 2,500, right?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  },
+  {
+   "q": "What is a BRELA annual return?",
+   "src": "results/sweep_vat_cues_2026_11_12.json"
+  }
+ ]
+}
