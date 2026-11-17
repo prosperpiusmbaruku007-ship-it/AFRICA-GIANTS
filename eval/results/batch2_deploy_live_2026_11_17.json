@@ -1,0 +1,386 @@
+{
+ "identity": {
+  "build": "911948b",
+  "rag_rows_loaded": 215,
+  "rag_embeddings_shape": [
+   215,
+   768
+  ],
+  "rag_facts_text_sha256": "456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13",
+  "config_rag_fact_count": 215,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794901625.223,
+   "enter_started_ts": 1794901625.233,
+   "enter_done_ts": 1794901662.243,
+   "import_to_enter_s": 0.0,
+   "load_s": 37.0,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "NAME",
+   "q": "GN 605A ilitolewa na nani?",
+   "reply": "GN 605A ilitolewa na Waziri wa Nchi, Ofisi ya Waziri Mkuu (Kazi, Vijana, Ajira na Watu Wenye Ulemavu) (Minister of Labour) chini ya sheria ya Tanzania. Jina kamili la amri ni 'Amri ya Kima cha Chini cha Mshahara (Wage Order)'. Thibitisha na TanzLII.org.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NAME",
+   "q": "Nani alisaini GN 605A?",
+   "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na VELMA Law au PKF Eastern Africa.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NAME",
+   "q": "Kima cha chini cha mshahara GN 605A kilitangazwa na waziri yupi?",
+   "reply": "Kilitangazwa na Waziri wa Kazi, katika Gazeti Rasmi la Serikali Na. 605A, tarehe 13 Oktoba 2025. Thibitisha na TanzLII.org.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE-STMT",
+   "q": "Leseni ya biashara inaisha lini?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE-STMT",
+   "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE-STMT",
+   "q": "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE-STMT",
+   "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LICENCE-STMT",
+   "q": "Leseni ya duka langu inaisha mwezi gani?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RETURN-STMT",
+   "q": "Return ya kodi ya mapato ya mtu binafsi ni lini?",
+   "reply": "Kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RETURN-STMT",
+   "q": "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?",
+   "reply": "Kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RETURN-STMT",
+   "q": "Nina biashara binafsi na mwaka wangu wa hesabu umeishia tarehe 31 Desemba. Kwa hiyo return ya income tax sihitaji kusubiri miezi 12 mingine, naweza kuwasilisha ndani ya miezi 6, sivyo?",
+   "reply": "Kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "Nataka leseni ya biashara ya duka langu, nipate wapi?",
+   "reply": "Leseni za biashara zinapatikana kupitia halmashauri husika. Thibitisha na halmashauri yako (manispaa, wilaya).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AUTHORITY",
+   "q": "Leseni yangu ya biashara nikiipoteza nifanyeje?",
+   "reply": "Kupoteza leseni ni tatizo. Thibitisha na halmashauri husika ili kujua utaratibu sahihi wa kuitafuta upya. Thibitisha na halmashauri husika.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?",
+   "reply": "Malipo ya kuachishwa kazi yanaweza kuwa sehemu ya mapato ya ajira yanayotozwa kodi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Severance ni siku ngapi?",
+   "reply": "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+   "reply": "Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Ada ya leseni ya biashara ni kiasi gani?",
+   "reply": "Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika (LGA).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nikate WCF kwenye mshahara wa mfanyakazi?",
+   "reply": "Hapana — WCF haikatwi kwenye mshahara. Ni gharama ya mwajiri pekee, inayolipwa moja kwa moja kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kamishna Mkuu wa TRA anafanya nini?",
+   "reply": "Kamishna Mkuu ana majukumu makubwa: kusimamia utawala wa TRA, kuongoza timu ya maafisa wa kodi, kupanga mikakati ya kukusanya kodi, kushughulikia malalamiko, na kuwasiliana na Waziri wa Fedha. Ni mtu muhimu sana katika mchakato mzima wa kodi Tanzania. Thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Return ya kodi ya mapato ya kampuni ni lini?",
+   "reply": "Kampuni ya kawaida (mwezi 6): kodi ya mapato ya kampuni inawasilishwa ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato, ambao mara nyingi huwa Desemba 31. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Kodi ya awamu (provisional tax) inalipwa lini?",
+   "reply": "Kodi ya awamu inalipwa kwa awamu 4 sawa katika mwaka wa mapato: tarehe 31 Machi, 30 Juni, 30 Septemba, na 31 Desemba. Kila awamu ni sawa na robo ya kodi halisi inayokadiriwa. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Ada ya huduma kwa kampuni ya nje ni asilimia ngapi kodi ya zuio?",
+   "reply": "Kampuni ya nje (non-resident) inalipa kodi ya zuio ya asilimia 15 kwenye ada ya huduma. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Gawio kwa mwekezaji asiye mkazi linakatwa zuio asilimia ngapi?",
+   "reply": "Kiwango cha zuio kwa gawio kwa mwekezaji asiye mkazi ni asilimia 10. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara yote ya wafanyakazi 12. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,000,000 = TZS 140,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nawezaje kusajili kampuni?",
+   "reply": "Kuna njia mbili za kawaida za kusajili kampuni: (1) kupitia BRELA online portal (brela.go.tz); (2) kwa njia ya kawaida ya ofisi. Thibitisha na BRELA (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

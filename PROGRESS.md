@@ -917,6 +917,16 @@ Also seen: replies cite **"lga.go.tz"** as a verification host (not whitelisted,
 
 **Full suite after the fixes: 3,478 passed.** The fixes are code only (no index change); **re-deploy `chike-inference`, then re-run the whole harness** (the pre-fix artifact is kept, so the re-run is a fresh measurement, not a resume).
 
+### 4ap. 2026-11-17 — BATCH 2 RE-DEPLOYED (`chike-inference` build `911948b`, window 10:46) AND RE-VERIFIED LIVE: 25/25, EVERY REPLY READ; BOTH DEFECTS OF 4ao CLOSED
+
+**Deployed (R16).** `/health` `pending: 0`, `supervised: true`; pre-flight green (provenance, chain lint, real build); stop -> deploy; **served identity verified live: `build 911948b`, 215 rows, digest `45683823…` == local.** Code-only change over `36a5144` (the index is unchanged). The full harness was re-run FRESH (`eval/results/batch2_deploy_live_2026_11_17.json`; the first-window artifact is kept as `..._PREFIX_36a5144.json`, so this is a new measurement, not a resume): **25 rows, automated misses 0, every reply READ.**
+
+**CLOSED, observed live.** *`lga.go.tz`:* "Leseni yangu ya biashara nikiipoteza nifanyeje?" -> `guards ['repaired']`, "Thibitisha na halmashauri husika" with no host; the fee + expiry two-part question -> `guards ['repaired']`, no `lga.go.tz`, still on the MODEL path (1 call, not the statement). *Stray commas:* the three GN 605A questions now read "ilisainiwa na Waziri wa Kazi." and "Kilitangazwa na Waziri wa Kazi, katika Gazeti Rasmi ..." (no `,.`, no `,,`); no personal name in any. *Still holding:* both statement routes `engine:fixed_statement` with 0 model calls on every phrasing incl. the np_13 / s2_07 / s2_16 premises; severance + "kodi gani" -> TRA; and every negative (company return, provisional instalments "30 Septemba", non-resident service fee 15%, non-resident dividend 10%, WCF "Hapana", SDL compute, company registration with no council line).
+
+**Seen, NOT fixed (read in these replies, outside the approved list):** (a) the lost-licence reply now repeats itself ("Thibitisha na halmashauri husika ili kujua ... Thibitisha na halmashauri husika.") — the model wrote one clause, the repair removed the host and left the sentence; cosmetic. (b) "Nani alisaini GN 605A?" -> "... Thibitisha na **VELMA Law au PKF Eastern Africa**" — a firm named in words as the place to verify (the logged sibling-pairs class, section 5); the authority table judges hosts, not firm names. (c) Two replies still say "Waziri wa Kazi" — an office, not a person, but not the Order's exact office string. (d) The fee + expiry question is answered with the fee only: the expiry half is dropped on the model path (A2 gap by design of the veto).
+
+**Batch 2 is closed.** Next: stage 3 (read-only), per the founder's order.
+
 ### 5. Open — **REWRITTEN 2026-11-13; the earlier list was stale (most of it was resolved in 4b–4r). Resolved items are kept, marked, not deleted.**
 
 **OPEN**
