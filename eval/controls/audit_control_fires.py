@@ -1390,6 +1390,28 @@ def audit_unexercisable():
            'a confident wrong sector count ("sekta 15") on the model path; a plain goods-vs-services rate question diverted to the mixed-supply 3:2 statement',
            _v, 'the live eval_117 reply and the eval_039 gold row (targeted verification, build e9e429e)', 'a negated count, a sub-sector number, a count already right, a mining-sector wage question, a question naming a combined sale', _note)
 
+    # ── 2026-11-17 batch 3 addendum (PROGRESS 4ay item 8): D-FIDELITY-22, the VAT-withholding START DATE (Finance Act 2025 commences 1 July 2025; the 1 September 2025 proviso belongs to the 16% e-payment rate). PLANTED on the live eval_041 reply.
+    try:
+        from chike import fidelity as _f22, clarification as _c22
+        _live22 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'targeted_gate4_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _q22 = 'Je, utaratibu wa VAT withholding wa Finance Act 2025 ulianza kutumika tangu 1 Januari 2025?'
+        _t22 = lambda q, b: [t for t, _ in _f22.body_contradicts_d16(q, b)]   # noqa: E731
+        _spec22 = {'the live eval_041 reply (delayed to 1 Septemba 2025) flags': 'vat_withholding_start_date' in _t22(_q22, _live22['eval_041']['reply']),
+                   'the restatement states 1 Julai 2025 and no deferral': all(x in _c22.CONSTANT_RESTATEMENTS['vat_withholding_start_date'] for x in ('1 Julai 2025', 'haina kuahirishwa'))}
+        _clean22 = ['vat_withholding_start_date' not in _t22(_q22, 'VAT ya 16% kwa malipo ya kielektroniki inaanza 1 Septemba 2025.'),
+                    'vat_withholding_start_date' not in _t22(_q22, 'Hapana. Utaratibu wa VAT withholding ulianza tarehe 1 Julai 2025, si 1 Septemba 2025.'),
+                    'vat_withholding_start_date' not in _t22('Kiwango kipya cha NSSF kinaanza lini?', 'Kiwango kipya kinaanza kutumika tarehe 1 Septemba 2025.')]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code22 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired22 = 'fidelity.body_contradicts_d16(' in _code22
+        _v = ('FIRES' if (all(_spec22.values()) and all(_clean22) and _wired22) else 'NOT_WIRED' if (all(_spec22.values()) and all(_clean22)) else 'ERROR')
+        _note = (f'specimens: {_spec22}; clean limbs (must all be True): {_clean22}; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): {_wired22}. Priced (eval/results/price_vat_withholding_sept_2026_11_17.json): the live specimen only; 0 of 562 gold answers, 0 of 8,754 training pairs.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 batch 3 addendum: D-FIDELITY-22 VAT-withholding start date (1 July 2025, no deferral; 1 September 2025 is the 16% e-payment rule)', 'fidelity',
+           'a confident wrong start / deferral date for VAT withholding ("ulicheleweshwa hadi 1 Septemba 2025")',
+           _v, 'the live eval_041 reply (targeted verification, build e9e429e)', 'the B2C e-payment 16% rule from 1 September 2025, a negation, the correct 1 July statement, an unrelated 1 September date', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

@@ -1,4 +1,4 @@
-"""PRICE A *CANDIDATE* GUARD (proposal only, founder's item 6): a sentence about VAT withholding (zuio) that puts 1 September 2025 on its START / implementation date. The fixed rule: VAT withholding on goods (3%) and
+"""PRICE D-FIDELITY-22 (first priced as a CANDIDATE; founder approved building it 2026-11-17): a sentence about VAT withholding (zuio) that puts 1 September 2025 on its START / implementation date. The fixed rule: VAT withholding on goods (3%) and
 services (6%) is effective 1 JULY 2025 (Finance Act 2025, locked facts vat_withholding_goods / vat_withholding_services, served index rows 16-17), with no deferral; the 1 September 2025 date belongs to the B2C e-payment VAT
 (16%), a different rule. Specimen: the live reply to eval_041 ("... ulianza rasmi tarehe 1 Julai 2025 ... lakini utekelezaji wake ulicheleweshwa hadi 1 Septemba 2025").
 
@@ -19,6 +19,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 spec = importlib.util.spec_from_file_location("_pf", os.path.join(HERE, "price_followup_guards_2026_11_16.py"))
 pf = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pf)
+sys.path.insert(0, REPO)
+from chike import fidelity  # noqa: E402
 
 WH = re.compile(r"vat\s+withholding|vat\s+ya\s+zuio|zuio\s+la\s+vat|zuio\s+wa\s+vat|utaratibu\s+wa\s+zuio|withholding\s+(?:vat|agent)", re.IGNORECASE)
 SEP = re.compile(r"1\s+septemba(?:\s+2025)?|septemba\s+1|1(?:st)?\s+september(?:\s+2025)?|september\s+1", re.IGNORECASE)
@@ -32,9 +34,8 @@ START = re.compile(r"cheleweshw|ulianza|ilianza|kuanza|kuanzia|ulipoanza|utekele
 
 
 def hits(q, a):
-    """the SUBJECT comes from the question OR the sentence (the specimen's sentence says 'utekelezaji wake', never 'VAT withholding'); the sentence puts 1 September on a start / delay"""
-    subject_q = bool(WH.search(q or ""))
-    return [s.strip() for s in SPLIT.split(a or "") if s and (subject_q or WH.search(s)) and SEP.search(s) and START.search(s) and not B2C.search(s) and not NEG.search(s)]
+    """the REAL guard (D-FIDELITY-22, wired 2026-11-17); the candidate this file priced as a proposal is now fidelity.vat_withholding_start_misstated"""
+    return [sent for topic, sent in fidelity.body_contradicts_d16(q, a) if topic == "vat_withholding_start_date"]
 
 
 def main():

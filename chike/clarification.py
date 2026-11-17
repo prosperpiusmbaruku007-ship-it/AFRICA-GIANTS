@@ -637,6 +637,10 @@ CONSTANT_RESTATEMENTS = {
     # D-FIDELITY-20 (2026-11-17): the company annual-return deadline (Companies Act Cap.212 R.E.2023: each return is made up to the anniversary of incorporation; 28 days from that return date). R44: the Act is named, no section number.
     "brela_annual_return_deadline": ("Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya tarehe ya return iliyotangulia). "
                                      "Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na kila afisa aliyehusika wanaweza kutozwa faini (Sheria ya Makampuni). Thibitisha na BRELA (brela.go.tz)."),
+    # D-FIDELITY-22 (2026-11-17): the VAT-withholding start date (Finance Act 2025 (No. 11), read with edition asserted: the Act commences 1 July 2025; the 3% / 6% rule carries no separate commencement; the 1 September 2025 proviso belongs to the 16% e-payment rate). R44: the Act is named, no section number.
+    "vat_withholding_start_date": ("VAT ya zuio (3% kwa bidhaa, 6% kwa huduma) ilianza kutumika tarehe 1 Julai 2025 pamoja na Sheria ya Fedha 2025; sheria haina kuahirishwa kwa kifungu hicho. "
+                                   "Tarehe 1 Septemba 2025 ni ya kifungu kingine cha sheria hiyo hiyo (VAT ya 16% kwa malipo kupitia benki au mfumo wa kielektroniki), si ya VAT ya zuio. "
+                                   "Anayezuia VAT ni wakala wa zuio: wizara ya fedha, taasisi ya Serikali inayobakiza mapato yake, au mtu aliyesajiliwa anayeteuliwa na Kamishna Mkuu kwa taarifa. Thibitisha na TRA (tra.go.tz)."),
     "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
                            "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
 }

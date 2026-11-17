@@ -1899,12 +1899,33 @@ def brela_annual_return_deadline_misstated(question: str, body: str):
             and not _D16_NEG.search(s) and not _D20_RIGHT_FRAME.search(s) and not _D20_NOT_THIS_OBLIGATION.search(s)]
 
 
+# ---- D-FIDELITY-22 (2026-11-17, founder-approved, item 6 of batch 3): THE VAT-WITHHOLDING START DATE. A CONSTANT (R19), FACT PATH.
+#   specimen (live, build e9e429e, eval_041): "Finance Act 2025 ilipanga mabadiliko hayo kuanzia 1 Julai 2025, lakini utekelezaji wake ulicheleweshwa hadi 1 Septemba 2025."
+#   the Act (Finance Act 2025 (No. 11), edition asserted, read 2026-11-17): s.2 commences the Act on 1 JULY 2025; s.124 inserts VAT Act s.5(5) (the 3% / 6% withholding) with NO separate commencement clause; the "1st September, 2025" proviso
+#   is attached to s.5(6) -- the 16% rate for an UNREGISTERED person who pays through a bank / approved electronic system -- a different rule. The reply put that date on the withholding rule.
+# R25. (1) Defect: a confident wrong start/deferral date on the fact path. (2) What CORRECT output could it damage: a sentence about the B2C e-payment 16% rule (names e-payment / digital / B2C / 16%), a negation ("si 1 Septemba"), a correct
+#   1 July statement (no September), an UNRELATED 1 September date (the subject must be VAT WITHHOLDING, from the question or the sentence), and any sentence that gives September no start / delay word. The replacement states the fixed rule.
+_D22_WH = re.compile(r"vat\s+withholding|vat\s+ya\s+zuio|zuio\s+la\s+vat|zuio\s+wa\s+vat|utaratibu\s+wa\s+zuio|withholding\s+(?:vat|agent)", re.IGNORECASE)
+_D22_SEP = re.compile(r"1\s+septemba(?:\s+2025)?|septemba\s+1|1(?:st)?\s+september(?:\s+2025)?|september\s+1", re.IGNORECASE)
+_D22_B2C = re.compile(r"e-?payment|kidijitali|digital|b2c|mteja\s+wa\s+mwisho|16\s*%|asilimia\s+16|malipo\s+ya\s+kielektroniki|kielektroniki|electronic", re.IGNORECASE)
+_D22_START = re.compile(r"cheleweshw|ulianza|ilianza|kuanza|kuanzia|ulipoanza|utekelezaji|implementation|effective|delayed|postponed|deferred|hadi", re.IGNORECASE)
+
+
+def vat_withholding_start_misstated(question: str, body: str):
+    """[sentence] putting 1 September on the START (or a deferral) of VAT WITHHOLDING. The subject comes from the question OR the sentence; the B2C e-payment rule and any negation veto."""
+    subject_q = bool(_D22_WH.search(question or ""))
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and (subject_q or _D22_WH.search(s)) and _D22_SEP.search(s) and _D22_START.search(s)
+            and not _D22_B2C.search(s) and not _D16_NEG.search(s)]
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
     out += [("corporate_return_deadline", s) for s in corporate_return_deadline_misstated(question, body)]
     out += [("severance_flat_15", s) for s in severance_flat_15_asserted(question, body)]
     out += [("brela_annual_return_deadline", s) for s in brela_annual_return_deadline_misstated(question, body)]   # D-FIDELITY-20
+    out += [("vat_withholding_start_date", s) for s in vat_withholding_start_misstated(question, body)]   # D-FIDELITY-22
     return out
 
 
