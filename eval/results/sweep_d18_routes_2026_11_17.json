@@ -1,0 +1,53 @@
+{
+ "swept": 8600,
+ "hits": {
+  "tin_apply_deadline": [
+   {
+    "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?",
+    "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl"
+   },
+   {
+    "q": "Naomba TIN ndani ya siku ngapi tangu nianze biashara?",
+    "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl"
+   },
+   {
+    "q": "Sina haja ya kuwa na TIN kwa sababu biashara yangu ni ndogo na ndiyo kwanza naanza, sivyo?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Nimeanza biashara ya kuuza vifaa vya ujenzi wiki iliyopita. Nimesikia nina siku 15 za kuomba TIN, kwa hiyo sihitaji kuwa nayo siku ya kwanza kabisa, ni kweli?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Naomba TIN lini baada ya kuanza biashara?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Nimeanza biashara, nisajili TIN ndani ya muda gani?",
+    "src": "results/coverage_batch_draft1.json"
+   }
+  ],
+  "business_licence_fee_and_validity": [
+   {
+    "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+    "src": "eval/fidelity/d17_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?",
+    "src": "eval/fidelity/d17_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "How much does an LGA business licence cost and when is it renewed?",
+    "src": "eval/fidelity/d17_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Ada ya leseni ya duka langu ni ngapi na huisha lini?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara ya LGA inahuishwa lini na ada yake inategemeana na nini?",
+    "src": "results/sweep_vat_cues_2026_11_12.json"
+   }
+  ]
+ }
+}

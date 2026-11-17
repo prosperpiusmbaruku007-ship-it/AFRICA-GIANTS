@@ -1231,7 +1231,7 @@ def audit_unexercisable():
                     not _f17.licence_validity_period_violations('Leseni ya biashara inaisha lini?', 'Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa.'),
                     _r17.fixed_statement_topic('Ada ya leseni ya biashara ni kiasi gani?') is None,
                     _r17.fixed_statement_topic('Return ya kodi ya mapato ya kampuni ni lini?') is None,
-                    _r17.fixed_statement_topic('Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?') is None]
+                    _r17.fixed_statement_topic('Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?') != 'business_licence_validity']   # 2026-11-17 (next batch): the two-part question now routes to the COMBINED fee+renewal statement; the renewal-only statement must still decline it
         with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
             _code17 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
         _wired17 = 'fidelity.strip_unsupported_names(' in _code17 and 'fidelity.repair_licence_authority(' in _code17 and 'fidelity.body_contradicts_constant(' in _code17
@@ -1243,6 +1243,41 @@ def audit_unexercisable():
     record('2026-11-17 batch: unsupported-name strip, licence validity PERIOD guard, licence cue/lga, tax-over-labour, individual-return + licence-validity statement routes', 'fidelity',
            'an invented minister/person, a "siku 90" licence validity, "Leseni yangu ya biashara" missing the authority repair, a severance TAX question given the labour office, the individual-return and licence-validity questions answered by the model',
            _v, 'GN 605A issuer live reply, LGA licence live reply, np_13, the severance tax live reply, the individual-return live reply', 'offices/institutions/Acts untouched, a lawful 12-month statement, two-part fee+expiry questions left to the model, company return untouched', _note)
+
+    # ── 2026-11-17 NEXT SMALL BATCH: TIN-window and licence fee + renewal model-free statement routes, the VAT two-amount resolver (np_22), the practitioner-FIRM authority repair, the repeated-confirm-sentence dedupe.
+    # PLANTED on the verbatim frozen-set rows and the live replies of builds 36a5144 / 911948b.
+    try:
+        from chike import fidelity as _f18, routing as _r18
+        _fs1 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'negated_premise_live_2026_11_16.json'), encoding='utf-8'))['rows']}
+        _fs2 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'negated_premise_set2_live_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _pre = {r['q']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'batch2_deploy_live_2026_11_17_PREFIX_36a5144.json'), encoding='utf-8'))['rows']}
+        _firm = _pre['Nani alisaini GN 605A?']
+        _lost = _pre['Leseni yangu ya biashara nikiipoteza nifanyeje?']
+        _spec18 = {'np_22 turnover + period beside the 200M bound resolved': (_r18.turnover_with_local_period(_fs1['np_22']['question']) or (0, ''))[1] == 'six_month',
+                   'np_14 routes to the TIN statement': _r18.fixed_statement_topic(_fs1['np_14']['question']) == 'tin_apply_deadline',
+                   'np_26 routes to the TIN statement': _r18.fixed_statement_topic(_fs1['np_26']['question']) == 'tin_apply_deadline',
+                   's2_08 routes to the TIN statement': _r18.fixed_statement_topic(_fs2['s2_08']['question']) == 'tin_apply_deadline',
+                   'fee + renewal two-part question routes to the combined statement': _r18.fixed_statement_topic('Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?') == 'business_licence_fee_and_validity',
+                   'a firm named as the authority repaired': _f18.repair_firm_authority(_firm['q'], _firm['reply']) != _firm['reply'] and 'VELMA' not in _f18.repair_firm_authority(_firm['q'], _firm['reply']),
+                   'the repeated confirm sentence dropped': _f18._drop_redundant_confirm_tail('Kupoteza leseni ni tatizo. Thibitisha na halmashauri husika ili kujua utaratibu sahihi. Thibitisha na halmashauri husika.') != 'Kupoteza leseni ni tatizo. Thibitisha na halmashauri husika ili kujua utaratibu sahihi. Thibitisha na halmashauri husika.'}
+        _clean18 = [_r18.fixed_statement_topic('TIN ni nini?') is None,
+                    _r18.fixed_statement_topic('Nitapataje TIN?') is None,
+                    _r18.fixed_statement_topic('Ada ya leseni ya biashara ni kiasi gani?') is None,
+                    _r18.turnover_with_local_period('Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?') is None,
+                    _f18.repair_firm_authority('Nani alisaini GN 605A?', 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani ni 33.4%. Thibitisha na TRA (tra.go.tz).') == 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani ni 33.4%. Thibitisha na TRA (tra.go.tz).',
+                    _f18._drop_redundant_confirm_tail('Thibitisha na halmashauri yako. Thibitisha na BRELA kwa leseni za kundi A.') == 'Thibitisha na halmashauri yako. Thibitisha na BRELA kwa leseni za kundi A.']
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code18 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired18 = 'fidelity.repair_firm_authority(' in _code18 and 'routing.turnover_with_local_period(' in _code18
+        _v = ('FIRES' if (all(_spec18.values()) and all(_clean18) and _wired18) else 'NOT_WIRED' if (all(_spec18.values()) and all(_clean18)) else 'ERROR')
+        _note = (f'specimens: {_spec18}; clean limbs (must all be True): {_clean18}; wired (comments stripped): {_wired18}. Priced (eval/results/price_d18_2026_11_17.json): TIN route 6 of 8,603 held questions diverted after a narrowing from 31 '
+                 '(all read); the VAT resolver resolves 5, one a priced FALSE POSITIVE (18M MONTHLY read as annual) fixed by a monthly cue before wiring; the firm repair changes 33 stored replies, 5 GOLD answers and 28 training pairs, '
+                 'because the corpus itself ends "Thibitisha na PKF Eastern Africa au TanzLII" (reported, not edited).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 next small batch: TIN-window + fee/renewal statement routes, VAT two-amount resolver (np_22), firm-as-authority repair, confirm-sentence dedupe', 'fidelity',
+           'a premise check answered "Hapana, hakuna siku 15" (TIN), a two-part licence question answered with the fee only, np_22 asked for sales figures it had been given, a consultancy named as the authority, a confirm sentence repeated',
+           _v, 'np_14, np_22, np_26, s2_08, the 36a5144 live replies', 'a TIN definition / how-to, a fee-only question, a MONTHLY rate beside a bound, an analysis citing a firm as an analysis, two different confirm sentences', _note)
 
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:

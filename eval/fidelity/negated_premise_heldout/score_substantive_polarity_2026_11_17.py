@@ -99,6 +99,27 @@ def main():
     print(f"\n=== THE 'HAPANA BIAS' RE-READ BY CONTENT: model-path TRUE-premise (YES) rows ===")
     print(f"  {len(mp_true)} rows; opener Hapana: {[r['id'] for r in mp_true if r['opener'] == 'NO']}; of those the CONTENT is wrong/stance-inverted: {[r['id'] for r in mp_true if r['opener'] == 'NO' and r['subst_flip']]}")
     print(f"  content stance NO (inverted) on a TRUE premise, whatever the opener: {[r['id'] for r in mp_true if r['pol'] == 'NO']}")
+    # ---- BOTH READINGS (founder's second reading of the 8 disputed rows, recorded BESIDE the first, never over it) ----
+    second = json.load(io.open(os.path.join(HERE, "stage3_second_reading_2026_11_17.json"), encoding="utf-8"))["rows"]
+    first = {r["id"]: r["verdict"] for r in rows}
+    reader2_strict = dict(first)
+    reader2_leaning = dict(first)
+    for rid, v in second.items():
+        base = v["verdict"]
+        reader2_strict[rid] = "PARTIAL" if base == "PARTIAL_LEANING_WRONG" else base
+        reader2_leaning[rid] = "WRONG" if base == "PARTIAL_LEANING_WRONG" else base
+    changed = {rid: (first[rid], reader2_strict[rid], reader2_leaning[rid]) for rid in second if (first[rid], reader2_strict[rid], reader2_leaning[rid]) != (first[rid],) * 3}
+    print("\n=== TOTALS UNDER BOTH READINGS (n=49) ===")
+    tot = {}
+    for label, m in (("reader 1 (Claude Code)", first), ("reader 2 strict (founder's 8; np_07 = PARTIAL)", reader2_strict), ("reader 2 leaning (founder's 8; np_07 = WRONG)", reader2_leaning)):
+        c = collections.Counter(m.values())
+        tot[label] = {k: c.get(k, 0) for k in ("RIGHT", "PARTIAL", "WRONG", "NONE")}
+        print(f"  {label:<48} RIGHT {c.get('RIGHT', 0):>2}  PARTIAL {c.get('PARTIAL', 0):>2}  WRONG {c.get('WRONG', 0):>2}  NONE {c.get('NONE', 0):>2}")
+    print(f"  rows that differ between the readings: { {k: v for k, v in changed.items()} }")
+    w1, w2, w3 = ({r for r, v in m.items() if v == "WRONG"} for m in (first, reader2_strict, reader2_leaning))
+    seen = {r["id"] for r in rows if r["opener_inverted"]}
+    print(f"  WRONG-content rows the OPENER metric can see: reader 1 {len(w1 & seen)} of {len(w1)}; reader 2 strict {len(w2 & seen)} of {len(w2)}; reader 2 leaning {len(w3 & seen)} of {len(w3)}")
+    res["both_readings"] = {"totals": tot, "differ": changed, "wrong_seen_by_opener": {"reader1": [len(w1 & seen), len(w1)], "reader2_strict": [len(w2 & seen), len(w2)], "reader2_leaning": [len(w3 & seen), len(w3)]}}
     res["rows"] = rows
     json.dump(res, io.open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1, default=list)
     return 0

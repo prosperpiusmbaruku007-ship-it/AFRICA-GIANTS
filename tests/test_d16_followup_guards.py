@@ -67,8 +67,8 @@ def _guard(r):
 ])
 def test_wired_specimen_is_replaced_by_the_locked_statement(pid, must, must_not):
     p = _spec(pid)
-    # 2026-11-17: the licence question routes to the model-free statement now; the guard is the second layer for a phrasing the route declines (fee + expiry in one question).
-    q = "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?" if pid == "d16_lic_01" else p["question"]
+    # 2026-11-17: the licence question routes to the model-free statement now; the guard is the second layer for a phrasing the route declines (renewal + a late-renewal penalty in one sentence).
+    q = "Leseni ya biashara ya LGA inaisha lini na adhabu ya kuchelewa ni ngapi?" if pid == "d16_lic_01" else p["question"]
     r = _ans(q, p["body"])
     assert "replaced" in _guard(r) and must_not not in r.text and (must in r.text or must.replace("ro", "r") in r.text), r.text
 

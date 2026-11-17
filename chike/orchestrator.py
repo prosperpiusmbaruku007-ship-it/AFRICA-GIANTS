@@ -716,6 +716,10 @@ class Orchestrator:
         confident verdict on a limb the trader never addressed. Neither is done."""
         turnover = swn.sole_plausible_amount(sq.text)
         if turnover is None:
+            # 2026-11-17 (np_22): TWO amounts, one of them a bound ("bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110"): the other is the turnover and its period is the cue next to it.
+            resolved = routing.turnover_with_local_period(sq.text)
+            if resolved is not None:
+                return self._deterministic_answer(sq, rules_engine.vat_registration(resolved[0], resolved[1]))
             return SubAnswer(sub_question=sq, text=clarification.VAT_NO_TURNOVER,
                              needs_clarification=True)
         # A THRESHOLD NAMED INSIDE A NEGATED PREMISE IS A BOUND, NOT THE USER'S TURNOVER (2026-11-12).
@@ -1205,6 +1209,8 @@ class Orchestrator:
         # 2026-11-17: two more single-clause repairs (R25 blocks at fidelity.repair_gn605a_issuer and fidelity.repair_licence_authority): a consultancy named as the ISSUER of GN 605A, and a business-licence
         # citation that is BRELA alone or a non-licence authority.
         repaired = fidelity.repair_licence_authority(sub.sub_question.text, fidelity.repair_gn605a_issuer(sub.sub_question.text, repaired))
+        # 2026-11-17 (D-FIDELITY-18): a practitioner FIRM named in words as the authority to confirm with ("Thibitisha na VELMA Law au PKF Eastern Africa") is replaced by the topic's authority. R25 block at fidelity.repair_firm_authority.
+        repaired = fidelity.repair_firm_authority(sub.sub_question.text, repaired)
         # 2026-11-17 (D-FIDELITY-17): a personal name in the body that the question and the served facts do not carry is removed (an office, an institution or an Act is never judged). R25 block at fidelity.strip_unsupported_names.
         repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
         if repaired != cleaned:

@@ -60,6 +60,64 @@
    "PARTIAL": 4
   }
  },
+ "both_readings": {
+  "totals": {
+   "reader 1 (Claude Code)": {
+    "RIGHT": 32,
+    "PARTIAL": 5,
+    "WRONG": 9,
+    "NONE": 3
+   },
+   "reader 2 strict (founder's 8; np_07 = PARTIAL)": {
+    "RIGHT": 32,
+    "PARTIAL": 4,
+    "WRONG": 12,
+    "NONE": 1
+   },
+   "reader 2 leaning (founder's 8; np_07 = WRONG)": {
+    "RIGHT": 32,
+    "PARTIAL": 3,
+    "WRONG": 13,
+    "NONE": 1
+   }
+  },
+  "differ": {
+   "s2_15": [
+    "NONE",
+    "WRONG",
+    "WRONG"
+   ],
+   "s2_18": [
+    "NONE",
+    "WRONG",
+    "WRONG"
+   ],
+   "s2_08": [
+    "PARTIAL",
+    "WRONG",
+    "WRONG"
+   ],
+   "np_07": [
+    "PARTIAL",
+    "PARTIAL",
+    "WRONG"
+   ]
+  },
+  "wrong_seen_by_opener": {
+   "reader1": [
+    2,
+    9
+   ],
+   "reader2_strict": [
+    3,
+    12
+   ],
+   "reader2_leaning": [
+    3,
+    13
+   ]
+  }
+ },
  "rows": [
   {
    "set": "set1",

@@ -1,0 +1,464 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2377,
+   "guards": {
+    "firm_repair": {
+     "flags": 33,
+     "rows": [
+      {
+       "src": "batch2_deploy_live_2026_11_17.json",
+       "q": "Nani alisaini GN 605A?",
+       "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na VELMA Law au PKF Eastern Africa."
+      },
+      {
+       "src": "batch2_deploy_live_2026_11_17_PREFIX_36a5144.json",
+       "q": "Nani alisaini GN 605A?",
+       "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi,. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na VELMA Law au PKF Eastern Africa."
+      },
+      {
+       "src": "extended_078_live_replies_2026_09_05.json",
+       "q": "Kima cha chini cha mshahara ni sawa nchi nzima bila kujali aina ya biashara, sivyo?",
+       "reply": "Hapana. Hakuna kima cha chini kimoja kwa nchi nzima. Kima cha chini kinategemea sekta na subsekta — kuna viwango 15+ kwa sekata mbalimbali. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "extended_078_live_replies_2026_09_05.json",
+       "q": "Kima cha chini kimepanda kwa kiasi gani mwaka huu -- naskia baadhi ya sekta zimepanda zaidi ya nyingine?",
+       "reply": "Kima cha chini cha mshahara kimepanda kwa wastani wa asilimia 33.4% kwa sekta zote 16. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "GN 605A ya mishahara ya chini ya sekta binafsi inaanza kutumika tarehe ngapi?",
+       "reply": "GN 605A ilianza kutumika rasmi tarehe 1 Januari 2026. Amri hiyo iligazetishwa tarehe 13 Oktoba 2025. Thibitisha na VELMA Law au PKF Eastern Africa."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia ngapi?",
+       "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+       "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?",
+       "reply": "Kiwango cha wastani kabla ya GN 605A kilikuwa karibu TZS 275,060 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?",
+       "reply": "Kulingana na wastani wa viwango vyote vya GN 605A (sekta 16 na sekta ndogo 46), wastani wa taifa ni karibu TZS 358,322 kwa mwezi. Hii ni wastani wa wastani — si kiwango cha juu kabisa. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+       "reply": "Kiwango cha JUU KABISA (maximum) chini ya GN 605A ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Hakuna kiwango cha juu zaidi kuliko hicho katika GN 605A. Viwango vyote vya sekta nyingine ni vidogo kuliko hivyo. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari 2026?",
+       "reply": "Hapana. Amri ya mishahara ya 2022 ILIFUTWA rasmi kuanzia 1 Januari 2026. GN605A ndiyo amri MPYA inayotumika sasa badala yake. Kwa hiyo, viwango vyote vya 2022 havina nguvu kisheria kuanzia Januari 2026. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+       "reply": "Hapana. Hazungumziwi katika GN 605A. Amri hiyo inazungumzia tu viwango vya sekta binafsi. Viwango vya watumishi wa serikali havitolewi na GN 605A, bali na Rais Samia kupitia Tangazo Rasmi la Serikali Na. 605A. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Je, kiwango cha mshahara wa chini cha mwaka 2022 bado kinatumika baada ya Januari 2026?",
+       "reply": "Hapana. Viwango vya mshahara wa chini vilivyotolewa katika GN 605A havitumiki tena kuanzia 1 Januari 2026. Amri hiyo imefutwa rasmi. Tarehe hiyo hiyo, viwango vipya vilianza kutumika. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "GN 605A ilibadilisha kima cha chini cha mshahara wa sekta binafsi kwa wastani wa kiasi gani?",
+       "reply": "GN 605A iliongeza wastani wa kima cha chini kwa asilimia 33.4% — kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au VELMA Law."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Kima cha chini cha mshahara cha GN 605A kilianza kutumika Julai 2025, sivyo?",
+       "reply": "Hapana. GN 605A iligazetishwa tarehe 13 Oktoba 2025 na ilikuwa na tarehe ya kuanza ya 1 Januari 2026. Hakuna sehemu ya amri hiyo inayosema Julai 2025. Tarehe sahihi ni 1 Januari 2026 — thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Kima cha juu kabisa cha mshahara wa GN 605A na kile cha kawaida (default) ni TZS ngapi?",
+       "reply": "Kima cha juu kabisa ni TZS 765,900 (sekta ya nishati kimataifa). Kima cha chini kabisa cha default ni TZS 175,000 (wafanyakazi wa kilimo/jumla). Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "GN 605A ya mishahara ya chini ya sekta binafsi inaanza kutumika tarehe ngapi?",
+       "reply": "GN 605A ilianza kutumika tarehe 1 Januari 2026. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Ongezeko la wastani la mishahara ya chini ya sekta binafsi chini ya GN 605A ni asilimia ngapi?",
+       "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+       "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?",
+       "reply": "Mshahara wa wastani wa TZS 275,060 kwa mwezi ulikuwa wastani wa taarifa za Julai–Agosti 2025. Thibitisha na PKF Eastern Africa au VELMA Law."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?",
+       "reply": "Kulingana na GN 605A, wastani wa mshahara wa chini wa sekta binafsi baada ya amri kuanza ni:\n\nTZS 175,000 (sekta ya kilimo ya kawaida)\nTZS 263,000 (maafisa walio na sifa)\nTZS 358,322 (madini ya kimataifa)\n\nHizi si viwango vipya vya 2025/26. Ni wastani wa viwango vilivyopo kwenye GN 605A kuanzia 1 Ja"
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+       "reply": "Kiwango cha juu zaidi ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Ni kiwango cha wastani cha sekta hiyo, si cha juu kabisa. Hakuna kiwango cha juu kabisa cha kisheria katika GN 605A — viwango vinatofautiana sana kulingana na sekta na sub-sector. Thibitisha na"
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari 2026?",
+       "reply": "Hapana. Amri ya mishahara ya 2022 ILIFUTWA rasmi kuanzia 1 Januari 2026. GN 605A ndiyo amri MPYA inayotumika sasa badala yake. GN 605A ina viwango vipya vya juu zaidi kuliko 2022 kwa wastani. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+       "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na PKF Eastern Africa kwa kila mfanyakazi wake. Thibitisha na PKF Eastern Africa (pkfeastafrica.com)."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Je, kiwango cha mshahara wa chini cha mwaka 2022 bado kinatumika baada ya Januari 2026?",
+       "reply": "Hapana. Viwango vya mshahara wa chini vya mwaka 2022 vilimalizika rasmi tarehe 31 Desemba 2022. Tangu 1 Januari 2026, viwango vipya vya GN 605A vimeanza kutumika. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "GN 605A ilibadilisha kima cha chini cha mshahara wa sekta binafsi kwa wastani wa kiasi gani?",
+       "reply": "GN 605A iliongeza wastani wa kima cha chini kwa asilimia 33.4 — kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi. Ongezeko hili lilianza kutumika tarehe 1 Januari 2026. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Kima cha chini cha mshahara cha GN 605A kilianza kutumika Julai 2025, sivyo?",
+       "reply": "Hapana. GN 605A iligazetishwa tarehe 13 Oktoba 2025 na ilikuwa na tarehe ya kuanza ya 1 Januari 2026. Hakuna sehemu ya amri hiyo inayosema Julai 2025. Tarehe sahihi ni 1 Januari 2026 — thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Kima cha juu kabisa cha mshahara wa GN 605A na kile cha kawaida (default) ni TZS ngapi?",
+       "reply": "Kima cha juu kabisa ni TZS 765,900 (sekta ya nishati kimataifa). Kima cha chini kabisa cha default ni TZS 175,000 (wafanyakazi wa kilimo/jumla). Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "grounding_48.json",
+       "q": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+       "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "natural48_rerun_2026_08_11_adjudication.json",
+       "q": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+       "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "natural48_rerun_2026_08_15_adjudication.json",
+       "q": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+       "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "natural48_rerun_2026_08_17_adjudication.json",
+       "q": "mshahara wa chini kabisa naruhusiwa kumpa mfanyakazi ni kiasi gani siku hizi",
+       "reply": "Kulingana na GN605A, kiwango cha wastani cha mshahara wa chini kwa sekta binafsi ni karibu TZS 358,322 kwa mwezi. Thibitisha na PKF Eastern Africa au TanzLII."
+      },
+      {
+       "src": "work_item2_round2_adjudication_afef9dd.json",
+       "q": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
+       "reply": "Kiwango cha JUU KABISA (maximum) cha mshahara wa chini chini ya GN 605A ni TZS 765,900 — kwa sekta ya nishati ya kimataifa (international energy companies). Hii ni kiwango cha CHINI YA KIWANGO CHA LULU (minimum) cha TZS 358,322. Thibitisha na PKF Eastern Africa au TanzLII."
+      }
+     ]
+    },
+    "confirm_dedupe": {
+     "flags": 4,
+     "rows": [
+      {
+       "src": "batch2_deploy_live_2026_11_17.json",
+       "q": "Leseni yangu ya biashara nikiipoteza nifanyeje?",
+       "reply": "Kupoteza leseni ni tatizo. Thibitisha na halmashauri husika ili kujua utaratibu sahihi wa kuitafuta upya. Thibitisha na halmashauri husika."
+      },
+      {
+       "src": "discard_rate.json",
+       "q": "kama mgeni akikutwa anafanya biashara isiyoruhusiwa adhabu yake ni ipi",
+       "reply": "Kwa mujibu wa Government Notice No. 487A, mgeni atakayekutwa anafanya shughuli iliyopigwa marufuku anakabiliwa na faini isiyo pungua TZS 10,000,000 au kifungo cha miezi sita, na kufutwa kwa visa na kibali cha ukaazi kunaweza kutokea kama sehemu ya adhabu -- thibitisha na Idara ya Uhamiaji (immigrati"
+      },
+      {
+       "src": "followup_deploy_live_2026_11_16.json",
+       "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+       "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz)."
+      },
+      {
+       "src": "followup_deploy_live_2026_11_16_firstrun.json",
+       "q": "VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+       "reply": "Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz)."
+      }
+     ]
+    }
+   }
+  },
+  "GOLD": {
+   "pairs": 562,
+   "guards": {
+    "firm_repair": {
+     "flags": 5,
+     "rows": [
+      {
+       "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+       "q": "GN 605A ya mishahara ya chini ya sekta binafsi inaanza kutumika tarehe ngapi?",
+       "reply": "Tarehe 1 Januari 2026. GN 605A ilitangazwa tarehe 13 Oktoba 2025 na ilianza kutumika 1 Januari 2026. Amri ya mishahara ya 2022 ilifutwa kuanzia tarehe hiyo hiyo. Thibitisha na PKF Eastern Africa au VELMA Law."
+      },
+      {
+       "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania KABLA ya GN 605A kuanza kutumika ulikuwa TZS ngapi kwa mwezi?",
+       "reply": "TZS 275,060 kwa mwezi — chini ya amri ya mishahara ya 2022 ambayo ilifutwa kuanzia 1 Januari 2026. Kiwango hiki si halali tena baada ya tarehe hiyo. Thibitisha na PKF Eastern Africa."
+      },
+      {
+       "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+       "q": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?",
+       "reply": "TZS 358,322 kwa mwezi kwa wastani. Hii ni ongezeko la asilimia 33.4. Kiwango halisi kinatofautiana kwa sekta na sub-sector — kina anuwai kutoka karibu TZS 175,000 hadi TZS 765,900 (madini/nishati ya kimataifa). Thibitisha na VELMA Law au PKF."
+      },
+      {
+       "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+       "q": "Je, amri ya mishahara ya chini ya sekta binafsi ya mwaka 2022 bado ina nguvu tangu Januari 2026?",
+       "reply": "Hapana. Amri ya mishahara ya 2022 ilifutwa rasmi kuanzia 1 Januari 2026. GN 605A ndiyo amri mpya inayotumika. Mwajiri yeyote anayetumia viwango vya 2022 baada ya tarehe hiyo anachukuliwa kuwa hana utiifu wa kisheria. Thibitisha na PKF Eastern Africa au VELMA Law."
+      },
+      {
+       "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+       "q": "Mwajiri anadai viwango vya amri ya mishahara ya 2022 bado vinatumika kwa wafanyakazi wake mwaka 2026 — hali yake ya kisheria ni nini?",
+       "reply": "Hana utiifu wa kisheria. Amri ya mishahara ya 2022 ilifutwa rasmi kuanzia 1 Januari 2026 na GN 605A. Mwajiri anayetumia viwango vya 2022 baada ya tarehe hiyo anakiuka sheria ya kazi na anaweza kukabiliwa na malalamiko ya wafanyakazi na hatua za kisheria. Thibitisha na VELMA Law au PKF."
+      }
+     ]
+    },
+    "confirm_dedupe": {
+     "flags": 0,
+     "rows": []
+    }
+   }
+  },
+  "TRAINING": {
+   "pairs": 8758,
+   "guards": {
+    "firm_repair": {
+     "flags": 28,
+     "rows": [
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Ukipanga mishahara ya wafanyakazi wa sekta binafsi kulingana na GN 605A — ongezeko la asilimia ngapi unapaswa kupanga kwa wastani?",
+       "reply": "Upangaji sahihi unategemea sekta na sub-sector yako — wastani wa sekta zote ni asilimia 33.4, si 33.5. Wastani wa mshahara wa chini wa sekta binafsi ulipanda kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi chini ya GN 605A kuanzia 1 Januari 2026. Hata hivyo, ongezeko halisi linategemea sekta yako maal"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Je, TZS 358,322 ndiyo kiwango cha juu kabisa cha mshahara wa chini chini ya GN 605A?",
+       "reply": "Hapana — TZS 358,322 si kiwango cha juu kabisa. Ni WASTANI (average) kwa sekta zote 16 za GN 605A. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi — kwa sekta ya madini ya kimataifa na nishati. Makosa haya — kuchukua wastani badala ya kiwango cha juu kabisa — yanawe"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni ipi — kutoka chini kabisa hadi juu kabisa?",
+       "reply": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: karibu TZS 175,000 kwa mwezi (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya madini ya kimataifa na nishati)\n\nOngezeko la wastani"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Mfanyakazi wangu anafanya kazi katika sekta ya madini ya kimataifa — kiwango cha mshahara wake wa chini ni TZS ngapi chini ya GN 605A?",
+       "reply": "Kwa sekta ya madini ya kimataifa na nishati (international mining and energy), kiwango cha mshahara wa chini chini ya GN 605A ni karibu TZS 765,900 kwa mwezi. Hii ndiyo kiwango cha JUU KABISA katika GN 605A — si wastani. Wastani wa sekta zote ni TZS 358,322 — kwa hivyo mfanyakazi wa madini ya kimata"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "GN 605A ilianza kutumika tarehe ngapi hasa?",
+       "reply": "GN 605A ilianza kutumika tarehe 1 JANUARI 2026 — si Septemba 2025 wala Oktoba 2025. Tarehe mbili muhimu za kuelewa:\n\nTarehe 13 Oktoba 2025: GN 605A ilitangazwa rasmi (gazetted) kwenye Gazeti la Serikali.\nTarehe 1 Januari 2026: GN 605A ilianza kutumika (effective date) — viwango vipya vya mshahara wa"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Nilikuwa nadhani GN 605A ilianza Septemba 2025 — hii ni sahihi?",
+       "reply": "Hapana — GN 605A haikuanza Septemba 2025. Tarehe sahihi za GN 605A ni:\n\nIlitangazwa (gazetted): 13 Oktoba 2025\nIlianza kutumika (effective): 1 JANUARI 2026\n\nSeptemba 2025 ni tarehe ya jambo tofauti kabisa — ni tarehe ya mabadiliko ya VAT kwa malipo ya kidijitali B2C (16%) chini ya Finance Act 2025. "
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Kuna tarehe nyingi za mabadiliko ya sheria mwaka 2025-2026 Tanzania — unaweza kuzifafanua?",
+       "reply": "Kuna tarehe tofauti tatu muhimu ambazo mara nyingi zinachanganywa:\n\n1 JULAI 2025: Finance Act 2025 inaanza — mabadiliko ya VAT withholding (3% bidhaa / 6% huduma) na mabadiliko mengine ya kodi.\n1 SEPTEMBA 2025: VAT mpya ya B2C e-payment (16%) inaanza chini ya Finance Act 2025.\n13 OKTOBA 2025: GN 605"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "GN 605A ilitangazwa (gazetted) na kuanza kutumika (effective) tarehe moja — au ni tarehe tofauti mbili?",
+       "reply": "Ni tarehe TOFAUTI MBILI:\n\nIlitangazwa (gazetted): 13 Oktoba 2025 — hii ni tarehe GN 605A ilipochapishwa kwenye Gazeti la Serikali.\nIlianza kutumika (effective): 1 Januari 2026 — hii ni tarehe viwango vipya vya mshahara wa chini vilipoanza kulazimika kisheria.\n\nKwa vitendo: hata kama GN 605A ilikuwep"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Nipe mstari wa wakati (timeline) wa mabadiliko yote muhimu ya mishahara na kodi kuanzia 2025 hadi 2026 Tanzania?",
+       "reply": "Mstari wa wakati wa mabadiliko muhimu:\n\n1 MEI 2025: Rais Samia anatangaza mshahara wa TZS 500,000/mwezi kwa sekta ya umma, kuanzia Julai 2025.\n1 JULAI 2025: Finance Act 2025 inaanza — mabadiliko ya VAT withholding (3%/6%) na mabadiliko mengine ya kodi. Mshahara wa umma wa TZS 500,000 unaanza.\n1 SEPT"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "Mshahara wa wastani wa sekta binafsi wa TZS 275,060 — ulikuwa ukitumika hadi tarehe ngapi?",
+       "reply": "Mshahara wa wastani wa TZS 275,060 ulikuwa ukitumika chini ya amri ya mishahara ya 2022 — hadi tarehe 31 Desemba 2025. Kuanzia 1 Januari 2026, amri ya 2022 ilifutwa na GN 605A ikaanza kutumika, ikiinua wastani hadi TZS 358,322 kwa mwezi. Kumbuka: tarehe ya mwisho ya amri ya 2022 ni 31 Desemba 2025 —"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+       "q": "GN 605A na amri ya mishahara ya 2022 — ipi ilifuta ipi?",
+       "reply": "GN 605A ILIFUTA amri ya mishahara ya 2022 — si kinyume chake. Hii ni muhimu sana kuelewa:\n\nAMRI YA 2022 = ya zamani, imefutwa kuanzia 1 Januari 2026.\nGN 605A = mpya, inayotumika sasa kuanzia 1 Januari 2026.\n\nGN 605A haijafutwa — bado ipo na inafanya kazi. Amri ya 2022 ndiyo iliyofutwa. GN 605A ilich"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+       "q": "GN 605A ya mishahara ya chini ni nini na ilianza lini?",
+       "reply": "GN 605A ni Agizo la Serikali (Government Notice No.605A) linaloamua viwango vya mishahara ya chini kwa sekta binafsi Tanzania. Liligazetishwa tarehe 13 Oktoba 2025 na lilianza kutumika tarehe 1 Januari 2026. Linaghairi na kubadilisha kabisa Amri ya Mishahara ya 2022. GN 605B haipo -- amri sahihi ni "
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+       "q": "Je, GN 605B (Government Notice 605B) ndiyo inayosimamia mishahara ya chini Tanzania?",
+       "reply": "Hapana. GN 605B haipatikani -- haipo kama amri ya kisheria. Amri sahihi inayosimamia mishahara ya chini ya sekta binafsi Tanzania ni GN 605A (Government Notice 605A), iliyoanza kutumika tarehe 1 Januari 2026. Epuka kurejelea GN 605B katika mazungumzo yoyote ya kisheria au biashara. Thibitisha na VEL"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+       "q": "Je, GN 605A au GN 605B ndiyo amri sahihi ya mishahara ya chini inayotumika 2026?",
+       "reply": "GN 605A ndiyo amri sahihi na halali inayotumika. GN 605B haipo -- haiko kwenye Gazeti Rasmi la Tanzania wala kwenye rekodi za kisheria zinazojulikana. GN 605A (Government Notice No.605A) iligazetishwa Oktoba 2025 na ilianza kutumika tarehe 1 Januari 2026, ikighairi Amri ya Mishahara ya 2022 kabisa. "
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Je, GN 605A au GN 605B ndiyo amri sahihi ya mishahara ya chini inayotumika 2026?",
+       "reply": "GN 605A ndiyo amri sahihi na halali inayotumika. GN 605B haipo -- haiko kwenye Gazeti Rasmi la Tanzania wala kwenye rekodi za kisheria zinazojulikana. GN 605A (Government Notice No.605A) iligazetishwa Oktoba 2025 na ilianza kutumika tarehe 1 Januari 2026, ikighairi Amri ya Mishahara ya 2022 kabisa. "
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Mshahara wa wastani wa sekta binafsi wa TZS 275,060 — ulikuwa ukitumika hadi tarehe ngapi?",
+       "reply": "Mshahara wa wastani wa TZS 275,060 ulikuwa ukitumika chini ya amri ya mishahara ya 2022 — hadi tarehe 31 Desemba 2025. Kuanzia 1 Januari 2026, amri ya 2022 ilifutwa na GN 605A ikaanza kutumika, ikiinua wastani hadi TZS 358,322 kwa mwezi. Kumbuka: tarehe ya mwisho ya amri ya 2022 ni 31 Desemba 2025 —"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "GN 605A ya mishahara ya chini ni nini na ilianza lini?",
+       "reply": "GN 605A ni Agizo la Serikali (Government Notice No.605A) linaloamua viwango vya mishahara ya chini kwa sekta binafsi Tanzania. Liligazetishwa tarehe 13 Oktoba 2025 na lilianza kutumika tarehe 1 Januari 2026. Linaghairi na kubadilisha kabisa Amri ya Mishahara ya 2022. GN 605B haipo -- amri sahihi ni "
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Nipe mstari wa wakati (timeline) wa mabadiliko yote muhimu ya mishahara na kodi kuanzia 2025 hadi 2026 Tanzania?",
+       "reply": "Mstari wa wakati wa mabadiliko muhimu:\n\n1 MEI 2025: Rais Samia anatangaza mshahara wa TZS 500,000/mwezi kwa sekta ya umma, kuanzia Julai 2025.\n1 JULAI 2025: Finance Act 2025 inaanza — mabadiliko ya VAT withholding (3%/6%) na mabadiliko mengine ya kodi. Mshahara wa umma wa TZS 500,000 unaanza.\n1 SEPT"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni ipi — kutoka chini kabisa hadi juu kabisa?",
+       "reply": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: karibu TZS 175,000 kwa mwezi (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya madini ya kimataifa na nishati)\n\nOngezeko la wastani"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Je, TZS 358,322 ndiyo kiwango cha juu kabisa cha mshahara wa chini chini ya GN 605A?",
+       "reply": "Hapana — TZS 358,322 si kiwango cha juu kabisa. Ni WASTANI (average) kwa sekta zote 16 za GN 605A. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi — kwa sekta ya madini ya kimataifa na nishati. Makosa haya — kuchukua wastani badala ya kiwango cha juu kabisa — yanawe"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "GN 605A ilianza kutumika tarehe ngapi hasa?",
+       "reply": "GN 605A ilianza kutumika tarehe 1 JANUARI 2026 — si Septemba 2025 wala Oktoba 2025. Tarehe mbili muhimu za kuelewa:\n\nTarehe 13 Oktoba 2025: GN 605A ilitangazwa rasmi (gazetted) kwenye Gazeti la Serikali.\nTarehe 1 Januari 2026: GN 605A ilianza kutumika (effective date) — viwango vipya vya mshahara wa"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Ukipanga mishahara ya wafanyakazi wa sekta binafsi kulingana na GN 605A — ongezeko la asilimia ngapi unapaswa kupanga kwa wastani?",
+       "reply": "Upangaji sahihi unategemea sekta na sub-sector yako — wastani wa sekta zote ni asilimia 33.4, si 33.5. Wastani wa mshahara wa chini wa sekta binafsi ulipanda kutoka TZS 275,060 hadi TZS 358,322 kwa mwezi chini ya GN 605A kuanzia 1 Januari 2026. Hata hivyo, ongezeko halisi linategemea sekta yako maal"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Kuna tarehe nyingi za mabadiliko ya sheria mwaka 2025-2026 Tanzania — unaweza kuzifafanua?",
+       "reply": "Kuna tarehe tofauti tatu muhimu ambazo mara nyingi zinachanganywa:\n\n1 JULAI 2025: Finance Act 2025 inaanza — mabadiliko ya VAT withholding (3% bidhaa / 6% huduma) na mabadiliko mengine ya kodi.\n1 SEPTEMBA 2025: VAT mpya ya B2C e-payment (16%) inaanza chini ya Finance Act 2025.\n13 OKTOBA 2025: GN 605"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "GN 605A na amri ya mishahara ya 2022 — ipi ilifuta ipi?",
+       "reply": "GN 605A ILIFUTA amri ya mishahara ya 2022 — si kinyume chake. Hii ni muhimu sana kuelewa:\n\nAMRI YA 2022 = ya zamani, imefutwa kuanzia 1 Januari 2026.\nGN 605A = mpya, inayotumika sasa kuanzia 1 Januari 2026.\n\nGN 605A haijafutwa — bado ipo na inafanya kazi. Amri ya 2022 ndiyo iliyofutwa. GN 605A ilich"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Nilikuwa nadhani GN 605A ilianza Septemba 2025 — hii ni sahihi?",
+       "reply": "Hapana — GN 605A haikuanza Septemba 2025. Tarehe sahihi za GN 605A ni:\n\nIlitangazwa (gazetted): 13 Oktoba 2025\nIlianza kutumika (effective): 1 JANUARI 2026\n\nSeptemba 2025 ni tarehe ya jambo tofauti kabisa — ni tarehe ya mabadiliko ya VAT kwa malipo ya kidijitali B2C (16%) chini ya Finance Act 2025. "
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "GN 605A ilitangazwa (gazetted) na kuanza kutumika (effective) tarehe moja — au ni tarehe tofauti mbili?",
+       "reply": "Ni tarehe TOFAUTI MBILI:\n\nIlitangazwa (gazetted): 13 Oktoba 2025 — hii ni tarehe GN 605A ilipochapishwa kwenye Gazeti la Serikali.\nIlianza kutumika (effective): 1 Januari 2026 — hii ni tarehe viwango vipya vya mshahara wa chini vilipoanza kulazimika kisheria.\n\nKwa vitendo: hata kama GN 605A ilikuwep"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Je, GN 605B (Government Notice 605B) ndiyo inayosimamia mishahara ya chini Tanzania?",
+       "reply": "Hapana. GN 605B haipatikani -- haipo kama amri ya kisheria. Amri sahihi inayosimamia mishahara ya chini ya sekta binafsi Tanzania ni GN 605A (Government Notice 605A), iliyoanza kutumika tarehe 1 Januari 2026. Epuka kurejelea GN 605B katika mazungumzo yoyote ya kisheria au biashara. Thibitisha na VEL"
+      },
+      {
+       "src": "datasets/tier1a/sft/val_sft.jsonl",
+       "q": "Mfanyakazi wangu anafanya kazi katika sekta ya madini ya kimataifa — kiwango cha mshahara wake wa chini ni TZS ngapi chini ya GN 605A?",
+       "reply": "Kwa sekta ya madini ya kimataifa na nishati (international mining and energy), kiwango cha mshahara wa chini chini ya GN 605A ni karibu TZS 765,900 kwa mwezi. Hii ndiyo kiwango cha JUU KABISA katika GN 605A — si wastani. Wastani wa sekta zote ni TZS 358,322 — kwa hivyo mfanyakazi wa madini ya kimata"
+      }
+     ]
+    },
+    "confirm_dedupe": {
+     "flags": 6,
+     "rows": [
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Chike, kodi ya VAT bado ni 18% mpaka leo au imebadilika?",
+       "reply": "Hapana, bado ni 18% na haijabadilika tangu mwaka 2015. Thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Unajua kodi ya VAT imekuwa ni asilimia ngapi kwa miaka ya karibuni?",
+       "reply": "Kodi ya VAT imekuwa ni 18% tangu mwaka 2015. Thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+       "q": "Nina matawi mawili ya biashara — nahitaji EFD moja au kila tawi liwe na lake?",
+       "reply": "Kila eneo la mauzo linatakiwa kuwa na uwezo wa kutoa risiti za EFD kwa mauzo yanayofanyika hapo, hivyo kwa kawaida kila tawi linahitaji mashine yake. Kwa mpangilio kamili kulingana na hali ya matawi yako, thibitisha na TRA (tra.go.tz). Kumbuka biashara iliyosajili VAT lazima itumie EFD kwa mauzo yot"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Nina matawi mawili ya biashara — nahitaji EFD moja au kila tawi liwe na lake?",
+       "reply": "Kila eneo la mauzo linatakiwa kuwa na uwezo wa kutoa risiti za EFD kwa mauzo yanayofanyika hapo, hivyo kwa kawaida kila tawi linahitaji mashine yake. Kwa mpangilio kamili kulingana na hali ya matawi yako, thibitisha na TRA (tra.go.tz). Kumbuka biashara iliyosajili VAT lazima itumie EFD kwa mauzo yot"
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Chike, kodi ya VAT bado ni 18% mpaka leo au imebadilika?",
+       "reply": "Hapana, bado ni 18% na haijabadilika tangu mwaka 2015. Thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/val_sft.jsonl",
+       "q": "Unajua kodi ya VAT imekuwa ni asilimia ngapi kwa miaka ya karibuni?",
+       "reply": "Kodi ya VAT imekuwa ni 18% tangu mwaka 2015. Thibitisha na TRA (tra.go.tz). Thibitisha na TRA (tra.go.tz)."
+      }
+     ]
+    }
+   }
+  }
+ },
+ "vat_resolver": {
+  "questions_swept": 8603,
+  "resolved": [
+   {
+    "q": "Mimi nina biashara ya kuuza vifaa, mauzo yangu ya mwaka bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110. Sihitaji kujisajili VAT kwa sababu mwaka bado haujaisha, siyo?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 110000000,
+    "period": "six_month"
+   },
+   {
+    "q": "Ndani ya miezi 6 nimeuza milioni 110, ingawa mauzo yangu ya mwaka bado hayajafika milioni 200. Je nijisajili VAT?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 110000000,
+    "period": "six_month"
+   },
+   {
+    "q": "Mauzo yangu kwa mwaka bado hayajafika milioni 200, lakini katika miezi 12 nimeuza milioni 150. Je VAT?",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 150000000,
+    "period": "annual"
+   },
+   {
+    "q": "Mauzo yangu ya mwaka ni TZS 150 milioni, hayajafika TZS 200 milioni.",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 150000000,
+    "period": "annual"
+   },
+   {
+    "q": "Mauzo yangu hayajafika milioni 200, ila nimeuza milioni 110 ndani ya miezi 6 na ndani ya mwaka mmoja.",
+    "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+    "amount": 110000000,
+    "period": "six_month"
+   }
+  ]
+ }
+}

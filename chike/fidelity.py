@@ -1930,7 +1930,7 @@ def repair_licence_authority(question: str, body: str) -> str:
         # right when it cites no dead host: for lga.go.tz / mlywf.go.tz the host (and its parenthesis) is removed and the council wording is left as the model wrote it.
         dead = "|".join(re.escape(h) for h in _D16_NO_DNS_HOSTS)
         fixed = re.sub(r"\s*\(\s*(?:https?://)?(?:www\.)?(?:%s)\s*\)" % dead, "", body, flags=re.IGNORECASE)
-        return re.sub(r"(?<![a-z0-9.-])(?:%s)(?![a-z0-9-])" % dead, "halmashauri yako", fixed, flags=re.IGNORECASE)
+        return _drop_redundant_confirm_tail(re.sub(r"(?<![a-z0-9.-])(?:%s)(?![a-z0-9-])" % dead, "halmashauri yako", fixed, flags=re.IGNORECASE))
     if any(t[1].search(question) for t in _AUTH_TOPICS):
         return body                                       # the question carries another topic cue: ambiguous, not judged
     hosts = {m.group(1).lower() for m in _AUTH_HOST.finditer(body)}
@@ -2066,3 +2066,59 @@ def licence_validity_period_violations(question, body):
                 continue
             out.append(f"licence/validity-period:{n} {unit.lower()}")
     return out
+
+
+# ---- D-FIDELITY-18 (2026-11-17, founder's next small batch). TWO MORE SINGLE-CLAUSE REPAIRS.
+#
+# (3) A PRACTITIONER FIRM NAMED AS THE AUTHORITY TO CONFIRM WITH. Live (build a2e6611 and 36a5144): "Nani alisaini GN 605A?" -> "... Thibitisha na VELMA Law au PKF Eastern Africa." D-FIDELITY-14 judges HOSTS (a *.go.tz or a firm's
+#     domain written out); a firm named in WORDS, with no host, was never judged. The firms below are the practitioner-advisory family (CLAUDE.md R6 / Section 4: they are EVAL sources and cited as such, never an authority to "confirm with").
+#     R25 -- the two questions at the site: (a) the defect: a consultancy offered to a Tanzanian employer as the place to verify a statutory figure -- the model learned the formulaic "Thibitisha na ..." tail from corpus rows that end that way
+#     (the sibling GN 605A pairs, PROGRESS section 5). No index edit reaches it. (b) What CORRECT output could it damage? ONLY a "Thibitisha na ..." (or "kwa ...") TAIL that names a firm: an analysis cited as an analysis ("Kulingana na uchambuzi wa
+#     PKF Eastern Africa, wastani ni 33.4%") is not a tail and is untouched; a tail naming a whitelisted source (TanzLII) keeps it; a tail naming a real authority (TRA, kazi.go.tz) is untouched. Only the firm items are removed from a tail;
+#     what is left stays; if nothing is left the topic's authority replaces them (the D-FIDELITY-14 table), or "mamlaka husika" when the question has no single topic.
+_FIRM_NAMES_CI = re.compile(r"velma(?:\s+law)?|clydeco|ey\.com|pkf(?:\s+east(?:ern)?\s+africa)?|bowmans?|clyde\s*(?:&|and)\s*co\.?|kpmg|ernst\s*(?:&|and)\s*young|pwc|pricewaterhouse\s*coopers|deloitte|dentons|dla\s+piper|habib\s+advisory", re.IGNORECASE)
+_FIRM_EY = re.compile(r"(?<![A-Za-z])EY(?![A-Za-z])")
+# the tail consumes a parenthesis whole and a dotted host whole ("bowmanslaw.com"), so a full stop INSIDE a host does not end it early (the first form left ".com)." behind)
+_CONFIRM_TAIL = re.compile(r"(?P<lead>thibitisha\s+(?:na|kwa)\s+)(?P<tail>(?:\([^)\n]*\)|[\w-]+(?:\.[\w-]+)+|[^.\n(])*)", re.IGNORECASE)
+_TAIL_SPLIT = re.compile(r"\s+(?:au|na|and|or)\s+|\s*[,/]\s*", re.IGNORECASE)
+
+
+def _names_a_firm(text):
+    return bool(_FIRM_NAMES_CI.search(text) or _FIRM_EY.search(text))
+
+
+def repair_firm_authority(question: str, body: str) -> str:
+    """The body with a practitioner firm removed from every 'Thibitisha na ...' tail; the topic's authority (or 'mamlaka husika') when nothing legitimate is left; unchanged otherwise. Idempotent."""
+    if not body or not _names_a_firm(body):
+        return body
+    topic = authority_topic(question)
+    replacement = f"{topic[3]} ({topic[4]})" if topic else "mamlaka husika"
+
+    def fix(m):
+        tail = m.group("tail")
+        if not _names_a_firm(tail):
+            return m.group(0)
+        items = [x.strip() for x in _TAIL_SPLIT.split(re.sub(r"\([^)]*\)", lambda g: g.group(0).replace(",", ";"), tail)) if x and x.strip()]
+        kept = [x for x in items if not _names_a_firm(x)]
+        kept = [x for x in kept if re.sub(r"[\s()]", "", x)]
+        return m.group("lead") + (" au ".join(kept) if kept else replacement)
+
+    return _drop_redundant_confirm_tail(_CONFIRM_TAIL.sub(fix, body))
+
+
+# (4) A REPEATED "Thibitisha na X." SENTENCE. Live (build 36a5144 -> 911948b): after the dead-host repair removed "(lga.go.tz)" the reply read "Thibitisha na halmashauri husika ili kujua utaratibu sahihi wa kuitafuta upya. Thibitisha na
+#     halmashauri husika." -- the model wrote one clause, the repair left it beside the formulaic tail. The LAST sentence is dropped when it is only a shorter restatement of "Thibitisha na <same target>" that an earlier sentence already carries.
+def _drop_redundant_confirm_tail(body):
+    parts = re.split(r"(?<=[.!?])\s+", (body or "").strip())
+    if len(parts) < 2:
+        return body
+    last = parts[-1].strip()
+    m = re.match(r"^thibitisha\s+(?:na|kwa)\s+(.+?)\s*\.?$", last, re.IGNORECASE)
+    if not m:
+        return body
+    target = re.sub(r"\s+", " ", m.group(1).lower()).strip()
+    for earlier in parts[:-1]:
+        e = re.sub(r"\s+", " ", earlier.lower())
+        if re.search(r"thibitisha\s+(?:na|kwa)\s+" + re.escape(target), e):
+            return " ".join(parts[:-1])
+    return body

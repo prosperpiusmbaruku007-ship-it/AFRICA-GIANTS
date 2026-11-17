@@ -1,0 +1,14 @@
+{
+  "_what": "The FOUNDER'S second reading of the 8 rows the first adjudicator flagged as the place a second reader could disagree (stage3_adjudication_2026_11_17.json is Claude Code's reading and is NOT overwritten). Recorded beside it, 2026-11-17. Only the 8 disputed rows were re-read; every other row keeps the first reading's verdict, so 'reader 2' below means 'reader 1 with these 8 replaced', not an independent re-adjudication of all 49.",
+  "reader": "founder",
+  "rows": {
+    "s2_15": {"verdict": "WRONG", "was": "NONE", "why": "A confident wrong-topic rate (the corporate income-tax 30% for a dividend-withholding question) is a wrong answer. Already closed by the corporate_tax veto (build 81a4930)."},
+    "s2_18": {"verdict": "WRONG", "was": "NONE", "why": "Same: the corporate income-tax rate given as the answer to a dividend-withholding question. Closed by the same veto."},
+    "s2_08": {"verdict": "WRONG", "was": "PARTIAL", "why": "'Hapana, si kweli' denies a TRUE premise; the user reads the stance first, whatever the later sentence says."},
+    "np_07": {"verdict": "PARTIAL_LEANING_WRONG", "was": "PARTIAL", "why": "Never states the base rule (input VAT is not claimable for a client-visiting car). Counted as PARTIAL in the strict totals and as WRONG in the leaning totals."},
+    "np_22": {"verdict": "NONE", "was": "NONE", "why": "Agreed no-answer, but LOG IT AS A ROUTE / EXTRACTOR BUG: 'milioni 110 ndani ya miezi 6' was stated and the VAT engine still asked for the sales figures (two amounts: the 200M bound and the 110M turnover with its period)."},
+    "np_02": {"verdict": "PARTIAL", "was": "PARTIAL", "why": "Agreed."},
+    "np_14": {"verdict": "PARTIAL", "was": "PARTIAL", "why": "Agreed."},
+    "s2_13": {"verdict": "PARTIAL", "was": "PARTIAL", "why": "Agreed."}
+  }
+}

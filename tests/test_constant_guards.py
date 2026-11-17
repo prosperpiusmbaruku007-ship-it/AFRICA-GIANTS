@@ -58,8 +58,8 @@ def _replaced(r):
 ])
 def test_wired_constants_replace_the_specimen_with_the_locked_statement(pid, must_contain, must_not):
     p = _spec(pid)
-    # 2026-11-17: the licence question itself now routes to the model-free validity statement (no guard needed); the guard is the SECOND layer for a phrasing the route declines (a two-part fee + expiry question).
-    q = "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?" if pid == "cg_03" else p["question"]
+    # 2026-11-17: the licence question itself now routes to the model-free validity statement (no guard needed); the guard is the SECOND layer for a phrasing the route declines (renewal + a late-renewal penalty in one sentence: the veto declines it).
+    q = {"cg_03": "Leseni ya biashara ya LGA inaisha lini na adhabu ya kuchelewa ni ngapi?", "cg_05": "Naomba TIN baada ya kuanza biashara, adhabu ya kuchelewa ni nini?"}.get(pid, p["question"])   # cg_05: the TIN question itself routes to the model-free TIN statement since 2026-11-17
     r = _answer(q, p["body"])
     assert must_contain in r.text and must_not not in r.text and _replaced(r), r.text
 

@@ -44,6 +44,10 @@ PAYE_BANDS_TOPIC = "paye_band_table"
 # before and after the 215-row index) and the business-licence VALIDITY (premise phrasings "...sivyo?" / "si lazima ..." answered "Hapana ... kila mwaka" with no figure; a fabricated "siku 90"). Same discipline, same exclusion from auto-send.
 INDIVIDUAL_RETURN = "individual_income_tax_return"
 LICENCE_VALIDITY = "business_licence_validity"
+# 2026-11-17 (founder, next small batch): the TIN application window (np_14, np_26, s2_08: a premise check answered "Hapana ... hakuna siku maalum za 15" to a RIGHT asker, three times) and the two-part licence FEE + RENEWAL
+# question (answered with the fee only, the renewal half silently dropped). Same discipline, same exclusion from auto-send.
+TIN_APPLY = "tin_apply_deadline"
+LICENCE_FEE_VALIDITY = "business_licence_fee_and_validity"
 
 
 def _paye_bands_text() -> str:
@@ -153,10 +157,26 @@ STATEMENTS = {
         "Business Licensing Act Cap.101 R.E.2023 s.7(1)-(2) validity, s.6(1) appointment of licensing authorities by Gazette order (not located); category split from BRELA Newsletter No.10 (PORTAL tier). Locked facts "
         "business_licence_expiry_30_june and business_licence_authority; Cap.208 R.E.2002 s.7 (30 June) superseded by Act 2 of 2014 s.6",
     ),
+    TIN_APPLY: (
+        "tin_apply_deadline",
+        "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. "
+        "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+        "Locked fact tin_apply_deadline (Tax Administration Act Cap.438 R.E.2023: apply within 15 days of starting business; one TIN per person; may be issued within 7 days). The 15 days is the window to APPLY, not a duty to hold a TIN on day one -- "
+        "the point np_14 / np_26 / s2_08 got wrong or inverted",
+    ),
+    LICENCE_FEE_VALIDITY: (
+        "business_licence_expiry_30_june",
+        "Kuhusu ada: ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo (jiji/manispaa, wilaya/mji, au kijiji) na kama ni leseni kuu au ya tawi; "
+        "uliza halmashauri yako kwa ada ya aina yako. Kuhusu muda: leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). "
+        "Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). "
+        "Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+        "BOTH LIMBS of a two-part question, whole: the fee limb from locked fact business_licence_fee_national_schedule_local_collection (its clause 'leseni hutolewa na kukusanywa na halmashauri' is DROPPED here because the validity limb says Category A is "
+        "issued by BRELA and the two must not contradict inside one answer) and the validity statement of business_licence_validity (Cap.101 R.E.2023 s.7(1)-(2); BRELA Newsletter No.10, portal tier). No figure of a FEE is stated: the Schedule varies by trade and area",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY})
 
 
 def fixed_statement(topic) -> ComputationResult:

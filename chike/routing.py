@@ -770,6 +770,64 @@ def upper_bound_amount(text: str):
     return _bound_amount(text, _BOUND_VERB_RE, _BOUND_PREP_RE)
 
 
+# ── TWO AMOUNTS, ONE OF THEM A BOUND: THE OTHER IS THE TURNOVER, AND ITS PERIOD IS THE ONE NEXT TO IT (2026-11-17, np_22) ─────────────────────────────────────────────────────────────────
+#
+# np_22 (frozen set #1): "... mauzo yangu ya mwaka bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110. Sihitaji kujisajili VAT kwa sababu mwaka bado haujaisha, siyo?" The question STATES the figure and
+# its period ("milioni 110 ndani ya miezi 6"), and the engine still asked for the sales figures: `sole_plausible_amount` refuses a text with TWO amounts, and the second amount is the 200M THRESHOLD the trader says they have
+# not reached. Logged by the founder as a ROUTE / EXTRACTOR bug (stage 3 second reading).
+#
+# NARROW BY CONSTRUCTION (R17): (1) there must be at least TWO plausible amounts; (2) at least ONE must be the object of an upper- or lower-bound cue (the existing, probed `_bound_amount` machinery, applied per amount);
+# (3) EXACTLY ONE amount must remain; (4) that amount needs a period cue WITHIN 70 characters, and the NEAREST cue wins ("ya mwaka" sitting 50 characters before the threshold does not outvote "ndani ya miezi 6" sitting
+# 15 characters before the figure). Anything else returns None and the engine asks, exactly as before: two competing turnover figures, a figure with no period of its own, and a bound with nothing left are all NOT resolved.
+# A MONTHLY (or weekly, or "average") figure is a RATE, never a turnover for a registration period (the engine's own VAT_PERIOD_IS_A_RATE exit): it is a cue here ONLY so that it can WIN and make the resolver return None.
+# Found by pricing the resolver over 8,600 questions (PROGRESS 4ar): "inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?" resolved to 18M ANNUAL, because the monthly cue was absent and the
+# distant "kwa mwaka" won -- a business turning over 216M a year would have been told it is below the threshold.
+_LOCAL_PERIOD_CUES = (
+    ("monthly", r"kwa\s+mwezi|kila\s+mwezi|mwezi\s+huu|per\s+month|monthly|kwa\s+wiki|kila\s+wiki|kwa\s+siku|kila\s+siku|wastani\s+wa"),
+    ("six_month", r"miezi\s+(?:6|sita)(?![\d])|nusu\s+mwaka|half\s*-?\s*year|six\s+months"),
+    ("annual", r"miezi\s+(?:12|kumi\s+na\s+miwili|kumi\s+na\s+mbili)|kwa\s+mwaka|(?:ya|za|la)\s+mwaka|katika\s+mwaka|mwaka\s+mmoja|per\s+year|annual|twelve\s+months"),
+)
+
+
+def _bound_governed(text: str, pos: int, verb_re, prep_re) -> bool:
+    head = text.lower()[:pos]
+    for m in verb_re.finditer(head):
+        gap = head[m.end():]
+        if len(gap) <= 40 and _only_filler(gap):
+            return True
+    for m in prep_re.finditer(head):
+        if _only_filler(head[m.end():]):
+            return True
+    return False
+
+
+def turnover_with_local_period(text: str):
+    """(amount, period) when the text carries a BOUND amount and exactly one other amount whose own period cue is within 70 characters; else None (the engine then asks, as before)."""
+    located = [(pos, amt) for pos, amt in swn.parse_amounts_located(text) if amt >= swn.MIN_PLAUSIBLE_AMOUNT]
+    if len(located) < 2:
+        return None
+    keep = [(pos, amt) for pos, amt in located
+            if not (_bound_governed(text, pos, _BOUND_VERB_RE, _BOUND_PREP_RE) or _bound_governed(text, pos, _LOWER_VERB_RE, _LOWER_PREP_RE))]
+    if len(keep) != 1 or len(keep) == len(located):
+        return None
+    pos, amt = keep[0]
+    ql = text.lower()
+    cues = []
+    for period, pat in _LOCAL_PERIOD_CUES:
+        for m in re.finditer(pat, ql):
+            d = min(abs(m.start() - pos), abs(m.end() - pos))
+            if d <= 70:
+                cues.append((d, period))
+    if not cues:
+        return None
+    cues.sort()
+    best = cues[0]
+    # a rate (monthly / weekly / average) is never a turnover for a registration period; and if a DIFFERENT period's cue is ALSO within 30 characters of the figure, its period is ambiguous: the engine asks, as before
+    if best[1] == "monthly" or (best[0] <= 30 and any(p != best[1] and d <= 30 for d, p in cues[1:])):
+        return None
+    return (amt, best[1])
+
+
 # ── THE MIRROR: A LOWER BOUND IS "AT LEAST B", NOT "B" (2026-11-12) ────────────────────────────────
 #
 # "Mauzo yangu ya mwaka yamezidi TZS 100 milioni, je ni lazima kusajili VAT?" was answered "hapana,
@@ -2506,6 +2564,20 @@ _FS_TOPICS = (
      re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)*(?:biashara|duka|maduka|mgahawa|saluni|kioski|genge|frem|banda|hoteli|baa)|licen[cs]e\s+ya\s+(?:biashara|duka)|business\s+licen[cs]e"),
      re.compile(r"isha|ishi|huisha|inaisha|haiishi|dumu|inadumu|upya|renew|expir|halali|(?<![a-z])valid|muda\s+wa\s+leseni|kuhuisha|inahuishwa|huhuishwa|kila\s+mwaka|mwaka\s+mmoja|miezi\s+12|(?<!\d)30\s+juni"),
      re.compile(r"(?<![a-z])ada(?![a-z])|gharama|(?<![a-z])bei(?![a-z])|(?<![a-z])fee|adhabu|faini|penalty|kuchelewa|kuchelewesha|nipate|kupata|kuomba|naombaje|nitaombaje|wapi|mchakato|hatua|nyaraka|vigezo|requirements|(?<![a-z])tin(?![a-z])|efd|(?<![a-z])tra(?![a-z])|mgeni|wageni|uhamiaji|gn\s*487|kibali|(?<![a-z])visa|usajili\s+wa|kusajili|jina\s+la\s+biashara|kampuni|kufuta|kufutwa|kufungwa|nani\s+anatoa|inatolewa\s+na\s+nani|inagharimu|gharimu|kiasi\s+gani|(?<![a-z])cost|how\s+much|(?<![a-z])price|cheti|zimamoto|usalama|afya")),
+    # ---- 2026-11-17 (founder, next small batch): the TIN application window and the two-part licence FEE + RENEWAL question. NARROW BY CONSTRUCTION (R17): a subject cue + a specific second limb + vetoes; both ACCEPT premise phrasings
+    # (the statement is the whole rule: np_14 / np_26 / s2_08 are premise checks). The TIN route vetoes every neighbouring question (a definition, a verification, a company, a penalty, another tax); the fee + renewal route needs BOTH a fee cue
+    # AND a validity cue, so a fee-only or a renewal-only question never reaches it (the renewal-only route vetoes fee words, so the two are mutually exclusive by construction).
+    ("tin_apply_deadline",
+     re.compile(r"(?<![a-z])tin(?![a-z])"),
+     # NARROWED 2026-11-17 after the first corpus sweep (31 diversions, most of them NOT about the window): the statement answers WHEN to apply and the "do I need one yet" premise checks (np_14, np_26, s2_08),
+     # so the question must carry a TIME or an OBLIGATION cue; a HOW / WHAT-DOCUMENTS / HOW-MUCH question has the model's fact answer and is vetoed.
+     re.compile(r"siku|ndani\s+ya|(?<![a-z])lini(?![a-z])|muda\s+gani|mwisho|haraka|kwanza\s+kabisa|siku\s+ya\s+kwanza|sihitaji|sina\s+haja|sitakiwi|si\s+lazima|ndiyo\s+kwanza|nianze|kuanza"),
+     re.compile(r"(?<![a-z])vat(?![a-z])|nssf|sdl|wcf|paye|efd|brela|kampuni|company|leseni|gn\s*487|mgeni|wageni|raia|adhabu|faini|penalty|kuchelewa|kuhakiki|kuthibitisha|namba\s+ya\s+tin\s+ni|cheti|certificate|clearance|kufuta|kufutwa|kubadili|mabadiliko|nimepoteza|imepotea|ni\s+nini|inamaanisha|maana|forodha|customs|import|kuagiza|nida"
+                r"|akaunti|benki|kibali|vibali|permit|msamaha|exempt|mauzo|milioni|elfu|shilingi|vicoba|mkulima|farmer|zanzibar|moja\s+kwa|mwajiri|mfanyakazi|employer|gharimu|kiasi\s+gani|bure|online|mtandaoni|utaratibu|hatua|mchakato|nyaraka|vitu\s+gani|jinsi|namna|nawezaje|nachukuaje|naipataje|napataje|nitapataje|nifanyeje|vipi|ninaweza\s+kufanya|kufungua|kulipa|mwingine|kujiandikisha|nijiandikishe")),
+    ("business_licence_fee_and_validity",
+     re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)*(?:biashara|duka|maduka|mgahawa|saluni|kioski|genge|frem|banda|hoteli|baa)|licen[cs]e\s+ya\s+(?:biashara|duka)|business\s+licen[cs]e"),
+     re.compile(r"(?=.*(?:(?<![a-z])ada(?![a-z])|gharama|inagharimu|gharimu|kiasi\s+gani|(?<![a-z])cost|how\s+much|(?<![a-z])bei(?![a-z])))(?=.*(?:isha|ishi|huisha|inaisha|upya|renew|expir|huhuishwa|inahuishwa|kuhuisha|muda\s+wa\s+leseni|halali))", re.S),
+     re.compile(r"cheti|zimamoto|usalama|afya|(?<![a-z])tin(?![a-z])|efd|(?<![a-z])tra(?![a-z])|mgeni|wageni|uhamiaji|gn\s*487|kibali|(?<![a-z])visa|adhabu|faini|penalty|kuchelewa|kuchelewesha|nipate|kupata|kuomba|naombaje|nitaombaje|wapi|mchakato|hatua|nyaraka|vigezo|requirements|usajili\s+wa|kusajili|jina\s+la\s+biashara|kampuni|kufuta|kufutwa|kufungwa|nani\s+anatoa|inatolewa\s+na\s+nani")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))", re.S),
@@ -2537,10 +2609,12 @@ _FS_TOPIC_ASK = {
     "paye_band_table": re.compile(r"ngapi|gani|vipi|mpangilio|ni\s+nini|zipi|yapi|orodha|(?<![a-z])je(?![a-z])|what|which|list"),
     # 2026-11-17: both accept the premise-check forms (the statement is the whole rule)
     "individual_income_tax_return": re.compile(r"lini|muda|mwisho|deadline|tarehe|siku|miezi|mwezi\s+gani|ndani\s+ya|kuwasilisha|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|kusubiri|naweza"),
+    "tin_apply_deadline": re.compile(r"lini|siku|muda|ndani\s+ya|haraka|kuomba|(?<![a-z])omba|ombi|kujiandikisha|kujisajili|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|haja|hitaji|lazima|kwanza|nipate|kupata|pata(?:je)?|(?<![a-z])je(?![a-z])|\?"),
+    "business_licence_fee_and_validity": re.compile(r"lini|gani|ngapi|muda|(?<![a-z])je(?![a-z])|kiasi|how|when|\?"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 def fixed_statement_topics(text: str):

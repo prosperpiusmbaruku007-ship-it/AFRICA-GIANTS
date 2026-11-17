@@ -5,7 +5,7 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 32,
+    "FIRES": 33,
     "DISABLED": 1,
     "NOT_WIRED": 1,
     "OBSERVED": 3
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpqdvppc8l\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmplnxdccng\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -349,6 +349,15 @@
       "positive_specimen": "GN 605A issuer live reply, LGA licence live reply, np_13, the severance tax live reply, the individual-return live reply",
       "negative_specimen": "offices/institutions/Acts untouched, a lawful 12-month statement, two-part fee+expiry questions left to the model, company return untouched",
       "note": "specimens: {'invented minister/person (GN 605A) stripped': True, 'siku 90 licence period flagged': True, 'np_13 \"Leseni yangu ya biashara\" now reaches the authority repair': True, 'severance TAX question keeps TRA (tax wins over labour)': True, 'individual-return question routes to the statement': True, 's2_07 / np_13 licence questions route to the statement': True, 'lga.go.tz replaced on a licence question': True}; clean limbs (must all be True): [True, True, True, True, True, True]; wired (comments stripped): True. Priced (eval/results/price_d17_2026_11_17.json): 0 flags in 562 gold answers and 0 in 8,758 training pairs for the names and period guards (one training false positive, \"Mkurugenzi Mtendaji Mkuu\", fixed by a stoplist before wiring); stored replies flag only the live specimens. 88 probes in eval/fidelity/d17_batch_probes_2026_11_17.jsonl."
+    },
+    {
+      "id": "2026-11-17 next small batch: TIN-window + fee/renewal statement routes, VAT two-amount resolver (np_22), firm-as-authority repair, confirm-sentence dedupe",
+      "layer": "fidelity",
+      "claims_to_block": "a premise check answered \"Hapana, hakuna siku 15\" (TIN), a two-part licence question answered with the fee only, np_22 asked for sales figures it had been given, a consultancy named as the authority, a confirm sentence repeated",
+      "verdict": "FIRES",
+      "positive_specimen": "np_14, np_22, np_26, s2_08, the 36a5144 live replies",
+      "negative_specimen": "a TIN definition / how-to, a fee-only question, a MONTHLY rate beside a bound, an analysis citing a firm as an analysis, two different confirm sentences",
+      "note": "specimens: {'np_22 turnover + period beside the 200M bound resolved': True, 'np_14 routes to the TIN statement': True, 'np_26 routes to the TIN statement': True, 's2_08 routes to the TIN statement': True, 'fee + renewal two-part question routes to the combined statement': True, 'a firm named as the authority repaired': True, 'the repeated confirm sentence dropped': True}; clean limbs (must all be True): [True, True, True, True, True, True]; wired (comments stripped): True. Priced (eval/results/price_d18_2026_11_17.json): TIN route 6 of 8,603 held questions diverted after a narrowing from 31 (all read); the VAT resolver resolves 5, one a priced FALSE POSITIVE (18M MONTHLY read as annual) fixed by a monthly cue before wiring; the firm repair changes 33 stored replies, 5 GOLD answers and 28 training pairs, because the corpus itself ends \"Thibitisha na PKF Eastern Africa au TanzLII\" (reported, not edited)."
     },
     {
       "id": "AUTO-SEND route allowlist",

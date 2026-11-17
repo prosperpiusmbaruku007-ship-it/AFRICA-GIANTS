@@ -64,6 +64,11 @@ LIVE = {
         'Kiwango cha kodi ya mapato ya mtu binafsi ni asilimia 0%. Thibitisha na TRA (tra.go.tz).'),
     'business_licence_validity': ('Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?',
         'Hapana, leseni ya biashara huwa inafanyiwa upya kila mwaka, na unapaswa kuwasilisha taarifa za kila mwaka kwa BRELA. Thibitisha na halmashauri yako, au BRELA kwa kundi A (brela.go.tz).'),
+    # 2026-11-17 (next small batch): the live specimens of the TIN window (np_26, frozen set #1, VERBATIM) and the two-part licence question (build 911948b live check, VERBATIM).
+    'tin_apply_deadline': ('Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?',
+        'Hapana, hiyo taarifa haiko sahihi. Hakuna siku maalum za 15 za kuomba TIN. Ni muhimu sana kupata TIN haraka iwezekanavyo. Thibitisha na tra.go.tz.'),
+    'business_licence_fee_and_validity': ('Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?',
+        'Ada ya leseni ya biashara hutofautiana kulingana na aina ya shughuli na eneo. Thibitisha na halmashauri husika (lga.go.tz).'),
 }
 
 
@@ -249,7 +254,9 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # The PAYE band-table STATEMENT is the control for the question that asks for the table; D-FIDELITY-11 keeps guarding band EDGES. The invented-band specimen below IS caught, by the figure rule.
 # 2026-11-17: the two new topics are also not guarded by fixed_figure_violations. business_licence_validity is guarded by the licence rules (D-FIDELITY-13 dates, D-FIDELITY-17 validity periods) in
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
-PAYE_NO_GUARD = frozenset({"paye_band_table", "individual_income_tax_return", "business_licence_validity"})
+# 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
+# (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
+PAYE_NO_GUARD = frozenset({"paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

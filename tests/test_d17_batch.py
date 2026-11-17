@@ -88,7 +88,7 @@ def test_wired_a_name_the_served_facts_carry_is_kept():
 def test_wired_the_period_specimen_is_replaced_by_the_locked_statement():
     p = _spec("d17_pd_01")
     # the route declines the TWO-PART phrasing, so the guard is what the user depends on
-    r, b = _ans("Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?", p["body"])
+    r, b = _ans("Leseni ya biashara ya LGA inaisha lini na adhabu ya kuchelewa ni ngapi?", p["body"])
     assert "replaced" in _guards(r) and "siku 90" not in r.text and "miezi 12" in r.text, r.text
 
 
@@ -149,7 +149,7 @@ def test_planted_name_guard_disabled_lets_the_name_through(monkeypatch):
 
 def test_planted_period_guard_disabled_lets_siku_90_through(monkeypatch):
     monkeypatch.setattr(fidelity, "licence_validity_period_violations", lambda q, b: [])
-    r, _ = _ans("Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?", _spec("d17_pd_01")["body"])
+    r, _ = _ans("Leseni ya biashara ya LGA inaisha lini na adhabu ya kuchelewa ni ngapi?", _spec("d17_pd_01")["body"])
     assert "siku 90" in r.text
 
 
