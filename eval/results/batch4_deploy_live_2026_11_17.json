@@ -1,0 +1,239 @@
+{
+ "identity": {
+  "build": "e1fd3de",
+  "rag_rows_loaded": 215,
+  "rag_embeddings_shape": [
+   215,
+   768
+  ],
+  "rag_facts_text_sha256": "456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13",
+  "config_rag_fact_count": 215,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1794930368.834,
+   "enter_started_ts": 1794930368.843,
+   "enter_done_ts": 1794930407.4,
+   "import_to_enter_s": 0.0,
+   "load_s": 38.6,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "AVG-ENGINE",
+   "q": "Biashara yangu inauza kwa wastani wa milioni 18 kila mwezi. Je nijisajili VAT?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 18,000,000 kila mwezi kwa wastani, yaani TZS 18,000,000 × 12 = TZS 216,000,000 kwa miezi 12, yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hii inadhani wastani huo unadumu miezi 12; mauzo halisi ya miezi 12 (au ya miezi 6 mfululizo) ndiyo yanayoamua. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AVG-ENGINE",
+   "q": "Biashara yangu inauza kwa wastani wa milioni 10 kwa mwezi. Je nahitaji kusajili VAT?",
+   "reply": "Kwa wastani huo, hapana: mauzo yako ya TZS 10,000,000 kila mwezi kwa wastani, yaani TZS 10,000,000 × 12 = TZS 120,000,000 kwa miezi 12, hayajafikia kizingiti cha TZS 200,000,000 (wala TZS 100,000,000 katika miezi 6: TZS 60,000,000). LAKINI hii ni makadirio ya wastani: usajili wa VAT ni wa lazima IKIWA mauzo halisi yatafikia TZS 200,000,000 katika miezi 12, AU TZS 100,000,000 katika miezi 6 mfululizo. Niambie jumla halisi ya mauzo yako nami nitathibitisha. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AVG-ENGINE",
+   "q": "Nauza kwa wastani wa milioni 18 kila mwezi, mauzo yangu ya mwaka bado hayajafika milioni 200. Je nijisajili VAT?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 18,000,000 kila mwezi kwa wastani, yaani TZS 18,000,000 × 12 = TZS 216,000,000 kwa miezi 12, yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hii inadhani wastani huo unadumu miezi 12; mauzo halisi ya miezi 12 (au ya miezi 6 mfululizo) ndiyo yanayoamua. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "BARE-MONTHLY-ASKS",
+   "q": "Nauza milioni 25 kila mwezi. Je nijisajili VAT?",
+   "reply": "Kizingiti cha VAT kinapimwa kwa jumla ya mauzo ya kipindi, si kwa mauzo ya mwezi mmoja: usajili ni wa lazima IKIWA mauzo yamefikia TZS 200,000,000 katika miezi 12, AU TZS 100,000,000 katika miezi 6 mfululizo. Sitakisii mauzo ya mwaka kwa kuzidisha ya mwezi mara 12 — mauzo hupanda na kushuka. Niambie jumla ya mauzo yako ya miezi 12 iliyopita, au ya miezi 6 mfululizo, nami nitalinganisha na kizingiti.",
+   "path": "engine:vat_registration:ask",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NP22",
+   "q": "Mimi nina biashara ya kuuza vifaa, mauzo yangu ya mwaka bado hayajafika milioni 200 lakini ndani ya miezi 6 nimeuza milioni 110. Sihitaji kujisajili VAT kwa sababu mwaka bado haujaisha, siyo?",
+   "reply": "Hapana. Unatakiwa kujisajili VAT. Mauzo yako ya TZS 110,000,000 kwa miezi 6 mfululizo yamefikia au kuzidi kizingiti cha TZS 100,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "COMPETING-ASKS",
+   "q": "Mauzo yangu hayajafika milioni 200, lakini kwa wastani wa milioni 18 kwa mwezi kwa mwaka. Je nijisajili VAT?",
+   "reply": "Ili nikwambie kama usajili wa VAT ni wa lazima kwako, niambie jumla ya mauzo ya biashara yako — ya miezi 12 iliyopita, au ya miezi 6 mfululizo. Vizingiti ni TZS 200,000,000 kwa miezi 12 na TZS 100,000,000 kwa miezi 6 mfululizo.",
+   "path": "engine:vat_registration:ask",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D19-SPECIMEN",
+   "q": "Kama biashara yangu inauza kwa wastani wa milioni 18 kila mwezi, hiyo hela ipo chini ya milioni 200 kwa mwaka?",
+   "reply": "Kulingana na taarifa uliyotoa, mauzo ya wastani ya milioni 18 kwa mwezi ni sawa na mauzo ya TZS 216,000,000 kwa mwaka. Hii ni zaidi ya kiwango cha milioni 200 kinachohitajika ili kusajiliwa kwa VAT. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D19-NEG",
+   "q": "Je, mauzo ya TZS 150 milioni kwa mwaka ni chini ya kizingiti cha usajili wa VAT?",
+   "reply": "Ndiyo — mauzo ya TZS 150,000,000 kwa mwaka ni CHINI ya kizingiti cha TZS 200,000,000/mwaka, hivyo hayastahili usajili wa lazima wa VAT. Hata hivyo, unaweza kujisajili VAT kwa HIARI (voluntary registration) ikiwa unataka kudai input VAT. Thibitisha na TRA tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D19-NEG",
+   "q": "Mauzo yangu ni milioni 250 kwa mwaka. Nijisajili VAT?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 250,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Naomba TIN lini baada ya kuanza biashara?",
+   "reply": "Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?",
+   "reply": "Kuhusu ada: ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo (jiji/manispaa, wilaya/mji, au kijiji) na kama ni leseni kuu au ya tawi; uliza halmashauri yako kwa ada ya aina yako. Kuhusu muda: leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nani alisaini GN 605A?",
+   "reply": "GN 605A iliyoanza 1 Januari 2026 ilisainiwa na Waziri wa Kazi. Hakuna taarifa kuwa PKF au kampuni nyingine ilisaini amri hii. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nina wafanyakazi 12, mishahara yao yote ni TZS 4,000,000 kwa mwezi, SDL ni ngapi?",
+   "reply": "Kwa hesabu sahihi, tumia kiwango cha 3.5% cha SDL kwenye jumla ya mishahara yote ya wafanyakazi 12. Thibisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 4,000,000 = TZS 140,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Mshahara wangu ni TZS 800,000 kwa mwezi, PAYE ni kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEGATIVE",
+   "q": "Nikate WCF kwenye mshahara wa mfanyakazi?",
+   "reply": "Hapana — WCF haikatwi kwenye mshahara. Ni gharama ya mwajiri pekee, inayolipwa moja kwa moja kwa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

@@ -41,6 +41,9 @@ about the trader's future, not an arithmetic step. Turnover is seasonal for exac
 this product serves. So a monthly figure declines to a never-guess exit that states both
 thresholds and asks for the actual period total. That is the same never-guess-as-infrastructure
 rule C4 established: the decline is a code path, not a sentence the model is asked to obey.
+[2026-11-17, founder, PROGRESS 4at: NARROWED REVERSAL. A STATED AVERAGE ("kwa wastani wa X kila mwezi") IS now
+annualised by vat_registration_monthly_average, working shown and the assumption stated; a BARE monthly figure and
+monthly/annual cues that compete keep the exit above. The paragraph above stands for everything else.]
 
 EFD HAS NO THRESHOLD AT ALL, AND THIS IS A CORRECTION, NOT THE ORIGINAL DESIGN (2026-08-29).
 `EFD_ANNUAL = Decimal(11_000_000)` used to sit here, tested the same way as the VAT limbs above,
