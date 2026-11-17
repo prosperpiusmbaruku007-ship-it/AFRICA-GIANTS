@@ -1,0 +1,131 @@
+{
+ "seed": 20261117,
+ "control_sample": [
+  "eval_006",
+  "eval_014",
+  "eval_035",
+  "eval_066",
+  "eval_086",
+  "eval_100",
+  "eval_122",
+  "eval_134",
+  "eval_148",
+  "eval_177",
+  "eval_182",
+  "eval_185",
+  "eval_207",
+  "eval_209",
+  "eval_215",
+  "eval_246",
+  "eval_281",
+  "eval_284",
+  "eval_289",
+  "eval_304"
+ ],
+ "P1_control": {
+  "n": 20,
+  "seed": 20261117,
+  "verdict_flips": [],
+  "flips_with_identical_text_modulo_whitespace": [],
+  "text_differs_from_baseline": [
+   "eval_215"
+  ],
+  "enumeration_falsified": false
+ },
+ "P2_gains": {
+  "eval_028": true,
+  "eval_208": true,
+  "eval_229": true,
+  "eval_239": true,
+  "eval_257": true
+ },
+ "P3_losses": {
+  "eval_039": true,
+  "eval_318": true,
+  "eval_392": true
+ },
+ "P4_vat_pair": {
+  "eval_333": true,
+  "eval_353": true
+ },
+ "P5_unpredicted": [
+  "eval_131",
+  "eval_146"
+ ],
+ "P6_key_only": {
+  "eval_115": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_116": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_117": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "wrong",
+   "judge_old": "wrong"
+  },
+  "eval_118": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_119": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "wrong",
+   "judge_old": "wrong"
+  },
+  "eval_120": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_125": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_126": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  },
+  "eval_135": {
+   "regex_current": true,
+   "regex_old": true,
+   "judge_current": "correct",
+   "judge_old": "correct"
+  }
+ },
+ "tally_56": {
+  "baseline_c2143c0": {
+   "n": 56,
+   "A2_pass": 44,
+   "no_answer_clarified_or_refused": 2,
+   "A1_candidates_judge_wrong_and_answered": 22,
+   "judge_correct": 30,
+   "judge_undetermined": 2,
+   "judge_missing": 2
+  },
+  "live_e9e429e": {
+   "n": 56,
+   "A2_pass": 46,
+   "no_answer_clarified_or_refused": 3,
+   "A1_candidates_judge_wrong_and_answered": 13,
+   "judge_correct": 41,
+   "judge_undetermined": 2,
+   "judge_missing": 0
+  }
+ }
+}
