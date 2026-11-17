@@ -1872,11 +1872,39 @@ def severance_flat_15_asserted(question: str, body: str):
             and not _D16_SEV_EXCLUDED.search(s) and not _D16_NEG.search(s)]
 
 
+# ---- D-FIDELITY-20 (2026-11-17, founder-approved after the BRELA verification of PROGRESS 4aw): THE COMPANY ANNUAL-RETURN DEADLINE. A CONSTANT (R19), FACT PATH.
+#   specimen (gate c2143c0 and 0e11c3d, eval_072): "annual return kila mwaka -- hasa ndani ya miezi 12 kutoka tarehe ya usajili wake"
+#   the Act (Companies Act Cap.212 R.E.2023, edition asserted from the running header, read 2026-11-17): each annual return is made up to the "return date" = the ANNIVERSARY of incorporation (or of the last return's date) and is
+#   delivered within TWENTY-EIGHT DAYS of it; failing that, the company and every officer in default are liable to a fine. "12 months from registration" is not the rule.
+# R25 (the two questions, answered at the site). (1) Defect: a confident wrong deadline on a stored gate reply; no served index row states the 28-day rule in the asker's vocabulary (it sits only inside the legacy form-number label of
+#   `annual_return_form_number`), so the model fills the gap; the index row is QUEUED for the next regen (kaggle/NEXT_REGEN_QUEUE.md) and this guard is the layer that reaches it meanwhile. (2) What CORRECT output could it damage: a sentence
+#   that NEGATES the date ("Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA" -- a training pair that denies it), one that states the right frame (anniversary / "tarehe ya kumbukumbu" / "siku 28"), a TAX return question
+#   (the corporate-return guard owns income-tax returns), and any sentence that does not carry an annual-return subject AND a 12-month / 30-September figure. NARROW BY CONSTRUCTION (R17): the QUESTION is about a company's annual return
+#   (BRELA / kampuni / Msajili) and about no tax; the sentence names the return AND the figure.
+_D20_RETURN = re.compile(r"annual\s+returns?|ritani(?:\s+ya\s+mwaka)?|ripoti\s+ya\s+kila\s+mwaka|tamko\s+la\s+mwaka", re.IGNORECASE)
+_D20_Q_COMPANY = re.compile(r"brela|kampuni|company|msajili|registrar|companies\s+act|sheria\s+ya\s+makampuni", re.IGNORECASE)
+_D20_Q_TAX = re.compile(r"kodi|income\s+tax|(?<![a-z])tra(?![a-z])|(?<![a-z])paye(?![a-z])|(?<![a-z])vat(?![a-z])|tax", re.IGNORECASE)
+# its OWN veto list: the D-FIDELITY-16 one contains "usajili" (registration thresholds) and would veto the very specimen ("... kutoka tarehe ya usajili wake")
+_D20_NOT_THIS_OBLIGATION = re.compile(r"awamu|instal?l?ment|provisional|(?<![a-z])vat(?![a-z])|severance|kuachishwa|likizo|leave|threshold|kizingiti|mauzo|turnover|withholding|kodi\s+ya\s+zuio|(?<![a-z])paye(?![a-z])|nssf|sdl|wcf|leseni|licen[cs]e", re.IGNORECASE)
+_D20_RIGHT_FRAME = re.compile(r"anniversary|maadhimisho|kumbukumbu|siku\s+28|28\s+days|return\s+date|tarehe\s+ya\s+return", re.IGNORECASE)
+
+
+def brela_annual_return_deadline_misstated(question: str, body: str):
+    """[sentence] stating 12 months or 30 September as the deadline for a COMPANY's annual return, for a question about a company's annual return. Negations, the correct anniversary / 28-day frame and any tax cue veto."""
+    q = question or ""
+    if not (_D20_RETURN.search(q) and _D20_Q_COMPANY.search(q)) or _D20_Q_TAX.search(q):
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and _D20_RETURN.search(s) and (_D16_12M.search(s) or _D16_SEP30.search(s))
+            and not _D16_NEG.search(s) and not _D20_RIGHT_FRAME.search(s) and not _D20_NOT_THIS_OBLIGATION.search(s)]
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
     out += [("corporate_return_deadline", s) for s in corporate_return_deadline_misstated(question, body)]
     out += [("severance_flat_15", s) for s in severance_flat_15_asserted(question, body)]
+    out += [("brela_annual_return_deadline", s) for s in brela_annual_return_deadline_misstated(question, body)]   # D-FIDELITY-20
     return out
 
 

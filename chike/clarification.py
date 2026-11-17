@@ -634,6 +634,9 @@ CONSTANT_RESTATEMENTS = {
                                   "(Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
     "severance_flat_15": ("Malipo ya kuachishwa kazi (severance) ni mapato ya ajira: yanajumuishwa kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. "
                           "Kuna kanuni za kugawa malipo ya miaka ya nyuma (Sheria ya Kodi ya Mapato). Thibitisha kiasi chako na TRA (tra.go.tz)."),
+    # D-FIDELITY-20 (2026-11-17): the company annual-return deadline (Companies Act Cap.212 R.E.2023: each return is made up to the anniversary of incorporation; 28 days from that return date). R44: the Act is named, no section number.
+    "brela_annual_return_deadline": ("Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya tarehe ya return iliyotangulia). "
+                                     "Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na kila afisa aliyehusika wanaweza kutozwa faini (Sheria ya Makampuni). Thibitisha na BRELA (brela.go.tz)."),
     "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
                            "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
 }

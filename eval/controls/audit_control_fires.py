@@ -1339,6 +1339,28 @@ def audit_unexercisable():
            'a question that states an annual AND a six-month turnover answered by asking for the figures it already carries',
            _v, 'eval_333, eval_353 (committed gold rows)', 'same period twice, a monthly figure, the two statutory thresholds themselves, a bound plus one figure', _note)
 
+    # ── 2026-11-17 (PROGRESS 4ax): D-FIDELITY-20, the company annual-return deadline (Companies Act Cap.212 R.E.2023: made up to the anniversary of incorporation, delivered within 28 days). PLANTED on the stored gate reply to eval_072.
+    try:
+        from chike import fidelity as _f20, clarification as _c20
+        _gate20 = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'gate_production_c2143c0.json'), encoding='utf-8'))['rows']}
+        _q20, _rep20 = _gate20['eval_072']['question_sw'], _gate20['eval_072']['generated']
+        _topics20 = lambda q, b: [t for t, _ in _f20.body_contradicts_d16(q, b)]   # noqa: E731
+        _spec20b = {'the stored eval_072 reply (12 months from registration) flags': 'brela_annual_return_deadline' in _topics20(_q20, _rep20),
+                    'the restatement names the 28-day rule and the anniversary': all(x in _c20.CONSTANT_RESTATEMENTS['brela_annual_return_deadline'] for x in ('siku 28', 'maadhimisho'))}
+        _clean20b = ['brela_annual_return_deadline' not in _topics20(_q20, 'Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA; tarehe inategemea tarehe ya kumbukumbu ya usajili (anniversary date).'),
+                     'brela_annual_return_deadline' not in _topics20(_q20, 'Kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni; ukichelewa zaidi ya siku 28 kuna faini.'),
+                     'brela_annual_return_deadline' not in _topics20('Return ya kodi ya mapato ya kampuni ni lini?', 'Annual return ya kodi ni ndani ya miezi 6 baada ya mwaka wa mapato.')]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code20b = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired20b = 'fidelity.body_contradicts_d16(' in _code20b
+        _v = ('FIRES' if (all(_spec20b.values()) and all(_clean20b) and _wired20b) else 'NOT_WIRED' if (all(_spec20b.values()) and all(_clean20b)) else 'ERROR')
+        _note = (f'specimens: {_spec20b}; clean limbs (must all be True): {_clean20b}; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): {_wired20b}. Priced (eval/results/price_d20_2026_11_17.json): 2 of 2,427 stored replies (the specimen in both gates), 0 of 562 gold answers, 2 of 8,754 training pairs (the same pair, authored + export: its last sentences teach the 12-month claim).')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 D-FIDELITY-20: company annual-return deadline constant (28 days from the return date, not 12 months from registration)', 'fidelity',
+           'a confident wrong annual-return deadline ("hasa ndani ya miezi 12 kutoka tarehe ya usajili wake") on the fact path',
+           _v, 'the stored gate reply to eval_072 (c2143c0 and 0e11c3d)', 'a negation of 30 September, the anniversary / 28-day frame, a tax-return question, fee and penalty sentences', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))
