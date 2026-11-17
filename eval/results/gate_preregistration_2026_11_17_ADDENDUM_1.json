@@ -1,0 +1,56 @@
+{
+ "_what": "DATED ADDENDUM 1 to gate_preregistration_2026_11_17.json (committed cb66f9e, NOT rewritten). Written and committed BEFORE the gate is launched. Check with `git log --diff-filter=A` for this file against the results artifact's add-commit.",
+ "dated": "2026-11-17 (after cb66f9e, c027924)",
+ "what_changed_since_the_original": [
+  "e9e429e: the VAT engine tests an ANNUAL and a SIX-MONTH turnover figure given together, each against its OWN limb (eval_333 / eval_353 regressed at 8ff677a). Priced over 8,613 held questions (4 read as a pair, all genuine, every verdict correct); the bound+one-figure path, the stated-average path and the competing-cue ask are unchanged (tests/test_d20_vat_pair.py, 26).",
+  "corporate_income_tax_return.wrong_patterns[0] narrowed off BRELA annual-return text (a sweep pattern; no runtime effect).",
+  "chike-inference REDEPLOYED at e9e429e: pre-flight green, whatsapp pending 0, app stop + deploy, /health build e9e429e, 215 rows, served digest == committed (eval/results/batch5_deploy_live_2026_11_17.json, 14 rows, every reply read, 0 misses)."
+ ],
+ "blast_radius_effect": "NONE on the enumerated set: eval_333 and eval_353 were already in the 10 route-changed rows (route none->vat_registration at 8ff677a); the fix changes their TEXT, not their membership. The control arm (344 rows) is unchanged. The pair reader fires on 4 of 8,613 held questions, 2 of them in the gate.",
+ "identity": "P0 now expected to read 'MEASURES THE SERVING CODE': chike/ at the gate commit is byte-identical to chike/ at the serving commit e9e429e IF nothing under chike/ changes between e9e429e and launch (only eval/, tests/, kaggle/ runbook and PROGRESS commits follow).",
+ "moved_rows": {
+  "eval_333": {
+   "was_predicted": "FAIL (the harness scores every clarified row a miss)",
+   "now_predicted": "PASS",
+   "clarified": false,
+   "regex_on_the_actual_text": true,
+   "model_calls": 0,
+   "text": "Ndiyo, unatakiwa kujisajili VAT. Ingawa kigezo cha miezi 12 (TZS 190,000,000) hakijafikia TZS 200,000,000, kigezo cha miezi 6 mfululizo kimefikiwa: TZS 120,000,000 dhidi ya kizingiti cha TZS 100,000,000. Kigezo kimoja tu kinatosha kulazimisha usajili. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz)."
+  },
+  "eval_353": {
+   "was_predicted": "FAIL (the harness scores every clarified row a miss)",
+   "now_predicted": "PASS",
+   "clarified": false,
+   "regex_on_the_actual_text": true,
+   "model_calls": 0,
+   "text": "Hapana, bado hulazimiki kwa vigezo vyote viwili: mauzo ya miezi 12 (TZS 199,000,000) yako chini ya TZS 200,000,000, na ya miezi 6 mfululizo (TZS 99,000,000) yako chini ya TZS 100,000,000. Ukivuka kimojawapo, ndipo usajili wa VAT unakuwa wa lazima. Thibitisha na TRA (tra.go.tz)."
+  }
+ },
+ "revised_P2_deterministic_rows": {
+  "gains_regex_FAIL_to_PASS": [
+   "eval_028",
+   "eval_208",
+   "eval_229",
+   "eval_239",
+   "eval_257"
+  ],
+  "losses_regex_PASS_to_FAIL": [
+   "eval_039",
+   "eval_318",
+   "eval_392"
+  ],
+  "net_regex": 2,
+  "note": "the three remaining predicted losses are scorer artefacts or the known clarified-row policy, not model defects: eval_039 and eval_392 (the new statement is correct but lacks the polarity word the yes/no regex wants), eval_318 (SDL and NSSF answered, the VAT period asked)"
+ },
+ "revised_P5_headline": {
+  "point_estimate_in_corpus_raw": "319/384 -> about 83.6%",
+  "band_raw": "82.8% - 84.1% (318-323 of 384)",
+  "gate_1_85pct": "still NOT predicted to clear; the top of the band is below 85%",
+  "basis": "the original's prompt-only band (0-2 gains, 0-3 losses on 41 rows) unchanged; only the deterministic-row net moved (original net 0 -> 2)"
+ },
+ "known_open_before_the_run_changes": [
+  "REMOVED: the eval_333 / eval_353 VAT two-figure regression (fixed and verified live).",
+  "ADDED, from the BRELA verification: a stored gate reply (eval_072: 'annual return ... hasa ndani ya miezi 12 kutoka tarehe ya usajili wake') states a deadline the Companies Act (Cap.212 R.E.2023) does not: the return is made up to the anniversary of incorporation and delivered within 28 days of that return date (s.131). The gold key is correct ('Mara moja kwa mwaka'); the reply is a possible A1 on that row. A constant guard is PROPOSED, not built."
+ ],
+ "NO_PUSH_WHILE_IT_RUNS": "unchanged: nothing may be pushed from launch until the artifact is committed"
+}
