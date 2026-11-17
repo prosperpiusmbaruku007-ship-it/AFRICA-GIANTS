@@ -1,0 +1,42 @@
+{
+ "sets": {
+  "SET #1 (29 rows)": {
+   "sidecar applied, founder's exclusion KEPT": {
+    "before": "3/12 explicit-opener (25%); 3/20 of all",
+    "after": "3/12 explicit-opener (25%); 3/20 of all",
+    "changed_rows": []
+   },
+   "sidecar applied, exclusion LIFTED for the corrected rows": {
+    "before": "3/12 explicit-opener (25%); 3/20 of all",
+    "after": "3/12 explicit-opener (25%); 3/20 of all",
+    "changed_rows": []
+   }
+  },
+  "SET #2 (20 rows)": {
+   "sidecar applied, founder's exclusion KEPT": {
+    "before": "1/7 explicit-opener (14%); 1/16 of all",
+    "after": "1/7 explicit-opener (14%); 1/16 of all",
+    "changed_rows": [
+     [
+      "s2_07",
+      "NO",
+      "YES",
+      false
+     ]
+    ]
+   },
+   "sidecar applied, exclusion LIFTED for the corrected rows": {
+    "before": "1/7 explicit-opener (14%); 1/16 of all",
+    "after": "1/7 explicit-opener (14%); 1/16 of all",
+    "changed_rows": [
+     [
+      "s2_07",
+      "NO",
+      "YES",
+      true
+     ]
+    ]
+   }
+  }
+ }
+}

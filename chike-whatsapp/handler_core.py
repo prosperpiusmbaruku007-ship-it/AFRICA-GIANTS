@@ -1441,6 +1441,10 @@ AUTOSEND_PREFIX = ("Hii ni hesabu ya kiotomatiki ya mfumo — bado haijakaguliwa
 AUTHORITY_CONTACTS = {
     "tra": "TRA: piga bila malipo 0800 780 078 au 0800 750 075 (Jumatatu–Ijumaa, 08:00–19:00), au tembelea tra.go.tz",
     "brela": "BRELA: piga 022 2212800 au 022 2180113, au tembelea brela.go.tz",
+    # 2026-11-17 (founder): a BUSINESS-LICENCE question is NOT a BRELA question for an ordinary trader. The Business Licensing Act (Cap.101 R.E.2023 s.6) delegates the choice of licensing authority to a Gazette order
+    # (not located); BRELA's own newsletter says BRELA issues Category A licences (national / international businesses, since 1 July 2017) and local councils Category B. NO phone number: no council number is
+    # published in one place, and a wrong number is worse than none. No digits, so the digits-only-in-registered-contacts test holds trivially.
+    "licence": "Halmashauri ya eneo lako (BRELA kwa leseni za Kundi A)",
     "nssf": "NSSF: piga bila malipo 0800 116 773, au tembelea nssf.go.tz",
     "wcf": "WCF: piga bila malipo 0800 110 028 (08:00–17:00), au tembelea wcf.go.tz",
 }
@@ -1455,7 +1459,8 @@ _WE = r"(?![a-z0-9])"
 _TOPIC_RES = {
     "nssf": _re_tok.compile(_WB + r"(nssf|mfuko wa hifadhi|hifadhi ya jamii|michango ya nssf)" + _WE, _re_tok.I),
     "wcf": _re_tok.compile(_WB + r"(wcf|mfuko wa fidia|fidia ya wafanyakazi|workers.? compensation)" + _WE, _re_tok.I),
-    "brela": _re_tok.compile(_WB + r"(brela|leseni|licen[cs]e|jina la biashara|business name|usajili wa (kampuni|biashara)|"
+    "licence": _re_tok.compile(_WB + r"(leseni|licen[cs]e)" + _WE, _re_tok.I),
+    "brela": _re_tok.compile(_WB + r"(brela|jina la biashara|business name|usajili wa (kampuni|biashara)|"
                              r"kusajili (kampuni|biashara)|annual return|ritani ya mwaka)" + _WE, _re_tok.I),
     "tra": _re_tok.compile(_WB + r"(vat|paye|sdl|efd|tra|tin|kodi|ushuru|risiti|withholding|wht|presumptive|makadirio|"
                            r"income tax|skills development levy)" + _WE, _re_tok.I),
@@ -1473,7 +1478,7 @@ def holding_authorities(item):
             if k and k not in found:
                 found.append(k)
     q = str(item.get("question") or "")
-    for k in ("nssf", "wcf", "brela", "tra"):
+    for k in ("nssf", "wcf", "licence", "brela", "tra"):
         if _TOPIC_RES[k].search(q) and k not in found:
             found.append(k)
     return found if 1 <= len(found) <= 2 else []

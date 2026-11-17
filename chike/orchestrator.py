@@ -1183,6 +1183,13 @@ class Orchestrator:
             return dataclasses.replace(
                 sub, text=clarification.constants_restated(topics),
                 raw_text=sub.text, needs_clarification=False, guard="replaced")
+        elif sub.computation is None and fidelity.body_contradicts_d16(sub.sub_question.text, cleaned):
+            # D-FIDELITY-16 (2026-11-17): a non-resident dividend at 15%, a company income-tax return deadline of 12 months / 30 September, a flat 15% on severance. Constants (R19), FACT path, REPLACED with the
+            # locked statement. Model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
+            topics = [t for t, _ in fidelity.body_contradicts_d16(sub.sub_question.text, cleaned)]
+            return dataclasses.replace(
+                sub, text=clarification.constants_restated(topics),
+                raw_text=sub.text, needs_clarification=False, guard="replaced")
         elif sub.computation is None and fidelity.body_states_derived_levy_amount(sub.sub_question.text, cleaned):
             # D-FIDELITY-13 (np_28, th_22): a shilling amount derived for a payroll levy from a wage nobody gave. D-FIDELITY-9's loose form restricted to the FACT path and to a sentence that DERIVES an amount.
             levies = routing.all_explicit_levies(sub.sub_question.text)
@@ -1195,6 +1202,9 @@ class Orchestrator:
         # D-FIDELITY-14 (2026-11-16): a WRONG authority named in the "Thibitisha na ..." tail (np_19 immigration.go.tz on maternity leave, np_12 osha.go.tz on annual leave). REPAIRED, never withheld: one clause changes,
         # nothing is blocked. Applies to every model-written body that reaches here; R25's justification and every exclusion are at fidelity.repair_authority.
         repaired = fidelity.repair_authority(sub.sub_question.text, cleaned)
+        # 2026-11-17: two more single-clause repairs (R25 blocks at fidelity.repair_gn605a_issuer and fidelity.repair_licence_authority): a consultancy named as the ISSUER of GN 605A, and a business-licence
+        # citation that is BRELA alone or a non-licence authority.
+        repaired = fidelity.repair_licence_authority(sub.sub_question.text, fidelity.repair_gn605a_issuer(sub.sub_question.text, repaired))
         if repaired != cleaned:
             cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)

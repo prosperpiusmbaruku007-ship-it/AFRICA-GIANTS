@@ -1,0 +1,574 @@
+{
+ "files": {
+  "PROGRESS.md": [
+   {
+    "line": 557,
+    "match": "30 Juni",
+    "ctx": "message sent 01:11:13** (`holding_notice_ok true`); claimed 01:17:51 by Prosper, **approved 01:18:04 with no edit** (`draft == final`, `edit_reason null`): *\"Kila leseni ya biashara nchini Tanzania huisha ifikapo tarehe 30 Juni ya kila mwaka. Thibitisha na BRE"
+   },
+   {
+    "line": 750,
+    "match": "31 Machi",
+    "ctx": "4. **FIVE CONTENT DEFECTS UNRELATED TO POLARITY, found by reading:** np_12 annual leave \"siku 30\" (28) citing osha.go.tz; np_13 licence renewal \"31 Machi\" (30 June); **np_20 (an OPEN control) records kept \"miaka mitatu (3)\" — the rule is FIVE years**; **np_28 "
+   },
+   {
+    "line": 760,
+    "match": "30 June",
+    "ctx": "**2. GUARDS (R19: constants), founding specimens = the VERBATIM live replies, 27 probes (11 flag / 16 clean), `tests/test_constant_guards.py`.** D-FIDELITY-13: **licence expiry** (a date other than 30 June; np_13 \"31 Machi\"), **record keeping** (years other th"
+   },
+   {
+    "line": 770,
+    "match": "31 Machi",
+    "ctx": "sft/`):** two distinct pairs in `cleaned_pairs/batch_002_cleaned.jsonl` and `batch_005_cleaned.jsonl` (four lines counting the `sft/train_sft.jsonl` export) assert that an LGA business licence is renewed \"ifikapo tarehe 31 Machi\" -- the exact wrong date np_13 "
+   },
+   {
+    "line": 776,
+    "match": "31 MACHI",
+    "ctx": "### 4af. 2026-11-17 — FOUNDER DECISIONS APPLIED: D-FIDELITY-14 (WRONG AUTHORITY, REPAIRED) BUILT; THE \"31 MACHI\" LICENCE PAIRS QUARANTINED (FOUR, NOT TWO); np_ BATCH COMMITTED"
+   },
+   {
+    "line": 780,
+    "match": "31 Machi",
+    "ctx": "t delete): FOUR pairs, not two.** The founder named the two the D-FIDELITY-13 pricing flagged; searching the corpus for the claim found two more that answer other questions (batch_005 #157 the licence list \"(kila mwaka, 31 Machi)\" and #193 the ten steps \"(tare"
+   },
+   {
+    "line": 792,
+    "match": "30 June",
+    "ctx": "**GUARD — fired live, not only in tests:** the np_13 licence question came back `path fact, calls 1, guards ['replaced']` with the 30 June statement; np_20 `replaced` with the 5-year statement; np_26 `replaced` with the 15-day/7-day TIN statement. **The model "
+   },
+   {
+    "line": 794,
+    "match": "30 Juni",
+    "ctx": "**Two automated misses, both read (R38: suspect the probe first):** (1) \"Leseni ya biashara ya LGA inahuishwa lini?\" -> the model gave a non-answer about fees (\"lga.go.tz\"); my `must` demanded \"30 Juni\" of a question that licenses a no-date answer — a PROBE ov"
+   },
+   {
+    "line": 828,
+    "match": "31 Machi",
+    "ctx": "and stage 4: the s2_13 paternity window, BRELA-vs-licence authority (primary-source check first), the GN 605A \"PKF issued the table\" body, the unsourced \"15% PAYE\" on severance, and `batch_002:8` (annual PAYE statement \"31 Machi\" vs locked 30 January) read-and"
+   }
+  ],
+  "chike/clarification.py": [
+   {
+    "line": 619,
+    "match": "30 Juni",
+    "ctx": "\"business_licence_expiry\": (\"Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka, kwa hiyo huhuishwa kila mwaka kabla ya tarehe hiyo (Sheria ya Leseni za Biashara). \""
+   }
+  ],
+  "chike/fidelity.py": [
+   {
+    "line": 1559,
+    "match": "31 Machi",
+    "ctx": "#   licence    np_13  \"leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi\"   (every business licence expires 30 June)"
+   },
+   {
+    "line": 1563,
+    "match": "31 March",
+    "ctx": "# R19: each of the first three is a lookup against a statutory CONSTANT -- no transformation of the user's numbers makes \"licences expire 31 March\" or \"keep records three years\" true -- so no engine result is"
+   }
+  ],
+  "chike/orchestrator.py": [
+   {
+    "line": 1172,
+    "match": "30 June",
+    "ctx": "# D-FIDELITY-13 (2026-11-16, np_13 / np_20 / np_26): a licence-expiry date other than 30 June, a record-keeping period other than 5 years, a TIN application deadline denied or not 15 days. Constants"
+   }
+  ],
+  "chike-inference/rag_facts_text.json": [
+   {
+    "line": 170,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.\","
+   }
+  ],
+  "data/raw/extracted/tra/d517d28b53c4764ff8be066bd23ce9ca.json": [
+   {
+    "line": 99,
+    "match": "30 June",
+    "ctx": "ninto Mainland Tanzania\\nGold Supply of gold to Bank of Tanzania Ongoing\\nSupply of gold to a licensed refi nery in\\nGold Ongoing\\nMainland Tanzania\\n1 July\\n2025 –\\nFertilizer Supply of locally manufactured fertilizer\\n30 June\\n2028\\n18\""
+   },
+   {
+    "line": 103,
+    "match": "30 June",
+    "ctx": "\"content\": \"1 July\\nSupply of locally manufactured gar- 2025 –\\nGarments\\nments made from locally grown cotton 30 June\\n2026\\nGoods (leased,\\nSupply zero-rated if goods are used\\nhired, licensed, Ongoing\\noutside the United Republic\\netc.)\\nLeased goods\\nTreat"
+   }
+  ],
+  "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": [
+   {
+    "line": 132,
+    "match": "31 March",
+    "ctx": "umber of employees, and location. It is required for all businesses operating in Tanzania Mainland, including shops, restaurants, consulting offices, and street vendors. The licence must be renewed annually — usually by 31 March.\", \"question_en\": \"Who issues a"
+   }
+  ],
+  "datasets/tier1a/raw_sources/raw_pairs_batch_005.jsonl": [
+   {
+    "line": 146,
+    "match": "31 Machi",
+    "ctx": "(LGA) inatofautiana kulingana na aina ya biashara, eneo, na ukubwa. Kwa biashara ndogo za kawaida mji mkubwa, ada inaweza kuanzia TZS 50,000 hadi TZS 500,000+ kwa mwaka. Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. Kuendesha b"
+   },
+   {
+    "line": 157,
+    "match": "31 Machi",
+    "ctx": "ce_costs\", \"question_sw\": \"Biashara ya rejareja ndogo (duka) inahitaji leseni ngapi Tanzania kwa ujumla?\", \"answer_sw\": \"Duka la rejareja ndogo Tanzania kwa kawaida linahitaji: (1) Leseni ya biashara ya LGA (kila mwaka, 31 Machi), (2) TIN ya TRA (mara moja), ("
+   },
+   {
+    "line": 193,
+    "match": "31 Machi",
+    "ctx": "wafanyakazi 10+, (7) Angalia kama unahitaji EFD (ikiwa VAT au TRA imeamuru), (8) Sajili VAT ikiwa mauzo yanazidi TZS 200M/mwaka, (9) Wasilisha tamko la kodi la mwaka kwa TRA, (10) Huisha leseni ya LGA kila mwaka (tarehe 31 Machi).\", \"question_en\": \"Summary of "
+   }
+  ],
+  "datasets/tier1a/rejected/licence_renewal_31_machi_quarantine_2026_11_17.jsonl": [
+   {
+    "line": 1,
+    "match": "31 March",
+    "ctx": "ed_pairs/batch_002_cleaned.jsonl\", \"source_line_at_quarantine\": 145, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...ifikapo tarehe 31 Machi..."
+   },
+   {
+    "line": 2,
+    "match": "31 March",
+    "ctx": "ed_pairs/batch_005_cleaned.jsonl\", \"source_line_at_quarantine\": 146, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...tarehe ya mwisho ni 31 Mac"
+   },
+   {
+    "line": 3,
+    "match": "31 March",
+    "ctx": "ed_pairs/batch_005_cleaned.jsonl\", \"source_line_at_quarantine\": 157, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(kila mwaka, 31 Machi)...'"
+   },
+   {
+    "line": 4,
+    "match": "31 March",
+    "ctx": "ed_pairs/batch_005_cleaned.jsonl\", \"source_line_at_quarantine\": 193, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(tarehe 31 Machi)...'. Eve"
+   },
+   {
+    "line": 5,
+    "match": "31 March",
+    "ctx": "sets/tier1a/sft/train_sft.jsonl\", \"source_line_at_quarantine\": 1208, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...ifikapo tarehe 31 Machi..."
+   },
+   {
+    "line": 6,
+    "match": "31 March",
+    "ctx": "sets/tier1a/sft/train_sft.jsonl\", \"source_line_at_quarantine\": 1272, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...tarehe ya mwisho ni 31 Mac"
+   },
+   {
+    "line": 7,
+    "match": "31 March",
+    "ctx": "sets/tier1a/sft/train_sft.jsonl\", \"source_line_at_quarantine\": 2428, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(tarehe 31 Machi)...'. Eve"
+   },
+   {
+    "line": 8,
+    "match": "31 March",
+    "ctx": "sets/tier1a/sft/train_sft.jsonl\", \"source_line_at_quarantine\": 2664, \"action\": \"removed_from_live_corpus\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(kila mwaka, 31 Machi)...'"
+   },
+   {
+    "line": 9,
+    "match": "31 March",
+    "ctx": "_sources/raw_pairs_batch_005.jsonl\", \"source_line_at_quarantine\": 146, \"action\": \"marked_raw_not_removed\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...tarehe ya mwisho ni 31 Mac"
+   },
+   {
+    "line": 10,
+    "match": "31 March",
+    "ctx": "_sources/raw_pairs_batch_005.jsonl\", \"source_line_at_quarantine\": 157, \"action\": \"marked_raw_not_removed\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(kila mwaka, 31 Machi)...'"
+   },
+   {
+    "line": 11,
+    "match": "31 March",
+    "ctx": "_sources/raw_pairs_batch_005.jsonl\", \"source_line_at_quarantine\": 193, \"action\": \"marked_raw_not_removed\", \"defect_class\": \"BUSINESS_LICENCE_RENEWAL_DATE_31_MACHI\", \"reason\": \"states the business licence renewal date as 31 March: '...(tarehe 31 Machi)...'. Eve"
+   }
+  ],
+  "eval/controls/audit_control_fires.py": [
+   {
+    "line": 1102,
+    "match": "31 Machi",
+    "ctx": "'licence 31 Machi (np_13)': _f13.body_contradicts_constant(_live['np_13']['question'], _live['np_13']['reply']),"
+   },
+   {
+    "line": 1110,
+    "match": "30 Juni",
+    "ctx": "_f13.body_contradicts_constant(_live['np_13']['question'], 'Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka.'),"
+   },
+   {
+    "line": 1121,
+    "match": "31 Machi",
+    "ctx": "'pairs asserting \"31 Machi\" for LGA licence renewal (a genuine corpus defect, reported for quarantine). Route sweep: eval/results/sweep_np_routes_2026_11_16.json, 17 diversions all read by hand.')"
+   },
+   {
+    "line": 1125,
+    "match": "31 Machi",
+    "ctx": "'annual leave \"siku 30\", severance \"miezi 10\", licence renewal \"31 Machi\", records \"miaka 3\", a denied 15-day TIN deadline, a TZS amount derived for WCF from no wage',"
+   }
+  ],
+  "eval/controls/sweep_licence_expiry_2026_11_17.py": [
+   {
+    "line": 1,
+    "match": "30 June",
+    "ctx": "\"\"\"SWEEP EVERY PLACE THAT STATES A BUSINESS-LICENCE EXPIRY DATE (30 June / 31 March) -- 2026-11-17."
+   },
+   {
+    "line": 2,
+    "match": "30 June",
+    "ctx": "The Business Licensing Act (Cap.101 R.E.2023 s.7(1)) makes a licence valid TWELVE MONTHS FROM ISSUANCE; 30 June was the pre-2014 rule (Cap.208 R.E.2002 s.7) and 31 March the 1972 original."
+   }
+  ],
+  "eval/controls/verify_np_batch_deploy_live_2026_11_17.py": [
+   {
+    "line": 38,
+    "match": "30 Juni",
+    "ctx": "(\"GUARD\", \"Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?\", [r\"30 Juni\"], [r\"31 Machi\"], None, None, False, 0),"
+   },
+   {
+    "line": 42,
+    "match": "30 Juni",
+    "ctx": "(\"GUARD\", \"Leseni ya biashara ya LGA inahuishwa lini?\", [r\"30 Juni\"], [r\"31 Machi\"], None, None, False, 0),"
+   }
+  ],
+  "eval/fidelity/constant_guards_probes_2026_11_16.jsonl": [
+   {
+    "line": 3,
+    "match": "31 Machi",
+    "ctx": "{\"id\": \"cg_03\", \"guard\": \"constant\", \"question\": \"Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?\", \"body\": \"Hapana, leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi. Thibitisha na BRELA (brela.go.tz).\", \""
+   },
+   {
+    "line": 18,
+    "match": "30 Juni",
+    "ctx": "{\"id\": \"cg_18\", \"guard\": \"constant\", \"question\": \"Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?\", \"body\": \"Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe.\", \"expect\": \"clean\", \"guards_against\": "
+   },
+   {
+    "line": 19,
+    "match": "30 Juni",
+    "ctx": "{\"id\": \"cg_19\", \"guard\": \"constant\", \"question\": \"Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?\", \"body\": \"Hapana. Leseni huisha 30 Juni. Ada ya mwaka huu ililipwa tarehe 1 Januari.\", \"expect\": \"clean\", \"guards_against\": \"a second "
+   }
+  ],
+  "eval/fidelity/negated_premise_heldout/assemble_authored_set_2026_11_16.py": [
+   {
+    "line": 95,
+    "match": "30 Juni",
+    "ctx": "\"Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe. Thibitisha na mamlaka ya leseni.\", SRC_LIC, \"yes_no\", AUTH1, A1, \"NEGATED / premise FALSE: business licences expire 30 June each year\", (),"
+   }
+  ],
+  "eval/fidelity/negated_premise_heldout/assemble_set2_2026_11_16.py": [
+   {
+    "line": 62,
+    "match": "30 Juni",
+    "ctx": "row(7, \"Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?\", NV, [NV, TG], \"false_premise\", \"NO\", \"licence\","
+   },
+   {
+    "line": 63,
+    "match": "30 Juni",
+    "ctx": "\"Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe, hata ile uliyoipata mwaka huu. Thibitisha na mamlaka ya leseni.\", S1.SRC_LIC,"
+   },
+   {
+    "line": 64,
+    "match": "30 June",
+    "ctx": "\"NEGATED / FALSE / No -- licences expire 30 June every year\","
+   }
+  ],
+  "eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl": [
+   {
+    "line": 13,
+    "match": "30 Juni",
+    "ctx": "waka, inadumu mpaka niifute, sivyo?\", \"negation_form\": \"negative_verb\", \"premise_label\": \"false_premise\", \"correct_polarity\": \"NO\", \"topic\": \"licence\", \"correct_answer_sw\": \"Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe. T"
+   }
+  ],
+  "eval/fidelity/negated_premise_heldout/negated_premise_set2_AUTHORED.jsonl": [
+   {
+    "line": 7,
+    "match": "30 Juni",
+    "ctx": "{\"id\": \"s2_07\", \"question\": \"Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?\", \"negation_form\": \"negative_verb\", \"premise_label\": \"false_premise\", \"correct_polarity\": \"NO\", \"topic\": \"licen"
+   }
+  ],
+  "eval/results/control_fire_audit.json": [
+   {
+    "line": 311,
+    "match": "31 Machi",
+    "ctx": "\"claims_to_block\": \"annual leave \\\"siku 30\\\", severance \\\"miezi 10\\\", licence renewal \\\"31 Machi\\\", records \\\"miaka 3\\\", a denied 15-day TIN deadline, a TZS amount derived for WCF from no wage\","
+   },
+   {
+    "line": 315,
+    "match": "31 Machi",
+    "ctx": "\"note\": \"founding specimens fire (verbatim live replies): {'annual leave siku 30 (np_12)': True, 'severance miezi 10 (np_05)': True, 'licence 31 Machi (np_13)': True, 'records miaka 3 (np_20)': True, 'TIN deadline denied (np_26)': True, 'derived WCF amount (np"
+   }
+  ],
+  "eval/results/coverage_12_rerun.json": [
+   {
+    "line": 141,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\""
+   },
+   {
+    "line": 182,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\""
+   }
+  ],
+  "eval/results/coverage_gate_signals.json": [
+   {
+    "line": 13370,
+    "match": "30 june",
+    "ctx": "\"top1_fact\": \"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara hui\","
+   }
+  ],
+  "eval/results/coverage_profiles_after.json": [
+   {
+    "line": 676,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\","
+   }
+  ],
+  "eval/results/coverage_profiles_before.json": [
+   {
+    "line": 676,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\","
+   },
+   {
+    "line": 1022,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\","
+   },
+   {
+    "line": 1973,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\","
+   }
+  ],
+  "eval/results/coverage_profiles_fixed_after.json": [
+   {
+    "line": 676,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya bi\","
+   }
+  ],
+  "eval/results/dryrun_regen_2026_10_05.json": [
+   {
+    "line": 137,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le\""
+   },
+   {
+    "line": 142,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le\""
+   }
+  ],
+  "eval/results/dryrun_regen_2026_10_06.json": [
+   {
+    "line": 137,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le\""
+   },
+   {
+    "line": 142,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Le\""
+   }
+  ],
+  "eval/results/negated_premise_live_2026_11_16.json": [
+   {
+    "line": 202,
+    "match": "31 Machi",
+    "ctx": "\"reply\": \"Hapana, leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi. Thibitisha na BRELA (brela.go.tz).\","
+   }
+  ],
+  "eval/results/negated_premise_set2_live_2026_11_17.json": [
+   {
+    "line": 107,
+    "match": "30 Juni",
+    "ctx": "\"question\": \"Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?\","
+   },
+   {
+    "line": 108,
+    "match": "30 Juni",
+    "ctx": "\"reply\": \"Hapana, leseni ya biashara huisha kila mwaka ifikapo tarehe 30 Juni. Huwezi kuendelea nayo bila kuihuisha. Thibitisha na BRELA (brela.go.tz).\","
+   }
+  ],
+  "eval/results/np_batch_deploy_live_2026_11_17.json": [
+   {
+    "line": 158,
+    "match": "30 Juni",
+    "ctx": "\"reply\": \"Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka, kwa hiyo huhuishwa kila mwaka kabla ya tarehe hiyo (Sheria ya Leseni za Biashara). Thibitisha na mamlaka ya leseni (halmashauri yako).\","
+   }
+  ],
+  "eval/results/price_np_guards_2026_11_16.json": [
+   {
+    "line": 32,
+    "match": "31 Machi",
+    "ctx": "\"reply\": \"Hapana, leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi. Thibitisha na BRELA (brela.go.tz).\","
+   },
+   {
+    "line": 35,
+    "match": "31 machi",
+    "ctx": "\"licence/expiry-date:31 machi\""
+   },
+   {
+    "line": 93,
+    "match": "31 Machi",
+    "ctx": "\"reply\": \"Leseni ya biashara ya LGA lazima ihuishwe kila mwaka, kawaida ifikapo tarehe 31 Machi. Kuchelewa kuhuisha kunasababisha faini za ucheleweshaji. Ada ya leseni inategemea aina ya biashara, ukubwa wake (kulingana na mapato au eneo la jengo), na halmasha"
+   },
+   {
+    "line": 96,
+    "match": "31 machi",
+    "ctx": "\"licence/expiry-date:31 machi\""
+   },
+   {
+    "line": 103,
+    "match": "31 Machi",
+    "ctx": "(LGA) inatofautiana kulingana na aina ya biashara, eneo, na ukubwa. Kwa biashara ndogo za kawaida mji mkubwa, ada inaweza kuanzia TZS 50,000 hadi TZS 500,000+ kwa mwaka. Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. Kuendesha b"
+   },
+   {
+    "line": 106,
+    "match": "31 machi",
+    "ctx": "\"licence/expiry-date:31 machi\""
+   },
+   {
+    "line": 113,
+    "match": "31 Machi",
+    "ctx": "\"reply\": \"Leseni ya biashara ya LGA lazima ihuishwe kila mwaka, kawaida ifikapo tarehe 31 Machi. Kuchelewa kuhuisha kunasababisha faini za ucheleweshaji. Ada ya leseni inategemea aina ya biashara, ukubwa wake (kulingana na mapato au eneo la jengo), na halmasha"
+   },
+   {
+    "line": 116,
+    "match": "31 machi",
+    "ctx": "\"licence/expiry-date:31 machi\""
+   },
+   {
+    "line": 123,
+    "match": "31 Machi",
+    "ctx": "(LGA) inatofautiana kulingana na aina ya biashara, eneo, na ukubwa. Kwa biashara ndogo za kawaida mji mkubwa, ada inaweza kuanzia TZS 50,000 hadi TZS 500,000+ kwa mwaka. Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. Kuendesha b"
+   },
+   {
+    "line": 126,
+    "match": "31 machi",
+    "ctx": "\"licence/expiry-date:31 machi\""
+   }
+  ],
+  "eval/results/regen_guards_local_dryrun.json": [
+   {
+    "line": 423,
+    "match": "30 june",
+    "ctx": "\"text\": \"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June e\""
+   }
+  ],
+  "eval/results/regen_guard_audit.json": [
+   {
+    "line": 527,
+    "match": "30 june",
+    "ctx": "\"text\": \"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each yea\""
+   }
+  ],
+  "eval/results/wrong_pattern_language_scan_2026_09_23.json": [
+   {
+    "line": 363,
+    "match": "30 june",
+    "ctx": "\"rendering\": \"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.\","
+   },
+   {
+    "line": 375,
+    "match": "30 june",
+    "ctx": "\"rendering\": \"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.\","
+   }
+  ],
+  "kaggle/rag_facts_text.json": [
+   {
+    "line": 170,
+    "match": "30 june",
+    "ctx": "\"business licence expiry 30 june: Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.\","
+   }
+  ],
+  "scripts/check_source_editions.py": [
+   {
+    "line": 303,
+    "match": "thirtieth day of June",
+    "ctx": "31 July 2002. Note: There are outstanding amendments that have not yet been applied: Act 2 of 2014, Act 15 of 2015, Act 4 of 2018, Act 12 of 2023'. s.7 'Every business licence granted under this Act shall expire on the thirtieth day of June next following the "
+   },
+   {
+    "line": 306,
+    "match": "30 JUNE",
+    "ctx": "'do_not_verify_against': 'THIS EDITION PRODUCED THE 30 JUNE ERROR in locked fact business_licence_expiry_30_june, which read CONFIRMED for three months. s.7 here says 30 June; s.7 of R.E.2023 says twelve months. The chapter number also changed (208 -> 101), so"
+   }
+  ],
+  "scripts/locked_facts.json": [
+   {
+    "line": 3055,
+    "match": "30 June",
+    "ctx": "\"fact\": \"Every business licence in Tanzania expires on 30 June each year. Leseni ya biashara huisha tarehe 30 Juni kila mwaka, hivyo huhuishwa kila mwaka kabla ya tarehe hiyo.\","
+   }
+  ],
+  "scripts/quarantine_licence_31_machi_training_pairs_2026_11_17.py": [
+   {
+    "line": 2,
+    "match": "31 MACHI",
+    "ctx": "\"\"\"QUARANTINE THE TRAINING PAIRS THAT STATE A BUSINESS LICENCE IS RENEWED BY \"31 MACHI\" (founder's decision, 2026-11-17: \"mark, don't delete\", every copy including datasets/tier1a/sft/ -- R36)."
+   },
+   {
+    "line": 4,
+    "match": "30 JUNE",
+    "ctx": "THE DEFECT. Every business licence in Tanzania expires on 30 JUNE (locked fact business_licence_expiry_30_june: Business Licensing Act s.3(4) as substituted by Finance Act 2014 s.5). Four distinct authored pairs say 31 March:"
+   },
+   {
+    "line": 6,
+    "match": "31 Machi",
+    "ctx": "batch_005 #157 \"Leseni ya biashara ya LGA (kila mwaka, 31 Machi)\"                          batch_005 #193 \"(10) Huisha leseni ya LGA kila mwaka (tarehe 31 Machi)\""
+   },
+   {
+    "line": 27,
+    "match": "30 June",
+    "ctx": "CORRECT = \"Every business licence expires on 30 June each year (locked fact business_licence_expiry_30_june; Business Licensing Act s.3(4) as substituted by Finance Act 2014 s.5). '31 Machi' is wrong.\""
+   },
+   {
+    "line": 29,
+    "match": "31 Machi",
+    "ctx": "Q145 = (\"Leseni ya biashara ya LGA inahuishwa lini na ada yake\", \"ifikapo tarehe 31 Machi\")"
+   },
+   {
+    "line": 30,
+    "match": "31 Machi",
+    "ctx": "Q146 = (\"Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?\", \"tarehe ya mwisho ni 31 Machi ya mwaka unaofuata\")"
+   },
+   {
+    "line": 31,
+    "match": "31 Machi",
+    "ctx": "Q157 = (\"Biashara ya rejareja ndogo (duka) inahitaji leseni ngapi\", \"(kila mwaka, 31 Machi)\")"
+   },
+   {
+    "line": 97,
+    "match": "31 March",
+    "ctx": "\"defect_class\": DEFECT, \"reason\": f\"states the business licence renewal date as 31 March: '...{sentence}...'. {CORRECT}\","
+   }
+  ],
+  "scripts/_gen_batch_005_part4.py": [
+   {
+    "line": 77,
+    "match": "31 Machi",
+    "ctx": "\"Leseni huhuishwa kila mwaka — tarehe ya mwisho ni 31 Machi ya mwaka unaofuata. \""
+   },
+   {
+    "line": 901,
+    "match": "31 Machi",
+    "ctx": "\"(10) Huisha leseni ya LGA kila mwaka (tarehe 31 Machi).\","
+   },
+   {
+    "line": 913,
+    "match": "31 March",
+    "ctx": "\"(10) Renew LGA licence annually (by 31 March).\","
+   }
+  ],
+  "tests/test_constant_guards.py": [
+   {
+    "line": 101,
+    "match": "30 Juni",
+    "ctx": "for topic, needle in ((\"business_licence_expiry\", \"30 Juni\"), (\"record_keeping_period\", \"miaka 5\"), (\"tin_apply_deadline\", \"siku 15\")):"
+   }
+  ],
+  "tests/test_review_timeout.py": [
+   {
+    "line": 903,
+    "match": "30 Juni",
+    "ctx": "model_calls=1, draft=\"Kila leseni ya biashara nchini Tanzania huisha ifikapo tarehe 30 Juni ya kila mwaka. Thibitisha na BRELA.\")"
+   }
+  ],
+  "tests/test_validate_dataset_gate.py": [
+   {
+    "line": 209,
+    "match": "31 Machi",
+    "ctx": "# 1712 -> 1708 on 2026-11-17, re-derived: the licence \"31 Machi\" quarantine removed FOUR cleaned_pairs rows (batch_002:145, batch_005:146, :157, :193); the four train_sft rows are in sft/, not counted here."
+   }
+  ]
+ }
+}

@@ -457,7 +457,7 @@ PINNED = {
     "unfair_termination_compensation": ("present_elsewhere", "miezi 12 hadi 24"),
     "domestic_worker_minimum_wage": ("present_elsewhere", "TZS 328,000"),
     "tin_apply_deadline": ("present_elsewhere", "Namba ya Mlipakodi (TIN) kwa TRA"),
-    "individual_income_tax_return": ("present_elsewhere", "30 Juni ya mwaka unaofuata"),
+    "individual_income_tax_return": ("present_elsewhere", "hivyo mwisho ni 30 Juni ya mwaka unaofuata"),
     "dividend_withholding_rate": ("present_elsewhere", "kampuni nyingine: 10%"),
     "professional_service_fee_wht": ("present_elsewhere", "mkazi 5%, asiye mkazi 15%"),
     "vat_registration_who_must": ("present_elsewhere", "huduma za kitaalamu zenye leseni"),
@@ -471,6 +471,11 @@ PINNED = {
     "vat_voluntary_registration": ("present_elsewhere", "usajili wa hiari unaruhusiwa kwa"),
     "wht_construction_services": ("present_elsewhere", "uwiano wa 3:2 kati ya vifaa na huduma"),
     "vat_withholding_mixed_supply": ("present_elsewhere", "uwiano wa 3:2 kati ya bidhaa na huduma"),
+    # ---- 2026-11-17 follow-up: four NEW facts, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips them the moment it lands).
+    "corporate_income_tax_return": ("pending_r15", None),
+    "business_licence_authority": ("pending_r15", None),
+    "gn605a_issuer": ("pending_r15", None),
+    "severance_pay_income_tax": ("pending_r15", None),
 }
 
 

@@ -5,7 +5,7 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 30,
+    "FIRES": 31,
     "DISABLED": 1,
     "NOT_WIRED": 1,
     "OBSERVED": 3
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpwvm8d8x6\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpugn5c0uq\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -331,6 +331,15 @@
       "positive_specimen": "s2_15, s2_18, s2_04, s2_17",
       "negative_specimen": "the corporate rate question, a body forbidding the WCF deduction, the correct car-VAT answer",
       "note": "specimens: {'s2_18 dividend question no longer routes corporate_tax': True, 's2_15 dividend question no longer routes corporate_tax': True, 's2_04 WCF-deducted body flagged': True, 's2_17 car-VAT body flagged': True, 'corporate_tax excluded from auto-send': True}; clean limbs (must all be True): [True, True, True]; wired (comments stripped): True. Priced: 0 gold flags, 0 training, 2 stored = the specimens (eval/results/price_d15_2026_11_17.json); wrong-topic audit 61 probes 0 failed after the veto (eval/results/autosend_wrong_topic_audit_2026_11_17.json)."
+    },
+    {
+      "id": "2026-11-17 licence-validity flip + D-FIDELITY-16 + GN 605A issuer / licence-authority repairs",
+      "layer": "fidelity",
+      "claims_to_block": "a fixed calendar licence expiry (30 June), a non-resident dividend at 15%, a company return deadline of 12 months / 30 Septemba, a flat 15% on severance, PKF named as the issuer of GN 605A, a lone BRELA citation on a licence question",
+      "verdict": "FIRES",
+      "positive_specimen": "s2_07, wrongtopic dividend + return, np_batch severance + PKF",
+      "negative_specimen": "the twelve-months statement, a non-resident service fee at 15%, provisional-tax instalment dates, a non-resident severance 15%, PKF cited as an analysis",
+      "note": "specimens: {'s2_07 licence 30 Juni flagged': True, 'dividend 15% non-resident flagged': True, 'company return 12 months / 30 Septemba flagged': True, 'severance flat 15% flagged': True, 'PKF named as GN 605A issuer repaired': True, 'lone BRELA on a licence question repaired': True}; clean limbs (must all be True): [True, True, True, True, True]; wired (comments stripped): True. Priced: 0 flags in 562 gold answers and 8,764 training pairs for the licence flip and D-FIDELITY-16; stored replies flag only the live specimens (eval/results/price_d16_2026_11_17.json). 41 probes in eval/fidelity/d16_followup_probes_2026_11_17.jsonl."
     },
     {
       "id": "AUTO-SEND route allowlist",

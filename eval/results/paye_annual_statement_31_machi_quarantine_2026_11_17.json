@@ -1,0 +1,21 @@
+{
+  "measured": "2026-11-17",
+  "defect_class": "PAYE_ANNUAL_STATEMENT_DATE_31_MACHI",
+  "rows_removed_from_live": 4,
+  "rows_marked_raw": 2,
+  "lines_removed": {
+    "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl": [
+      8
+    ],
+    "datasets/tier1a/cleaned_pairs/batch_002a_cleaned.jsonl": [
+      8
+    ],
+    "datasets/tier1a/sft/train_sft.jsonl": [
+      2238
+    ],
+    "datasets/tier1a/sft/val_sft.jsonl": [
+      417
+    ]
+  },
+  "quarantine_file": "datasets/tier1a/rejected/paye_annual_statement_31_machi_quarantine_2026_11_17.jsonl"
+}

@@ -399,6 +399,17 @@ critical_queries = [
     # guard; both of these sat behind an ambiguous one that always passed.
     ('GN487A penalty', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['Faini kwa mgeni']),
     ('SDL rate', 'query: SDL rate Tanzania ni asilimia ngapi?', ['asilimia tatu na nusu']),
+    # ── 2026-11-17 FOLLOW-UP GUARDS (licence validity corrected, dividend clarified, four new rows). Each anchor IS the claim under guard and was checked unique against the
+    # prospective index (eval/index_quality/dryrun_regen_2026_11_17.py). The licence anchor is the CORRECTED value: the old row said 30 Juni, and an anchor written by searching the
+    # index for text that is present would have required the stale claim (the defect-defends-itself shape recorded at 'EFD threshold' below).
+    ('Licence validity', 'query: Leseni ya biashara inaisha lini?', ['halali kwa miezi 12 tangu tarehe ilipotolewa']),
+    ('Licence validity (user premise 30 Juni)', 'query: Leseni yangu ya biashara huisha tarehe 30 Juni kila mwaka, sivyo?', ['halali kwa miezi 12 tangu tarehe ilipotolewa']),
+    ('Licence authority', 'query: Leseni ya biashara nipate wapi, BRELA au halmashauri?', ['leseni za kundi A']),
+    ('Dividend non-resident', 'query: Gawio kwa mwekezaji asiye mkazi linakatwa zuio asilimia ngapi?', ['ni vilevile kwa mpokeaji asiye mkazi']),
+    ('Company income-tax return', 'query: Kampuni inawasilisha return ya kodi ya mapato lini?', ['kampuni ya kawaida (mwaka wa kalenda) kufikia 30 Juni']),
+    ('Individual return still reachable', 'query: Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?', ['Mkazi asiye na kodi ya kulipa']),
+    ('GN 605A issuer', 'query: Jedwali la GN 605A limetolewa na nani?', ['Si PKF wala kampuni ya ushauri']),
+    ('Severance tax', 'query: Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?', ['hakuna kiwango maalum cha asilimia 15']),
     # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
     # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
     # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:
@@ -695,7 +706,7 @@ critical_queries = [
     ('Unfair termination compensation', 'query: Nimemfukuza mfanyakazi bila utaratibu, fidia ya kuachishwa kazi isivyo haki ni kiasi gani?', ['miezi 12 hadi 24']),
     ('Domestic worker minimum wage (GN 605A item 4)', 'query: Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?', ['TZS 328,000']),
     ('TIN application', 'query: Nitapataje TIN?', ['Namba ya Mlipakodi (TIN) kwa TRA']),
-    ('Individual income tax return', 'query: Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?', ['30 Juni ya mwaka unaofuata']),
+    ('Individual income tax return', 'query: Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?', ['hivyo mwisho ni 30 Juni ya mwaka unaofuata']),
     ('Dividend withholding', 'query: Kodi ya zuio kwenye gawio (dividend) ni asilimia ngapi?', ['kampuni nyingine: 10%']),
     ('Professional service fee withholding', 'query: Nikimlipa mshauri wa kodi au mhasibu, nakata kodi ya zuio asilimia ngapi?', ['mkazi 5%, asiye mkazi 15%']),
     ('VAT registration: professionals regardless of turnover', 'query: Mhasibu au wakili anahitaji kusajili VAT hata kama mauzo ni madogo?', ['huduma za kitaalamu zenye leseni']),

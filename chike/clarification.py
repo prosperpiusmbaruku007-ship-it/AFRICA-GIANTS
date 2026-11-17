@@ -616,8 +616,8 @@ def wrong_fee_band_withheld() -> str:
 # Unlike D-FIDELITY-7 (which states no figure after being caught inventing one), these three are lookups against statutory constants that the SAME session's locked facts hold verbatim, so the replacement is the
 # right answer, not a second guess. Each sentence is lifted from the locked fact of that name (tests/test_constant_guards.py asserts the figure is in the fact's own text). R44: the Act is named, no section number.
 CONSTANT_RESTATEMENTS = {
-    "business_licence_expiry": ("Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka, kwa hiyo huhuishwa kila mwaka kabla ya tarehe hiyo (Sheria ya Leseni za Biashara). "
-                                "Thibitisha na mamlaka ya leseni (halmashauri yako)."),
+    "business_licence_expiry": ("Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). "
+                                "Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Thibitisha na mamlaka yako ya leseni: halmashauri yako, au BRELA kwa leseni za kundi A (brela.go.tz)."),
     "record_keeping_period": ("Rekodi za biashara zihifadhiwe kwa miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. "
                               "Muda ni mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
     # D-FIDELITY-15 (2026-11-17): WCF is never deducted from the employee; input VAT on a passenger car. Sentences lifted from wcf_paid_to_fund_not_tra / input_vat_passenger_vehicle.
@@ -625,6 +625,15 @@ CONSTANT_RESTATEMENTS = {
                          "Kiwango ni asilimia 0.5 ya jumla ya mishahara ghafi ya wafanyakazi wote, na hulipwa kwa Mfuko wa WCF (wcf.go.tz), si TRA."),
     "input_vat_passenger_vehicle": ("Hapana: VAT ya pembejeo haidaiwi kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo "
                                     "(Sheria ya VAT). Thibitisha na TRA (tra.go.tz)."),
+    # D-FIDELITY-16 (2026-11-17): a non-resident dividend at 15%, a company return deadline of 12 months / 30 September, a flat 15% on severance. Sentences lifted from dividend_withholding_rate / corporate_income_tax_return /
+    # severance_pay_income_tax (tests/test_d16_followup_guards.py asserts the figures are in each fact's own text). R44: the Act is named, no section number.
+    "dividend_nonresident_rate": ("Gawio linakatwa kodi ya zuio ya 5% (kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam, au kampuni mkazi inayomiliki 25% au zaidi) au 10% (kampuni nyingine). "
+                                  "15% si kiwango cha gawio; viwango hivi ni vilevile kwa mpokeaji asiye mkazi. Mkataba wa kodi mara mbili unaweza kuweka kiwango tofauti (Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
+    "corporate_return_deadline": ("Return ya kodi ya mapato ya kampuni iwasilishwe ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato: kampuni ya kawaida (mwaka wa kalenda) kufikia 30 Juni ya mwaka unaofuata; "
+                                  "mwaka tofauti ulioidhinishwa na Kamishna unahamisha tarehe, na anayekaguliwa na CAG ana miezi 9. Mapato jumla zaidi ya TZS 100,000,000: return ipitiwe au kuthibitishwa na CPA "
+                                  "(Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
+    "severance_flat_15": ("Malipo ya kuachishwa kazi (severance) ni mapato ya ajira: yanajumuishwa kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. "
+                          "Kuna kanuni za kugawa malipo ya miaka ya nyuma (Sheria ya Kodi ya Mapato). Thibitisha kiasi chako na TRA (tra.go.tz)."),
     "tin_apply_deadline": ("Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. "
                            "TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi). Thibitisha na TRA (tra.go.tz)."),
 }

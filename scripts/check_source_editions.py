@@ -281,6 +281,48 @@ DECLARED = {
         'edition': 'Finance Act 2026 (No. 2), 30th June 2026',
         'edition_evidence': "page 1: 'No. 2 The Finance Act, 2026 ... THE UNITED REPUBLIC OF TANZANIA No. 2 30th June, 2026 ACT SUPPLEMENT To The Special Gazette of the United Republic of Tanzania No. 8 Vol. 107 Dated 30th June, 2026'; s.2 'This Act shall come into operation on the 1st day of July, 2026'. s.91(b) adds VAT Act s.5(7) (3:2 goods:services apportionment of the value subject to withholding); s.27(a)(iii) adds First Schedule para 2(4) of the Income Tax Act. Fetched from tra.go.tz.",
     },
+    'tra/finance_act_2025_no11.pdf': {
+        'kind': 'gazette',
+        'edition': 'Finance Act 2025 (No. 11), 30th June 2025',
+        'edition_evidence': "page 1: 'No. 11 The Finance Act, 2025 ... THE UNITED REPUBLIC OF TANZANIA No. 11 30th June, 2025 ACT SUPPLEMENT to the Special Gazette ... No.6 Vol.106 dated 30th June, 2025'; s.2 'This Act shall come into operation on the 1st day of July, 2025'. Part XIII amends the Income Tax Act: s.59 amends s.117(3)(b) (CPA threshold: individual turnover > 500 million, corporation gross income > 100 million); s.60(e) amends First Schedule para 4(c) only (NOT 4(b) dividends). Its s.14 'section 20' and s.109 'section 54' belong to other Acts. Fetched from tra.go.tz (THE_FINANCE_ACT,_2025.pdf) 2026-11-17 by search-located URL, not a guess.",
+    },
+    'tra/finance_act_2024_no6.pdf': {
+        'kind': 'gazette',
+        'edition': 'Finance Act 2024 (No. 6), 1st July 2024',
+        'edition_evidence': "page 1: 'No. 6 The Finance Act, 2024 ... THE UNITED REPUBLIC OF TANZANIA'; s.2 'This Act shall come into operation on the 1st day of July, 2024'. Part X amends the Income Tax Act USING THE PRE-REVISION NUMBERING (its s.91 = R.E.2023 s.117, its s.82 = s.105, bracket notes in the R.E. confirm): s.44 adds a nine-month return limb for a person whose financial statement is audited by the Controller and Auditor General and renumbers old s.91(2) as (3), so R.E.2023 s.117(2) is FA2025's s.117(3); s.46(b) amends First Schedule para 4(b) by adding a royalty-to-sports-entity limb, leaving dividends untouched. No amendment to s.20 (year of income). Fetched from tra.go.tz (Finance_Act_2024_(1).pdf) 2026-11-17, located by search.",
+    },
+    'brela/business_licensing_act_cap101_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "page header on every page: 'THE BUSINESS LICENSING ACT [CAP. 101 R.E. 2023]'; cover 'CHAPTER 101 THE BUSINESS LICENSING ACT [PRINCIPAL LEGISLATION]'. CHAPTER NUMBER: the same Act (No. 25 of 1972) was Cap. 208 in the 2002 print and is Cap. 101 here; the number 208 now belongs to the Business Activities Registration Act (elibrary.osg.go.tz item 2700d1bd..., 'Chapter 208 R.E. 2023'). Cap. 101 is confirmed independently by Finance Act 2025 Part VI ('AMENDMENT OF THE BUSINESS LICENSING ACT, (CAP. 101)') and by GN 487A. s.7(1) 'A business licence granted under this Act shall be valid for a period of twelve months from the date of issuance', s.7(2) up to three consecutive years' fee; its history note for s.7 lists Acts 20 of 1978 s.30, 11 of 2000 s.4, 2 of 2014 s.6 (none later). Does NOT incorporate Finance Act 2025 Part VI (no 'non-citizen' in the text) -- which amends ss.3, 4 and adds 14A and does not touch s.7. Fetched from brela.go.tz 2026-11-17, located by search.",
+        'superseded': False,
+    },
+    'brela/business_licensing_act_cap208_2002_tanzlii.pdf': {
+        'kind': 'statute',
+        'edition': 'Cap. 208 as at 31 July 2002',
+        'edition_evidence': "cover: 'Tanzania Business Licensing Act Chapter 208 Legislation as at 31 July 2002. Note: There are outstanding amendments that have not yet been applied: Act 2 of 2014, Act 15 of 2015, Act 4 of 2018, Act 12 of 2023'. s.7 'Every business licence granted under this Act shall expire on the thirtieth day of June next following the date of issue.'",
+        'superseded': True,
+        'superseded_by': 'Cap. 101 R.E. 2023, brela/business_licensing_act_cap101_re2023.pdf (sha256 650aa1c7...). s.7 (Validity of licences) was amended by Act 2 of 2014 s.6 to twelve months from issuance; the section number did not move (s.7 in both).',
+        'do_not_verify_against': 'THIS EDITION PRODUCED THE 30 JUNE ERROR in locked fact business_licence_expiry_30_june, which read CONFIRMED for three months. s.7 here says 30 June; s.7 of R.E.2023 says twelve months. The chapter number also changed (208 -> 101), so a search for Cap.208 now finds a different Act.',
+    },
+    'brela/brela_matrix_business_licensing_act_2021.pdf': {
+        'kind': 'portal',
+        'edition': 'BRELA proposed-amendments matrix, 25 Nov 2021',
+        'edition_evidence': "file name 'MATRIX-BUSINESS LICENSING ACT-25 NOV 2021'; states 'amendment of Section 7 by Finance Act 2014 which provided the Validity of Business License to be 12 Months from the date of issuance'. A regulator's own working paper: corroborates the statute, does not replace it.",
+        'superseded': False,
+    },
+    'brela/brela_newsletter_no10_licensing_2024.pdf': {
+        'kind': 'portal',
+        'edition': 'BRELA Newsletter No. 10 (English), file stamped 2024-10-29',
+        'edition_evidence': "article 'THE ROLE OF BUSINESS LICENSING SYSTEMS IN SIMPLIFYING THE ISSUANCE OF BUSINESS LICENCES IN TANZANIA': 'Business licences category A are issued ... by BRELA'; 'Since 1st July 2017, the responsibility for issuing business licences Category A ... was transferred' to BRELA; category B by Local Government Authorities. The Act itself (s.6) delegates the appointment of licensing authorities to a Gazette order that was not located.",
+        'superseded': False,
+    },
+    'labour/gn605a_2025_minimum_wage_order.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 605A of 2025, published 13 October 2025 (Special Supplement 9)',
+        'edition_evidence': "TanzLII/Laws.Africa reproduction of 'Labour Institutions (Minimum Wage for Private Sector) Order, 2025 (Government Notice 605A of 2025)', 'Published in Special Supplement 9 on 13 October 2025. Assented to on 23 September 2025. Commenced on 1 January 2026', '[Made under section 39(1)]' of the Labour Institutions Act. Names no consultancy; contains no average-increase figure. Fetched from the media.tanzlii.org mirror recorded in locked fact gn605a_average_increase (reachable by plain curl; the HTML front end is the CAPTCHA'd one).",
+        'superseded': False,
+    },
     'tra/gn225_2015_vat_general_regulations.pdf': {
         'kind': 'gazette',
         'edition': 'GN No. 225, published 19/06/2015',

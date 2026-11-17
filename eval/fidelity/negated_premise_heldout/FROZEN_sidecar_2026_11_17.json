@@ -1,0 +1,25 @@
+{
+ "frozen_file": "FROZEN.json",
+ "frozen_sha256": "df3b11e4706c34c62a1b65196744233f9c233f7ba8600adb54d78a5646a2baf8",
+ "authored_file": "negated_premise_AUTHORED.jsonl",
+ "recorded": "2026-11-17",
+ "why_a_sidecar": "the frozen set is not edited (founder, 2026-11-17); this file records what the corrected key says.",
+ "corrections": [
+  {
+   "id": "np_13",
+   "change": "ANSWER TEXT only; the label (false_premise / NO) is UNCHANGED",
+   "original": {
+    "premise_label": "false_premise",
+    "correct_polarity": "NO",
+    "correct_answer_sw": "Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe. Thibitisha na mamlaka ya leseni."
+   },
+   "corrected": {
+    "premise_label": "false_premise",
+    "correct_polarity": "NO",
+    "correct_answer_sw": "Hapana. Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa, kisha lazima ihuishwe; haidumu mpaka uifute. Thibitisha na mamlaka ya leseni."
+   },
+   "reason": "the premise ('a licence never expires') is still false, so polarity NO stands; the stated expiry was the stale 30 June rule",
+   "evidence": "Business Licensing Act Cap.101 R.E.2023 s.7(1) 'A business licence granted under this Act shall be valid for a period of twelve months from the date of issuance' (data/source_documents/brela/business_licensing_act_cap101_re2023.pdf, sha256 650aa1c7); the 30 June rule is Cap.208 as at 31 July 2002 s.7 (superseded in the manifest). Locked fact business_licence_expiry_30_june corrected 2026-11-17."
+  }
+ ]
+}

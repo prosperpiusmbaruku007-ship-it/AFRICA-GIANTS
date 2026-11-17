@@ -1570,6 +1570,7 @@ _C13_LICENCE_Q = re.compile(r"leseni\s+(?:ya|yangu|za)\s*(?:biashara|duka)?|busi
 _C13_LICENCE_Q_NEED = re.compile(r"isha|huisha|ish[ae]|upya|hui?sh|renew|expir|dumu|muda|lini|tarehe|kila\s+mwaka|mwisho", re.IGNORECASE)
 _C13_LICENCE_S = re.compile(r"leseni|licen[cs]e", re.IGNORECASE)
 _C13_EXPIRY_S = re.compile(r"isha|huish|upya|renew|expir|ifikapo|kabla\s+ya|updated|mwisho|tarehe", re.IGNORECASE)
+_C13_LIC_NEG = re.compile(r"(?<![a-z])(?:si|sio|siyo|not|never|badala\s+ya|tofauti\s+na|wala)\s+(?:tarehe\s+|siku\s+ya\s+|ya\s+)?$", re.IGNORECASE)   # "si tarehe 30 Juni", "wala 31 Machi"
 _C13_DATE = re.compile(rf"(?<!\d)(\d{{1,2}})\s+({_MONTH_NAMES})\b|\b({_MONTH_NAMES})\s+(\d{{1,2}})(?!\d)", re.IGNORECASE)
 _C13_RECORDS_Q = re.compile(r"kumbukumbu|rekodi|vitabu\s+vya|records|books\s+of\s+account", re.IGNORECASE)
 _C13_RECORDS_Q_NEED = re.compile(r"hifadhi|hifadh|keep|retain|muda|miaka|tupa|kuhifadhi", re.IGNORECASE)
@@ -1610,9 +1611,10 @@ def _c13_licence(question, body):
             month = (m.group(2) or m.group(3)).lower()
             if re.match(r"\s*,?\s*\d{4}", s[m.end():]):
                 continue                 # a FULL date with a year ("GN 487A ya 28 Julai 2025") is a dated instrument, not a recurring licence expiry (priced: 3 training rows)
-            if (day, month) in ((30, "juni"), (30, "june")) or _fd10_negated(s, m.start()):
-                continue
-            if day in qn and re.search(rf"(?<!\d){day}\s+{month}|{month}\s+{day}(?!\d)", question, re.IGNORECASE):
+            # 2026-11-17 FLIPPED. The Business Licensing Act (Cap.101 R.E.2023 s.7(1)) makes a licence valid TWELVE MONTHS FROM ISSUANCE: NO fixed calendar date is right, and 30 June (the pre-2014 rule, Cap.208 R.E.2002 s.7)
+            # is the stale one. The old exemption for (30, juni) is gone, and so is the old "a date the ASKER named is a mention" exemption: under the old constant a reply that
+            # repeated the asker's 30 June was right; now it is the premise to deny (s2_07). A bare "Hapana," opener does NOT excuse a sentence that still asserts the date -- only a negation attached to the date does.
+            if _fd10_negated(s, m.start()) or _C13_LIC_NEG.search(s[max(0, m.start() - 32):m.start()]):
                 continue
             out.append(f"licence/expiry-date:{day} {month}")
     return out
@@ -1797,3 +1799,122 @@ def body_contradicts_d15(question: str, body: str):
     out = [("wcf_not_deducted", s) for s in wcf_deduction_asserted(body, question)]
     out += [("input_vat_passenger_vehicle", s) for s in input_vat_car_claim_asserted(question, body)]
     return out
+
+
+# ---- D-FIDELITY-16 (2026-11-17, founder-approved, from the unsourced-figure check of the 2026-11-17 live replies): THREE MORE CONSTANTS, FACT PATH, plus TWO REPAIRS.
+#   dividend to a non-resident at 15%   "10% kwa wakazi na 15% kwa wasio wakazi"   (First Schedule para 4(b)(i): 5% / 10% whatever the payee's residence; the 15% in para 4(b) is 'other payments')
+#   company income-tax return deadline  "miezi 12 ... 30 Septemba"                  (six months after the year of income, 30 June for a calendar-year company; 30 September is a PROVISIONAL TAX instalment date)
+#   a flat 15% on severance             "inatozwa kodi ya asilimia 15 (PAYE)"      (employment income through the ordinary bands; the 15% limbs are a non-resident payee and director's fees)
+# R19: each is a lookup against a statutory constant, so no engine result is needed and the guard reaches the fact path. NARROW BY CONSTRUCTION (R17): each needs its OWN subject in the sentence AND the figure in the
+# SAME sentence, and every negation, every neighbouring payment type and every neighbouring obligation vetoes it. The must-pass probes the founder named are the veto lists: non-resident SERVICE FEES at 15%, "other
+# payments" at 15%, provisional-tax dates (including 30 September), the VAT 12-month threshold, severance's 12 months, a non-resident's 15% and a director's fee 15%.
+_D16_NONRES = re.compile(r"asiye\s+mkazi|wasio\s+wakazi|wasiokuwa\s+wakazi|non-?\s?residents?|nje\s+ya\s+nchi|(?<![a-z])wageni(?![a-z])|(?<![a-z])mgeni(?![a-z])|foreign(?:er)?s?", re.IGNORECASE)
+_D16_DIV = re.compile(r"gawio|magawio|dividend", re.IGNORECASE)
+_D16_15 = re.compile(r"(?<![\d.,])(?:asilimia\s+15|15\s*%|15\s*percent)(?![\d])", re.IGNORECASE)
+_D16_OTHER_PAYMENT = re.compile(r"huduma|service|riba|interest|mrabaha|royalt|pango|(?<![a-z])rent(?![a-z])|kamisheni|commission|ushauri|consult|ada\s+ya|malipo\s+mengine|other\s+payments|mkurugenzi|director|usafirishaji|bima|insurance|mshahara|ajira|employ|ukodishaji", re.IGNORECASE)
+_D16_NEG = re.compile(r"(?<![a-z])(?:si|sio|siyo|sivyo|hakuna|haikatwi|hakitumiki|haihusu|not|no|never)(?![a-z])", re.IGNORECASE)
+_D16_RETURN = re.compile(r"(?<![a-z])(?:returns?|tamko|ritani)(?![a-z])", re.IGNORECASE)
+_D16_12M = re.compile(r"miezi\s+(?:12|kumi\s+na\s+mbili)|12\s+months?", re.IGNORECASE)
+_D16_SEP30 = re.compile(r"30\s+septemba|30(?:th)?\s+september|september\s+30|septemba\s+30", re.IGNORECASE)
+_D16_NOT_RETURN_DEADLINE = re.compile(r"awamu|instal?l?ment|provisional|vat|thamani\s+iliyoongezwa|severance|kuachishwa|likizo|leave|usajili|sajili|threshold|kizingiti|mauzo|turnover|kodi\s+ya\s+zuio|withholding|paye|nssf|sdl|wcf", re.IGNORECASE)
+_D16_DEADLINE_WORDS = re.compile(r"muda\s+wa\s+mwisho|tarehe\s+ya\s+mwisho|mwisho\s+wa\s+kuwasilisha|deadline|due\s+date|ifikapo", re.IGNORECASE)
+_D16_INCOME_TAX_Q = re.compile(r"kodi\s+ya\s+mapato|income\s+tax|corporate|(?<![a-z])kampuni|(?<![a-z])company", re.IGNORECASE)
+_D16_SEV_Q = re.compile(r"severance|kuachishwa\s+kazi|malipo\s+ya\s+kuachishwa|redundan|retrench|kupunguzwa\s+kazi", re.IGNORECASE)
+_D16_SEV_EXCLUDED = re.compile(r"asiye\s+mkazi|wasio\s+wakazi|non-?resident|mkurugenzi|director", re.IGNORECASE)
+_D16_SEV_TAX = re.compile(r"kodi|paye|(?<![a-z])tax|zuio|hukatwa|inatozwa|inakatwa|kukatwa", re.IGNORECASE)
+_D16_SEV_OTHER_LEVY = re.compile(r"(?<![a-z])(?:nssf|sdl|wcf|osha|vat|tin)(?![a-z])", re.IGNORECASE)
+
+
+def dividend_nonresident_15_asserted(question: str, body: str):
+    """[sentence] attaching 15% to a DIVIDEND for a NON-RESIDENT. The sentence names a non-resident with the 15% within 50 characters; the dividend subject is in the sentence OR the question; any neighbouring
+    payment type (service fees, interest, royalty, rent, commission, director's fee ...) or any negation vetoes it."""
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s or not _D16_15.search(s) or _D16_OTHER_PAYMENT.search(s) or _D16_NEG.search(s):
+            continue
+        if not (_D16_DIV.search(s) or _D16_DIV.search(question or "")):
+            continue
+        if any(abs(a.start() - b.start()) <= 50 for a in _D16_15.finditer(s) for b in _D16_NONRES.finditer(s)):
+            out.append(s.strip())
+    return out
+
+
+def corporate_return_deadline_misstated(question: str, body: str):
+    """[sentence] stating 12 months or 30 September as the INCOME TAX RETURN deadline. The sentence names a return AND one of the two; the question is about an income-tax / company return. Provisional-tax
+    instalments, VAT, severance, registration thresholds and withholding all veto, as does any negation."""
+    if not (_D16_RETURN.search(question or "") and _D16_INCOME_TAX_Q.search(question or "")) or re.search(r"(?<![a-z])vat(?![a-z])", question or "", re.IGNORECASE):
+        return []
+    # a sentence naming the return states the figure; a sentence that only gives a DEADLINE ("muda wa mwisho ni 30 Septemba ya mwaka unaofuata", the live specimen's second sentence) states it for the
+    # return the QUESTION is about -- but only the 30 September limb, since "12 months" with no subject is too common a phrase to attach to a return.
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and ((_D16_RETURN.search(s) and (_D16_12M.search(s) or _D16_SEP30.search(s))) or (_D16_SEP30.search(s) and _D16_DEADLINE_WORDS.search(s)))
+            and not _D16_NOT_RETURN_DEADLINE.search(s) and not _D16_NEG.search(s)]
+
+
+def severance_flat_15_asserted(question: str, body: str):
+    """[sentence] putting a flat 15% tax on severance. The QUESTION is about severance and names no non-resident or director; the sentence carries the 15% and a tax word, and no other levy, no non-resident /
+    director cue and no negation."""
+    if not _D16_SEV_Q.search(question or "") or _D16_SEV_EXCLUDED.search(question or ""):
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and _D16_15.search(s) and _D16_SEV_TAX.search(s) and not _D16_SEV_OTHER_LEVY.search(s)
+            and not _D16_SEV_EXCLUDED.search(s) and not _D16_NEG.search(s)]
+
+
+def body_contradicts_d16(question: str, body: str):
+    """[(topic, sentence)] -- empty when none of the three rules applies."""
+    out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
+    out += [("corporate_return_deadline", s) for s in corporate_return_deadline_misstated(question, body)]
+    out += [("severance_flat_15", s) for s in severance_flat_15_asserted(question, body)]
+    return out
+
+
+# ---- TWO REPAIRS (one clause changes, nothing is blocked; the D-FIDELITY-14 posture). R25's two questions, answered at the site:
+# GN 605A ISSUER.  1. Defect: a live reply said the table was "lililotolewa na PKF Eastern Africa" (eval/results/np_batch_deploy_live_2026_11_17.json). GN 605A is the Labour Institutions (Minimum Wage for Private
+#   Sector) Order, 2025 -- published in Special Supplement 9, 13 Oct 2025; it names no consultancy. "PKF" appears in NO served index row, so no index edit reaches it. 2. What correct output could it damage? Only a sentence
+#   that says PKF ISSUED/PUBLISHED/PREPARED something about GN 605A; "kulingana na uchambuzi wa PKF" (an analysis cited as such) is not an issuer verb and is untouched, as is any sentence not about GN 605A.
+# LICENCE AUTHORITY.  1. Defect: s2_07 told an ordinary trader to "Thibitisha na BRELA (brela.go.tz)" for a business licence. The Act delegates the choice of licensing authority to a Gazette order (not located); BRELA's
+#   own newsletter says BRELA issues Category A licences (national / international businesses, since 1 July 2017) and councils issue Category B. So a lone BRELA citation is right for one class and wrong for the ordinary
+#   trader, and a lone TRA / labour / OSHA / NSSF / WCF / immigration host is wrong for both. 2. Damage: a body naming two authorities, a body that already says "halmashauri", a refusal, and a licence question that also
+#   carries another topic cue are all left alone, and the rewrite is idempotent.
+_D16_PKF_ISSUER_AFTER = re.compile(r"((?:lililotolewa|iliyotolewa|limetolewa|imetolewa|lilitolewa|ilitolewa|lililochapishwa|iliyochapishwa|limechapishwa|lililoandaliwa|iliyoandaliwa|issued|published|prepared)\s+(?:na|kutoka|by)\s+)PKF(?:\s+East(?:ern)?\s+Africa)?(?![a-z])", re.IGNORECASE)
+_D16_PKF_ISSUER_BEFORE = re.compile(r"(?<![a-z])PKF(?:\s+East(?:ern)?\s+Africa)?(\s+(?:ilitoa|inatoa|ilichapisha|iliandaa|issued|published|prepared))", re.IGNORECASE)
+_D16_GN605A_CUE = re.compile(r"605\s*a|kima\s+cha\s+chini|minimum\s+wage", re.IGNORECASE)
+
+
+def repair_gn605a_issuer(question: str, body: str) -> str:
+    """The body with 'PKF' replaced by 'Serikali' where a sentence about GN 605A says PKF issued/published/prepared it; unchanged otherwise."""
+    if not body:
+        return body
+    out = []
+    for part in re.split(r"(?<=[.!?\n])", body):
+        if _D16_GN605A_CUE.search(part):
+            part = _D16_PKF_ISSUER_AFTER.sub(lambda m: m.group(1) + "Serikali", part)
+            part = _D16_PKF_ISSUER_BEFORE.sub(lambda m: "Serikali" + m.group(1), part)
+        out.append(part)
+    return "".join(out)
+
+
+_D16_LICENCE_Q = re.compile(r"leseni\s+(?:ya|yangu|za)\s*(?:biashara|duka)|business\s+licen[cs]e", re.IGNORECASE)
+_D16_LICENCE_LABEL = "halmashauri yako, au BRELA kwa kundi A"
+_D16_NON_LICENCE_HOSTS = ("tra.go.tz", "kazi.go.tz", "osha.go.tz", "nssf.go.tz", "wcf.go.tz", "immigration.go.tz")
+
+
+def repair_licence_authority(question: str, body: str) -> str:
+    """For a business-LICENCE question, the one citation host rewritten to 'halmashauri yako, au BRELA kwa kundi A (brela.go.tz)' when it is BRELA alone or a non-licence authority; unchanged otherwise (R25 block above)."""
+    if not question or not body or not _D16_LICENCE_Q.search(question) or _AUTH_REFUSAL.search(body) or re.search(r"halmashauri", body, re.IGNORECASE):
+        return body
+    if any(t[1].search(question) for t in _AUTH_TOPICS):
+        return body                                       # the question carries another topic cue: ambiguous, not judged
+    hosts = {m.group(1).lower() for m in _AUTH_HOST.finditer(body)}
+    if len(hosts) != 1:
+        return body
+    host = next(iter(hosts))
+    if not (host == "brela.go.tz" or host.endswith(".brela.go.tz") or any(host == h or host.endswith("." + h) for h in _D16_NON_LICENCE_HOSTS)):
+        return body
+    esc = re.escape(host)
+    labelled = re.compile(r"(thibitisha\s+na\s+)([^().\n]{0,60}?)\(\s*(?:https?://)?(?:www\.)?" + esc + r"\s*\)", re.IGNORECASE)
+    fixed, n = labelled.subn(lambda m: f"{m.group(1)}{_D16_LICENCE_LABEL} (brela.go.tz)", body)
+    if n:
+        return fixed
+    return re.sub(r"(?<![a-z0-9.-])" + esc + r"(?![a-z0-9-])", f"{_D16_LICENCE_LABEL} (brela.go.tz)", body, flags=re.IGNORECASE)

@@ -1,0 +1,15 @@
+{
+  "measured": "2026-11-17",
+  "defect_class": "GN605A_AVERAGE_ATTRIBUTED_TO_PKF_AS_OFFICIAL_ISSUER",
+  "rows_removed_from_live": 2,
+  "rows_marked_raw": 2,
+  "lines_removed": {
+    "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl": [
+      48
+    ],
+    "datasets/tier1a/sft/train_sft.jsonl": [
+      1494
+    ]
+  },
+  "quarantine_file": "datasets/tier1a/rejected/pkf_issuer_pair_quarantine_2026_11_17.jsonl"
+}

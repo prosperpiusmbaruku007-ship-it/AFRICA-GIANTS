@@ -1,0 +1,25 @@
+{
+ "frozen_file": "FROZEN_set2.json",
+ "frozen_sha256": "17f301bea0b1e5ad9c03f3133088fce92f88c8b95791d498fd986e1516ac2259",
+ "authored_file": "negated_premise_set2_AUTHORED.jsonl",
+ "recorded": "2026-11-17",
+ "why_a_sidecar": "the frozen set is not edited (founder, 2026-11-17); this file records what the corrected key says.",
+ "corrections": [
+  {
+   "id": "s2_07",
+   "change": "LABEL: false_premise / NO -> true_premise / YES, and the answer text. `exclude_from_inversion` is NOT changed by this sidecar (the founder's 2026-11-17 exclusion for ambiguous polarity stands; the rescore reports the rates both with it kept and with it lifted)",
+   "original": {
+    "premise_label": "false_premise",
+    "correct_polarity": "NO",
+    "correct_answer_sw": "Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka na lazima ihuishwe, hata ile uliyoipata mwaka huu. Thibitisha na mamlaka ya leseni."
+   },
+   "corrected": {
+    "premise_label": "true_premise",
+    "correct_polarity": "YES",
+    "correct_answer_sw": "Ndiyo. Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa, si tarehe maalum ya kalenda; kwa hiyo leseni uliyoipata mwaka huu huhitaji kuihuisha tarehe 30 Juni, bali miezi 12 baada ya kutolewa. Thibitisha na mamlaka ya leseni."
+   },
+   "reason": "the premise ('a licence obtained this year need not be renewed before 30 June') is TRUE under a twelve-months-from-issuance rule",
+   "evidence": "Business Licensing Act Cap.101 R.E.2023 s.7(1) 'A business licence granted under this Act shall be valid for a period of twelve months from the date of issuance' (data/source_documents/brela/business_licensing_act_cap101_re2023.pdf, sha256 650aa1c7); the 30 June rule is Cap.208 as at 31 July 2002 s.7 (superseded in the manifest). Locked fact business_licence_expiry_30_june corrected 2026-11-17."
+  }
+ ]
+}

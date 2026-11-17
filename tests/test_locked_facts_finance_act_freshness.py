@@ -60,8 +60,9 @@ KNOWN_GAPS = {
     'SDL_source_law': 'verified_by is a bare TRA page + Act name, no direct-read date.',
     'vat_withholding_buyer_remits_directly': 'verified_by is a TRA portal quote, no direct-'
                                              'read date.',
-    'business_licence_expiry_30_june': 'no verified_by field at all -- never checked against '
-                                       'primary text by anyone, not just undated.',
+    # 'business_licence_expiry_30_june' REMOVED 2026-11-17: it was listed here as 'no verified_by field at all -- never checked against primary text by anyone' for months while its status read
+    # CONFIRMED. It has now been read against Cap.101 R.E.2023 s.7(1) and CORRECTED (30 June was the pre-2014 rule; twelve months from issuance is current) -- see its correction_note. Kept as a comment,
+    # not deleted: the gap registry named this exact weakness and nothing acted on it, which is the lesson (CLAUDE.md R29).
     'presumptive_excluded_services': 'no verified_by field at all -- the CLAIM was '
                                      'independently confirmed unchanged by FA2026 this session '
                                      '(rates.py PRESUMPTIVE group, and the fact itself notes '

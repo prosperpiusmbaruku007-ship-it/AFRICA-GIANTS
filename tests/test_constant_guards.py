@@ -25,7 +25,7 @@ def _flags(p):
 
 
 def test_probe_file_has_both_halves():
-    assert len(PROBES) == 27 and sum(p["expect"] == "flag" for p in PROBES) == 11 and sum(p["expect"] == "clean" for p in PROBES) == 16
+    assert len(PROBES) == 29 and sum(p["expect"] == "flag" for p in PROBES) == 13 and sum(p["expect"] == "clean" for p in PROBES) == 16
 
 
 @pytest.mark.parametrize("p", PROBES, ids=[p["id"] for p in PROBES])
@@ -54,7 +54,7 @@ def _replaced(r):
 
 
 @pytest.mark.parametrize("pid,must_contain,must_not", [
-    ("cg_03", "30 Juni", "31 Machi"), ("cg_04", "miaka 5", "mitatu"), ("cg_05", "siku 15", "Hakuna siku maalum"),
+    ("cg_03", "miezi 12", "inatakiwa kuwa updated"), ("cg_04", "miaka 5", "mitatu"), ("cg_05", "siku 15", "Hakuna siku maalum"),
 ])
 def test_wired_constants_replace_the_specimen_with_the_locked_statement(pid, must_contain, must_not):
     p = _spec(pid)
@@ -98,7 +98,7 @@ def test_restatements_carry_the_locked_figures_and_no_section_number():
     facts = json.load(open("scripts/locked_facts.json", encoding="utf-8"))
     facts = facts.get("facts", facts)
     facts = facts if isinstance(facts, dict) else {f["key"]: f for f in facts}
-    for topic, needle in (("business_licence_expiry", "30 Juni"), ("record_keeping_period", "miaka 5"), ("tin_apply_deadline", "siku 15")):
+    for topic, needle in (("business_licence_expiry", "miezi 12"), ("record_keeping_period", "miaka 5"), ("tin_apply_deadline", "siku 15")):
         key = {"business_licence_expiry": "business_licence_expiry_30_june"}.get(topic, topic)
         assert needle in clarification.CONSTANT_RESTATEMENTS[topic] and needle.lower() in json.dumps(facts[key], ensure_ascii=False).lower(), topic
     for t in clarification.CONSTANT_RESTATEMENTS.values():

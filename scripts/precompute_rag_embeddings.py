@@ -1109,6 +1109,29 @@ _COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('vat_voluntary_registration', 'wht_co
 CONCISE_BILINGUAL_FACTS.update(_COVERAGE_2026_11_16)
 
 
+# ─── 2026-11-17 FOLLOW-UP: licence validity CORRECTED, dividend clarified, four NEW rows ─────────────────────────────────────
+# business_licence_expiry_30_june is REWRITTEN IN PLACE (row 168 keeps its position): the served text said every licence expires on 30 June, the pre-2014 rule (Cap.208 R.E.2002 s.7). The key still says 30_june and is
+# kept (R27: renaming it orphans every anchor), so it is listed here to be embedded WITHOUT the 'key: ' prefix -- otherwise the row would still open with the words 'business licence expiry 30 june'. dividend_withholding_rate
+# is clarified (a model replied '15% kwa wasio wakazi'); its text is ordered so the 15% sits BEFORE 'asiye mkazi', which keeps the row clear of its own wrong_patterns. Four NEW rows trail the index like every coverage batch.
+# No section numbers in the Swahili text (CLAUDE.md R44); they live in locked_facts.json metadata.
+_FOLLOWUP_2026_11_17 = {
+    'business_licence_expiry_30_june':
+        'Leseni ya biashara inaisha lini? Ni halali kwa miezi 12 tangu tarehe ilipotolewa, si tarehe maalum ya kalenda: SI 30 Juni wala 31 Machi (sheria ya zamani, ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara).',
+    'dividend_withholding_rate':
+        'Gawio (dividend) linakatwa kodi ya zuio asilimia ngapi? Kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam: 5%; kampuni mkazi kwenda kampuni mkazi inayomiliki 25% au zaidi: 5%; kampuni nyingine: 10%. 15% si kiwango cha gawio; ni vilevile kwa mpokeaji asiye mkazi. Mkataba wa kodi mara mbili unaweza kubadilisha: thibitisha na TRA. Mtu binafsi anayelipa nje ya biashara hahusiki (Sheria ya Kodi ya Mapato).',
+    'corporate_income_tax_return':
+        'Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato: kampuni ya kawaida (mwaka wa kalenda) kufikia 30 Juni ya mwaka unaofuata; mwaka tofauti ulioidhinishwa na Kamishna unahamisha tarehe. Si miezi 12, si 30 Septemba (hiyo ni awamu ya kodi). Mapato jumla zaidi ya TZS 100,000,000: return ipitiwe na CPA. Anayekaguliwa na CAG: miezi 9 (Sheria ya Kodi ya Mapato).',
+    'business_licence_authority':
+        'Leseni ya biashara inatolewa na nani, halmashauri au BRELA? Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa: uagizaji na usafirishaji nje, benki, usafirishaji wa abiria na mizigo, clearing and forwarding) hutolewa na BRELA tangu 1 Julai 2017 (Sheria ya Leseni za Biashara; BRELA).',
+    'gn605a_issuer':
+        'GN 605A ni nini na nani aliitoa? Ni Amri ya Kima cha Chini cha Mshahara kwa Sekta Binafsi, 2025, iliyotolewa na Serikali chini ya Sheria ya Taasisi za Kazi, 13 Oktoba 2025, inaanza 1 Januari 2026. Si PKF wala kampuni ya ushauri: hizo ni vyanzo vya uchambuzi tu.',
+    'severance_pay_income_tax':
+        'Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni mapato ya ajira: yanaingia kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. Kuna kanuni za kugawa malipo ya miaka ya nyuma: thibitisha kiasi chako na TRA (Sheria ya Kodi ya Mapato).',
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('corporate_income_tax_return', 'business_licence_authority', 'gn605a_issuer', 'severance_pay_income_tax')
+CONCISE_BILINGUAL_FACTS.update(_FOLLOWUP_2026_11_17)
+
+
 def build_fact_text(key: str, value: str) -> str:
     # Concise Swahili-dominant text for high-stakes facts (short — no long English tail).
     if key in CONCISE_BILINGUAL_FACTS:

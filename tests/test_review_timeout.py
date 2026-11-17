@@ -333,11 +333,13 @@ def test_the_registered_contacts_are_the_ones_read_from_each_authoritys_own_site
     assert "022 2212800" in c["brela"] and "brela.go.tz" in c["brela"] and "0800" not in c["brela"], "BRELA publishes no toll-free line"
     assert "0800 116 773" in c["nssf"] and "nssf.go.tz" in c["nssf"]
     assert "0800 110 028" in c["wcf"] and "wcf.go.tz" in c["wcf"]
-    assert set(c) == {"tra", "brela", "nssf", "wcf"}
+    assert set(c) == {"tra", "brela", "nssf", "wcf", "licence"}
+    # 2026-11-17 (founder): the licence line names the council and BRELA for Category A, with NO council phone number and no digits at all
+    assert c["licence"] == "Halmashauri ya eneo lako (BRELA kwa leseni za Kundi A)" and not re.search(r"\d", c["licence"])
 
 
 @pytest.mark.parametrize("question,path,want", [
-    ("Leseni ya biashara inaisha lini?", "fact", ["brela"]),                          # the founder's own example
+    ("Leseni ya biashara inaisha lini?", "fact", ["licence"]),                        # the founder's own example; 2026-11-17: the council (BRELA for Category A), no longer BRELA's phone
     ("Nataka kusajili kampuni, ada ni kiasi gani?", "fact", ["brela"]),
     ("Jina la biashara linasajiliwa wapi?", None, ["brela"]),
     ("Mauzo yangu ni milioni 250 kwa mwaka. Je, ni lazima nijisajili VAT?", "engine:vat_registration", ["tra"]),
@@ -347,7 +349,7 @@ def test_the_registered_contacts_are_the_ones_read_from_each_authoritys_own_site
     ("Mchango wa kila mwezi ni kiasi gani?", "engine:nssf", ["nssf"]),                # topic from the ROUTE when the words do not say
     ("WCF inalipwa na nani?", "fact", ["wcf"]),
     ("Mfuko wa fidia ya wafanyakazi unalipa nini?", None, ["wcf"]),
-    ("Nahitaji leseni na pia VAT", None, ["brela", "tra"]),                           # two topics: both, in the order found
+    ("Nahitaji leseni na pia VAT", None, ["licence", "tra"]),                           # two topics: both, in the order found
     ("NSSF na WCF zote zinalipwa lini?", None, ["nssf", "wcf"]),
     ("leseni, VAT na NSSF zote", None, []),                                           # three: too many to name, so none
     ("Nimeajiri watu 5, nifanye nini kuhusu bima?", None, []),                        # not a topic we know
@@ -372,7 +374,7 @@ def test_the_topic_is_read_from_the_question_and_the_route_never_from_the_models
     """A draft that says 'Thibitisha na TRA' must not steer the contact: the draft is model text and may be wrong."""
     it = {"question": "Leseni ya biashara inaisha lini?", "answer_path": "fact",
           "draft": "Thibitisha na TRA (tra.go.tz). VAT, PAYE, NSSF"}
-    assert core.holding_authorities(it) == ["brela"]
+    assert core.holding_authorities(it) == ["licence"]
     import inspect
     assert "draft" not in inspect.getsource(core.holding_authorities)
 
@@ -900,13 +902,13 @@ def test_a_licence_question_gets_BRELA_in_the_holding_message_not_TRA(monkeypatc
     """The founder's 2026-11-13 live finding: the holding message named TRA for a licence question the answer sent to BRELA."""
     mw, sent = _load_mw(monkeypatch)
     it = _aged(mw, 16, question="Leseni ya biashara inaisha lini?", answer_path="fact", engine_working=None, facts=["f"],
-               model_calls=1, draft="Kila leseni ya biashara nchini Tanzania huisha ifikapo tarehe 30 Juni ya kila mwaka. Thibitisha na BRELA.")
+               model_calls=1, draft="Leseni ya biashara nchini Tanzania ni halali kwa miezi 12 tangu ilipotolewa. Thibitisha na BRELA.")
     _sweep(mw)
     assert len(sent) == 1
     text = sent[0][1]
-    assert core.AUTHORITY_CONTACTS["brela"] in text and "TRA" not in text and "0800 780 078" not in text
-    assert "30 Juni" not in text, "the draft is never in the holding message"
-    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_authority"] == ["brela"]
+    assert core.AUTHORITY_CONTACTS["licence"] in text and "Halmashauri ya eneo lako" in text and "TRA" not in text and "0800 780 078" not in text and "022 2212800" not in text
+    assert "miezi 12" not in text, "the draft is never in the holding message"
+    assert mw.REVIEW_QUEUE[it["review_id"]]["holding_notice_authority"] == ["licence"]
 
 
 # ── DELETED ITEMS STAY DELETED; OLD TESTER ROWS ARE NOT "REAL PARTICIPANTS" (both found live 2026-11-13) ──────────────────────

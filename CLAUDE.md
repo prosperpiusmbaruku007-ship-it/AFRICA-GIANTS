@@ -2692,6 +2692,40 @@ current AS OF is not fully dated, even if it names a real, checkable instrument*
 date, or find the instrument's own gazette date, before trusting convergence between two such
 sources as confirmation.
 
+### ⛔⛔ R29's THIRD MODE, IN PRACTICE — A FACT MARKED `CONFIRMED` THAT NOBODY HAD VERIFIED, AND THE ERROR SPREAD INTO TEST LABELS WRITTEN OUTSIDE THIS REPOSITORY (added 2026-11-17, founder's instruction)
+
+**The fact.** `business_licence_expiry_30_june` read `status: CONFIRMED` and *"confirmed against the Act text 2026-08-16"* for **three months** and said every business licence expires on 30 June. The Business Licensing Act
+(**Cap.101 R.E.2023**, `data/source_documents/brela/business_licensing_act_cap101_re2023.pdf`) s.7(1) says a licence is **valid for twelve months from the date of issuance** (s.7 amended by Act 2 of 2014 s.6). The 30 June
+rule is the text of the **Cap.208 R.E.2002** s.7 (`business_licensing_act_cap208_2002_tanzlii.pdf`, now `superseded` in the manifest). **R29 mode 2 (an out-of-date edition) is the inference — the text is exactly the 2002
+section — but which edition was read on 2026-08-16 is NOT recorded, and the record below shows the check may never have happened.**
+
+**The record was never evidence that it was verified, and said so in three places that nothing acted on:**
+
+| where | what it said |
+|---|---|
+| the fact itself | **no `verified_by` field**; its citation named "s.3(4) … Finance Act 2014 s.5" — not the validity section (s.7) |
+| `tests/test_locked_facts_finance_act_freshness.py` gap registry | *"no verified_by field at all — never checked against primary text by anyone, not just undated"* — a known gap, listed, passing |
+| `np_13`'s own `label_flag` (2026-11-16) | *"the locked fact's `verified_by` is empty — the weakest provenance of the 30; re-read the Business Licensing Act before this row is trusted as a key"* |
+
+**R35's shape exactly:** a caution recorded faithfully, with no date and no consequence, so it lapsed. **A `CONFIRMED` status is a claim, not a check; `verified_by` empty means unverified whatever the status says.**
+
+**How far it spread (one defect, six layers — `eval/controls/sweep_licence_expiry_2026_11_17.py` enumerates them):**
+the locked fact · served index row 168 · the **D-FIDELITY-13 guard**, which *required* the stale date and **replaced a model's "31 Desemba" with the wrong "30 Juni" statement** (the guard was only as right as the constant it
+restated) · `CONSTANT_RESTATEMENTS` · **two frozen test labels** (`np_13` authored by a claude.ai advisor session, `s2_07` by ChatGPT — both *from the fact*, so the error crossed into labels written outside this repo) ·
+the 2026-11-17 quarantine record (which named 30 June as the correct value) · the audit's own "correct body" clean limb, and my scoring of the s2_07 live reply as right.
+
+**The chapter number moved too: Cap.208 → Cap.101.** The same Act (No. 25 of 1972) is Cap.208 in the 2002 print and Cap.101 in R.E.2023, and **the number 208 now belongs to the Business Activities Registration Act** — so a
+search for "Cap.208" finds a *different Act*. A new form of the renumbering trap (a **chapter** number, not a section number); Finance Act 2025 Part VI and GN 487A both already said Cap.101.
+
+**It was found by accident** — a search for the Act while chasing an unrelated question (BRELA vs the council as licence authority) — **not by any check this project has.**
+
+**IN PRACTICE:**
+- **A fact's `status` is never the evidence; its `verified_by` is.** Before leaning on a locked fact for anything that *restates* it (a guard, a fixed statement, a gold key), read the `verified_by` and the primary text.
+- **A guard or restatement is a locked fact with a larger blast radius.** D-FIDELITY guards that encode a constant need the primary-source read recorded in the fact they restate; they were not checked for that.
+- **A test key that cites a locked fact inherits its error.** When a fact is corrected, grep every frozen set's `source` field for the fact's key. Do not edit frozen sets: record the correction in a **sidecar** that pins the frozen file's sha256 (`eval/fidelity/negated_premise_heldout/FROZEN_*sidecar_2026_11_17.json`, re-scored by `rescore_with_sidecars_2026_11_17.py`).
+- **A recorded "weakest provenance" caution needs an owner and a date (R35).** `label_flag` / gap-registry entries that name an unverified source are findings, not footnotes.
+- **Assert the edition first** (Section 4); the superseded 2002 print is declared in the manifest with its replacement and `do_not_verify_against`.
+
 ### R30 — A TOOL FAILURE RECORDED AS A PROPERTY OF THE SOURCE DECAYS EXACTLY LIKE AN UNTESTED CONTROL, AND IT ALREADY DID, ONCE, SILENTLY.
 
 **"TRA unreachable" was never true. `WebFetch` failing against tra.go.tz with `Parse Error:

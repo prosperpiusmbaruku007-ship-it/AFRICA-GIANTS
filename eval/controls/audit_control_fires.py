@@ -1107,7 +1107,7 @@ def audit_unexercisable():
             'np_28 routes to the rate statement': _r13.detect_intent(_live['np_28']['question']) == 'wcf'}
         _clean13 = [
             _f13.fixed_figure_violations(_live['np_12']['question'], 'Hapana. Likizo ya mwaka ni angalau siku 28 mfululizo.'),
-            _f13.body_contradicts_constant(_live['np_13']['question'], 'Hapana. Kila leseni ya biashara huisha tarehe 30 Juni kila mwaka.'),
+            _f13.body_contradicts_constant(_live['np_13']['question'], 'Hapana. Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa.'),
             _f13.body_contradicts_constant(_live['np_26']['question'], 'Ndiyo. Omba TIN ndani ya siku 15; TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi.'),
             _f13.body_states_derived_levy_amount(_live['np_28']['question'], 'Kiwango cha WCF ni asilimia 0.5 ya jumla ya mishahara ghafi.'),
             _r13.detect_intent('Malipo ya fidia ya kuachishwa kazi (severance pay) hayapigwi kodi — je, ni kweli?') != 'none']
@@ -1172,6 +1172,41 @@ def audit_unexercisable():
         _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
     record('2026-11-17 corporate_tax veto + D-FIDELITY-15 + auto-send exclusion', 'fidelity', 'a dividend-withholding question answered with the corporate rate; WCF described as deducted; input VAT on a car claimable',
            _v, 's2_15, s2_18, s2_04, s2_17', 'the corporate rate question, a body forbidding the WCF deduction, the correct car-VAT answer', _note)
+
+    # ── 2026-11-17 follow-up: licence rule FLIPPED (a fixed calendar date is wrong), D-FIDELITY-16 (non-resident dividend 15%, company return 12 months / 30 Septemba, flat 15% on severance) and two repairs
+    # (PKF as issuer of GN 605A; a lone BRELA citation on a licence question). PLANTED on the verbatim live specimens; each clean limb is a must-pass the founder named.
+    try:
+        from chike import fidelity as _f16
+        _rd = lambda n: json.load(open(os.path.join(REPO, 'eval', 'results', n), encoding='utf-8'))['rows']
+        _s2r = {r['id']: r for r in _rd('negated_premise_set2_live_2026_11_17.json')}
+        _wt = {r['q']: r for r in _rd('wrongtopic_deploy_live_2026_11_17.json')}
+        _npb = {r['q']: r for r in _rd('np_batch_deploy_live_2026_11_17.json')}
+        _dq = [r for q, r in _wt.items() if 'withholding tax yake ni 10%' in q][0]
+        _rq = [r for q, r in _wt.items() if 'return ya kodi ya mapato ya kampuni' in q][0]
+        _sq = [r for q, r in _npb.items() if 'severance pay) hayapigwi kodi' in q][0]
+        _gq = [r for q, r in _npb.items() if 'GN 605A kinachofaa' in q][0]
+        _spec16 = {'s2_07 licence 30 Juni flagged': bool(_f16.constant_violations(_s2r['s2_07']['question'], _s2r['s2_07']['reply'])),
+                   'dividend 15% non-resident flagged': bool(_f16.body_contradicts_d16(_dq['q'], _dq['reply'])),
+                   'company return 12 months / 30 Septemba flagged': bool(_f16.body_contradicts_d16(_rq['q'], _rq['reply'])),
+                   'severance flat 15% flagged': bool(_f16.body_contradicts_d16(_sq['q'], _sq['reply'])),
+                   'PKF named as GN 605A issuer repaired': _f16.repair_gn605a_issuer(_gq['q'], _gq['reply']) != _gq['reply'],
+                   'lone BRELA on a licence question repaired': _f16.repair_licence_authority(_s2r['s2_07']['question'], _s2r['s2_07']['reply']) != _s2r['s2_07']['reply']}
+        _clean16 = [not _f16.constant_violations('Leseni ya biashara inaisha lini?', 'Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa.'),
+                    not _f16.body_contradicts_d16('Ada ya huduma kwa kampuni ya nje ni asilimia ngapi?', 'Kodi ya zuio kwa ada ya huduma kwa asiye mkazi ni asilimia 15.'),
+                    not _f16.body_contradicts_d16('Return ya kodi ya mapato ya kampuni ni lini, na awamu?', 'Return iwasilishwe ndani ya miezi 6. Awamu ya tatu ya kodi ya mapato ni 30 Septemba.'),
+                    not _f16.body_contradicts_d16('Mfanyakazi asiye mkazi analipwa severance, kodi ni ngapi?', 'Kwa asiye mkazi kodi ya zuio ni asilimia 15.'),
+                    _f16.repair_gn605a_issuer('x', 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani wa ongezeko la GN 605A ni 33.4%.') == 'Kulingana na uchambuzi wa PKF Eastern Africa, wastani wa ongezeko la GN 605A ni 33.4%.']
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code16 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired16 = 'fidelity.body_contradicts_d16(' in _code16 and 'fidelity.repair_gn605a_issuer(' in _code16 and 'fidelity.repair_licence_authority(' in _code16
+        _v = ('FIRES' if (all(_spec16.values()) and all(_clean16) and _wired16) else 'NOT_WIRED' if (all(_spec16.values()) and all(_clean16)) else 'ERROR')
+        _note = (f'specimens: {_spec16}; clean limbs (must all be True): {_clean16}; wired (comments stripped): {_wired16}. Priced: 0 flags in 562 gold answers and 8,764 training pairs for the licence flip and D-FIDELITY-16; '
+                 'stored replies flag only the live specimens (eval/results/price_d16_2026_11_17.json). 41 probes in eval/fidelity/d16_followup_probes_2026_11_17.jsonl.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 licence-validity flip + D-FIDELITY-16 + GN 605A issuer / licence-authority repairs', 'fidelity',
+           'a fixed calendar licence expiry (30 June), a non-resident dividend at 15%, a company return deadline of 12 months / 30 Septemba, a flat 15% on severance, PKF named as the issuer of GN 605A, a lone BRELA citation on a licence question',
+           _v, 's2_07, wrongtopic dividend + return, np_batch severance + PKF', 'the twelve-months statement, a non-resident service fee at 15%, provisional-tax instalment dates, a non-resident severance 15%, PKF cited as an analysis', _note)
 
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
