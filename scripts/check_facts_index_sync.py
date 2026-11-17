@@ -471,11 +471,13 @@ PINNED = {
     "vat_voluntary_registration": ("present_elsewhere", "usajili wa hiari unaruhusiwa kwa"),
     "wht_construction_services": ("present_elsewhere", "uwiano wa 3:2 kati ya vifaa na huduma"),
     "vat_withholding_mixed_supply": ("present_elsewhere", "uwiano wa 3:2 kati ya bidhaa na huduma"),
-    # ---- 2026-11-17 follow-up: four NEW facts, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips them the moment it lands).
-    "corporate_income_tax_return": ("pending_r15", None),
-    "business_licence_authority": ("pending_r15", None),
-    "gn605a_issuer": ("pending_r15", None),
-    "severance_pay_income_tax": ("pending_r15", None),
+    # business_licence_expiry_30_june: the KEY embeds a superseded value and the row is now embedded WITHOUT the "key: " prefix (so it no longer opens "business licence expiry 30 june"), hence a pin.
+    "business_licence_expiry_30_june": ("present_elsewhere", "halali kwa miezi 12 tangu tarehe ilipotolewa"),
+    # ---- 2026-11-17 follow-up: four NEW facts, shipped by the Kaggle regen (HF dataset commit f0696366, built from 8452139) -- converted from pending_r15.
+    "corporate_income_tax_return": ("present_elsewhere", "kampuni ya kawaida (mwaka wa kalenda) kufikia 30 Juni"),
+    "business_licence_authority": ("present_elsewhere", "leseni za kundi A"),
+    "gn605a_issuer": ("present_elsewhere", "Si PKF wala kampuni ya ushauri"),
+    "severance_pay_income_tax": ("present_elsewhere", "hakuna kiwango maalum cha asilimia 15"),
 }
 
 

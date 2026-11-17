@@ -52,9 +52,12 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # ⭐ BUMPED 2026-11-16 for the follow-up regen (208 -> 211 rows: 3 new rows, 29 R44 section-number strips, the presumptive row, the 2 WCF rows). Previous
 # value, kept for rollback: 78b2b4d2e36dd88eb9c297a087fbf8f68a010e800d7c36b980eab0b1d7917577 -- the 208-row index of 2026-11-13. Computed from the fetched HF
 # file (dataset commit 3565846), verified IDENTICAL (rows and order) to the local build of a0a4ce4 BEFORE it was committed.
+# ⭐ BUMPED 2026-11-17 for the licence/dividend/company-return regen (211 -> 215 rows: rows 168 and 199 rewritten, 4 appended). Previous value, kept for rollback:
+# cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b -- the 211-row index of 2026-11-16. Computed from the fetched HF file (dataset commit f0696366, built
+# from 8452139), verified IDENTICAL (rows and order) to the local build of 896a6c9 BEFORE it was committed.
 EXPECTED_SERVED_SHA256 = (
-    "cfaaa6f16d63bfd46256b18e1172e39d6a484f0c52a7e3946f057204db4d582b")
-EXPECTED_ROWS = 211
+    "97696157be5acb0d98ac1654bae924301b55ea1ca9d962888f05e3253de680c7")
+EXPECTED_ROWS = 215
 
 
 def _src():

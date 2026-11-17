@@ -174,7 +174,7 @@ RAW = f'https://raw.githubusercontent.com/{REPO}/main'
 DATASET_REPO = 'prospAprospA007/africa-giants-dataset'
 
 # The index production serves. ASSERTED, not assumed — see gate_index_identity() below.
-EXPECTED_FACT_COUNT = 211   # 2026-11-16: 208 -> 211 with the follow-up regen (R44 strips, 3 new rows); was 184 -> 208 on 2026-11-13. The gate must be measured against THIS index
+EXPECTED_FACT_COUNT = 215   # 2026-11-17: 211 -> 215 with the licence/dividend/company-return regen (rows 168, 199 rewritten, 4 appended). Earlier: 2026-11-16: 208 -> 211 with the follow-up regen (R44 strips, 3 new rows); was 184 -> 208 on 2026-11-13. The gate must be measured against THIS index
 
 # The commit the last full gate ran at, and its re-derived in-corpus headline. Both are read
 # back out of the committed artifact at run time rather than trusted from this comment.
