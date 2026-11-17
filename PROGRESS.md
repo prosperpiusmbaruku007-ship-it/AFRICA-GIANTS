@@ -927,6 +927,27 @@ Also seen: replies cite **"lga.go.tz"** as a verification host (not whitelisted,
 
 **Batch 2 is closed.** Next: stage 3 (read-only), per the founder's order.
 
+### 4aq. 2026-11-17 — STAGE 3: THE SUBSTANTIVE-POLARITY CHECK ON FROZEN SETS #1 AND #2 (READ-ONLY, ALL 49 REPLIES READ BY HAND). THE OPENER METRIC SEES 2 OF 9 WRONG-CONTENT ROWS; IT OVER-COUNTS ONE AND MISSES TWO FLIPS
+
+**What was done.** Protocol written and committed with the scorer BEFORE adjudication (`eval/fidelity/negated_premise_heldout/score_substantive_polarity_2026_11_17.py`, docstring): verdict RIGHT / WRONG / PARTIAL / NONE on the CONTENT against the gold **with the 2026-11-17 sidecars applied** (np_13's answer text; s2_07 -> TRUE/YES), plus the polarity the content implies, plus three disagreement classes with the opener. **All 49 stored replies READ** (set #1: 29, set #2: 20) and adjudicated one by one with a reason (`stage3_adjudication_2026_11_17.json`); the script never classifies a reply, it re-derives the opener (the existing classifier, imported) and tabulates. Artifact `eval/results/substantive_polarity_stage3_2026_11_17.json`. **The replies are those of the builds that produced them (set #1: before the 2026-11-16 constant guards and the statement routes): this measures the METRIC, not today's system.**
+
+**RESULT.** Verdicts over 49: **RIGHT 32, PARTIAL 5, WRONG 9, NONE 3.** On the 40 scored yes/no rows (s2_06 and s2_07 are in neither rate, your call):
+
+| metric | flags | rows |
+|---|---|---|
+| OPENER (an explicit Ndiyo/Hapana contradicts the correct polarity) | **4** | np_01, np_05, np_26, s2_08 |
+| SUBSTANTIVE polarity flip (the content implies the opposite) | **5** | np_05, np_26, s2_04, s2_08, s2_17 |
+
+- **The opener metric OVER-counts one: `np_01`.** "Hapana, si lazima ulipe SDL … chini ya 10" means *no, you need not pay* — it AGREES with the premise, and its second paragraph says "Ndiyo, ni kweli — SDL haihusiki". An idiom the opener classifier reads as an inversion (CLASS B, the only one).
+- **It MISSES two flips: `s2_04`** ("Ndiyo, … unapaswa kuikata kutoka kwa mishahara": opener right, content the offence — CLASS A) **and `s2_17`** (input VAT on a passenger car "unaweza kudai": no opener at all — CLASS C).
+- **Across ALL 49 rows, 9 carry substantively WRONG content** (np_05, np_12, np_13, np_20, np_26, np_28, s2_04, s2_07, s2_17). **The opener metric can see two of them** (np_05, np_26); **seven are invisible to it**: three have a RIGHT opener over wrong content (**A: np_12 "siku 30", np_13 "31 Machi", s2_04**), three have NO opener (**C: np_20 "miaka mitatu", np_28 an invented TZS 30,000, s2_17**), and s2_07 is the excluded row.
+- **By route:** all 9 WRONG rows are on the **model path** (9 of 38 = 24%); the **7 model-free statement rows are all RIGHT**. The 4 other model-free rows are engine clarifications / the since-vetoed corporate-tax misroute (np_02 PARTIAL, np_22, s2_15, s2_18 NONE).
+- **The Hapana-bias claim, re-read by content (18 model-path TRUE-premise rows):** opener Hapana on np_01, np_05, np_26, s2_08; of those the CONTENT is inverted on **np_05, np_26, s2_08** (np_01 is right). **Counting content stance instead of opener, a TRUE premise is met with a NO stance on 4 rows: np_05, np_26, s2_04, s2_08** — s2_04 is the one the opener cannot see.
+
+**What this does and does not establish (limits, stated because the founder's own rule is that a metric's reach is part of its result).** n is 49 and authored by two external models and reviewed by the founder; the two sets overlap in topics, so these are not 49 independent trials. **The adjudicator is not independent**: Claude Code read six of these replies in earlier entries (s2_04, s2_07, s2_13, s2_15, s2_17, s2_18 — disclosed in the adjudication file), wrote several of the guards the replies are scored against, and **no second human has read the file** — **the 5 PARTIAL and the 3 NONE rows are exactly where another reader could disagree** (np_02, np_07, np_14, s2_08, s2_13). The "3 of 4" Hapana-bias figure of set #1 stays a small-sample statement. **The headline is about the METRIC: an opener count is a floor on wrong content — it caught 2 of 9 here — and it is not a safe proxy for 'the model told the user the opposite'.** The existing instruments that DO read content (the judge, hand reading) remain the way to see this class (R12b's caveat).
+
+**Recommendation, not built.** Report a substantive-polarity column beside the opener rate in any future negated-premise measurement, from a hand-read or judge-adjudicated verdict (never a regex over the body: the body-regex route is the one R12b records as having credited `eval_318`/`eval_320`).
+
 ### 5. Open — **REWRITTEN 2026-11-13; the earlier list was stale (most of it was resolved in 4b–4r). Resolved items are kept, marked, not deleted.**
 
 **OPEN**
