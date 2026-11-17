@@ -1208,6 +1208,42 @@ def audit_unexercisable():
            'a fixed calendar licence expiry (30 June), a non-resident dividend at 15%, a company return deadline of 12 months / 30 Septemba, a flat 15% on severance, PKF named as the issuer of GN 605A, a lone BRELA citation on a licence question',
            _v, 's2_07, wrongtopic dividend + return, np_batch severance + PKF', 'the twelve-months statement, a non-resident service fee at 15%, provisional-tax instalment dates, a non-resident severance 15%, PKF cited as an analysis', _note)
 
+    # ── 2026-11-17 BATCH (D-FIDELITY-17): unsupported personal names removed, licence validity PERIOD guard, licence-authority cue fix + lga/mlywf, tax-over-labour authority topic, and TWO model-free statement routes
+    # (individual income-tax return deadline; business-licence validity). PLANTED on the verbatim live specimens of build a2e6611.
+    try:
+        from chike import fidelity as _f17, routing as _r17
+        _rows17 = {r['q']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'licence_followup_deploy_live_2026_11_17.json'), encoding='utf-8'))['rows']}
+        _gnq = 'GN 605A ilitolewa na nani?'
+        _gn = _rows17[_gnq]
+        _lga = _rows17['Leseni ya biashara ya LGA inahuishwa lini?']
+        _ind = _rows17['Return ya kodi ya mapato ya mtu binafsi ni lini?']
+        _np13 = _rows17['Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?']
+        _sev = _rows17['Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?']
+        _spec17 = {'invented minister/person (GN 605A) stripped': bool(_f17.strip_unsupported_names('GN 605A ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. George Simbachawene) kwa Tangazo.', _gn['q'], '')[1]),
+                   'siku 90 licence period flagged': bool(_f17.licence_validity_period_violations(_lga['q'], _lga['reply'])),
+                   'np_13 "Leseni yangu ya biashara" now reaches the authority repair': _f17.repair_licence_authority(_np13['q'], _np13['reply']) != _np13['reply'],
+                   'severance TAX question keeps TRA (tax wins over labour)': (_f17.authority_topic(_sev['q']) or ('',))[0] == 'tax',
+                   'individual-return question routes to the statement': _r17.fixed_statement_topic(_ind['q']) == 'individual_income_tax_return',
+                   's2_07 / np_13 licence questions route to the statement': _r17.fixed_statement_topic(_np13['q']) == 'business_licence_validity',
+                   'lga.go.tz replaced on a licence question': 'lga.go.tz' not in _f17.repair_licence_authority('Leseni ya biashara inaisha lini?', 'Ni mwaka. Thibitisha na LGA (lga.go.tz).')}
+        _clean17 = [_f17.strip_unsupported_names('Kamishna Mkuu wa TRA na Mamlaka ya Mapato Tanzania; Sheria ya Kodi ya Mapato.', 'x', '')[1] == [],
+                    _f17.strip_unsupported_names('Mkurugenzi Mtendaji Mkuu wa WCF anasimamia.', 'x', '')[1] == [],
+                    not _f17.licence_validity_period_violations('Leseni ya biashara inaisha lini?', 'Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa.'),
+                    _r17.fixed_statement_topic('Ada ya leseni ya biashara ni kiasi gani?') is None,
+                    _r17.fixed_statement_topic('Return ya kodi ya mapato ya kampuni ni lini?') is None,
+                    _r17.fixed_statement_topic('Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?') is None]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code17 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired17 = 'fidelity.strip_unsupported_names(' in _code17 and 'fidelity.repair_licence_authority(' in _code17 and 'fidelity.body_contradicts_constant(' in _code17
+        _v = ('FIRES' if (all(_spec17.values()) and all(_clean17) and _wired17) else 'NOT_WIRED' if (all(_spec17.values()) and all(_clean17)) else 'ERROR')
+        _note = (f'specimens: {_spec17}; clean limbs (must all be True): {_clean17}; wired (comments stripped): {_wired17}. Priced (eval/results/price_d17_2026_11_17.json): 0 flags in 562 gold answers and 0 in 8,758 training pairs for the names and period guards '
+                 '(one training false positive, "Mkurugenzi Mtendaji Mkuu", fixed by a stoplist before wiring); stored replies flag only the live specimens. 88 probes in eval/fidelity/d17_batch_probes_2026_11_17.jsonl.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-17 batch: unsupported-name strip, licence validity PERIOD guard, licence cue/lga, tax-over-labour, individual-return + licence-validity statement routes', 'fidelity',
+           'an invented minister/person, a "siku 90" licence validity, "Leseni yangu ya biashara" missing the authority repair, a severance TAX question given the labour office, the individual-return and licence-validity questions answered by the model',
+           _v, 'GN 605A issuer live reply, LGA licence live reply, np_13, the severance tax live reply, the individual-return live reply', 'offices/institutions/Acts untouched, a lawful 12-month statement, two-part fee+expiry questions left to the model, company return untouched', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

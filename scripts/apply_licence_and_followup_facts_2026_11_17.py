@@ -52,6 +52,16 @@ if "2026-11-17 re-read" not in f["primary_source"]:
 f["verified_as_at"] = TODAY
 f["correction_note"] = "2026-11-17: the fact was silent on non-residents and a model reply filled the gap with '15% kwa wasio wakazi' (the 'other payments' rate). Clarified, not corrected: 5% / 10% are unchanged."
 
+# ---- 2b. INDIVIDUAL RETURN: the CAG nine-month limb (FA2024 s.44) -- checked for individuals, 2026-11-17.
+f = d["individual_income_tax_return"]
+if "CAG CHECK 2026-11-17" not in f["verified_by"]:
+    f["verified_by"] = (f["verified_by"] + " | CAG CHECK 2026-11-17 (founder asked whether the nine-month limb applies to individuals): FA2024 No.6 s.44 reads 'a person whose financial statement is audited by the Controller and Auditor General shall file ... not later than nine months'. "
+                        "The Act says 'a person', so it does not EXCLUDE an individual, but an individual business's accounts are not audited by the CAG; the model-free individual-return statement therefore does NOT state it (and does not claim it is impossible). "
+                        "The company-return fact (corporate_income_tax_return) does state it.")
+if "exceptions in s.118" in f["correct_value"]:
+    f["correct_value"] = f["correct_value"].replace("exceptions in s.118", "exceptions: a resident with no tax payable, or with employment income taxed by PAYE only")
+f["verified_as_at"] = TODAY
+
 # ---- 3. NEW: company income-tax return deadline.
 d["corporate_income_tax_return"] = {
     "fact": ("Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo kampuni ya kawaida iwasilishe kufikia 30 Juni ya mwaka unaofuata; "
@@ -86,16 +96,21 @@ d["business_licence_authority"] = {
     "coverage_batch": "2026-11-17 follow-up (BRELA vs licence authority)",
 }
 
-# ---- 5. NEW: who issued GN 605A (a model invented 'PKF Eastern Africa').
+# ---- 5. NEW: who issued GN 605A (a model invented 'PKF Eastern Africa', then a named minister and a ministry). STATED BY OFFICE, NO PERSONAL NAME (founder, 2026-11-17).
 d["gn605a_issuer"] = {
-    "fact": ("Jedwali la kima cha chini cha mshahara (GN 605A) limetolewa na nani? Ni Amri ya Kima cha Chini cha Mshahara kwa Sekta Binafsi, 2025 (Labour Institutions (Minimum Wage for Private Sector) Order, 2025, GN 605A), "
-             "iliyotolewa na Serikali chini ya Sheria ya Taasisi za Kazi, ilichapishwa 13 Oktoba 2025 na inaanza kutumika 1 Januari 2026. Si PKF wala kampuni ya ushauri: hizo ni vyanzo vya uchambuzi tu."),
-    "correct_value": "GN 605A is the Labour Institutions (Minimum Wage for Private Sector) Order, 2025, made under the Labour Institutions Act, published in Special Supplement 9 on 13 October 2025, in force 1 January 2026; not issued by PKF or any consultancy",
-    "wrong_patterns": ["605a.*lililotolewa na pkf", "605a.*iliyotolewa na pkf", "pkf.*ilitoa.*605a", "605a.*issued by pkf", "605a.*published by pkf"],
-    "primary_source": ("Labour Institutions (Minimum Wage for Private Sector) Order, 2025, Government Notice 605A of 2025 (TanzLII/Laws.Africa reproduction via the media.tanzlii.org mirror, data/source_documents/labour/gn605a_2025_minimum_wage_order.pdf, sha256 3a139908): "
-                       "'Published in Special Supplement 9 on 13 October 2025. Assented to on 23 September 2025. Commenced on 1 January 2026. [Made under section 39(1)]', Labour Institutions Act."),
-    "verified_by": ("Direct read 2026-11-17 of the Order. It names no consultancy and contains NO average-increase figure: the 33.4% average (TZS 275,060 -> 358,322) in gn605a_average_increase rests on PRESS and ADVISORY sources (BHRRC / the Minister's briefing / PKF Eastern Africa), NOT on the Order. "
-                    "Who signed the Order was not read; the fact says 'Serikali' accordingly."),
+    "fact": ("GN 605A ni nini na nani aliitoa? Ni Amri ya Kima cha Chini cha Mshahara kwa Sekta Binafsi, 2025 (Labour Institutions (Minimum Wage for Private Sector) Order, 2025, GN 605A), iliyotolewa na Waziri anayehusika na masuala ya kazi "
+             "(Waziri wa Nchi, Ofisi ya Waziri Mkuu: Kazi, Vijana, Ajira na Watu Wenye Ulemavu) chini ya Sheria ya Taasisi za Kazi, ilichapishwa 13 Oktoba 2025 na inaanza kutumika 1 Januari 2026. Si PKF wala kampuni ya ushauri: hizo ni vyanzo vya uchambuzi tu."),
+    "correct_value": ("GN 605A is the Labour Institutions (Minimum Wage for Private Sector) Order, 2025, made by the Minister responsible for labour (signed by the Minister of State, Prime Minister's Office - Labour, Youth, Employment and Persons with Disability) under the Labour Institutions Act, "
+                      "published 13 October 2025, in force 1 January 2026; not issued by PKF or any consultancy. STATED BY OFFICE: no personal name."),
+    "wrong_patterns": ["605a.*lililotolewa na pkf", "605a.*iliyotolewa na pkf", "pkf.*ilitoa.*605a", "605a.*issued by pkf", "605a.*published by pkf", r"605a[^.?!]{0,80}(?:mhe\.?|mheshimiwa)\s+[a-z]"],
+    "primary_source": ("Labour Institutions (Minimum Wage for Private Sector) Order, 2025, Government Notice 605A of 2025: the OFFICIAL gazette copy on kazi.go.tz (data/source_documents/labour/gn605a_2025_kazi_go_tz_official.pdf, sha256 1d4145ea, 'GOVERNMENT NOTICE No. 605A published on 13/10/2025 ... "
+                       "Special Gazette of the United Republic of Tanzania No. 6 Vol. 106 Dated 13th October, 2025', '(Made under section 39(1))', signature block 'Dodoma, 23th September, 2025 ... Minister of State, Prime Minister's Office - Labour, Youth, Employment and Persons with Disability'); "
+                       "the TanzLII reproduction (labour/gn605a_2025_minimum_wage_order.pdf, sha256 3a139908) says 'Published in Special Supplement 9 on 13 October 2025 ... Commenced on 1 January 2026' and omits the signature block. "
+                       "Labour Institutions Act Cap.300 s.39(1) (labour/labour_institutions_act_cap300_2019_tanzlii.pdf, 'Legislation as at 30 November 2019', Act 3 of 2020 not applied): 'After considering the report and recommendations of the wage board and the Council, the Minister shall make a wage order determining the minimum wage ...'; "
+                       "'Minister' means the Minister for the time being responsible for labour matters."),
+    "verified_by": ("Direct read 2026-11-17 of the Order's OFFICIAL gazette copy (kazi.go.tz) and of Labour Institutions Act s.39(1). It names no consultancy and contains NO average-increase figure: the 33.4% average (TZS 275,060 -> 358,322) in gn605a_average_increase rests on PRESS and ADVISORY sources "
+                    "(BHRRC / the Minister's briefing / PKF Eastern Africa), NOT on the Order. The signer is stated BY OFFICE ONLY: a personal name is deliberately never stated in a served answer (a live reply invented 'Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. ...)'). "
+                    "LIMITS: the Act text is the 30 November 2019 consolidation with Act 3 of 2020 not applied (s.39 not checked against it); the Order's date of signature reads '23th September, 2025' on the gazette copy."),
     "status": "CONFIRMED", "verified_date": TODAY, "verified_as_at": TODAY, "effective_date": "2026-01-01",
     "coverage_batch": "2026-11-17 follow-up (GN 605A attribution)",
 }

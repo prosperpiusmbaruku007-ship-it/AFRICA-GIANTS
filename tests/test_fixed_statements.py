@@ -59,6 +59,11 @@ LIVE = {
         'Kuna ngazi 8 za mabano ya PAYE: asilimia 0 (hadi TZS 270,000), 8, 20, 25, 30, 35, 40, 45. Thibitisha na TRA (tra.go.tz).'),
     'vat_withholding_mixed_supply': ('VAT ya zuio kwa mauzo ya bidhaa na huduma pamoja inakatwaje?',
         'Kwa mauzo yenye sehemu ya bidhaa na sehemu ya huduma, thibitisha na TRA (tra.go.tz): kuanzia 1 Julai 2026, sheria inasema kiwango kinagawanywa 3:2 kwa uwiano unaofaa. Thibitisha na TRA (tra.go.tz).'),
+    # 2026-11-17: the two live specimens of build a2e6611 (eval/results/licence_followup_deploy_live_2026_11_17.json), VERBATIM.
+    'individual_income_tax_return': ('Return ya kodi ya mapato ya mtu binafsi ni lini?',
+        'Kiwango cha kodi ya mapato ya mtu binafsi ni asilimia 0%. Thibitisha na TRA (tra.go.tz).'),
+    'business_licence_validity': ('Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?',
+        'Hapana, leseni ya biashara huwa inafanyiwa upya kila mwaka, na unapaswa kuwasilisha taarifa za kila mwaka kwa BRELA. Thibitisha na halmashauri yako, au BRELA kwa kundi A (brela.go.tz).'),
 }
 
 
@@ -242,7 +247,9 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # ── GUARDS (D-FIDELITY-10): the five live replies are the founding specimens ────────────────────
 # 3b: NO ordinal-band guard is built. "Sehemu ya pili (20%)" is defensible if the 0% band is not counted and wrong if it is (the served row numbers it band 3); a guard would blank a defensible narration.
 # The PAYE band-table STATEMENT is the control for the question that asks for the table; D-FIDELITY-11 keeps guarding band EDGES. The invented-band specimen below IS caught, by the figure rule.
-PAYE_NO_GUARD = frozenset({"paye_band_table"})
+# 2026-11-17: the two new topics are also not guarded by fixed_figure_violations. business_licence_validity is guarded by the licence rules (D-FIDELITY-13 dates, D-FIDELITY-17 validity periods) in
+# chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
+PAYE_NO_GUARD = frozenset({"paye_band_table", "individual_income_tax_return", "business_licence_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

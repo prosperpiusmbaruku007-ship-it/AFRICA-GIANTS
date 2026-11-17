@@ -2495,6 +2495,17 @@ _FS_TOPICS = (
      re.compile(r"(?<![a-z])paye(?![a-z])"),
      re.compile(r"(?=.*(?:mabano|bendi|(?<![a-z])bands?(?![a-z])|viwango|ngazi|madaraja))", re.S),
      re.compile(r"adhabu|faini|riba|tarehe|lini|siku|kuchelewa|kuwasilisha|kulipa|p9|cheti|kurejesha|nssf|sdl|wcf|vat|zuio|makadirio|mfanyakazi\s+\d|mshahara\s+wa|mshahara\s+ni|sivyo|si\s+kweli|ni\s+kweli")),
+    # ---- 2026-11-17 (founder, from the live check of build a2e6611): the INDIVIDUAL income-tax return deadline and the business-licence VALIDITY. NARROW BY CONSTRUCTION (R17): each needs a subject cue AND a specific second limb,
+    # vetoes for every neighbour, and -- unlike the three hedged 2026-11-16 topics -- ACCEPTS premise phrasings ("...sivyo?", "si lazima ..."), because the statement is the WHOLE rule and a correct answer to a premise check
+    # (s2_07 and np_13 are the founding specimens). A company / partnership / VAT / PAYE question is vetoed out of the individual-return route (the company return has its own guard and fact).
+    ("individual_income_tax_return",
+     re.compile(r"(?<![a-z])(?:returns?|tamko|ritani)(?![a-z])"),
+     re.compile(r"(?=.*(?:kodi\s+ya\s+mapato|income\s+tax))(?=.*(?:mtu\s+binafsi|binafsi|individual|mfanyabiashara|biashara\s+yangu|duka\s+langu|nimejiajiri|sole\s+prop))", re.S),
+     re.compile(r"kampuni|company|corporate|ubia|partnership|(?<![a-z])vat(?![a-z])|paye|nssf|sdl|wcf|zuio|withholding|adhabu|faini|riba|kuchelewa|kuchelewesha|penalty|awamu|provisional|instal?lment|(?<![a-z])p9(?![a-z])|(?<![a-z])p10(?![a-z])|cheti|certificate|mkurugenzi|wageni|mgeni")),
+    ("business_licence_validity",
+     re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)*(?:biashara|duka|maduka|mgahawa|saluni|kioski|genge|frem|banda|hoteli|baa)|licen[cs]e\s+ya\s+(?:biashara|duka)|business\s+licen[cs]e"),
+     re.compile(r"isha|ishi|huisha|inaisha|haiishi|dumu|inadumu|upya|renew|expir|halali|(?<![a-z])valid|muda\s+wa\s+leseni|kuhuisha|inahuishwa|huhuishwa|kila\s+mwaka|mwaka\s+mmoja|miezi\s+12|(?<!\d)30\s+juni"),
+     re.compile(r"(?<![a-z])ada(?![a-z])|gharama|(?<![a-z])bei(?![a-z])|(?<![a-z])fee|adhabu|faini|penalty|kuchelewa|kuchelewesha|nipate|kupata|kuomba|naombaje|nitaombaje|wapi|mchakato|hatua|nyaraka|vigezo|requirements|(?<![a-z])tin(?![a-z])|efd|(?<![a-z])tra(?![a-z])|mgeni|wageni|uhamiaji|gn\s*487|kibali|(?<![a-z])visa|usajili\s+wa|kusajili|jina\s+la\s+biashara|kampuni|kufuta|kufutwa|kufungwa|nani\s+anatoa|inatolewa\s+na\s+nani|inagharimu|gharimu|kiasi\s+gani|(?<![a-z])cost|how\s+much|(?<![a-z])price|cheti|zimamoto|usalama|afya")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))", re.S),
@@ -2524,9 +2535,12 @@ _FS_TOPIC_ASK = {
     "wcf_disease_reporting": re.compile(r"ngapi|ndani|lini|muda|deadline|how\s+(?:many|long)"),
     "nssf_split": re.compile(r"mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split|(?<![a-z])je(?![a-z])|inawezekana|naweza|halali|vipi|ngapi"),
     "paye_band_table": re.compile(r"ngapi|gani|vipi|mpangilio|ni\s+nini|zipi|yapi|orodha|(?<![a-z])je(?![a-z])|what|which|list"),
+    # 2026-11-17: both accept the premise-check forms (the statement is the whole rule)
+    "individual_income_tax_return": re.compile(r"lini|muda|mwisho|deadline|tarehe|siku|miezi|mwezi\s+gani|ndani\s+ya|kuwasilisha|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|kusubiri|naweza"),
+    "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity"})
 
 
 def fixed_statement_topics(text: str):

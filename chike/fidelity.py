@@ -1663,6 +1663,7 @@ def constant_violations(question: str, body: str):
     if not body or not question:
         return []
     out = [("business_licence_expiry", r) for r in _c13_licence(question, body)]
+    out += [("business_licence_expiry", r) for r in licence_validity_period_violations(question, body)]
     out += [("record_keeping_period", r) for r in _c13_records(question, body)]
     out += [("tin_apply_deadline", r) for r in _c13_tin(question, body)]
     return out
@@ -1726,9 +1727,19 @@ _AUTH_HOST = re.compile(r"(?<![a-z0-9.-])((?:[a-z0-9-]+\.)*(?:go\.tz|pkfeastafri
 _AUTH_REFUSAL = re.compile(r"samahani|sijui|siwezi\s+kusaidia|nje\s+ya\s+(?:uwezo|wigo)|masuala\s+ya\s+tanzania\s+bara\s+pekee|sina\s+uhakika", re.IGNORECASE)
 
 
+# 2026-11-17: "Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?" has a LABOUR cue (severance) and NO tax cue ("kodi gani" does not match `kodi ya`), so it was judged single-topic labour and a correct
+# "Thibitisha na TRA" was rewritten to "Ofisi ya Kazi (kazi.go.tz)". A TAX-ASK ("kodi gani / ngapi", "inakatwa / inatozwa kodi", PAYE, zuio ...) on a question whose only other topic is labour makes TAX the topic. The mirror
+# question ("severance ni siku ngapi?") has no tax-ask and stays labour. A third topic present (NSSF, WCF ...) still leaves the question unjudged.
+_AUTH_TAX_ASK = re.compile(r"kodi\s+(?:gani|ngapi|kiasi)|(?:kukatwa|kukatwaje|inakatwa|hukatwa|inatozwa|hutozwa|inapigwa|hupigwa|itakatwa|nitakatwa|nitatozwa)\s+kodi|kodi\s+inayo(?:katwa|tozwa)|"
+                           r"(?<![a-z])(?:paye|zuio|withholding|tax)(?![a-z])", re.IGNORECASE)
+
+
 def authority_topic(question: str):
-    """The ONE topic row the question is about, or None (no topic, or several: not judged)."""
+    """The ONE topic row the question is about, or None (no topic, or several: not judged). Tax wins over labour on a tax-ASK."""
     hits = [t for t in _AUTH_TOPICS if t[1].search(question or "")]
+    names = {t[0] for t in hits}
+    if "labour" in names and names <= {"labour", "tax"} and _AUTH_TAX_ASK.search(question or ""):
+        return [t for t in _AUTH_TOPICS if t[0] == "tax"][0]
     return hits[0] if len(hits) == 1 else None
 
 
@@ -1879,6 +1890,11 @@ def body_contradicts_d16(question: str, body: str):
 #   carries another topic cue are all left alone, and the rewrite is idempotent.
 _D16_PKF_ISSUER_AFTER = re.compile(r"((?:lililotolewa|iliyotolewa|limetolewa|imetolewa|lilitolewa|ilitolewa|lililochapishwa|iliyochapishwa|limechapishwa|lililoandaliwa|iliyoandaliwa|issued|published|prepared)\s+(?:na|kutoka|by)\s+)PKF(?:\s+East(?:ern)?\s+Africa)?(?![a-z])", re.IGNORECASE)
 _D16_PKF_ISSUER_BEFORE = re.compile(r"(?<![a-z])PKF(?:\s+East(?:ern)?\s+Africa)?(\s+(?:ilitoa|inatoa|ilichapisha|iliandaa|issued|published|prepared))", re.IGNORECASE)
+# 2026-11-17: the live reply said "ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. ...)": an issuer verb followed by "Waziri ..." with an office the Order does not carry. The Order's own gazette copy (kazi.go.tz, "GOVERNMENT NOTICE
+# No. 605A published on 13/10/2025") is signed by "Minister of State, Prime Minister's Office - Labour, Youth, Employment and Persons with Disability" and Labour Institutions Act s.39(1) has "the Minister" make the order, so a Waziri
+# phrase after an issuer verb on a GN 605A sentence is replaced by THAT office, by title only (no personal name anywhere).
+_D17_GN605A_OFFICE = "Waziri wa Nchi, Ofisi ya Waziri Mkuu (Kazi, Vijana, Ajira na Watu Wenye Ulemavu)"
+_D16_GN605A_MINISTER = re.compile(r"((?:lililotolewa|iliyotolewa|limetolewa|imetolewa|lilitolewa|ilitolewa|lililochapishwa|iliyochapishwa|ilitoa|inatoa|ilichapisha)\s+(?:na|kutoka)\s+)Waziri(?!\s+wa\s+Nchi,\s+Ofisi|\s+anayehusika)(?:\s+wa\s+[A-Z][a-z]+(?:(?:,|\s+na)\s+[A-Z][a-z]+)*)?(?:\s+Mkuu)?", re.IGNORECASE)
 _D16_GN605A_CUE = re.compile(r"605\s*a|kima\s+cha\s+chini|minimum\s+wage", re.IGNORECASE)
 
 
@@ -1891,13 +1907,17 @@ def repair_gn605a_issuer(question: str, body: str) -> str:
         if _D16_GN605A_CUE.search(part):
             part = _D16_PKF_ISSUER_AFTER.sub(lambda m: m.group(1) + "Serikali", part)
             part = _D16_PKF_ISSUER_BEFORE.sub(lambda m: "Serikali" + m.group(1), part)
+            part = _D16_GN605A_MINISTER.sub(lambda m: m.group(1) + _D17_GN605A_OFFICE, part)
         out.append(part)
     return "".join(out)
 
 
-_D16_LICENCE_Q = re.compile(r"leseni\s+(?:ya|yangu|za)\s*(?:biashara|duka)|business\s+licen[cs]e", re.IGNORECASE)
+_D16_LICENCE_Q = re.compile(r"leseni\s+(?:(?:yangu|yetu|yako|yake|yao|ya|za)\s+)*(?:biashara|duka|maduka|mgahawa|saluni|kioski|genge|frem|banda|hoteli|baa)|licen[cs]e\s+ya\s+(?:biashara|duka)|business\s+licen[cs]e", re.IGNORECASE)
+# 2026-11-17: the first form needed "biashara"/"duka" IMMEDIATELY after ya|yangu|za, so "Leseni yangu ya biashara" (live np_13) escaped the repair; the repeated (yangu|ya ...) group fixes it and the trade words
+# a participant actually uses (mgahawa, saluni, kioski ...) are listed. A bare "leseni" stays unjudged: it is also a driving, mining or fishing licence.
 _D16_LICENCE_LABEL = "halmashauri yako, au BRELA kwa kundi A"
-_D16_NON_LICENCE_HOSTS = ("tra.go.tz", "kazi.go.tz", "osha.go.tz", "nssf.go.tz", "wcf.go.tz", "immigration.go.tz")
+_D16_NON_LICENCE_HOSTS = ("tra.go.tz", "kazi.go.tz", "osha.go.tz", "nssf.go.tz", "wcf.go.tz", "immigration.go.tz", "lga.go.tz", "mlywf.go.tz")
+# lga.go.tz and mlywf.go.tz: NO DNS RECORD (NXDOMAIN via the local resolver and 8.8.8.8 on 2026-11-17; tra.go.tz, brela.go.tz, tamisemi.go.tz resolved as controls). The model cites lga.go.tz as a licence authority in live replies.
 
 
 def repair_licence_authority(question: str, body: str) -> str:
@@ -1918,3 +1938,121 @@ def repair_licence_authority(question: str, body: str) -> str:
     if n:
         return fixed
     return re.sub(r"(?<![a-z0-9.-])" + esc + r"(?![a-z0-9-])", f"{_D16_LICENCE_LABEL} (brela.go.tz)", body, flags=re.IGNORECASE)
+
+
+# ---- D-FIDELITY-17 (2026-11-17, founder-approved batch from the live check of build a2e6611). TWO MORE FACT-PATH CONSTANTS/REPAIRS, plus the shared cues they need.
+#
+# (1) UNSUPPORTED PERSONAL NAMES. Live: "GN 605A ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. George Simbachawene)" -- a minister, a ministry and a name, none in any served row (the served row says "Serikali"/an office).
+#     GENERAL RULE: a personal name introduced by an honorific (MHE., Mheshimiwa, Dkt., Prof., Mr, Bw., Bi ...), or following an office-holder title (Waziri, Katibu Mkuu, Kamishna ...), or standing in a parenthesis directly after such a
+#     title, is REMOVED unless that name appears in the QUESTION or in a served fact. The OFFICE stays ("Waziri wa Fedha", "Kamishna Mkuu wa TRA"): institutions, Acts and offices are never judged, only a person.
+#     R25 -- the two questions at the site: (a) the defect is a fabricated, confidently stated human being in a compliance answer; no index edit reaches it (the row names no person). (b) What CORRECT output could it damage? A person the
+#     asker named (kept: the question is in the supported text); a person a served fact names (kept); an institution or Act whose name is capitalised ("Mamlaka ya Mapato Tanzania", "Sheria ya Kodi ya Mapato"); an office by title
+#     ("Kamishna Mkuu wa TRA", "Waziri wa Fedha", "Rais wa Jamhuri"): none carries an honorific+name or a title followed by a capitalised given name, so none is touched. The probes hold each.
+_NAME_WORD = r"[A-Z][a-z]{1,}(?:['’-][A-Za-z]+)*"
+_HONORIFIC = r"(?:MHE\.?|Mhe\.?|Mheshimiwa|Dkt\.?|Dr\.?|Prof\.?|Mr\.?|Mrs\.?|Ms\.?|Bw\.?|Bwana|Bi\.?|Bibi|Ndugu|Mzee)"
+_OFFICE_ONLY = (r"(?:Waziri\s+Mkuu|Naibu\s+Waziri(?:\s+wa\s+[A-Z][a-z]+(?:\s+na\s+[A-Z][a-z]+)*)?|Waziri(?:\s+wa\s+[A-Z][a-z]+(?:\s+na\s+[A-Z][a-z]+)*)?|Katibu\s+Mkuu|Kamishna\s+Mkuu|Kamishna|"
+                r"Mkurugenzi\s+Mkuu|Mkurugenzi|Rais|Gavana|Mwenyekiti)")
+_NAME_AFTER_HONORIFIC = re.compile(rf"(?<![A-Za-z])({_HONORIFIC})\s+({_NAME_WORD}(?:\s+{_NAME_WORD}){{0,2}})")
+_NAME_AFTER_OFFICE = re.compile(rf"(?<![A-Za-z])({_OFFICE_ONLY})(\s+wa\s+[A-Z]{{2,6}})?\s+({_NAME_WORD}(?:\s+{_NAME_WORD}){{1,2}})(?![a-z])")
+_NAME_PAREN = re.compile(rf"\s*\(\s*(?:{_HONORIFIC}\s*)?({_NAME_WORD}(?:\s+{_NAME_WORD}){{1,2}})\s*\)")
+_OFFICE_WORD = re.compile(r"(?:Waziri|Katibu|Kamishna|Mkurugenzi|Rais|Gavana|Mwenyekiti|Naibu)")
+
+
+# Capitalised words that are PART OF AN OFFICE OR INSTITUTION, never of a person: "Mkurugenzi Mtendaji Mkuu wa WCF", "Mkaguzi Mkuu", "Mamlaka ya Mapato" must not be read as an office followed by a given name (priced on 8,758
+# training pairs: "Mkurugenzi Mtendaji Mkuu" was the one false positive of the first form).
+_NAME_STOP = frozenset(w.casefold() for w in (
+    "Mkuu", "Mtendaji", "Msaidizi", "Mkaguzi", "Msimamizi", "Mkurugenzi", "Mwandamizi", "Mdhibiti", "Naibu", "Katibu", "Waziri", "Rais", "Mwenyekiti", "Kamishna", "Gavana", "Mamlaka", "Wakala", "Ofisi", "Idara", "Wizara",
+    "Bodi", "Mfuko", "Benki", "Tume", "Serikali", "Jamhuri", "Muungano", "Tanzania", "Afrika", "Mashariki", "Kuu", "Taifa", "Bunge", "Mahakama", "Halmashauri", "Manispaa", "Jiji", "Wilaya", "Mkoa", "Kazi", "Fedha", "Mipango",
+    "Mapato", "Biashara", "Viwanda", "Uwekezaji", "Sheria", "Kodi", "Usajili", "Leseni", "Hifadhi", "Jamii", "Fidia", "Wafanyakazi", "Usalama", "Afya", "Ajira", "Vijana", "Ulemavu", "Wenye", "Watu", "Dar", "Salaam", "Dodoma",
+    "Arusha", "Mwanza", "Zanzibar", "Tunduma", "Moshi", "Mbeya", "Tanga", "Mtwara", "Kampuni", "Shirika", "Chama", "Baraza", "Kamati", "Kitengo", "Kurugenzi", "Sekretarieti"))
+
+
+def _looks_like_a_person(name):
+    """False when any word of `name` is an office/institution/place word (the stoplist above)."""
+    return not any(w.casefold() in _NAME_STOP for w in re.findall(r"[A-Za-z]+", name))
+
+
+def _name_supported(name, supported):
+    return name.casefold() in (supported or "").casefold()
+
+
+def strip_unsupported_names(body, question="", supported=""):
+    """(new_body, [removed names]): every personal name in `body` that is NOT in `question` / `supported` (the served facts) removed; offices, institutions and Acts untouched. Idempotent."""
+    if not body:
+        return body, []
+    ctx = f"{question or ''} {supported or ''}"
+    removed = []
+
+    def drop_honorific(m):
+        if not _looks_like_a_person(m.group(2)) or _name_supported(m.group(2), ctx):
+            return m.group(0)
+        removed.append(m.group(2))
+        return ""
+
+    def drop_after_office(m):
+        if not _looks_like_a_person(m.group(3)) or _name_supported(m.group(3), ctx):
+            return m.group(0)
+        removed.append(m.group(3))
+        return m.group(1) + (m.group(2) or "")
+
+    out = _NAME_AFTER_HONORIFIC.sub(drop_honorific, body)
+
+    def drop_paren(m):
+        if not _OFFICE_WORD.search(out_before(m)) or not _looks_like_a_person(m.group(1)) or _name_supported(m.group(1), ctx):
+            return m.group(0)
+        removed.append(m.group(1))
+        return ""
+
+    def out_before(m):
+        return cur[max(0, m.start() - 90):m.start()].split(".")[-1]
+
+    out = _NAME_AFTER_OFFICE.sub(drop_after_office, out)
+    cur = out
+    out = _NAME_PAREN.sub(drop_paren, out)
+    if removed:
+        out = re.sub(r"\(\s*\)", "", out)
+        out = re.sub(r"[ \t]{2,}", " ", out)
+        out = re.sub(r"\s+([,.;:])", r"\1", out)
+    return out, removed
+
+
+# (2) A LICENCE VALIDITY PERIOD other than twelve months from issuance (or the up-to-three-years prepayment option). Live: "huisha ... ndani ya siku 90 tangu tarehe ya kuomba upya". The 2026-11-17 flip of the licence rule judged
+# CALENDAR DATES only; a numeric period slipped past. R19: a constant. A period is judged only in a sentence about the licence's VALIDITY (expiry / halali / dumu) -- a late-renewal PENALTY, a fee, a grace window or an application
+# process is a different question and is skipped by its own cue words. Periods are normalised to months; 12 and 36 are lawful (s.7(1), s.7(2)); the asker's own numbers are mentions.
+_C17_VALIDITY_S = re.compile(r"huisha|inaisha|(?<![a-z])isha(?![a-z])|halali|dumu|inadumu|validity|(?<![a-z])valid(?![a-z])|expire|muda\s+wa\s+leseni", re.IGNORECASE)
+_C17_SKIP_S = re.compile(r"adhabu|faini|(?<![a-z])ada(?![a-z])|kuchelewa|kuchelewesha|penalty|(?<![a-z])fee(?![a-z])|gharama|riba|mchakato|maombi\s+yanachukua|inachukua\s+muda|kupata\s+leseni", re.IGNORECASE)
+_C17_NUM = {**_WORD_NUM, "thelathini": 30, "sitini": 60, "tisini": 90, "ishirini": 20}
+_C17_NUMRE = r"\d{1,3}|kumi\s+na\s+(?:moja|mbili)|" + "|".join(sorted(_C17_NUM, key=len, reverse=True))
+_C17_PERIOD = re.compile(rf"(?<![\d.,])({_C17_NUMRE})\s+(siku|wiki|miezi|miaka|mwezi|mwaka|days?|weeks?|months?|years?)(?![a-z])|(?<![a-z])(siku|wiki|miezi|miaka)\s+({_C17_NUMRE})(?![\d])", re.IGNORECASE)
+_C17_UNIT_MONTHS = {"siku": 1 / 30, "day": 1 / 30, "days": 1 / 30, "wiki": 1 / 4.345, "week": 1 / 4.345, "weeks": 1 / 4.345, "mwezi": 1, "miezi": 1, "month": 1, "months": 1, "mwaka": 12, "miaka": 12, "year": 12, "years": 12}
+_C17_LAWFUL_MONTHS = (12, 36)
+
+
+def _c17_to_number(tok):
+    t = re.sub(r"\s+", " ", tok.lower().strip())
+    if t.isdigit():
+        return int(t)
+    if t.startswith("kumi na "):
+        return 10 + _C17_NUM[t.split()[-1]]
+    return _C17_NUM.get(t)
+
+
+def licence_validity_period_violations(question, body):
+    """[reason] for a licence-validity sentence stating a period that is not twelve months (or the three-year prepayment). Empty when the question is not about a licence's expiry."""
+    if not (_C13_LICENCE_Q.search(question or "") and _C13_LICENCE_Q_NEED.search(question or "")):
+        return []
+    qn = _c13_numbers(question)
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not (s and _C13_LICENCE_S.search(s) and _C17_VALIDITY_S.search(s)) or _C17_SKIP_S.search(s):
+            continue
+        for m in _C17_PERIOD.finditer(s):
+            num_tok, unit = (m.group(1), m.group(2)) if m.group(1) else (m.group(4), m.group(3))
+            n = _c17_to_number(num_tok)
+            if n is None or n in qn or _fd10_negated(s, m.start()) or _C13_LIC_NEG.search(s[max(0, m.start() - 32):m.start()]):
+                continue
+            months = n * _C17_UNIT_MONTHS[unit.lower()]
+            if any(abs(months - ok) < 0.5 for ok in _C17_LAWFUL_MONTHS):
+                continue
+            out.append(f"licence/validity-period:{n} {unit.lower()}")
+    return out

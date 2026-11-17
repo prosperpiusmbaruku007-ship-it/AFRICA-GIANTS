@@ -40,6 +40,10 @@ VAT_WH_MIXED = "vat_withholding_mixed_supply"
 WCF_DISEASE = "wcf_disease_reporting"
 NSSF_SPLIT = "nssf_split"
 PAYE_BANDS_TOPIC = "paye_band_table"
+# 2026-11-17 (founder, from the live check of build a2e6611): two more constants the model got wrong with the correct row at rank 1 -- the INDIVIDUAL income-tax return deadline (answered with a tax RATE, "asilimia 0%"; the row is rank 1
+# before and after the 215-row index) and the business-licence VALIDITY (premise phrasings "...sivyo?" / "si lazima ..." answered "Hapana ... kila mwaka" with no figure; a fabricated "siku 90"). Same discipline, same exclusion from auto-send.
+INDIVIDUAL_RETURN = "individual_income_tax_return"
+LICENCE_VALIDITY = "business_licence_validity"
 
 
 def _paye_bands_text() -> str:
@@ -134,10 +138,25 @@ STATEMENTS = {
         'VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.',
         "Finance Act 2026 s.91(b) adding VAT Act s.5(7): the taxable VALUE subject to withholding is apportioned 3:2 goods:services, in force 1 July 2026; rates 3% / 6% unchanged (VAT Act s.5(5)); no blended percentage is stated because the Act gives none",
     ),
+    INDIVIDUAL_RETURN: (
+        "individual_income_tax_return",
+        "Kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. "
+        "Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).",
+        "Income Tax Act Cap.332 R.E.2023 s.117(1) six months, s.20(1) calendar year, s.118 exceptions (locked fact individual_income_tax_return). The nine-month limb added by FA2024 s.44 is for 'a person whose financial statement is audited "
+        "by the Controller and Auditor General'; an individual business's accounts are not, so it is DELIBERATELY not stated here (checked 2026-11-17: the Act says 'a person', so it is not claimed to be impossible either)",
+    ),
+    LICENCE_VALIDITY: (
+        "business_licence_expiry_30_june",
+        "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). "
+        "Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A "
+        "(biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+        "Business Licensing Act Cap.101 R.E.2023 s.7(1)-(2) validity, s.6(1) appointment of licensing authorities by Gazette order (not located); category split from BRELA Newsletter No.10 (PORTAL tier). Locked facts "
+        "business_licence_expiry_30_june and business_licence_authority; Cap.208 R.E.2002 s.7 (30 June) superseded by Act 2 of 2014 s.6",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY})
 
 
 def fixed_statement(topic) -> ComputationResult:

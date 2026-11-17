@@ -1,0 +1,57 @@
+{
+ "swept": 8519,
+ "hits": {
+  "business_licence_validity": [
+   {
+    "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+    "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara huisha lini?",
+    "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara inaisha lini?",
+    "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?",
+    "src": "eval/fidelity/d16_followup_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+    "src": "eval/fidelity/d16_followup_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Naomba kujua leseni ya biashara inahuishwa lini kila mwaka?",
+    "src": "results/coverage_12_rerun.json"
+   },
+   {
+    "q": "Leseni yangu ya biashara huisha tarehe 30 Juni kila mwaka, sivyo?",
+    "src": "results/licence_followup_deploy_live_2026_11_17.json"
+   }
+  ],
+  "individual_income_tax_return": [
+   {
+    "q": "Return ya kodi ya mapato ya mtu binafsi ni lini?",
+    "src": "eval/fidelity/d16_followup_probes_2026_11_17.jsonl"
+   },
+   {
+    "q": "Mimi ni mfanyabiashara binafsi, mwaka wa hesabu umeisha tarehe 31 Desemba. Return yangu ya income tax natakiwa kuiwasilisha lini?",
+    "src": "eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl"
+   },
+   {
+    "q": "Nina biashara binafsi na mwaka wangu wa hesabu umeishia tarehe 31 Desemba. Kwa hiyo return ya income tax sihitaji kusubiri miezi 12 mingine, naweza kuwasilisha ndani ya miezi 6, sivyo?",
+    "src": "eval/fidelity/negated_premise_heldout/negated_premise_set2_AUTHORED.jsonl"
+   },
+   {
+    "q": "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?",
+    "src": "results/coverage_batch_draft1.json"
+   },
+   {
+    "q": "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?",
+    "src": "results/coverage_batch_draft1.json"
+   }
+  ]
+ }
+}

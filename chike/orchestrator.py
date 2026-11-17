@@ -1205,6 +1205,8 @@ class Orchestrator:
         # 2026-11-17: two more single-clause repairs (R25 blocks at fidelity.repair_gn605a_issuer and fidelity.repair_licence_authority): a consultancy named as the ISSUER of GN 605A, and a business-licence
         # citation that is BRELA alone or a non-licence authority.
         repaired = fidelity.repair_licence_authority(sub.sub_question.text, fidelity.repair_gn605a_issuer(sub.sub_question.text, repaired))
+        # 2026-11-17 (D-FIDELITY-17): a personal name in the body that the question and the served facts do not carry is removed (an office, an institution or an Act is never judged). R25 block at fidelity.strip_unsupported_names.
+        repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
         if repaired != cleaned:
             cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)

@@ -1,0 +1,310 @@
+{
+ "specimens_inert": [],
+ "populations": {
+  "STORED REPLIES": {
+   "pairs": 2327,
+   "guards": {
+    "names": {
+     "flags": 4,
+     "rows": [
+      {
+       "src": "gate_production_0e11c3d.json",
+       "q": "Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?",
+       "flags": [
+        "Samia Suluhu Hassan"
+       ],
+       "reply": "Hapana. GN 487A haikuwa na muda wa 'kujiandaa' uliotolewa rasmi. Ilisainiwa na Rais Samia Suluhu Hassan tarehe 28 Julai 2025 na kuanza kutumika mara moja siku hiyo hiyo -- hakukuwa na muda wa mpito. Thibitisha na tangazo rasmi la Serikali (government gazette) kwenye tanzlii.org."
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+       "flags": [
+        "Kassim Majaliwa"
+       ],
+       "reply": "Hapana. Hazarau ya TZS 500,000 kwa mwezi haikutolewa na GN 605A. Hazarau hiyo imetolewa na Rais Samia katika hotuba yake ya 31 Julai 2025, lakini haijawa amri rasmi bado. Amri rasmi ni ile iliyotolewa na Waziri Mkuu Kassim Majaliwa kupitia GN 605A, ambayo ina viwango vilivyothibitishwa. Subiri taari"
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Serikali ilitoa muda wa kujiandaa baada ya GN 487A kutangazwa mnamo Julai 2025?",
+       "flags": [
+        "Samia Suluhu Hassan"
+       ],
+       "reply": "Hapana. GN 487A haikuwa na muda wa 'kujiandaa' uliotolewa rasmi. Ilisainiwa na Rais Samia Suluhu Hassan tarehe 28 Julai 2025 na kuanza kutumika mara moja siku hiyo hiyo -- hakukuwa na muda wa mpito. Thibitisha na tangazo rasmi la Serikali (government gazette) kwenye tanzlii.org."
+      },
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "GN 605A ilitolewa na nani?",
+       "flags": [
+        "George Simbachawene"
+       ],
+       "reply": "GN 605A ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. George Simbachawene) kwa Tangazo Rasmi la Serikali Na. 605A, tarehe 13 Oktoba 2025. Ilianza kutumika tarehe 1 Januari 2026. Thibitisha na TanzLII.org."
+      }
+     ]
+    },
+    "licence_period": {
+     "flags": 1,
+     "rows": [
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+       "flags": [
+        "licence/validity-period:90 siku"
+       ],
+       "reply": "Leseni ya biashara ya LGA huisha mwaka wake ndani ya siku 90 tangu tarehe ya kuomba upya. Thibitisha na LGA (lga.go.tz)."
+      }
+     ]
+    },
+    "licence_authority": {
+     "flags": 4,
+     "rows": [
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hapana, leseni ya biashara inatakiwa kuomba upya kila mwaka, na huisha ikiwa itakuwa imefutwa. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "Leseni ya biashara ya LGA inahuishwa lini?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Leseni ya biashara ya LGA huisha mwaka wake ndani ya siku 90 tangu tarehe ya kuomba upya. Thibitisha na LGA (lga.go.tz)."
+      },
+      {
+       "src": "negated_premise_live_2026_11_16.json",
+       "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hapana, leseni ya biashara inatakiwa kuwa updated kila mwaka ifikapo tarehe 31 Machi. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "negated_premise_set2_live_2026_11_17.json",
+       "q": "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hapana, leseni ya biashara huisha kila mwaka ifikapo tarehe 30 Juni. Huwezi kuendelea nayo bila kuihuisha. Thibitisha na BRELA (brela.go.tz)."
+      }
+     ]
+    },
+    "authority_repair_newly_changed": {
+     "flags": 1,
+     "rows": [
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "Nikiachishwa kazi nitakatwa kodi gani kwenye malipo ya severance?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Malipo ya kuachishwa kazi yanaweza kuwa sehemu ya mapato ya ajira yanayotozwa kodi. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+      }
+     ]
+    },
+    "gn605a": {
+     "flags": 4,
+     "rows": [
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Je, mshahara wa chini wa TZS 500,000 kwa sekta ya umma umetokana na GN 605A?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hapana. Hazarau ya TZS 500,000 kwa mwezi haikutolewa na GN 605A. Hazarau hiyo imetolewa na Rais Samia katika hotuba yake ya 31 Julai 2025, lakini haijawa amri rasmi bado. Amri rasmi ni ile iliyotolewa na Waziri Mkuu Kassim Majaliwa kupitia GN 605A, ambayo ina viwango vilivyothibitishwa. Subiri taari"
+      },
+      {
+       "src": "gate_production_c2143c0.json",
+       "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na PKF Eastern Africa kwa kila mfanyakazi wake. Thibitisha na PKF Eastern Africa (pkfeastafrica.com)."
+      },
+      {
+       "src": "licence_followup_deploy_live_2026_11_17.json",
+       "q": "GN 605A ilitolewa na nani?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "GN 605A ilitolewa na Waziri wa Kazi, Mawasiliano na Uchukuzi (MHE. George Simbachawene) kwa Tangazo Rasmi la Serikali Na. 605A, tarehe 13 Oktoba 2025. Ilianza kutumika tarehe 1 Januari 2026. Thibitisha na TanzLII.org."
+      },
+      {
+       "src": "np_batch_deploy_live_2026_11_17.json",
+       "q": "Mwajiri anagundua vipi kiwango cha mshahara wa chini cha GN 605A kinachofaa kwa kila mfanyakazi wake?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kila mwajiri lazima atumie jedwali la GN 605A lililotolewa na PKF Eastern Africa kwa kila mfanyakazi wake. Thibitisha na Ofisi ya Kazi (kazi.go.tz)."
+      }
+     ]
+    }
+   }
+  },
+  "GOLD": {
+   "pairs": 562,
+   "guards": {
+    "names": {
+     "flags": 0,
+     "rows": []
+    },
+    "licence_period": {
+     "flags": 0,
+     "rows": []
+    },
+    "licence_authority": {
+     "flags": 0,
+     "rows": []
+    },
+    "authority_repair_newly_changed": {
+     "flags": 0,
+     "rows": []
+    },
+    "gn605a": {
+     "flags": 0,
+     "rows": []
+    }
+   }
+  },
+  "TRAINING": {
+   "pairs": 8758,
+   "guards": {
+    "names": {
+     "flags": 0,
+     "rows": []
+    },
+    "licence_period": {
+     "flags": 0,
+     "rows": []
+    },
+    "licence_authority": {
+     "flags": 14,
+     "rows": [
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Naomba kuuliza kuhusu adhabu ya kuchelewesha uhuishaji wa leseni ya biashara. Kama nimechelewa, nitalipa pigo gani?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kama umechelewa kuhuisha leseni yako ya biashara, utatozwa adhabu ya asilimia 25 ya kutolipa kwa wakati. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Ni hela ngapi huwa adhabu ya kuchelewa kuhuisha leseni ya biashara kuanzia siku ya 31?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kuchelewa kuhuisha leseni kuna adhabu ambayo huongezeka kila baada ya siku 30. Maelezo zaidi kuhusu kiasi kamili cha adhabu yanaweza kupatikana kwa kuwasiliana na BRELA moja kwa moja au kuthibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Ule malipo ya dola 4000 kwa mwaka kwa ajili ya patent, je, inanihusu mimi kama nina leseni ya biashara?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kama mwenye leseni ya biashara unapaswa kufahamu kama utahitajika kulipia ada ya Hataza kila mwaka. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Habari Chike, je, inachukua muda gani kupata leseni ya biashara baada ya maombi?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kwa kawaida inachukua siku 1 tu kupata leseni ya biashara baada ya maombi kukamilika. Thibitisha na BRELA Official (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Kama nimechelewa ku renew leseni yangu ya biashara, faini yake ni asilimia ngapi?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Adhabu ya kuchelewa kuhuisha Leseni ya Biashara ni asilimia 25%. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Nataka kujua hasa ni kiasi gani cha faini kinatozwa nikichelewa kurudisha ubarizi wa leseni yangu ya biashara baada ya siku 30 kupita?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hakuna kiasi maalum cha faini kilichotajwa hapa moja kwa moja, lakini adhabu ya kuchelewesha kuhuisha leseni ya biashara huongezeka baada ya siku 30. Ni vyema ukawasiliana na BRELA au ukabatilisha na nyaraka zao ili kujua malipo kamili. (brela.go.tz)"
+      },
+      {
+       "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+       "q": "Niongoze kuhusu hii leseni ya biashara, Business Licensing Act Cap. 101, section 14A(2) ni muhimu kwangu kama mjasiriamali?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kifungu cha 14A(2) cha Sheria ya Leseni za Biashara (Cap. 101) kinaeleza mahitaji au taratibu mahususi za kupata au kudumisha leseni za biashara. Ni muhimu kuzingatia ili kuhakikisha biashara yako inafanya kazi kisheria. Thibitisha na mamlaka husika (immigration.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Kama nimechelewa ku renew leseni yangu ya biashara, faini yake ni asilimia ngapi?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Adhabu ya kuchelewa kuhuisha Leseni ya Biashara ni asilimia 25%. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Habari Chike, je, inachukua muda gani kupata leseni ya biashara baada ya maombi?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kwa kawaida inachukua siku 1 tu kupata leseni ya biashara baada ya maombi kukamilika. Thibitisha na BRELA Official (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Niongoze kuhusu hii leseni ya biashara, Business Licensing Act Cap. 101, section 14A(2) ni muhimu kwangu kama mjasiriamali?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kifungu cha 14A(2) cha Sheria ya Leseni za Biashara (Cap. 101) kinaeleza mahitaji au taratibu mahususi za kupata au kudumisha leseni za biashara. Ni muhimu kuzingatia ili kuhakikisha biashara yako inafanya kazi kisheria. Thibitisha na mamlaka husika (immigration.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Naomba kuuliza kuhusu adhabu ya kuchelewesha uhuishaji wa leseni ya biashara. Kama nimechelewa, nitalipa pigo gani?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kama umechelewa kuhuisha leseni yako ya biashara, utatozwa adhabu ya asilimia 25 ya kutolipa kwa wakati. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Ule malipo ya dola 4000 kwa mwaka kwa ajili ya patent, je, inanihusu mimi kama nina leseni ya biashara?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kama mwenye leseni ya biashara unapaswa kufahamu kama utahitajika kulipia ada ya Hataza kila mwaka. Thibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Ni hela ngapi huwa adhabu ya kuchelewa kuhuisha leseni ya biashara kuanzia siku ya 31?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Kuchelewa kuhuisha leseni kuna adhabu ambayo huongezeka kila baada ya siku 30. Maelezo zaidi kuhusu kiasi kamili cha adhabu yanaweza kupatikana kwa kuwasiliana na BRELA moja kwa moja au kuthibitisha na BRELA (brela.go.tz)."
+      },
+      {
+       "src": "datasets/tier1a/sft/train_sft.jsonl",
+       "q": "Nataka kujua hasa ni kiasi gani cha faini kinatozwa nikichelewa kurudisha ubarizi wa leseni yangu ya biashara baada ya siku 30 kupita?",
+       "flags": [
+        "changed"
+       ],
+       "reply": "Hakuna kiasi maalum cha faini kilichotajwa hapa moja kwa moja, lakini adhabu ya kuchelewesha kuhuisha leseni ya biashara huongezeka baada ya siku 30. Ni vyema ukawasiliana na BRELA au ukabatilisha na nyaraka zao ili kujua malipo kamili. (brela.go.tz)"
+      }
+     ]
+    },
+    "authority_repair_newly_changed": {
+     "flags": 0,
+     "rows": []
+    },
+    "gn605a": {
+     "flags": 0,
+     "rows": []
+    }
+   }
+  }
+ }
+}

@@ -1124,7 +1124,7 @@ _FOLLOWUP_2026_11_17 = {
     'business_licence_authority':
         'Leseni ya biashara inatolewa na nani, halmashauri au BRELA? Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa: uagizaji na usafirishaji nje, benki, usafirishaji wa abiria na mizigo, clearing and forwarding) hutolewa na BRELA tangu 1 Julai 2017 (Sheria ya Leseni za Biashara; BRELA).',
     'gn605a_issuer':
-        'GN 605A ni nini na nani aliitoa? Ni Amri ya Kima cha Chini cha Mshahara kwa Sekta Binafsi, 2025, iliyotolewa na Serikali chini ya Sheria ya Taasisi za Kazi, 13 Oktoba 2025, inaanza 1 Januari 2026. Si PKF wala kampuni ya ushauri: hizo ni vyanzo vya uchambuzi tu.',
+        'GN 605A ni nini na nani aliitoa? Ni Amri ya Kima cha Chini cha Mshahara kwa Sekta Binafsi, 2025, iliyotolewa na Waziri anayehusika na masuala ya kazi (Waziri wa Nchi, Ofisi ya Waziri Mkuu: Kazi, Vijana, Ajira na Watu Wenye Ulemavu) chini ya Sheria ya Taasisi za Kazi, 13 Oktoba 2025; inaanza 1 Januari 2026. Si PKF wala kampuni ya ushauri.',
     'severance_pay_income_tax':
         'Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni mapato ya ajira: yanaingia kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. Kuna kanuni za kugawa malipo ya miaka ya nyuma: thibitisha kiasi chako na TRA (Sheria ya Kodi ya Mapato).',
 }

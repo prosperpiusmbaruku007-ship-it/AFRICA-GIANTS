@@ -268,7 +268,8 @@ def test_undeclared_sources_are_COUNTED_so_the_gap_cannot_go_quiet():
     # GN 668/2021, GN 47/2017, VAT Act and Income Tax Act R.E.2023, three VAT amending Regulations, two TRA captures). Declared, so `undeclared` did not grow.
     # 78 -> 85 on 2026-11-17: seven sources cached WITH their editions for the licence-validity / dividend / company-return / GN 605A follow-up (Finance Acts 2024 and 2025, Business Licensing Act Cap.101 R.E.2023 and the
     # superseded Cap.208 2002 print, BRELA's 2021 amendments matrix and Newsletter No.10, the GN 605A Order). All declared, so `undeclared` did not grow.
-    assert man["counts"]["files"] == 85, (
+    # 85 -> 87 on 2026-11-17 (batch 2): the OFFICIAL kazi.go.tz copy of GN 605A (it carries the signature block the TanzLII reproduction omits) and the Labour Institutions Act Cap.300 (30 Nov 2019 consolidation). Both declared.
+    assert man["counts"]["files"] == 87, (
         f"the source tree changed size ({man['counts']['files']} files) -- rebuild the manifest "
         f"and re-derive this number rather than editing it")
     assert undeclared <= 52, (

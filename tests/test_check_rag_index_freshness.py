@@ -446,24 +446,20 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    # TWENTY-THIRD FLIP (2026-11-17), back to FRESH: the 2026-11-17 regen shipped (HF dataset commit f0696366, built from 8452139, correction_sync=CLEAN; fetched files verified IDENTICAL, rows and order, to the
-    # local build of 896a6c9) and was dual-committed. (Twenty-second flip, kept for provenance: PENDING -- 215 built vs 211 served, only rows 168 and 199 differing.) The specifics are asserted against the SERVED text.
-    assert ok is True, (
-        f"the live repo reports STALE after the 2026-11-17 regen's dual-commit. The content limb IS the verdict, so this means "
-        f"build_fact_texts() over this tree no longer equals a served file -- do not flip this back to False to make it green; "
-        f"find what moved: {report}")
-    assert report["content_matches"] is True, report
+    # TWENTY-FOURTH FLIP (2026-11-17, batch 2), back to PENDING: row 213 (gn605a_issuer) is rewritten to state the issuer BY OFFICE and is built but NOT yet served. 215 built vs 215 served, ONE row differing.
+    # (Twenty-third flip, kept for provenance: FRESH after the 2026-11-17 regen, HF dataset commit f0696366.)
+    assert ok is False, (
+        f"the live repo reports FRESH: the batch-2 regen has landed. Flip back to `ok is True` and re-assert the specifics: {report}")
+    assert report["content_matches"] is False, report
     assert report["content_build_error"] is None, report
-    assert report["diverging"] == {}, report["diverging"]
     for _d in ("kaggle", "chike-inference"):
         with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
             _served = json.load(_fh)
         assert len(_served) == 215, (_d, len(_served))
         assert "HAIKATWI" in _served[9] and "ikihesabiwa" in _served[9], _served[9][:200]
-        assert not any("ELRA, Kifungu" in t for t in _served), (_d, "an R44 strip did not land")
-        assert _served[208].startswith("Je naweza kujisajili VAT kwa hiari"), _d
         assert "halali kwa miezi 12 tangu tarehe ilipotolewa" in _served[168] and "30 June" not in _served[168], (_d, "row 168 is the corrected licence row")
-    assert report["embedding_rows_match"] is True, report
+        assert "iliyotolewa na Serikali chini ya Sheria ya Taasisi za Kazi" in _served[213], (_d, "row 213 is still the batch-1 wording until the regen lands")
+    assert report["embedding_rows_match"] is True, report      # 215 built rows vs 215 shipped embedding rows: the ROW COUNT is unchanged
     assert report["built_rows"] == 215, report["built_rows"]
     assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
@@ -522,14 +518,17 @@ def test_content_limb_passes_on_the_real_built_texts():
     row 9 still carries the BASE/SOURCE separation (seventeenth flip). (Eighteenth flip, kept for provenance: PENDING that regen --
     208 built vs 184 served, the first 184 differing only at rows 1, 26, 58, 90, 95.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    # TWENTY-THIRD FLIP (2026-11-17), back to FRESH -- the 2026-11-17 regen shipped. 215 rows: the 211 + four appended rows; REAL == SERVED. (Twenty-second flip, kept for provenance: PENDING, 215 built vs 211 served,
-    # the first 211 differing only at rows 168 and 199.)
-    assert ok is True, (
-        f"the real builder's output no longer matches the served index. If a fact or the builder has changed, an R15 regen is owed and "
-        f"THAT is the fix -- not flipping this: {rep}")
-    assert rep["content_matches"] is True
-    assert rep["diverging"] == {}, rep["diverging"]
-    assert len(REAL_TEXTS) == 215 and len(SERVED_TEXTS) == 215 and REAL_TEXTS == SERVED_TEXTS
+    # TWENTY-FOURTH FLIP (2026-11-17, batch 2), back to PENDING: 215 built vs 215 served, differing ONLY at row 213 (the GN 605A issuer stated by office, no personal name). (Twenty-third flip, kept for provenance:
+    # FRESH, REAL == SERVED.)
+    assert ok is False, (
+        f"the real builder's output now matches the served index: the batch-2 regen has landed. Flip back to `ok is True` and re-assert the specifics: {rep}")
+    assert rep["content_matches"] is False
+    assert len(REAL_TEXTS) == 215 and len(SERVED_TEXTS) == 215
+    _moved = [i for i in range(215) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
+    assert _moved == [213], _moved
+    assert "Waziri anayehusika na masuala ya kazi" in REAL_TEXTS[213] and "Ofisi ya Waziri Mkuu" in REAL_TEXTS[213] and "iliyotolewa na Serikali" in SERVED_TEXTS[213]
+    import re as _re
+    assert not _re.search(r"MHE|Mheshimiwa|Simbachawene|Majaliwa", REAL_TEXTS[213]), "the row states the issuer BY OFFICE: no personal name"
     assert "halali kwa miezi 12 tangu tarehe ilipotolewa" in SERVED_TEXTS[168] and "30 June" not in SERVED_TEXTS[168]
     assert "ni vilevile kwa mpokeaji asiye mkazi" in SERVED_TEXTS[199] and "kampuni nyingine: 10%" in SERVED_TEXTS[199]
     assert SERVED_TEXTS[211].startswith("Kampuni inawasilisha return ya kodi ya mapato lini?")

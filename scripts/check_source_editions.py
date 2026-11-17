@@ -323,6 +323,18 @@ DECLARED = {
         'edition_evidence': "TanzLII/Laws.Africa reproduction of 'Labour Institutions (Minimum Wage for Private Sector) Order, 2025 (Government Notice 605A of 2025)', 'Published in Special Supplement 9 on 13 October 2025. Assented to on 23 September 2025. Commenced on 1 January 2026', '[Made under section 39(1)]' of the Labour Institutions Act. Names no consultancy; contains no average-increase figure. Fetched from the media.tanzlii.org mirror recorded in locked fact gn605a_average_increase (reachable by plain curl; the HTML front end is the CAPTCHA'd one).",
         'superseded': False,
     },
+    'labour/gn605a_2025_kazi_go_tz_official.pdf': {
+        'kind': 'gazette',
+        'edition': 'GN No. 605A, published 13/10/2025 (Special Gazette No. 6 Vol. 106, official copy on kazi.go.tz)',
+        'edition_evidence': "page 1: 'GOVERNMENT NOTICE No. 605A published on 13/10/2025 LABOUR INSTITUTIONS ACT, (CAP. 300) ORDER (Made under section 39(1)) THE LABOUR INSTITUTIONS (MINIMUM WAGE FOR PRIVATE SECTOR) ORDER, 2025'; 'Special Gazette of the United Republic of Tanzania No. 6 Vol. 106 Dated 13th October, 2025'; final page signature block 'Dodoma, 23th September, 2025 ... Minister of State, Prime Minister's Office - Labour, Youth, Employment and Persons with Disability'. The OFFICIAL copy: unlike the TanzLII reproduction it carries the signature block. Fetched from kazi.go.tz 2026-11-17 (search-located URL).",
+        'superseded': False,
+    },
+    'labour/labour_institutions_act_cap300_2019_tanzlii.pdf': {
+        'kind': 'statute',
+        'edition': 'Cap. 300 as at 30 November 2019 (Act 3 of 2020 not applied)',
+        'edition_evidence': "cover: 'Tanzania Labour Institutions Act Chapter 300 Legislation as at 30 November 2019. Note: There are outstanding amendments that have not yet been applied: Act 3 of 2020'. s.39(1) 'After considering the report and recommendations of the wage board and the Council, the Minister shall make a wage order determining the minimum wage and other conditions of employment ...'; 'Minister' means the Minister for the time being responsible for labour matters. A 2019 consolidation: s.39 has NOT been checked against Act 3 of 2020 or later amendments.",
+        'superseded': False,
+    },
     'tra/gn225_2015_vat_general_regulations.pdf': {
         'kind': 'gazette',
         'edition': 'GN No. 225, published 19/06/2015',
