@@ -58,9 +58,12 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # ⭐ BUMPED 2026-11-17 (batch 2): row 213 (gn605a_issuer) rewritten to state the issuer BY OFFICE; the index stays 215 rows. Previous value, kept for rollback:
 # 97696157be5acb0d98ac1654bae924301b55ea1ca9d962888f05e3253de680c7 -- the 215-row index of a2e6611. Computed from the fetched HF file (dataset commit 9882b1b7, built from 8c9ecfd),
 # verified IDENTICAL (rows and order) to the local build of 8c9ecfd, and verified to differ from the served index at row 213 ONLY (text and embedding), BEFORE it was committed.
+# ⭐ BUMPED 2026-11-17 (batch 3): ONE row appended (company_annual_return_deadline, index 215); 215 -> 216 rows. Previous value, kept for rollback:
+# 456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13 -- the 215-row index of e9e429e. Computed from the fetched HF file (dataset commit 8dfb5d56, built from edd7357),
+# verified IDENTICAL (rows and order) to the local build, and verified to equal the served index on the first 215 rows (text and embedding) with row 215 the only addition, BEFORE it was committed.
 EXPECTED_SERVED_SHA256 = (
-    "456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13")
-EXPECTED_ROWS = 215
+    "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a")
+EXPECTED_ROWS = 216
 
 
 def _src():

@@ -478,8 +478,8 @@ PINNED = {
     "business_licence_authority": ("present_elsewhere", "leseni za kundi A"),
     "gn605a_issuer": ("present_elsewhere", "Si PKF wala kampuni ya ushauri"),
     "severance_pay_income_tax": ("present_elsewhere", "hakuna kiwango maalum cha asilimia 15"),
-    # ---- 2026-11-17 batch 3: ONE NEW fact, pending the Kaggle regen (test_pending_r15_keys_are_still_pending flips it the moment it lands).
-    "company_annual_return_deadline": ("pending_r15", None),
+    # ---- 2026-11-17 batch 3: ONE NEW fact, SHIPPED by the Kaggle regen (converted from pending_r15).
+    "company_annual_return_deadline": ("present_elsewhere", "siku 28 baada ya tarehe hiyo"),   # shipped by the batch-3 regen (HF dataset commit 8dfb5d56, built from edd7357): converted from pending_r15
 }
 
 
