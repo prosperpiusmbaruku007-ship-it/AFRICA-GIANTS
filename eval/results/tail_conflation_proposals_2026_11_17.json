@@ -1,7 +1,7 @@
 {
  "date": "2026-11-17",
  "read_only": true,
- "n_rows": 32,
+ "n_rows": 36,
  "rows": [
   {
    "stage": "cleaned",
@@ -9,11 +9,11 @@
    "line": 29,
    "question": "Kiwango cha chini kabisa cha mshahara chini ya GN 605A ni kiasi gani?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini')",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
    "old_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya madini ya kimataifa na nishati. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
-   "new_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+   "new_sw": "Kiwango cha chini kabisa katika GN 605A ni TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani); kilimo na sekta zisizotajwa ni TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
    "old_en": "The lowest minimum wage for the general sector is approximately TZS 175,000 per month. Rates reach up to TZS 765,900 for the international mining and energy sector. Confirm your sector's exact rate with MLYWF.",
-   "new_en": "The lowest minimum wage for the general sector is approximately TZS 175,000 per month. Rates reach up to TZS 765,900 for the energy sector (international companies). Confirm your sector's exact rate with MLYWF.",
+   "new_en": "The lowest rate in GN 605A is TZS 80,000 per month (other domestic workers); agriculture and unspecified sectors are TZS 175,000 per month. Rates reach up to TZS 765,900 for the energy sector (international companies). Confirm your sector's exact rate with MLYWF.",
    "old_sha256": "6a2bb5836989dad0"
   },
   {
@@ -35,11 +35,11 @@
    "line": 29,
    "question": "Kiwango cha chini kabisa cha mshahara chini ya GN 605A ni kiasi gani?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini')",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
    "old_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya madini ya kimataifa na nishati. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
-   "new_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+   "new_sw": "Kiwango cha chini kabisa katika GN 605A ni TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani); kilimo na sekta zisizotajwa ni TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
    "old_en": "The lowest minimum wage for the general sector is approximately TZS 175,000 per month. Rates reach up to TZS 765,900 for the international mining and energy sector. Confirm your sector's exact rate with MLYWF.",
-   "new_en": "The lowest minimum wage for the general sector is approximately TZS 175,000 per month. Rates reach up to TZS 765,900 for the energy sector (international companies). Confirm your sector's exact rate with MLYWF.",
+   "new_en": "The lowest rate in GN 605A is TZS 80,000 per month (other domestic workers); agriculture and unspecified sectors are TZS 175,000 per month. Rates reach up to TZS 765,900 for the energy sector (international companies). Confirm your sector's exact rate with MLYWF.",
    "old_sha256": "6a2bb5836989dad0"
   },
   {
@@ -54,6 +54,19 @@
    "old_en": "The highest minimum wage is TZS 765,900 per month — applicable to the international mining and energy sector. This is a floor; employers may pay above this. Confirm your sector with MLYWF.",
    "new_en": "The highest minimum wage is TZS 765,900 per month — applicable to the energy sector (international companies). This is a floor; employers may pay above this. Confirm your sector with MLYWF.",
    "old_sha256": "6efca68ae342bc00"
+  },
+  {
+   "stage": "cleaned",
+   "file": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "line": 231,
+   "question": "NSSF Tanzania ina mipaka ya chini ya mchango — je, kuna kiwango cha chini?",
+   "action": "repair",
+   "reason": "low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
+   "old_sw": "Hakuna kiwango cha chini cha shilingi kilichowekwa kisheria kwa michango ya NSSF. Mchango ni asilimia ya mshahara mkubwa wa jumla — 20% (mwajiri 10% + mfanyakazi 10%). Hata mfanyakazi anayepata mshahara mdogo sana analipa NSSF kwa asilimia hiyo hiyo. Kiwango cha chini cha mshahara (GN 605A — TZS 175,000-765,900 kulingana na sekta) kinaathiri kiwango cha chini cha mshahara, si hesabu ya NSSF.",
+   "new_sw": "Hakuna kiwango cha chini cha shilingi kilichowekwa kisheria kwa michango ya NSSF. Mchango ni asilimia ya mshahara mkubwa wa jumla — 20% (mwajiri 10% + mfanyakazi 10%). Hata mfanyakazi anayepata mshahara mdogo sana analipa NSSF kwa asilimia hiyo hiyo. Kiwango cha chini cha mshahara (GN 605A — TZS 80,000 hadi 765,900 kulingana na sekta) kinaathiri kiwango cha chini cha mshahara, si hesabu ya NSSF.",
+   "old_en": "There is no legally prescribed minimum shilling amount for NSSF contributions. The contribution is a percentage of gross wage — 20% (employer 10% + employee 10%). Even an employee earning a very low wage pays NSSF at that same percentage. The minimum wage (GN 605A — TZS 175,000-765,900 by sector) affects the minimum wage payable, not the NSSF calculation.",
+   "new_en": "There is no legally prescribed minimum shilling amount for NSSF contributions. The contribution is a percentage of gross wage — 20% (employer 10% + employee 10%). Even an employee earning a very low wage pays NSSF at that same percentage. The minimum wage (GN 605A — TZS 80,000 to 765,900 by sector) affects the minimum wage payable, not the NSSF calculation.",
+   "old_sha256": "8cf5c0ef3bb9dd67"
   },
   {
    "stage": "cleaned",
@@ -126,9 +139,9 @@
    "line": 48,
    "question": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A ni TZS ngapi?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini'); tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors; tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
    "old_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya madini ya kimataifa na nishati. Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha kiwango halisi cha sekta yako na PKF Eastern Africa au TanzLII.",
-   "new_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya nishati (kampuni za kimataifa). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha kiwango halisi cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya nishati (kampuni za kimataifa). Kiwango cha chini kabisa ni TZS 80,000 (wafanyakazi wengine wa nyumbani). Thibitisha kiwango halisi cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "cbdd6bce9f7c54cf"
@@ -165,12 +178,25 @@
    "line": 52,
    "question": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni TZS ngapi?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini'); tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors; tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
    "old_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni karibu TZS 175,000 kwa mwezi — kwa baadhi ya sekta za jumla. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: karibu TZS 175,000 (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (madini ya kimataifa na nishati)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na PKF Eastern Africa au TanzLII.",
-   "new_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni karibu TZS 175,000 kwa mwezi — kwa baadhi ya sekta za jumla. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: karibu TZS 175,000 (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (nishati, kampuni za kimataifa)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni TZS 80,000 kwa mwezi — kwa wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa ni TZS 175,000. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: TZS 80,000 (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (nishati, kampuni za kimataifa)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "645f2e0b1a3f17e9"
+  },
+  {
+   "stage": "authored_sft",
+   "file": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "line": 53,
+   "question": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni ipi — kutoka chini kabisa hadi juu kabisa?",
+   "action": "repair",
+   "reason": "low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
+   "old_sw": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: karibu TZS 175,000 kwa mwezi (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya nishati, kampuni za kimataifa)\n\nOngezeko la wastani ni asilimia 33.4. Viwango halisi vya sekta yako na sub-sector vinapatikana kwenye orodha ya GN 605A (sekta 16, sub-sectors 46). Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya nishati, kampuni za kimataifa)\n\nOngezeko la wastani ni asilimia 33.4. Viwango halisi vya sekta yako na sub-sector vinapatikana kwenye orodha ya GN 605A (sekta 16, sub-sectors 46). Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "old_en": null,
+   "new_en": null,
+   "old_sha256": "de4b3ae88e4fb270"
   },
   {
    "stage": "authored_sft",
@@ -230,12 +256,25 @@
    "line": 469,
    "question": "Kiwango cha chini kabisa cha mshahara chini ya GN 605A ni kiasi gani?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini')",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
    "old_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya madini ya kimataifa na nishati. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
-   "new_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+   "new_sw": "Kiwango cha chini kabisa katika GN 605A ni TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani); kilimo na sekta zisizotajwa ni TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "6a2bb5836989dad0"
+  },
+  {
+   "stage": "export",
+   "file": "datasets/tier1a/sft/train_sft.jsonl",
+   "line": 688,
+   "question": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni ipi — kutoka chini kabisa hadi juu kabisa?",
+   "action": "repair",
+   "reason": "low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
+   "old_sw": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: karibu TZS 175,000 kwa mwezi (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya nishati, kampuni za kimataifa)\n\nOngezeko la wastani ni asilimia 33.4. Viwango halisi vya sekta yako na sub-sector vinapatikana kwenye orodha ya GN 605A (sekta 16, sub-sectors 46). Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Anuwai kamili ya viwango vya mshahara wa chini chini ya GN 605A ni:\n\nCHINI KABISA: TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)\nWASTANI: TZS 358,322 kwa mwezi (wastani wa sekta zote 16)\nJUU KABISA: karibu TZS 765,900 kwa mwezi (sekta ya nishati, kampuni za kimataifa)\n\nOngezeko la wastani ni asilimia 33.4. Viwango halisi vya sekta yako na sub-sector vinapatikana kwenye orodha ya GN 605A (sekta 16, sub-sectors 46). Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "old_en": null,
+   "new_en": null,
+   "old_sha256": "de4b3ae88e4fb270"
   },
   {
    "stage": "export",
@@ -256,9 +295,9 @@
    "line": 1117,
    "question": "Kiwango cha chini kabisa cha mshahara chini ya GN 605A ni kiasi gani?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini')",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
    "old_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya madini ya kimataifa na nishati. Thibitisha kiwango halisi cha sekta yako na MLYWF.",
-   "new_sw": "Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
+   "new_sw": "Kiwango cha chini kabisa katika GN 605A ni TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani); kilimo na sekta zisizotajwa ni TZS 175,000 kwa mwezi. Viwango vinafikia hadi TZS 765,900 kwa sekta ya nishati (kampuni za kimataifa). Thibitisha kiwango halisi cha sekta yako na MLYWF.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "6a2bb5836989dad0"
@@ -282,9 +321,9 @@
    "line": 1735,
    "question": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni TZS ngapi?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini'); tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors; tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
    "old_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni karibu TZS 175,000 kwa mwezi — kwa baadhi ya sekta za jumla. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: karibu TZS 175,000 (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (madini ya kimataifa na nishati)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na PKF Eastern Africa au TanzLII.",
-   "new_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni karibu TZS 175,000 kwa mwezi — kwa baadhi ya sekta za jumla. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: karibu TZS 175,000 (baadhi ya sekta za jumla)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (nishati, kampuni za kimataifa)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni TZS 80,000 kwa mwezi — kwa wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa ni TZS 175,000. Muhtasari wa anuwai ya GN 605A:\n\nKIWANGO CHA CHINI KABISA: TZS 80,000 (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)\nWASTANI: TZS 358,322 (sekta zote 16)\nKIWANGO CHA JUU KABISA: karibu TZS 765,900 (nishati, kampuni za kimataifa)\n\nUsichukue wastani kama kiwango cha chini kabisa au cha juu kabisa. Thibitisha kiwango cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "645f2e0b1a3f17e9"
@@ -331,6 +370,19 @@
   {
    "stage": "export",
    "file": "datasets/tier1a/sft/train_sft.jsonl",
+   "line": 2381,
+   "question": "NSSF Tanzania ina mipaka ya chini ya mchango — je, kuna kiwango cha chini?",
+   "action": "repair",
+   "reason": "low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors",
+   "old_sw": "Hakuna kiwango cha chini cha shilingi kilichowekwa kisheria kwa michango ya NSSF. Mchango ni asilimia ya mshahara mkubwa wa jumla — 20% (mwajiri 10% + mfanyakazi 10%). Hata mfanyakazi anayepata mshahara mdogo sana analipa NSSF kwa asilimia hiyo hiyo. Kiwango cha chini cha mshahara (GN 605A — TZS 175,000-765,900 kulingana na sekta) kinaathiri kiwango cha chini cha mshahara, si hesabu ya NSSF.",
+   "new_sw": "Hakuna kiwango cha chini cha shilingi kilichowekwa kisheria kwa michango ya NSSF. Mchango ni asilimia ya mshahara mkubwa wa jumla — 20% (mwajiri 10% + mfanyakazi 10%). Hata mfanyakazi anayepata mshahara mdogo sana analipa NSSF kwa asilimia hiyo hiyo. Kiwango cha chini cha mshahara (GN 605A — TZS 80,000 hadi 765,900 kulingana na sekta) kinaathiri kiwango cha chini cha mshahara, si hesabu ya NSSF.",
+   "old_en": null,
+   "new_en": null,
+   "old_sha256": "8cf5c0ef3bb9dd67"
+  },
+  {
+   "stage": "export",
+   "file": "datasets/tier1a/sft/train_sft.jsonl",
    "line": 2908,
    "question": "Ninachanganya wastani na kiwango cha juu cha mshahara chini ya GN 605A — unaweza kufafanua tofauti?",
    "action": "repair",
@@ -347,9 +399,9 @@
    "line": 3394,
    "question": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A ni TZS ngapi?",
    "action": "repair",
-   "reason": "765,900 relabelled energy / international companies (not 'madini'); tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
+   "reason": "765,900 relabelled energy / international companies (not 'madini'); low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors; tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII",
    "old_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya madini ya kimataifa na nishati. Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha kiwango halisi cha sekta yako na PKF Eastern Africa au TanzLII.",
-   "new_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya nishati (kampuni za kimataifa). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha kiwango halisi cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Wastani wa mshahara wa chini wa sekta binafsi baada ya GN 605A ni TZS 358,322 kwa mwezi. Hii ni WASTANI kwa sekta zote 16 — si kiwango cha juu kabisa. Kiwango cha juu kabisa (maximum) chini ya GN 605A ni karibu TZS 765,900 kwa mwezi, kwa sekta ya nishati (kampuni za kimataifa). Kiwango cha chini kabisa ni TZS 80,000 (wafanyakazi wengine wa nyumbani). Thibitisha kiwango halisi cha sekta yako na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
    "old_en": null,
    "new_en": null,
    "old_sha256": "cbdd6bce9f7c54cf"
@@ -440,13 +492,22 @@
    "new_en": "16 sectors and 46 sub-sectors. Each sub-sector has its own specific minimum wage rate. Confirm the complete list with the Labour Office (kazi.go.tz) or TanzLII."
   },
   {
+   "id": "eval_119",
+   "question": "Wastani wa mshahara wa chini wa sekta binafsi Tanzania BAADA ya GN 605A kuanza ni TZS ngapi kwa mwezi?",
+   "answer_type": "number",
+   "old_sw": "TZS 358,322 kwa mwezi kwa wastani. Hii ni ongezeko la asilimia 33.4. Kiwango halisi kinatofautiana kwa sekta na sub-sector — kina anuwai kutoka karibu TZS 175,000 hadi TZS 765,900 (nishati, kampuni za kimataifa); madini na utafutaji wa madini ni TZS 695,000. Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "TZS 358,322 kwa mwezi kwa wastani. Hii ni ongezeko la asilimia 33.4. Kiwango halisi kinatofautiana kwa sekta na sub-sector — kina anuwai kutoka TZS 80,000 (wafanyakazi wengine wa nyumbani) hadi TZS 765,900 (nishati, kampuni za kimataifa); madini na utafutaji wa madini ni TZS 695,000. Thibitisha na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "old_en": "TZS 358,322 per month on average. This is a 33.4% increase. The exact rate varies by sector and sub-sector — ranging from approximately TZS 175,000 to TZS 765,900 (energy, international companies); mining and prospecting minerals is TZS 695,000. Confirm with the Labour Office (kazi.go.tz) or TanzLII.",
+   "new_en": "TZS 358,322 per month on average. This is a 33.4% increase. The exact rate varies by sector and sub-sector — ranging from TZS 80,000 (other domestic workers) to TZS 765,900 (energy, international companies); mining and prospecting minerals is TZS 695,000. Confirm with the Labour Office (kazi.go.tz) or TanzLII."
+  },
+  {
    "id": "eval_120",
    "question": "Kiwango cha juu zaidi cha mshahara wa chini chini ya GN 605A ni TZS ngapi na ni kwa sekta gani?",
    "answer_type": "number",
    "old_sw": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya madini na nishati ya kimataifa (international mining/energy). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na PKF Eastern Africa au Clyde & Co.",
-   "new_sw": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya nishati, kampuni za kimataifa (international energy companies). Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha takwimu hizi na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
+   "new_sw": "Karibu TZS 765,900 kwa mwezi — kwa sekta ya nishati, kampuni za kimataifa (international energy companies). Kiwango cha chini kabisa ni TZS 80,000 (wafanyakazi wengine wa nyumbani). Thibitisha takwimu hizi na Ofisi ya Kazi (kazi.go.tz) au TanzLII.",
    "old_en": "Approximately TZS 765,900 per month — for the international mining and energy sector. The lowest rate is approximately TZS 175,000. Confirm with PKF Eastern Africa or Clyde & Co.",
-   "new_en": "Approximately TZS 765,900 per month — for the energy sector (international companies). The lowest rate is approximately TZS 175,000. Confirm with the Labour Office (kazi.go.tz) or TanzLII."
+   "new_en": "Approximately TZS 765,900 per month — for the energy sector (international companies). The lowest rate is TZS 80,000 (other domestic workers). Confirm with the Labour Office (kazi.go.tz) or TanzLII."
   },
   {
    "id": "eval_126",
@@ -461,7 +522,7 @@
  "nat_42": {
   "id": "nat_42",
   "old": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (international mining/energy). Must NOT quote the 2022 wage order, which was revoked effective 1 Jan 2026 (R5).",
-  "new": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, roughly TZS 175,000 (general) to TZS 765,900 (energy, international companies). Must NOT quote the 2022 wage order, which was revoked effective 1 Jan 2026 (R5)."
+  "new": "GN 605A, gazetted 13 Oct 2025, effective 1 Jan 2026; sector-dependent, TZS 80,000 (other domestic workers) to TZS 765,900 (energy, international companies). Must NOT quote the 2022 wage order, which was revoked effective 1 Jan 2026 (R5)."
  },
  "floor_note": "The Order's lowest monthly rate is TZS 80,000 (4(d) other domestic workers); 175,000 is the default for sectors the Order does not specify. These rows state 175,000 as the lowest / the range's low end:",
  "floor_rows": [

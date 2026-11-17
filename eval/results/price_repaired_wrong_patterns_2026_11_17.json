@@ -1,0 +1,55 @@
+{
+ "STORED REPLIES": {
+  "pairs": 2413,
+  "hits": {
+   "corporate_income_tax_return[0]": [
+    {
+     "src": "gate_production_0e11c3d.json",
+     "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+     "match": "return kila mwaka — hasa ndani ya miezi 12",
+     "reply": "Kampuni iliyosajiliwa na BRELA inapaswa kuwasilisha annual return kila mwaka — hasa ndani ya miezi 12 kutoka tarehe ya usajili wake. Thibitisha na BRELA Official (brela.go.tz)."
+    },
+    {
+     "src": "gate_production_c2143c0.json",
+     "q": "Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return (ripoti ya kila mwaka)?",
+     "match": "return kila mwaka — hasa ndani ya miezi 12",
+     "reply": "Kampuni iliyosajiliwa na BRELA inapaswa kuwasilisha annual return kila mwaka — hasa ndani ya miezi 12 kutoka tarehe ya usajili wake. Thibitisha na BRELA Official (brela.go.tz)."
+    },
+    {
+     "src": "wrongtopic_deploy_live_2026_11_17.json",
+     "q": "Muda wa mwisho wa kuwasilisha return ya kodi ya mapato ya kampuni TRA ni lini?",
+     "match": "return ya kodi ya mapato ndani ya miezi 12",
+     "reply": "Kampuni lazima iwasilishe return ya kodi ya mapato ndani ya miezi 12 baada ya mwisho wa mwaka wake wa mapato. Kwa kampuni yenye mwaka wa mapato wa kalenda, muda wa mwisho ni 30 Septemba ya mwaka unaofuata. Thibitisha na TRA."
+    }
+   ],
+   "severance_pay_income_tax[0]": []
+  }
+ },
+ "GOLD": {
+  "pairs": 562,
+  "hits": {
+   "corporate_income_tax_return[0]": [],
+   "severance_pay_income_tax[0]": []
+  }
+ },
+ "TRAINING": {
+  "pairs": 8754,
+  "hits": {
+   "corporate_income_tax_return[0]": [
+    {
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+     "q": "Annual return ya BRELA inapaswa kuwasilishwa kabla ya tarehe gani kila mwaka?",
+     "match": "return ndani ya miezi 12",
+     "reply": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) k"
+    },
+    {
+     "src": "datasets/tier1a/sft/train_sft.jsonl",
+     "q": "Annual return ya BRELA inapaswa kuwasilishwa kabla ya tarehe gani kila mwaka?",
+     "match": "return ndani ya miezi 12",
+     "reply": "Hakuna tarehe maalum ya 30 Septemba kwa annual returns za BRELA — tarehe inategemea tarehe ya usajili wa kampuni yako. Annual return inapaswa kuwasilishwa kulingana na tarehe ya kumbukumbu ya usajili wa kampuni yako (anniversary date) — si lazima mwaka wa kifedha. Thibitisha na BRELA (brela.go.tz) k"
+    }
+   ],
+   "severance_pay_income_tax[0]": []
+  }
+ }
+}

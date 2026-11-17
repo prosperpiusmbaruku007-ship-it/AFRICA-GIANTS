@@ -1079,7 +1079,7 @@
       "non.?residents?[^.!?]{0,30}15%[^.!?]{0,40}\\brent\\b(?! is not| is wrong)",
       "kodi ya zuio ya pango[^.!?]{0,80}asilimia 15(?! si| sio)"
     ],
-    "_pattern_note": "2026-10-08: the two ENGLISH patterns had a bare `rent`, which matches inside the ordinary English word 'diffe-RENT'. tier1a_wht_deep_035 -- a row about DIRECTOR FEES (15% for residents and non-residents alike, correct) that mentions a residency split only for MANAGEMENT fees (5%/15%, also correct) -- was flagged on the text 'non-residents (15%) have different'. Word-bounded to \brent\b. The three Swahili patterns were already safe (`pango` has no such collision) and are unchanged, as is every other field (R27)."
+    "_pattern_note": "2026-10-08: the two ENGLISH patterns had a bare `rent`, which matches inside the ordinary English word 'diffe-RENT'. tier1a_wht_deep_035 -- a row about DIRECTOR FEES (15% for residents and non-residents alike, correct) that mentions a residency split only for MANAGEMENT fees (5%/15%, also correct) -- was flagged on the text 'non-residents (15%) have different'. Word-bounded to \\brent\\b. The three Swahili patterns were already safe (`pango` has no such collision) and are unchanged, as is every other field (R27)."
   },
   "wcf_accident_reporting": {
     "fact": "Ajali kazini, taarifa WCF ni ndani ya siku ngapi? Mfanyakazi amjulishe mwajiri ndani ya siku 2 za kazi; mwajiri aijulishe WCF ndani ya siku 7 (Kanuni: siku 7 za kazi) tangu apokee taarifa au ajue ajali -- si tangu tarehe ya ajali. Mfanyakazi anaweza kuijulisha WCF mwenyewe ndani ya siku 7 za kazi. Sheria inasema 'siku 7' tu: ripoti mapema (Sheria ya Fidia kwa Wafanyakazi; Kanuni za Fidia kwa Wafanyakazi, 2016).",
@@ -3501,7 +3501,7 @@
     "fact": "Kampuni inawasilisha return ya kodi ya mapato lini? Ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo kampuni ya kawaida iwasilishe kufikia 30 Juni ya mwaka unaofuata; kampuni iliyoidhinishwa na Kamishna kutumia mwaka tofauti wa mapato iwasilishe miezi 6 baada ya mwisho wa mwaka huo. Mtu ambaye hesabu zake zinakaguliwa na Mdhibiti na Mkaguzi Mkuu (CAG) ana miezi 9. Kampuni yenye mapato jumla zaidi ya TZS 100,000,000 kwa mwaka lazima iwe na return iliyoandaliwa au kuthibitishwa na mhasibu CPA anayefanya kazi kwa umma. Si miezi 12, si 30 Septemba: 30 Septemba ni tarehe ya awamu ya kodi ya awamu, si ya return (Sheria ya Kodi ya Mapato).",
     "correct_value": "within six months after the end of the year of income (30 June for a calendar-year company); nine months for a person audited by the CAG; an approved different year of income moves the date; CPA-prepared/certified when a corporation's gross income exceeds TZS 100,000,000",
     "wrong_patterns": [
-      "(?:return|tamko)[^.?!]{0,60}\b(?:ndani ya|baada ya|ni)\\s+miezi\\s+(?:12|kumi na mbili)",
+      "(?:return|tamko)[^.?!]{0,60}\\b(?:ndani ya|baada ya|ni)\\s+miezi\\s+(?:12|kumi na mbili)",
       "(?:return|tamko)[^.?!]{0,60}(?:30 septemba|septemba 30)",
       "corporate[^.?!]{0,40}return[^.?!]{0,40}(?:12 months|30 september)"
     ],
@@ -3551,7 +3551,7 @@
     "fact": "Malipo ya kuachishwa kazi (severance, redundancy) yanakatwa kodi kiasi gani? Ni mapato ya ajira: yanajumuishwa kwenye mapato ya mfanyakazi na kodi (PAYE) hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. Sheria ina kanuni za kugawa malipo ya miaka ya nyuma na fidia ya mkataba; thibitisha kiasi chako na TRA (Sheria ya Kodi ya Mapato).",
     "correct_value": "a redundancy/termination payment is employment income, included in total income and taxed through the ordinary resident PAYE bands; there is no flat 15% rate; allocation/spreading rules may apply (confirm with TRA)",
     "wrong_patterns": [
-      "(?:severance|kuachishwa kazi)[^.?!]{0,80}\b(?:ni|ya|kwa|hukatwa)\\s+(?:asilimia\\s+15|15\\s*%)",
+      "(?:severance|kuachishwa kazi)[^.?!]{0,80}\\b(?:ni|ya|kwa|hukatwa)\\s+(?:asilimia\\s+15|15\\s*%)",
       "severance[^.?!]{0,60}flat 15"
     ],
     "primary_source": "Income Tax Act Cap.332 R.E.2023 (tra.go.tz, sha256 a128d329), s.7(2)(e) 'payment for redundancy or loss or termination of employment' is included in an individual's gains or profits from employment; s.7(4) allocation of such a payment over the preceding years of income; s.7(5) compensation for termination of a contract; First Schedule para 1(1) the graduated rates. The flat 10% in First Schedule para 1(3)(b) is for investment gains and a commuted pension only; the 15% limbs are para 4(a)(ii) (a NON-RESIDENT payee) and 4(a)(iii) (director's fees).",

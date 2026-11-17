@@ -30,8 +30,8 @@ CASES = [
     # FIRST RUN LESSON (R38, in the probe layer): my must_not here was `ndiyo,? (unaweza|naweza) kujisajili kwa hiari` and the live reply was "Ndiyo, kwa mujibu wa
     # sheria, unaweza kujisajili VAT kwa hiari" -- one word (VAT) between, so the automated limb printed ok on an answer the row exists to prevent. A bare `Ndiyo` /
     # "hata ukiwa chini ya kiwango" is the thing to forbid: the Act names no route and TRA names no activities, so an unhedged yes is unsupported.
-    ("NEW", "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?", [r"(?i)TRA"], [r"(?i)ndiyo", r"(?i)hata ukiwa chini ya kiwango"], None, False),
-    ("NEW", "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?", [r"(?i)TRA|Kamishna"], [r"(?i)ndiyo", r"(?i)ili usajiliwe kwa hiari"], None, False),
+    ("NEW", "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango?", [r"(?i)TRA"], [r"(?i)\bndiyo\b", r"(?i)hata ukiwa chini ya kiwango"], None, False),
+    ("NEW", "Nina mauzo madogo, naweza kusajili VAT ingawa sijafikia kiwango?", [r"(?i)TRA|Kamishna"], [r"(?i)\bndiyo\b", r"(?i)ili usajiliwe kwa hiari"], None, False),
     ("NEW", "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali", [r"siku 7"], [r"(?i)(?<!si )tangu tarehe ya ajali", r"(?i)(?<!si )kutoka tarehe ya ajali"], None, False),
     ("NEW", "Ajali ya kazini nitoe taarifa WCF ndani ya siku ngapi?", [r"siku 7"], [r"(?i)(?<!si )tangu tarehe ya ajali"], None, False),
     ("NEW", "Mfanyakazi amepata ajali kazini, taarifa WCF inaanza kuhesabiwa lini?", [r"(?i)apokee|kupokea|ajue|taarifa"], [r"(?i)(?<!si )tangu tarehe ya ajali", r"(?i)(?<!si )tangu siku ya ajali"], None, False),

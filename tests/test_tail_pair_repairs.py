@@ -43,13 +43,29 @@ def _record():
     return json.load(io.open(RESULT, encoding="utf-8"))
 
 
+def _final_shas(stage_filter=None):
+    """the sha256 of each repaired answer AS IT STANDS NOW: a later approved batch (apply_proposed_repairs_2026_11_17) edits some of these same answers again, so each repair is followed along its chain"""
+    later = {}
+    later_path = os.path.join(REPO, "eval", "results", "applied_proposed_repairs_2026_11_17.json")
+    if os.path.exists(later_path):
+        for e in json.load(io.open(later_path, encoding="utf-8"))["edited"]:
+            later[e["old_sha256"]] = e["new_sha256"]
+    out = set()
+    for e in _record()["edited"]:
+        h = e["new_sha256"]
+        while h in later:
+            h = later[h]
+        out.add(h)
+    return sorted(out)
+
+
 def _quarantined_questions():
     return [json.loads(l)["row"]["instruction"] for l in io.open(QUAR, encoding="utf-8") if l.strip()]
 
 
 @pytest.mark.parametrize("stage", sorted(STAGES))
 def test_repairs_reach_every_stage_and_the_quarantined_pair_is_gone(stage):
-    shas = sorted({e["new_sha256"] for e in _record()["edited"]})
+    shas = _final_shas()
     assert len(shas) == 13, len(shas)
     missing, still = reach(_answers(STAGES[stage]), shas, _quarantined_questions())
     assert missing == [], f"{stage}: repaired answers not found: {missing}"
@@ -63,7 +79,7 @@ def test_the_quarantine_record_holds_the_pair_from_both_stages():
 
 
 def test_PLANTED_the_reach_check_blocks_a_stage_that_missed_the_edit():
-    shas = sorted({e["new_sha256"] for e in _record()["edited"]})
+    shas = _final_shas()
     qs = _quarantined_questions()
     # a stage holding the OLD answers and the quarantined question: both limbs must fire
     old = [(e["old"] and "q", e["old"]) for e in _record()["edited"]] + [(qs[0], "x")]

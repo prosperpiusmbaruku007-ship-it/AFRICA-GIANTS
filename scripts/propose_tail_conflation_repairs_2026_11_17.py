@@ -97,6 +97,34 @@ def _conflate(text):
     return text
 
 
+# FOUNDER-APPROVED 2026-11-17 ("correct it ... from the Order itself, edition asserted"): the Order's lowest MONTHLY rate is TZS 80,000 (Domestic Work, 4(d) other domestic workers); 175,000 is Agriculture 1(a) and item 16
+# "any other sector not specified"; the highest is 765,900 (Energy, international companies). Read from data/source_documents/labour/gn605a_2025_kazi_go_tz_official.pdf (GN No. 605A, 13/10/2025) by parsing all 50
+# hourly/daily/weekly/fortnightly/monthly blocks (monthly = daily x 26): minimum 80,000, maximum 765,900. ONLY sentences that call 175,000 the LOWEST or the range's low end are rewritten; a sentence that names 175,000 as the
+# rate for agriculture / "kawaida" / unspecified sectors is accurate and is left alone (batch_012:92 and :94, batch_004:3, eval_382).
+FLOOR = [
+    ("Kiwango cha chini kabisa kwa sekta ya jumla ni karibu TZS 175,000 kwa mwezi.", "Kiwango cha chini kabisa katika GN 605A ni TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani); kilimo na sekta zisizotajwa ni TZS 175,000 kwa mwezi."),
+    ("The lowest minimum wage for the general sector is approximately TZS 175,000 per month.", "The lowest rate in GN 605A is TZS 80,000 per month (other domestic workers); agriculture and unspecified sectors are TZS 175,000 per month."),
+    ("(GN 605A — TZS 175,000-765,900 kulingana na sekta)", "(GN 605A — TZS 80,000 hadi 765,900 kulingana na sekta)"),
+    ("(GN 605A — TZS 175,000-765,900 by sector)", "(GN 605A — TZS 80,000 to 765,900 by sector)"),
+    ("Kiwango cha chini kabisa ni karibu TZS 175,000. Thibitisha", "Kiwango cha chini kabisa ni TZS 80,000 (wafanyakazi wengine wa nyumbani). Thibitisha"),
+    ("Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni karibu TZS 175,000 kwa mwezi — kwa baadhi ya sekta za jumla.", "Kiwango cha chini kabisa cha mshahara wa chini chini ya GN 605A ni TZS 80,000 kwa mwezi — kwa wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa ni TZS 175,000."),
+    ("KIWANGO CHA CHINI KABISA: karibu TZS 175,000 (baadhi ya sekta za jumla)", "KIWANGO CHA CHINI KABISA: TZS 80,000 (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)"),
+    ("CHINI KABISA: karibu TZS 175,000 kwa mwezi (baadhi ya sekta za jumla)", "CHINI KABISA: TZS 80,000 kwa mwezi (wafanyakazi wengine wa nyumbani; kilimo na sekta zisizotajwa: TZS 175,000)"),
+    ("kutoka karibu TZS 175,000 hadi TZS 765,900", "kutoka TZS 80,000 (wafanyakazi wengine wa nyumbani) hadi TZS 765,900"),
+    ("ranging from approximately TZS 175,000 to TZS 765,900", "ranging from TZS 80,000 (other domestic workers) to TZS 765,900"),
+    ("The lowest rate is approximately TZS 175,000.", "The lowest rate is TZS 80,000 (other domestic workers)."),
+    ("roughly TZS 175,000 (general) to TZS 765,900", "TZS 80,000 (other domestic workers) to TZS 765,900"),
+]
+
+
+def _floor(text):
+    if not text:
+        return text
+    for old, new in FLOOR:
+        text = text.replace(old, new)
+    return text
+
+
 def propose(question, sw, en=None):
     if question in QUARANTINE:
         return "quarantine", None, None, QUARANTINE[question]
@@ -111,6 +139,11 @@ def propose(question, sw, en=None):
             new_sw, reasons = c, reasons + ["765,900 relabelled energy / international companies (not 'madini')"]
         if new_en is not None:
             new_en = _conflate(new_en)
+    f_sw = _floor(new_sw)
+    if f_sw != new_sw:
+        new_sw, reasons = f_sw, reasons + ["low end: 175,000 was called the lowest; the Order's lowest monthly rate is TZS 80,000 (other domestic workers), 175,000 is agriculture / unspecified sectors"]
+    if new_en is not None:
+        new_en = _floor(new_en)
     t = _fix_tail(new_sw, question=question)
     if t != new_sw:
         new_sw, reasons = t, reasons + ["tail: a consultancy named as the authority -> Ofisi ya Kazi (kazi.go.tz) / TanzLII"]
@@ -143,18 +176,19 @@ def main():
     gold = []
     for l in io.open(os.path.join(REPO, "eval/accuracy_gate/eval_questions_001.jsonl"), encoding="utf-8"):
         r = json.loads(l)
-        if r["id"] in ("eval_116", "eval_117", "eval_120", "eval_126"):
+        if r["id"] in ("eval_116", "eval_117", "eval_119", "eval_120", "eval_126"):
             sw, en = r["correct_answer_sw"], r["correct_answer_en"]
             nsw, nen = _fix_all_tails(sw, question=r["question_sw"]), _fix_all_tails(en, en=True, question=r["question_sw"])
             if r["id"] == "eval_120":
                 nsw = nsw.replace("kwa sekta ya madini na nishati ya kimataifa (international mining/energy)", "kwa sekta ya nishati, kampuni za kimataifa (international energy companies)")
                 nen = nen.replace("for the international mining and energy sector", "for the energy sector (international companies)")
+            nsw, nen = _floor(nsw), _floor(nen)
             gold.append({"id": r["id"], "question": r["question_sw"], "answer_type": r["answer_type"], "old_sw": sw, "new_sw": nsw, "old_en": en, "new_en": nen})
     nat42 = None
     for l in io.open(os.path.join(REPO, "eval/accuracy_gate/edge_probe_natural_048.jsonl"), encoding="utf-8"):
         r = json.loads(l)
         if r.get("id") == "nat_42":
-            nat42 = {"id": "nat_42", "old": r["expected_behavior"], "new": r["expected_behavior"].replace("(international mining/energy)", "(energy, international companies)")}
+            nat42 = {"id": "nat_42", "old": r["expected_behavior"], "new": _floor(r["expected_behavior"].replace("(international mining/energy)", "(energy, international companies)"))}
     floor_rows = []
     for stage, pat in STAGES:
         for p in sorted(glob.glob(os.path.join(REPO, pat))):
