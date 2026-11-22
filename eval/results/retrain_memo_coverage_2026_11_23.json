@@ -1,0 +1,651 @@
+{
+ "harness": "eval/controls/retrain_memo_coverage_2026_11_23.py",
+ "tally": {
+  "GATE c2143c0 MODEL": {
+   "OPEN": 20,
+   "ROUTE": 4,
+   "GUARD": 2
+  },
+  "THIS WEEK": {
+   "ROUTE": 6,
+   "GUARD": 3
+  }
+ },
+ "rows": [
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_025",
+   "q": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?",
+   "stored": "Kwa sababu sheria inasema wanapaswa kujiandikisha mara tu wanapopata leseni ya kufanya kazi. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "wrong reason given; row 208 names professional service providers"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kwa sababu sheria inasema wanapaswa kujiandikisha mara tu wanapopata leseni ya kufanya kazi. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_044",
+   "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?",
+   "stored": "Ndiyo, kiwango cha asilimia 3 hutumika kwa malipo ya huduma zinazotolewa na msambazaji aliyesajiliwa VAT. Thibitisha na tra.go.tz.",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "3% for IT services; rows 17,65"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ndiyo, kiwango cha asilimia 3 hutumika kwa malipo ya huduma zinazotolewa na msambazaji aliyesajiliwa VAT. Thibitisha na tra.go.tz.",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_048",
+   "q": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?",
+   "stored": "Kwa msambazaji, 'VAT withholding si VAT yote' inamaanisha: alipokea sehemu tu ya VAT iliyokuwa ikimstahili (3% au 6%), na sehemu nyingine imerudishwa moja kwa moja kwa TRA. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "supplier/TRA shares inverted; judge said correct and was wrong"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kwa msambazaji, 'VAT withholding si VAT yote' inamaanisha: alipokea sehemu tu ya VAT iliyokuwa ikimstahili (3% au 6%), na sehemu nyingine imerudishwa moja kwa moja kwa TRA. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_071",
+   "q": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?",
+   "stored": "BRELA inasajilisha aina KUMI kuu za miundo ya biashara Tanzania: 1. Biashara ya jina (sole trader/business name) 2. Ubia (partnership) 3. Kampuni ya hisa (limited company) 4. Kampuni ya majukumu mdogo (limited liability company) 5. Kampuni ya umma (public limited company) 6. Jina la biashara lililos",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "'KUMI' forms; row 82 says three"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "BRELA inasajilisha aina KUMI kuu za miundo ya biashara Tanzania: 1. Biashara ya jina (sole trader/business name) 2. Ubia (partnership) 3. Kampuni ya hisa (limited company) 4. Kampuni ya majukumu mdogo (limited liability company) 5. Kampuni ya umma (public limited company) 6. Jina la biashara lililos",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_127",
+   "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+   "stored": "Hapana — zinawasilishwa kwa nyakati tofauti. PAYE inalipwa ifikapo tarehe 7 ya mwezi unaofuata (tarehe ngumu: 7th). SDL inalipwa pamoja na PAYE, lakini si lazima ifikapo tarehe 7 — inaweza kuwa kabla au baadaye. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "?",
+    "note": "SDL 'not necessarily the 7th'; prompt-only LOSS"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Hapana — zinawasilishwa kwa nyakati tofauti. PAYE inalipwa ifikapo tarehe 7 ya mwezi unaofuata (tarehe ngumu: 7th). SDL inalipwa pamoja na PAYE, lakini si lazima ifikapo tarehe 7 — inaweza kuwa kabla au baadaye. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_155",
+   "q": "Zoezi la utekelezaji wa GN 487A bado linaendelea — lazima niwe makini sana sasa hivi?",
+   "stored": "Ndiyo, utekelezaji wa GN 487A unaendelea. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "?",
+    "note": "enforcement 'ongoing'; exercise ended 8 Oct 2025"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ndiyo, utekelezaji wa GN 487A unaendelea. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_163",
+   "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?",
+   "stored": "GN 487A inazuia hasa utaratibu wa 'kuweka jina la mkopo' (nominee registration) katika shughuli zilizozuiliwa. Inasisitiza umuhimu wa kumiliki biashara moja kwa moja ili kustahili ruhusa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "states no penalty; row 92 has 5M/3m"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "GN 487A inazuia hasa utaratibu wa 'kuweka jina la mkopo' (nominee registration) katika shughuli zilizozuiliwa. Inasisitiza umuhimu wa kumiliki biashara moja kwa moja ili kustahili ruhusa. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_174",
+   "q": "Nilikuwa sijui kuhusu GN 487A — polisi walisimamisha duka langu Septemba 2025. Nini kilifanyika?",
+   "stored": "Kulingana na GN 487A, adhabu kwa mgeni ni faini isiyo chini ya TZS 10M AU kifungo cha miezi 6, PAMOJA NA kufutwa kwa visa. Kwa msaidizi Mtanzania, adhabu ni faini isiyo zidi TZS 5M AU kifungo miezi 3. Kwa kuwa ulishtakiwa na kupatikana na hatia, adhabu kamili zinatumika. Thibitisha na Idara ya Uhami",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "?",
+    "note": "invents a prosecution and conviction"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kulingana na GN 487A, adhabu kwa mgeni ni faini isiyo chini ya TZS 10M AU kifungo cha miezi 6, PAMOJA NA kufutwa kwa visa. Kwa msaidizi Mtanzania, adhabu ni faini isiyo zidi TZS 5M AU kifungo miezi 3. Kwa kuwa ulishtakiwa na kupatikana na hatia, adhabu kamili zinatumika. Thibitisha na Idara ya Uhami",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_183",
+   "q": "Mwajiri asiyesajili OSHA anaweza kufungiwa biashara yake?",
+   "stored": "Ndiyo — OSHA ina nguvu kamili ya kutoa amri ya kusimamisha shughuli katika eneo lenye hatari. Thibitisha na osha.go.tz.",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "?",
+    "note": "asserts OSHA closure power; gold says none"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ndiyo — OSHA ina nguvu kamili ya kutoa amri ya kusimamisha shughuli katika eneo lenye hatari. Thibitisha na osha.go.tz.",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_187",
+   "q": "Nimekuwa na biashara kwa miaka 3 bila kusajili OSHA — nifanye nini sasa?",
+   "stored": "Wasiliana na OSHA mara moja (osha.go.tz) ili kupata taarifa sahihi kuhusu adhabu na hatua za kisheria. Kutokujisajili kunaweza kuongeza gharama za ziada. Thibitisha na osha.go.tz.",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "?",
+    "note": "thin: never says register"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Wasiliana na OSHA mara moja (osha.go.tz) ili kupata taarifa sahihi kuhusu adhabu na hatua za kisheria. Kutokujisajili kunaweza kuongeza gharama za ziada. Thibitisha na osha.go.tz.",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_229",
+   "q": "Mfumo wa mabano ya PAYE ya kila mwezi unafuata mpangilio gani wa viwango?",
+   "stored": "Kuna ngazi 8 za mabano ya PAYE: asilimia 0 (hadi TZS 270,000), 8 (TZS 270,001–520,000), 20 (TZS 520,001–760,000), 25 (TZS 760,001–1,000,000), 30 (TZS 1,000,001–1,200,000), 35 (TZS 1,200,001–1,400,000), 40 (TZS 1,400,001–1,600,000), 45 (zaidi ya TZS 1,600,000). Kila mwezi huanguka katika mojawapo ya ",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "invents 8 PAYE bands; the band row is served. A1; routable as a statement"
+   },
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "paye_band_table",
+   "now": "Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,00",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_239",
+   "q": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?",
+   "stored": "Magonjwa ya kazini yanatakiwa kuripotiwa WCF ndani ya siku 14 za kazi tangu kugunduliwa. Thibitisha na WCF (wcf.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "collapses the two-stage chain (row 46) to 14 working days; prompt-only LOSS"
+   },
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "wcf_disease_reporting",
+   "now": "Ugonjwa wa kazini unaripotiwa kwa hatua MBILI, si siku 7 moja kwa moja (Kanuni za Fidia kwa Wafanyakazi, 2016 — GN 185/2016, Kanuni ya 16): (1) mfanyakazi amjulishe mwajiri ndani ya siku 14 za kazi tangu ugonjwa kugunduliwa; (2) mwajiri aijulishe WCF ndani ya siku 7 za kazi tangu APOKEE taarifa hiyo",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_301",
+   "q": "Payroll yetu ni TZS 7,000,000 kwa mwezi, sasa je tunatakiwa kujisajili BRELA?",
+   "stored": "Ndiyo, unapaswa kujisajili BRELA kama una wafanyakazi 10 au zaidi. Thibitisha na BRELA (brela.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "invents a 10-employee BRELA rule; row 82. A1"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ndiyo, unapaswa kujisajili BRELA kama una wafanyakazi 10 au zaidi. Thibitisha na BRELA (brela.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_302",
+   "q": "Tuna wafanyakazi 15 wenye mshahara wa TZS 600,000 kila mmoja, je tunahitaji kusajili VAT?",
+   "stored": "Hapana, kwa sasa. Jumla ya mishahara yao ni TZS 9,000,000 kwa mwezi, ambayo ni chini ya kizingiti cha TZS 10,000,000. Kwa hivyo hakuna ulazima wa kusajili VAT. Lakini kumbuka: kama jumla ya mishahara itafika TZS 10,000,000, utakuwa lazimishwa kusajili VAT mara moja. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "invents a TZS 10M wage threshold for VAT. A1"
+   },
+   "cls": "GUARD",
+   "path": "clarification",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "intent": "none",
+   "topic": null,
+   "now": "Siwezi kuthibitisha kiwango cha mauzo kwa usajili wa VAT, hivyo sitakitaja na sitakisii kingine. Thibitisha na TRA (tra.go.tz) — au niulize utaratibu bila kiasi, nikueleze hatua.",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_332",
+   "q": "Kama mgeni je naweza kufanya biashara ya jumla (wholesale) na je adhabu yangu ikikutwa ni ngapi na je raia aliyenisaidia naye anaadhibiwa?",
+   "stored": "Ndiyo, kulingana na Taarifa ya Serikali Na. 487A (GN487A), shughuli ya jumla imepigwa marufuku kwa wasio raia. Adhabu yako kama mgeni ni faini isiyo pungua TZS 10,000,000 au kifungo cha miezi 6, pamoja na kuondolewa kwa visa au kibali chako. Msaidizi (raia wa Tanzania) anakabiliwa na faini ya TZS 5,",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "'Ndiyo' opener on a compound can-I question (polarity)"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ndiyo, kulingana na Taarifa ya Serikali Na. 487A (GN487A), shughuli ya jumla imepigwa marufuku kwa wasio raia. Adhabu yako kama mgeni ni faini isiyo pungua TZS 10,000,000 au kifungo cha miezi 6, pamoja na kuondolewa kwa visa au kibali chako. Msaidizi (raia wa Tanzania) anakabiliwa na faini ya TZS 5,",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_348",
+   "q": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?",
+   "stored": "Ndiyo, NSSF Tanzania ina mgawanyo wa 10% kwa 10% baina ya mwajiri na mfanyakazi. Hakuna mgawanyo mwingine uliopo. Thibitisha na NSSF (nssf.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "negated premise answered 'Ndiyo, no other split' -- row 78. A1; routable as a statement"
+   },
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "nssf_split",
+   "now": "Jumla ya NSSF ni asilimia 20 ya mshahara ghafi daima. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, lakini si mgawanyo pekee halali: mwajiri anaweza kuchagua kuchangia kiwango kikubwa zaidi, hadi mchango wote, kwa hiyo 15% + 5% au 20% + 0% ni mifano ya chaguo hilo, si orodha kami",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_355",
+   "q": "Mauzo yangu ni TZS 10,999,000 kwa mwaka, je EFD ni lazima kwangu?",
+   "stored": "Hapana, kwa sababu umefika chini ya kizingiti cha TZS 11M. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "'chini ya kizingiti cha TZS 11M' -- the fabricated EFD threshold. D-FIDELITY-7 did NOT fire: it keys on a subject named in the BODY and the body never says EFD. A1. prompt-only LOSS"
+   },
+   "cls": "GUARD",
+   "path": "clarification",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "intent": "none",
+   "topic": null,
+   "now": "Mashine ya risiti (EFD) haina kizingiti cha mauzo — inahitajika bila kujali kiwango cha mauzo ya mwaka. Msamaha hutolewa tu kwa tangazo la Kamishna Mkuu wa TRA. Sitatoa kiwango chochote cha mauzo hapa. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_375",
+   "q": "Msambazaji wangu hajasajiliwa VAT na hatoi ankara ya VAT — VAT withholding ninayozuia ni ngapi?",
+   "stored": "Kiwango cha VAT withholding ni 3% kwa bidhaa na 6% kwa huduma. Msambazaji asiyesajiliwa VAT hana wajibu wa kutoa ankara ya VAT, lakini VAT withholding bado inatumika. Kwa hesabu halisi ya kiasi kinachozuiwa, tumia fomula: VAT Withholding = Invoice Value × 3% (bidhaa) au 6% (huduma). Thibitisha na TR",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "says withholding still applies for an unregistered supplier. A1"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kiwango cha VAT withholding ni 3% kwa bidhaa na 6% kwa huduma. Msambazaji asiyesajiliwa VAT hana wajibu wa kutoa ankara ya VAT, lakini VAT withholding bado inatumika. Kwa hesabu halisi ya kiasi kinachozuiwa, tumia fomula: VAT Withholding = Invoice Value × 3% (bidhaa) au 6% (huduma). Thibitisha na TR",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_383",
+   "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?",
+   "stored": "Ada ya kusajili kampuni bila mtaji wa hisa (no share capital) ni TZS 95,000. Thibitisha na BRELA (brela.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "row 181 states 500,000 for a company with no share capital; reply says 95,000. A1"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Ada ya kusajili kampuni bila mtaji wa hisa (no share capital) ni TZS 95,000. Thibitisha na BRELA (brela.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_388",
+   "q": "Je, si kweli kwamba SDL hailipwi na mfanyakazi?",
+   "stored": "Hapana, si kweli. SDL ni kodi ya mwajiri pekee — haikatwi kutoka kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "negated-premise polarity, same class as 390/394"
+   },
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_payer",
+   "now": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_390",
+   "q": "Je, VAT haitozwi kwa bidhaa zilizosamehewa (exempt)?",
+   "stored": "Hapana, si sahihi. Bidhaa zilizo katika daraja la exempt zimesamehewa VAT kabisa, yaani hakuna VAT inayotozwa kwenye bidhaa hizo. Tofauti muhimu sana: zero-rated = tozwa VAT 0% (unadai input VAT); exempt = hautozwi VAT kabisa (huna haki ya kudai input VAT). Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "negated-premise polarity"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Hapana, si sahihi. Bidhaa zilizo katika daraja la exempt zimesamehewa VAT kabisa, yaani hakuna VAT inayotozwa kwenye bidhaa hizo. Tofauti muhimu sana: zero-rated = tozwa VAT 0% (unadai input VAT); exempt = hautozwi VAT kabisa (huna haki ya kudai input VAT). Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_085",
+   "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?",
+   "stored": "Kushindwa kuwasilisha annual return kwa muda mrefu kunasababisha hatua za kisheria dhidi ya kampuni: faini ya TZS 22,000 kwa kila mwezi wa kuchelewa (TZS 264,000 kwa mwaka kwa kawaida), pamoja na riba. Hatimaye, kampuni inaweza kufutwa kwenye daftari la BRELA. Thibitisha na BRELA (brela.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "FALSE_PASS; regression"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kushindwa kuwasilisha annual return kwa muda mrefu kunasababisha hatua za kisheria dhidi ya kampuni: faini ya TZS 22,000 kwa kila mwezi wa kuchelewa (TZS 264,000 kwa mwaka kwa kawaida), pamoja na riba. Hatimaye, kampuni inaweza kufutwa kwenye daftari la BRELA. Thibitisha na BRELA (brela.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_162",
+   "q": "'Mgeni' katika GN 487A inamaanisha nani hasa?",
+   "stored": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya ",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "FALSE_PASS"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Raia wa Tanzania ni'mgeni' kwa maana ya GN 487A ikiwa amefikia masharti haya: (1) Amepata uraia kupitia ndoa tu (si kwa njia ya kuasiliwa); (2) Ameishi Tanzania kwa miaka 15 au zaidi; (3) Ana pasipoti ya Tanzania yenye hadhi kamili ya uraia. Ikiwa amefikia masharti hayo, bado ana adhabu ya faini ya ",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_237",
+   "q": "Kodi ya zuio (withholding tax) inatakiwa kuwasilishwa TRA ndani ya muda gani baada ya mwisho wa mwezi?",
+   "stored": "Kodi ya zuio lazima iwasilishwe TRA ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "FALSE_PASS"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kodi ya zuio lazima iwasilishwe TRA ndani ya siku 7 baada ya mwisho wa mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_304",
+   "q": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "stored": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "FALSE_PASS"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Kulingana na sheria, unapaswa kusajili JINA LA BIASHARA (Business Name) ikiwa una wafanyakazi 20 au chini yao, na mtaji hadi TZS 100,000,000. Ikiwa mtaji wako unazidi TZS 100,000,000, basi unaweza kusajili KAMPUNI (Company Limited by Shares). Thibitisha na BRELA Official (brela.go.tz).",
+   "text_changed": false
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_324",
+   "q": "Biashara yangu ina mishahara TZS 4,800,000 kwa watu 13, na madeni TZS 2,000,000, na faida TZS 1,000,000 — SDL yangu ni ngapi?",
+   "stored": "Kwa hesabu kamili:\n\nSDL = 3.5% × TZS 4,800,000 = TZS 168,000\nNSSF = 20% × TZS 4,800,000 = TZS 960,000\nWCF = 0.5% × TZS 4,800,000 = TZS 24,000\n\nJumla ya malipo ya mwajiri = TZS 252,000\n\nFaida ya mwajiri = TZS 1,000,000 − madeni − NSSF − WCF = TZS 760,000\n\nSDL inakatwa kabla ya kutoa faida, si baadaye",
+   "why": {
+    "class": "MODEL",
+    "idx_checked": "yes",
+    "note": "FALSE_PASS; added fabrication"
+   },
+   "cls": "OPEN",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "intent": "sdl",
+   "topic": null,
+   "now": "Kwa hesabu kamili:\n\nSDL = 3.5% × TZS 4,800,000 = TZS 168,000\nNSSF = 20% × TZS 4,800,000 = TZS 960,000\nWCF = 0.5% × TZS 4,800,000 = TZS 24,000\n\nJumla ya malipo ya mwajiri = TZS 252,000\n\nFaida ya mwajiri = TZS 1,000,000 − madeni − NSSF − WCF = TZS 760,000\n\nSDL inakatwa kabla ya kutoa faida, si baadaye",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "private-school SDL (d997d4d)",
+   "q": "Shule binafsi inalipa SDL?",
+   "stored": "Shule binafsi zenye wafanyakazi 10+ zinatozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_exemptions",
+   "now": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihus",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "exemption list, fabricated (d997d4d)",
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "stored": "Waajiri waliosamehewa rasmi na Sheria ya Kodi ya Mapato (TRA Act No. 9 of 2015): (1) Serikali ya Tanzania (si taasisi za serikali); (2) Balozi za nje; (3) Mashirika ya Kimataifa (UN, NGO); (4) Taasisi za kidini; (5) Wasiofaa kwa sababu ya umri (wasio chini ya miaka 18); (6) Wanafunzi wa TaESA; (7) W",
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_exemptions",
+   "now": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihus",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "exemption category ask, non-answer (d997d4d)",
+   "q": "Nani amesamehewa SDL?",
+   "stored": "Thibitisha na TRA (tra.go.tz).",
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_exemptions",
+   "now": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihus",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "NHIF with NSSF (d997d4d)",
+   "q": "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?",
+   "stored": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "cls": "ROUTE",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "nssf",
+   "topic": null,
+   "now": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)\n\nNHIF haijafunikwa na Chike — thibitisha na NHIF.",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "household SDL premises claim (d997d4d)",
+   "q": "SDL inahusu biashara tu au hata waajiri wa nyumbani?",
+   "stored": "Haijathibitishwa rasmi. SDL inalenga 'mwajiri mwenye wafanyakazi 10+ katika eneo la biashara'. Tafsiri ya 'eneno la biashara' inaweza kuwa pana zaidi ya nyumba ya makazi. Thibitisha na TRA (tra.go.tz).",
+   "cls": "GUARD",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "intent": "none",
+   "topic": null,
+   "now": "SDL hutozwa kwa kila mwajiri mwenye wafanyakazi 10 au zaidi (Sheria ya Elimu na Mafunzo ya Ufundi); Sheria haisemi kwamba inahusu 'maeneo ya biashara' pekee. Wasiotozwa ni makundi yaliyoorodheshwa kisheria: taasisi za Serikali zinazofadhiliwa kikamilifu kupitia ruzuku ya Serikali, balozi, Umoja wa M",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "age-60 'huisha' (d997d4d)",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "stored": "Hapana, michango huisha pale mfanyakazi anapofikia umri wa miaka 60. Thibitisha na NSSF (nssf.go.tz).",
+   "cls": "GUARD",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "intent": "none",
+   "topic": null,
+   "now": "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "age-60 'miezi 180' (d997d4d)",
+   "q": "Michango ya NSSF inaisha ukifika miaka 60?",
+   "stored": "Si kweli — michango huisha ukifikia miezi 180 (miaka 15) na unastahili pensheni. Umri wa 60 ni wa pensheni tu — si mwisho wa michango. Thibitisha na NSSF.",
+   "cls": "GUARD",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "intent": "none",
+   "topic": null,
+   "now": "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "mining exemption invented (56af98b)",
+   "q": "Je, kampuni ya madini lazima ilipe SDL kwa wafanyakazi wake?",
+   "stored": "Kampuni za uchimbaji madini zinaweza kuwa na msamaha maalum chini ya Sheria ya Madini Tanzania. Msamaha huo unategemea aina ya shughuli na idadi ya wafanyakazi. Thibitisha na TRA au Wizara ya Madini.",
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_exemptions",
+   "now": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihus",
+   "text_changed": true
+  },
+  {
+   "set": "THIS WEEK",
+   "id": "'adhabu' sentence on the payer question (a8a0274)",
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "stored": "MWAJIRI (si mfanyakazi) ndiye anayelipa SDL. Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa. Mfanyakazi hapunguziwi kitu kwenye mshahara wake kwa sababu ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "cls": "ROUTE",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "intent": "fixed_statement",
+   "topic": "sdl_payer",
+   "now": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": true
+  }
+ ],
+ "limits": [
+  "stub backend returns the stored reply for every model call (approximation on the compute path)",
+  "OPEN is an upper bound on 'not covered'",
+  "gate replies are from a Kaggle host (R24b)"
+ ]
+}
