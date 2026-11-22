@@ -413,6 +413,11 @@ critical_queries = [
     # 2026-11-17 batch 3: the company annual-return deadline (Companies Act Cap.212 R.E.2023: the anniversary of incorporation, 28 days from the return date). The anchor is the PHRASE that carries the rule, not a bare number.
     ('BRELA annual return deadline', 'query: Annual return ya BRELA inapaswa kuwasilishwa lini?', ['siku 28 baada ya tarehe hiyo']),
     ('BRELA annual return frequency', 'query: Mara ngapi kampuni iliyosajiliwa na BRELA inahitajika kuwasilisha annual return?', ['siku 28 baada ya tarehe hiyo']),
+    # 2026-11-23: the SDL household-employer hedge, the NSSF age-60 hedge and the REVISED SDL exemption row. The first two questions are VERBATIM committed live probes (eval/results/d25_deploy_live_2026_11_22.json); the third is AUTHORED -- no committed
+    # fixture asks 'who is exempt from SDL', so the revised consolidated row could be lost with every committed guard green (R17: the absence is the finding). Each anchor is the PHRASE that carries the claim and matches exactly ONE row.
+    ('SDL household workers scope', 'query: Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?', ['Haijathibitishwa. SDL hutozwa kila mwajiri']),
+    ('NSSF contributions at age 60', 'query: Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?', ['Sheria haisemi hivyo wala kinyume']),
+    ('SDL exempt employers (revised row)', 'query: Ni waajiri gani hawalipi SDL?', ['Waziri wa Fedha anaweza kusamehe kwa Gazeti']),
     # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
     # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
     # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:

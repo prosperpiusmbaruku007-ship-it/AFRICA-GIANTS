@@ -4,8 +4,8 @@
   "_contract": "Any check that reads a cached source MUST call assert_edition(path, expected) first. A file whose edition is UNDECLARED may not be used to settle a figure.",
   "_generated_by": "scripts/check_source_editions.py --build",
   "counts": {
-    "files": 88,
-    "declared": 36,
+    "files": 90,
+    "declared": 38,
     "undeclared": 52,
     "superseded": 3
   },
@@ -260,6 +260,15 @@
       "superseded": true,
       "superseded_by": "Cap.50 R.E. 2023 (OAG 2025 compilation), sha256 2a820e67ed109cd36059, 773,203 bytes, 50pp, at https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf and https://oagmis.oag.go.tz/portal/acts/revised/155/download (byte-identical)",
       "do_not_verify_against": "THIS FILE PRODUCED THE fine_limit 100x ERROR. s.72(1) here is s.76(1) in R.E.2023, and this edition's s.76 is a DIFFERENT provision ('Protection of contributions'). Renumbering offsets confirmed from R.E.2023's own bracketed notes: s.23<-[21] s.25<-[23] s.29<-[27] s.46<-[44] s.47<-[45] s.50<-[48] s.51<-[49] s.76<-[72]; s.11/s.12/s.14 unmoved."
+    },
+    "nssf/nssf_act_cap50_re2023.pdf": {
+      "sha256": "2a820e67ed109cd360595ab9c732b7006e94027e16e5a0d4b751ff5e197bec98",
+      "bytes": 773203,
+      "captured_local_mtime_utc": "2026-11-22T21:01:27Z",
+      "kind": "statute",
+      "edition": "R.E. 2023",
+      "edition_evidence": "running page header: 'THE NATIONAL SOCIAL SECURITY FUND ACT [CAP . 50 R.E. 2023]'; cover 'CHAPTER 50 THE NATIONAL SOCIAL SECURITY FUND ACT [PRINCIPAL LEGISLATION]'. Fetched 2026-11-22 from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf (the file nssf_act_cap50.pdf's superseded_by entry already named this sha256). Read for NSSF contributions at age 60: s.2 'pensionable age means the age of sixty years'; Part III (ss.6-10) and Part IV (ss.11-20) set NO age at which contributions start or stop; s.20 does not relieve the employer for an employee in receipt of or entitled to a benefit; age appears only in benefit provisions (ss.25, 28, 29, 41).",
+      "superseded": false
     },
     "nssf/nssf_contributions_en.html": {
       "sha256": "c61740b2596b7e79c5d1f7a7b0048a48f00bbfc8bd844390bed4579408459c46",
@@ -733,6 +742,15 @@
       "edition_evidence": "page header from the first section onward: 'THE VALUE ADDED TAX ACT [CAP. 148 R.E. 2023]'; first page 'CHAPTER 148 THE VALUE ADDED TAX ACT [PRINCIPAL LEGISLATION]'. Fetched from tra.go.tz/images/uploads/acts/The_Value_Added_Tax_Act.pdf. Amended after this edition by Finance Acts 2024 (s.105 -> s.29(4),(5)), 2025 (s.126 -> s.29(5),(6)) and 2026 (s.91 -> s.5(5),(7)); this file does NOT contain those amendments.",
       "superseded": false,
       "note": "A consolidated Act is a snapshot: read the amending Finance Acts before encoding anything from it."
+    },
+    "tra/veta_act_cap82_re2023.pdf": {
+      "sha256": "eac6e92d2f04b6782fa6f564fce518d49177d38a3715b247948a16a99b29d71e",
+      "bytes": 593245,
+      "captured_local_mtime_utc": "2026-11-22T21:01:27Z",
+      "kind": "statute",
+      "edition": "R.E. 2023",
+      "edition_evidence": "running page header: 'THE VOCATIONAL EDUCATION AND TRAINING ACT [CAP . 82 R.E. 2023]'; cover 'CHAPTER 82 THE VOCATIONAL EDUCATION AND TRAINING ACT [PRINCIPAL LEGISLATION]'. Fetched 2026-11-22 from https://www.tra.go.tz/images/uploads/acts/THE_VOCATIONAL_EDUCATION_AND_TRAINING_ACT.pdf. Read for SDL scope: s.14(1) 'from every employer who has in his employment ten or more employees'; s.19(1)(a)-(j) ten exemption paragraphs (i = TaESA interns); s.19(3) Minister of Finance may exempt by Gazette order. NOT the operative text alone: Finance Act 2024 s.112 adds s.19(1)(k) and Finance Act 2026 s.98 rewords s.19(1)(a) -- Finance Act 2025 has no VETA Act amendment (all three cached under tra/).",
+      "superseded": false
     },
     "wcf/gn185_2016_workers_compensation_regulations.pdf": {
       "sha256": "badaf03f30c2e0f0251a0b2feaa614804fc76b6fb8b8f3eeacbf32748efa42df",

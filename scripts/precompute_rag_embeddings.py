@@ -139,11 +139,8 @@ CONCISE_BILINGUAL_FACTS = {
     # from the RAG index by an explicit, individually-reviewed list in
     # _NOISE_KEYS_REVIEWED below, not by the prefix pattern that swept them up before.
     'sdl_exemption_categories':
-        'Waajiri/taasisi zisizolipa SDL (msamaha): idara za Serikali, mamlaka za Serikali '
-        'za Mitaa, taasisi za kidiplomasia, Umoja wa Mataifa na taasisi zake, mashirika ya '
-        'kimataifa ya misaada, taasisi za kidini (kwa shughuli za kiroho tu), taasisi za '
-        'elimu zilizosajiliwa, mashirika ya misaada (charitable), wanafunzi wa TaESA, na '
-        'waajiri wa mashambani kwa wafanyakazi wanaolima moja kwa moja.',
+        'Nani hatozwi SDL? Walioorodheshwa kisheria: Serikali (ruzuku), balozi, UN, misaada ya kimataifa, taasisi za dini, hisani, elimu iliyosajiliwa, halmashauri, '
+        'wanafunzi wa TaESA, mashamba (wafanyakazi wa kilimo), mamlaka ya maji (vibarua wa miradi); Waziri wa Fedha anaweza kusamehe kwa Gazeti.',
 
     'sdl_payment_deadline':
         'SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.',
@@ -1008,6 +1005,7 @@ _NOISE_KEYS_REVIEWED = {
     'exemption_category_trainees_under_TAESA',
     'exemption_category_un_and_agencies',
     'exemption_category_international_organizations_aid',
+    'exemption_category_water_authorities',   # 2026-11-23: SDL s.19(1)(k) (Finance Act 2024 s.112), absorbed by the consolidated sdl_exemption_categories row like its siblings; a new key must be listed here or it becomes an English fallback row
 }
 
 
@@ -1142,6 +1140,18 @@ _BATCH3_2026_11_17 = {
 }
 _COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('company_annual_return_deadline',)
 CONCISE_BILINGUAL_FACTS.update(_BATCH3_2026_11_17)
+
+# ─── 2026-11-23: TWO NEW rows (SDL scope for household employers; NSSF contributions at age 60), founder-approved texts, appended after the company annual-return row so no existing row number moves ──────────────
+# Ask-aligned lead (the asker's words first, R15), the value, then the qualifier; NO section number in the Swahili text (R44: it lives in locked_facts metadata). Both are HEDGES by construction: the first says household workers' status is not settled and the
+# premises rule is not in the Act; the second says the Act is silent on any age cut-off. The consolidated sdl_exemption_categories row (above) was REVISED in place in the same pass (ten R.E.2023 paragraphs + (k) + the Gazette power).
+_BATCH_2026_11_23 = {
+    'sdl_domestic_workers_scope':
+        "Wafanyakazi wa nyumbani wanahesabiwa kwenye kizingiti cha SDL? Haijathibitishwa. SDL hutozwa kila mwajiri mwenye wafanyakazi 10+; si kwa 'maeneo ya biashara' tu. Thibitisha na TRA.",
+    'nssf_contributions_age_60':
+        'Michango ya NSSF inakoma ukifika miaka 60? Sheria haisemi hivyo wala kinyume; 60 ni umri wa pensheni (michango 180). Mwajiri hajaondolewa wajibu kwa anayestahili manufaa. Thibitisha na NSSF.',
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('sdl_domestic_workers_scope', 'nssf_contributions_age_60')
+CONCISE_BILINGUAL_FACTS.update(_BATCH_2026_11_23)
 
 
 def build_fact_text(key: str, value: str) -> str:

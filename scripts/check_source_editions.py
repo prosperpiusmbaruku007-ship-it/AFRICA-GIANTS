@@ -311,6 +311,18 @@ DECLARED = {
         'edition_evidence': "page header on every page: 'THE COMPANIES ACT [CAP. 212 R.E. 2023]'; cover 'CHAPTER 212 THE COMPANIES ACT [PRINCIPAL LEGISLATION]'. Read 2026-11-17 for the annual-return deadline: Part 'ANNUAL RETURN', s.131(1) 'A company shall deliver to the Registrar, successive annual returns each of which is made up to a date not later than the \"return date\", that is- (a) the anniversary of the company's incorporation; or (b) if the company's last return ... was made up to a different date, the anniversary of that date'; s.131(3) 'fails to deliver an annual return in accordance with this Chapter within twenty eight days of the return date, the company and every officer of the company who is in default shall be liable to a fine'. The file's own page furniture carries a 2025 OAG copyright watermark, so the text extraction is scrambled in layout mode: read in raw mode.",
         'superseded': False,
     },
+    'tra/veta_act_cap82_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "running page header: 'THE VOCATIONAL EDUCATION AND TRAINING ACT [CAP . 82 R.E. 2023]'; cover 'CHAPTER 82 THE VOCATIONAL EDUCATION AND TRAINING ACT [PRINCIPAL LEGISLATION]'. Fetched 2026-11-22 from https://www.tra.go.tz/images/uploads/acts/THE_VOCATIONAL_EDUCATION_AND_TRAINING_ACT.pdf. Read for SDL scope: s.14(1) 'from every employer who has in his employment ten or more employees'; s.19(1)(a)-(j) ten exemption paragraphs (i = TaESA interns); s.19(3) Minister of Finance may exempt by Gazette order. NOT the operative text alone: Finance Act 2024 s.112 adds s.19(1)(k) and Finance Act 2026 s.98 rewords s.19(1)(a) -- Finance Act 2025 has no VETA Act amendment (all three cached under tra/).",
+        'superseded': False,
+    },
+    'nssf/nssf_act_cap50_re2023.pdf': {
+        'kind': 'statute',
+        'edition': 'R.E. 2023',
+        'edition_evidence': "running page header: 'THE NATIONAL SOCIAL SECURITY FUND ACT [CAP . 50 R.E. 2023]'; cover 'CHAPTER 50 THE NATIONAL SOCIAL SECURITY FUND ACT [PRINCIPAL LEGISLATION]'. Fetched 2026-11-22 from https://www.nssf.go.tz/uploads/publications/en-1771921274-NSSF%20ACT%20CAP%2050%20RE.%202023.pdf (the file nssf_act_cap50.pdf's superseded_by entry already named this sha256). Read for NSSF contributions at age 60: s.2 'pensionable age means the age of sixty years'; Part III (ss.6-10) and Part IV (ss.11-20) set NO age at which contributions start or stop; s.20 does not relieve the employer for an employee in receipt of or entitled to a benefit; age appears only in benefit provisions (ss.25, 28, 29, 41).",
+        'superseded': False,
+    },
     'brela/brela_matrix_business_licensing_act_2021.pdf': {
         'kind': 'portal',
         'edition': 'BRELA proposed-amendments matrix, 25 Nov 2021',

@@ -270,7 +270,8 @@ def test_undeclared_sources_are_COUNTED_so_the_gap_cannot_go_quiet():
     # superseded Cap.208 2002 print, BRELA's 2021 amendments matrix and Newsletter No.10, the GN 605A Order). All declared, so `undeclared` did not grow.
     # 85 -> 87 on 2026-11-17 (batch 2): the OFFICIAL kazi.go.tz copy of GN 605A (it carries the signature block the TanzLII reproduction omits) and the Labour Institutions Act Cap.300 (30 Nov 2019 consolidation). Both declared.
     # 87 -> 88 on 2026-11-17: the Companies Act Cap.212 R.E.2023 (the annual-return deadline, PROGRESS 4aw/4ay), cached WITH its edition read from the page header. Declared, so `undeclared` did not grow.
-    assert man["counts"]["files"] == 88, (
+    # 88 -> 90 on 2026-11-22: the VETA Act Cap.82 R.E.2023 (tra/) and the NSSF Act Cap.50 R.E.2023 (nssf/), each cached WITH its edition read from the page header (SDL scope and NSSF age-60 facts). Declared, so `undeclared` did not grow.
+    assert man["counts"]["files"] == 90, (
         f"the source tree changed size ({man['counts']['files']} files) -- rebuild the manifest "
         f"and re-derive this number rather than editing it")
     assert undeclared <= 52, (

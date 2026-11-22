@@ -174,6 +174,7 @@ PINNED = {
     "exemption_category_local_government_authorities": ("absent", None),
     "exemption_category_trainees_under_TAESA": ("absent", None),
     "exemption_category_farm_employers_agriculture": ("absent", None),
+    "exemption_category_water_authorities": ("absent", None),   # 2026-11-23: SDL s.19(1)(k), absorbed by the consolidated sdl_exemption_categories row like its siblings (listed in precompute _NOISE_KEYS_REVIEWED)
 
     "workers_compensation_act_section": ("fragment", None),
     "workers_compensation_rules_section": ("fragment", None),
@@ -480,6 +481,9 @@ PINNED = {
     "severance_pay_income_tax": ("present_elsewhere", "hakuna kiwango maalum cha asilimia 15"),
     # ---- 2026-11-17 batch 3: ONE NEW fact, SHIPPED by the Kaggle regen (converted from pending_r15).
     "company_annual_return_deadline": ("present_elsewhere", "siku 28 baada ya tarehe hiyo"),   # shipped by the batch-3 regen (HF dataset commit 8dfb5d56, built from edd7357): converted from pending_r15
+    # 2026-11-23: TWO NEW rows built (216, 217) and NOT yet served -- pending the Kaggle regen; flip to present_elsewhere with the anchors below when it lands.
+    "sdl_domestic_workers_scope": ("pending_r15", None),
+    "nssf_contributions_age_60": ("pending_r15", None),
 }
 
 
