@@ -2078,13 +2078,18 @@ def sdl_body_contradicts_verdict(question: str, body: str, computation):
 # R25. (1) Defect: an invented SDL scope rule (one live reply) and an invented NSSF age cut-off (one live reply). (2) What CORRECT output could they damage: a sentence that DENIES the premises rule ("SDL haitegemei maeneo ya biashara"), a pension-eligibility sentence
 #   about age 60 that does not speak of contributions, an early-retirement sentence (55), and a sentence that says contributions are NOT tied to age. Each is vetoed by a negation cue or by requiring the word for contributions beside the age.
 _D27_SDL = re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy", re.IGNORECASE)
-_D27_PREMISES = re.compile(r"maeneo\s+ya\s+biashara|commercial\s+premises|business\s+premises|mahali\s+pa\s+biashara|ofisi\s+ya\s+biashara|biashara\s+pekee|premises", re.IGNORECASE)
+_D27_PREMISES = re.compile(r"maeneo\s+ya\s+biashara|commercial\s+premises|business\s+premises|mahali\s+pa\s+biashara|ofisi\s+ya\s+biashara|biashara\s+pekee|ene(?:o|no)\s+la\s+biashara|premises", re.IGNORECASE)
 _D27_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haitegemei|haihusu|haihusiani|haina|hakuna|not|no)(?![a-z])", re.IGNORECASE)
 _D28_CONTRIB = re.compile(r"michango|mchango|contribution|kuchangia|inachangiwa|huchangiwa|hulipwa\s+michango", re.IGNORECASE)
 _D28_AGE60_CLAIM = re.compile(
     r"(?:huendelea|hudumu|zinaendelea|inaendelea|huisha|zinaisha|inaisha|hukoma|zinakoma|inakoma|hukatwa|huchangiwa|hulipwa|inalipwa)[^.]{0,70}(?:hadi|mpaka|until|till|baada\s+ya)\s+(?:umri\s+wa\s+)?(?:miaka\s+)?60(?![0-9])"
     r"|(?:ukifikisha|ukifika|akifikisha|akifika|anapofikisha|unapofikisha|baada\s+ya\s+kufikisha)\s+(?:umri\s+wa\s+)?(?:miaka\s+)?60(?![0-9])[^.]{0,70}(?:hahitaji|huhitaji|hauhitaji|hakuna\s+michango|haulipi|huacha|hukoma|hawajibiki|haitajiki|hahitajiki)",
     re.IGNORECASE)
+# 2026-11-23, FROM THE LIVE CHECK (eval/results/sdl_nssf_deploy_live_2026_11_23.json): the first D-28 pattern wanted "hadi/mpaka 60" and so missed the live reply "michango huisha pale mfanyakazi anapofikia umri wa miaka 60"; a THIRD reply invented a
+# different cut-off, "michango huisha ukifikia miezi 180" (180 months is the MINIMUM for a pension, not an end to contributions). A denial of the 180 claim ("... kwamba michango huisha ...") is left alone.
+_D28_STOP_AT_60 = re.compile(r"(?:huisha|zinaisha|inaisha|hukoma|zinakoma|inakoma|huacha|zinaacha)[^.?!]{0,60}(?:anapofikia|anapofikisha|ukifikia|ukifikisha|ukifika|akifika|akifikisha|anapofika|unapofikia)[^.?!]{0,30}60(?![0-9])", re.IGNORECASE)
+_D28_STOP_AT_180 = re.compile(r"michango[^.?!]{0,60}(?:huisha|zinaisha|inaisha|hukoma|zinakoma|inakoma)[^.?!]{0,40}(?:miezi\s+180|(?<![0-9])180(?![0-9])|miaka\s+15(?![0-9]))", re.IGNORECASE)
+_D28_DENIAL_OF_CLAIM = re.compile(r"kwamba|haisemi|haikomi|hazikomi|haziishi", re.IGNORECASE)
 _D28_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haikomi|hazikomi|haziishi|haitegemei|haihusiani)(?![a-z])|haijafungwa|haijafungamana", re.IGNORECASE)
 
 
@@ -2100,8 +2105,17 @@ def nssf_contributions_tied_to_age_60(question: str, body: str):
     """[sentence] stating that NSSF contributions continue until, or stop at, age 60. Pension-eligibility and early-retirement sentences (no word for contributions) and sentences that deny the tie are left alone."""
     if not body:
         return []
-    return [s.strip() for s in _SENTENCE_SPLIT.split(body)
-            if s and _D28_CONTRIB.search(s) and _D28_AGE60_CLAIM.search(s) and not _D28_NEG.search(s)]
+    out = []
+    for s in _SENTENCE_SPLIT.split(body):
+        if not s or not _D28_CONTRIB.search(s):
+            continue
+        if _D28_AGE60_CLAIM.search(s) and not _D28_NEG.search(s):
+            out.append(s.strip())
+        elif _D28_STOP_AT_60.search(s) and not _D28_NEG.search(s):
+            out.append(s.strip())
+        elif _D28_STOP_AT_180.search(s) and not _D28_DENIAL_OF_CLAIM.search(s):
+            out.append(s.strip())
+    return out
 
 
 def body_contradicts_d16(question: str, body: str):

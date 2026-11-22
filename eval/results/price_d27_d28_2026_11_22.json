@@ -1,5 +1,5 @@
 {
- "swept": 4276,
+ "swept": 4298,
  "hits": [
   {
    "rule": "D28",
@@ -15,6 +15,31 @@
    "q": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?",
    "flagged": [
     "SDL inalenga waajiri wenye wafanyakazi 10+ katika MAENEO YA BIASHARA (commercial premises)."
+   ]
+  },
+  {
+   "rule": "D27",
+   "src": "reply:sdl_nssf_deploy_live_2026_11_23.json",
+   "q": "SDL inahusu biashara tu au hata waajiri wa nyumbani?",
+   "flagged": [
+    "SDL inalenga 'mwajiri mwenye wafanyakazi 10+ katika eneo la biashara'.",
+    "Tafsiri ya 'eneno la biashara' inaweza kuwa pana zaidi ya nyumba ya makazi."
+   ]
+  },
+  {
+   "rule": "D28",
+   "src": "reply:sdl_nssf_deploy_live_2026_11_23.json",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "flagged": [
+    "Hapana, michango huisha pale mfanyakazi anapofikia umri wa miaka 60."
+   ]
+  },
+  {
+   "rule": "D28",
+   "src": "reply:sdl_nssf_deploy_live_2026_11_23.json",
+   "q": "Michango ya NSSF inaisha ukifika miaka 60?",
+   "flagged": [
+    "Si kweli — michango huisha ukifikia miezi 180 (miaka 15) na unastahili pensheni."
    ]
   }
  ]

@@ -1,0 +1,320 @@
+{
+ "identity": {
+  "build": "d997d4d",
+  "rag_rows_loaded": 218,
+  "rag_embeddings_shape": [
+   218,
+   768
+  ],
+  "rag_facts_text_sha256": "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50",
+  "config_rag_fact_count": 218,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795383893.321,
+   "enter_started_ts": 1795383893.329,
+   "enter_done_ts": 1795383930.778,
+   "import_to_enter_s": 0.0,
+   "load_s": 37.4,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "NHIF",
+   "q": "NSSF na NHIF — ni mifumo tofauti au moja?",
+   "reply": "Ni mifumo MIWILI TOFAUTI kabisa. NSSF: hutoa pensheni na manufaa ya muda mrefu. NHIF: hutoa bima ya afya. Ni shirika mbili tofauti zenye masharti tofauti. Thibitisha na NSSF (nssf.go.tz) na NHIF (nhif.or.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF",
+   "q": "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF-NEG",
+   "q": "NHIF ni bima ya afya au pensheni?",
+   "reply": "NHIF ni bima ya afya (health insurance) — si pensheni. Inahudumia wanachama wake katika hospitali na vituo vya afya vilivyoidhinishwa. NSSF ni mfuko wa pensheni (retirement fund) unaohudumia wastaafu. Ni vyombo tofauti kabisa. Thibitisha na NHIF (nhif.or.tz) au NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF-NEG",
+   "q": "Makato ya NHIF kwa mshahara wa TZS 800,000 ni kiasi gani?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-HH",
+   "q": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?",
+   "reply": "Haijathibitishwa rasmi katika taarifa niliyopata. SDL inategemea idadi ya wafanyakazi wote, lakini sheria inaweza kuwa na vipengele tofauti kwa wafanyakazi wa nyumbani. Thibitisha na TRA (tra.go.tz) kwa hali halisi ya wafanyakazi wako.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-HH",
+   "q": "Je, mfanyakazi wa nyumbani anahesabiwa kwenye wafanyakazi 10 wa SDL?",
+   "reply": "Haijathibitishwa rasmi. SDL hutozwa kwa waajiri wenye wafanyakazi 10 AU ZAIDI katika Tanzania Bara. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-HH",
+   "q": "SDL inahusu biashara tu au hata waajiri wa nyumbani?",
+   "reply": "Haijathibitishwa rasmi. SDL inalenga 'mwajiri mwenye wafanyakazi 10+ katika eneo la biashara'. Tafsiri ya 'eneno la biashara' inaweza kuwa pana zaidi ya nyumba ya makazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF-60",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "reply": "Hapana, michango huisha pale mfanyakazi anapofikia umri wa miaka 60. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF-60",
+   "q": "Mfanyakazi wangu ana miaka 61, nimuache kumchangia NSSF?",
+   "reply": "Hapana — michango ya NSSF inaendelea hadi mwajiri atakapoacha kuajiri mfanyakazi. Umri wa pensheni si sababu ya kusimamisha michango. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF-60",
+   "q": "Michango ya NSSF inaisha ukifika miaka 60?",
+   "reply": "Si kweli — michango huisha ukifikia miezi 180 (miaka 15) na unastahili pensheni. Umri wa 60 ni wa pensheni tu — si mwisho wa michango. Thibitisha na NSSF.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Wafanyakazi wangu ni 20 na jumla ya mishahara ni TZS 8,000,000 kwa mwezi, SDL ni kiasi gani?",
+   "reply": "Kwa hesabu sahihi, tumia: SDL = 3.5% × TZS 8,000,000 = TZS 280,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 8,000,000 = TZS 280,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP-NEG",
+   "q": "Tuna wafanyakazi 6, je tunatakiwa kulipa SDL?",
+   "reply": "Hapana. SDL inahusu waajiri wenye wafanyakazi 10 AU ZAIDI. Una wafanyakazi 6 tu, chini ya kiwango cha 10, kwa hiyo SDL haikuhusu. Thibitisha na TRA (tra.go.tz).\nHapana. SDL haihusiki: una wafanyakazi 6 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-EXEMPT",
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "reply": "Waajiri waliosamehewa rasmi na Sheria ya Kodi ya Mapato (TRA Act No. 9 of 2015): (1) Serikali ya Tanzania (si taasisi za serikali); (2) Balozi za nje; (3) Mashirika ya Kimataifa (UN, NGO); (4) Taasisi za kidini; (5) Wasiofaa kwa sababu ya umri (wasio chini ya miaka 18); (6) Wanafunzi wa TaESA; (7) Wamiliki wa mashamba wenye wafanyakazi 10+; (8) Mamlaka za Maji (WSDA); (9) Waziri wa Fedha anaweza kuongeza msamaha mwingine kwa amri. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-EXEMPT",
+   "q": "Nani amesamehewa SDL?",
+   "reply": "Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-EXEMPT",
+   "q": "Shule binafsi inalipa SDL?",
+   "reply": "Shule binafsi zenye wafanyakazi 10+ zinatozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+   "reply": "Hapana. Kizingiti sahihi cha SDL ni wafanyakazi 10 au zaidi — si 4. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja kwa mwezi: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako. Chanzo: GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "NSSF ya mfanyakazi ni asilimia ngapi?",
+   "reply": "NSSF ya mfanyakazi ni asilimia 10 ya mshahara wake. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kiwango cha VAT kitakuwa asilimia ngapi 2028?",
+   "reply": "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

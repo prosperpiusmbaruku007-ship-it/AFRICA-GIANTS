@@ -104,3 +104,32 @@ def test_plant_the_contribution_word_requirement_removed_flags_pension_eligibili
 def test_new_patterns_contain_no_control_characters():
     for r in (fidelity._D27_SDL, fidelity._D27_PREMISES, fidelity._D27_NEG, fidelity._D28_CONTRIB, fidelity._D28_AGE60_CLAIM, fidelity._D28_NEG):
         assert not any(ord(c) < 32 and c != "\n" for c in r.pattern)
+
+
+# ---- 2026-11-23: THE THREE LIVE MISSES of the first deploy's check (eval/results/sdl_nssf_deploy_live_2026_11_23.json), VERBATIM. The automated must_not regexes of that run passed all three; READING the replies found them (R41). ----
+LIVE_D27 = ("Haijathibitishwa rasmi. SDL inalenga 'mwajiri mwenye wafanyakazi 10+ katika eneo la biashara'. Tafsiri ya 'eneno la biashara' inaweza kuwa pana zaidi ya nyumba ya makazi. Thibitisha na TRA (tra.go.tz).")
+LIVE_D28_STOP = "Hapana, michango huisha pale mfanyakazi anapofikia umri wa miaka 60. Thibitisha na NSSF (nssf.go.tz)."
+LIVE_D28_180 = "Si kweli — michango huisha ukifikia miezi 180 (miaka 15) na unastahili pensheni. Umri wa 60 ni wa pensheni tu — si mwisho wa michango. Thibitisha na NSSF."
+
+
+def test_live_misses_are_now_flagged():
+    assert fidelity.sdl_scope_by_premises("SDL inahusu biashara tu au hata waajiri wa nyumbani?", LIVE_D27), "singular 'eneo la biashara' (and the live typo 'eneno') must be caught"
+    assert fidelity.nssf_contributions_tied_to_age_60(Q28, LIVE_D28_STOP), "'huisha pale ... anapofikia umri wa miaka 60' has no hadi/mpaka"
+    assert fidelity.nssf_contributions_tied_to_age_60("Michango ya NSSF inaisha ukifika miaka 60?", LIVE_D28_180), "an invented 180-month cut-off"
+
+
+@pytest.mark.parametrize("body", [
+    "Si kweli kwamba michango huisha ukifikia miezi 180; 180 ni kiwango cha chini cha pensheni.",
+    "Pensheni hupatikana ukifikisha miaka 60 na michango 180.",
+    "Michango haiishi ukifika miaka 60; haisemi hivyo sheria.",
+    "Hapana — michango ya NSSF inaendelea hadi mwajiri atakapoacha kuajiri mfanyakazi. Umri wa pensheni si sababu ya kusimamisha michango.",
+])
+def test_the_new_patterns_leave_correct_and_denying_sentences_alone(body):
+    assert fidelity.nssf_contributions_tied_to_age_60(Q28, body) == [], body
+
+
+def test_plant_the_new_patterns_removed_loses_the_live_misses(monkeypatch):
+    never = re.compile(r"(?!x)x")
+    monkeypatch.setattr(fidelity, "_D28_STOP_AT_60", never)
+    monkeypatch.setattr(fidelity, "_D28_STOP_AT_180", never)
+    assert fidelity.nssf_contributions_tied_to_age_60(Q28, LIVE_D28_STOP) == [] and fidelity.nssf_contributions_tied_to_age_60(Q28, LIVE_D28_180) == []
