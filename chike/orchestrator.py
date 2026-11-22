@@ -1312,6 +1312,8 @@ class Orchestrator:
         """Full pipeline entry point; stamps `Reply.model_calls` (see Reply). The pipeline itself is `_answer`."""
         before = self._model_calls
         reply = self._answer(question)
+        if not reply.refused and fidelity.question_names_nhif(question):   # 2026-11-23 (founder): NHIF named -> keep the answer, append one line (R25 block at fidelity.append_nhif_note)
+            reply = dataclasses.replace(reply, text=fidelity.append_nhif_note(question, reply.text))
         calls = None if self._extractor_external else max(0, self._model_calls - before)
         return dataclasses.replace(reply, model_calls=calls)
 

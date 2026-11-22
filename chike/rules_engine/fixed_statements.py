@@ -51,6 +51,10 @@ LICENCE_FEE_VALIDITY = "business_licence_fee_and_validity"
 # 2026-11-18 (founder, after the batch-3 live check): the COMPANY annual-return deadline. The row was at rank 1 and the model still stated "siku 42" / "mwaka wa kalenda unaofuatia" (4az), a different wrong value from the
 # ones D-FIDELITY-20 catches, so only a model-free statement reaches it. Same discipline, same exclusion from auto-send.
 ANNUAL_RETURN = "brela_annual_return_deadline"
+# 2026-11-23 (founder): WHO IS EXEMPT FROM SDL. The live check of build d997d4d answered "Ni waajiri gani hawalipi SDL?" with a FABRICATED list (a wrong Act, an invented "under 18" category, farms "with 10+") and "Shule binafsi inalipa SDL?" with a
+# confident WRONG YES (registered educational institutions are exempt), both with the correct row served at rank <= 3. The list is a CONSTANT, so it is stated whole, model-free: the LESSON, recorded in PROGRESS, is that for a constant the model
+# contradicts even at rank 1-3 a statement route beats another guard (guards are the backstop, not the fix).
+SDL_EXEMPTIONS = "sdl_exemptions"
 # 2026-11-22 (founder, preliminary Gate 2 #20): a rate asked for a FUTURE year ("kiwango rasmi cha VAT kitakachotumika 2028/2029"). The honest answer is two limbs held together: the rate of a year whose Finance Act has not been passed is UNKNOWN,
 # and the CURRENT rates we hold, each with the instrument it rests on. Same discipline as the rest of this route: model-free, whole, excluded from auto-send. The figures are locked facts vat_standard_rate (18%) and sdl_rate (3.5%, FA2023).
 FUTURE_YEAR_RATE = "future_year_rate"
@@ -196,10 +200,21 @@ STATEMENTS = {
         "The Finance Act is passed in June and commences 1 July: Finance Act 2025 commenced 1 Jul 2025 (locked facts) and the rates of a year whose Act has not been passed are unknowable, which is the point. 'Current' is as held in the locked facts, not a "
         "claim that Finance Act 2026 was read for these two rates. Founding specimen: preliminary Gate 2 #20 (gp_20), 'kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029'",
     ),
+    SDL_EXEMPTIONS: (
+        "sdl_exemption_categories",
+        "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); "
+        "Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; "
+        "mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; "
+        "wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. "
+        "Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+        "Locked fact sdl_exemption_categories (VETA Act Cap.82 R.E.2023 s.19(1)(a)-(j) and s.19(3); (k) added by Finance Act 2024 s.112; (a) reworded 'through Government subvention' by Finance Act 2026 s.98; Finance Act 2025 has no VETA amendment) and the per-category facts. "
+        "Founder-approved text, whole: every category stated, none selected, so it answers a LIST ask and a CATEGORY ask (a school, a religious body, a council) with the same sentence. Household employers are in none of these; whether domestic workers count toward the ten is the "
+        "OTHER hedge (sdl_domestic_workers_scope) and that question is vetoed off this route. R44: the Act is named, no section number",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS})
 
 
 def fixed_statement(topic) -> ComputationResult:

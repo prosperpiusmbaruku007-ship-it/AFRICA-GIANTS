@@ -1,0 +1,47 @@
+{
+ "swept": 8727,
+ "changed": [
+  {
+   "q": "Kampuni yangu inafunza wanafunzi (apprentices) chini ya mpango wa serikali. Je, hii inaathiri wajibu wa SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Kampuni inayomilikiwa na Serikali (parastatal) inalipa SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Serikali ya Tanzania inalipa SDL kwa wafanyakazi wake?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je kuna taasisi zinazosamehewa kulipa SDL?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Nani amesamehewa SDL?",
+   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Shule binafsi inalipa SDL?",
+   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
+   "before": "none",
+   "after": "fixed_statement"
+  }
+ ]
+}

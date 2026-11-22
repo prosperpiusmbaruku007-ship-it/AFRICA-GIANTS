@@ -1,0 +1,19 @@
+{"id": "se_01", "question": "Ni waajiri gani hawalipi SDL?", "expect": "statement", "guards_against": "Founding specimen (live, d997d4d): answered with a FABRICATED list."}
+{"id": "se_02", "question": "Shule binafsi inalipa SDL?", "expect": "statement", "guards_against": "Founding specimen (live, d997d4d): a confident WRONG YES; registered educational institutions are exempt."}
+{"id": "se_03", "question": "Nani amesamehewa SDL?", "expect": "statement", "guards_against": "Live non-answer ('Thibitisha na TRA')."}
+{"id": "se_04", "question": "Taasisi ya dini inalipa SDL?", "expect": "statement", "guards_against": "The founder's own category example."}
+{"id": "se_05", "question": "Halmashauri inalipa SDL?", "expect": "statement", "guards_against": "Category ask: local authorities."}
+{"id": "se_06", "question": "Mkulima mwenye shamba analipa SDL?", "expect": "statement", "guards_against": "Category ask: farm employers."}
+{"id": "se_07", "question": "Je kuna taasisi zinazosamehewa kulipa SDL?", "expect": "statement", "guards_against": "A held corpus question that is exactly a list ask (batch_015)."}
+{"id": "se_08", "question": "Serikali ya Tanzania inalipa SDL kwa wafanyakazi wake?", "expect": "statement", "guards_against": "A held corpus question: the statement gives the CONDITION (wholly financed through subvention)."}
+{"id": "se_09", "question": "Nina shule yenye wafanyakazi 15, je natakiwa kulipa SDL?", "expect": "not_statement", "guards_against": "A HEADCOUNT is present: it stays on the SDL engine (founder's veto)."}
+{"id": "se_10", "question": "SDL inahusu biashara tu au hata waajiri wa nyumbani?", "expect": "not_statement", "guards_against": "The household-employer question keeps its own hedge (founder's veto)."}
+{"id": "se_11", "question": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?", "expect": "not_statement", "guards_against": "The founding household specimen: its own hedge, not the list."}
+{"id": "se_12", "question": "Kiwango cha SDL ni asilimia ngapi?", "expect": "not_statement", "guards_against": "A RATE ask stays on its own route."}
+{"id": "se_13", "question": "SDL inaanzia wafanyakazi wangapi?", "expect": "not_statement", "guards_against": "The THRESHOLD ask stays on its statement."}
+{"id": "se_14", "question": "Je, kampuni ya madini lazima ilipe SDL kwa wafanyakazi wake?", "expect": "not_statement", "guards_against": "The substring trap: 'dini' sits inside 'madini'; found by the corpus sweep."}
+{"id": "se_15", "question": "Waajiri wa EPZ (Export Processing Zone) wanaweza kusamehewa SDL?", "expect": "not_statement", "guards_against": "EPZ is not on the list and no source held settles it: the statement would imply EPZ employers pay."}
+{"id": "se_16", "question": "Mwajiri anaweza kuomba msamaha wa SDL vipi?", "expect": "not_statement", "guards_against": "A HOW-TO-APPLY ask: a list does not answer it."}
+{"id": "se_17", "question": "Nina wafanyakazi wa kilimo — je wanasamehewa SDL? PAYE je?", "expect": "not_statement", "guards_against": "Two-part question naming another levy: the statement would silently drop the PAYE part."}
+{"id": "se_18", "question": "Shule yangu inalipa PAYE?", "expect": "not_statement", "guards_against": "A school question that does NOT name SDL."}
+{"id": "se_19", "question": "Faini ya kuchelewa kulipa SDL kwa shule ni ngapi?", "expect": "not_statement", "guards_against": "A penalty ask beside a category word."}

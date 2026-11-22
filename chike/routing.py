@@ -2726,6 +2726,17 @@ _FS_TOPICS = (
      re.compile(r"(?=.*(?:kiwango|viwango|(?<![a-z])rate|asilimia|percent|%))(?=.*(?:kodi|(?<![a-z])tax|(?<![a-z])vat(?![a-z])|ushuru|paye|(?<![a-z])sdl(?![a-z])|nssf|wcf|ongezeko\s+la\s+thamani))", re.S),
      re.compile(r"kizingiti|threshold|kusajili|usajili|sajili|registration|register|lini|deadline|tarehe|faini|adhabu|penalty|ada\s+ya|fomu|form(?![a-z])|namba|nawezaje|jinsi|hesabu|kokotoa|calculate|compute|"
                 r"niliuza|nimeuza|niliuziwa|uliopita|iliyopita|last\s+year|mwaka\s+jana|badala|kurudishiwa|refund|msamaha|exempt|zuio|withhold|makadirio|presumptive")),
+    # ---- 2026-11-23 (founder): WHO IS EXEMPT FROM SDL -- a LIST ask ("ni waajiri gani hawalipi SDL?") and a CATEGORY ask ("Shule binafsi inalipa SDL?", "taasisi ya dini inalipa SDL?"). NARROW BY CONSTRUCTION (R17): SDL named, an exemption word or
+    # a category word AND a pay/exempt verb, and VETOES -- ANY digit (a headcount or payroll figure stays on the SDL engine), the household/domestic-worker question (it keeps its own hedge), a threshold, a rate, a deadline, a penalty, a how-to.
+    # The topic's OWN ask only. Probes both ways: eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl.
+    ("sdl_exemptions",
+     re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
+     re.compile(r"(?=.*(?:waajiri\s+gani|taasisi\s+zipi|nani\s+(?:hawalipi|amesamehewa|hatozwi)|wanaosamehewa|wamesamehewa|amesamehewa|msamaha|haitozwi|hatozwi|hawalipi|wasiolipa|wasiotozwa|zisizolipa|exempt|samehe|"
+                r"shule|chekechea|(?<![a-z])chuo|taasisi\s+ya\s+dini|taasisi\s+za\s+dini|kanisa|msikiti|kidini|(?<![a-z])dini|ubalozi|balozi|halmashauri|manispaa|hisani|charit|shirika\s+la\s+misaada|umoja\s+wa\s+mataifa|taesa|shamba|mkulima|kilimo|mamlaka\s+ya\s+maji|serikali))"
+                r"(?=.*(?:inalipa|analipa|wanalipa|zinalipa|hulipa|hutozwa|inatozwa|anatozwa|wanatozwa|zinatozwa|inahusu|inawahusu|ana\s+wajibu|lazima|wajibu|hawalipi|hailipi|halipi|haitozwi|hatozwi|msamaha|samehe|samehewa|wasiolipa|wasiotozwa|zisizolipa|waajiri\s+gani|taasisi\s+zipi))", re.S),
+     re.compile(r"[0-9]|nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesabu|lini|deadline|tarehe|faini|adhabu|penalty|fomu|kujisajili|usajili|jinsi|nawezaje|"
+                r"epz|export\s+processing|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
@@ -2763,6 +2774,7 @@ _FS_TOPIC_ASK = {
     "tin_apply_deadline": re.compile(r"lini|siku|muda|ndani\s+ya|haraka|kuomba|(?<![a-z])omba|ombi|kujiandikisha|kujisajili|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|haja|hitaji|lazima|kwanza|nipate|kupata|pata(?:je)?|(?<![a-z])je(?![a-z])|\?"),
     "business_licence_fee_and_validity": re.compile(r"lini|gani|ngapi|muda|(?<![a-z])je(?![a-z])|kiasi|how|when|\?"),
     "sector_minimum_wage": _SECTOR_WAGE_ASK,
+    "sdl_exemptions": re.compile(r"\?|(?<![a-z])(?:gani|zipi|nani|je|inalipa|analipa|wanalipa|hutozwa|inatozwa|anatozwa|msamaha|hawalipi|haitozwi)(?![a-z])"),
     "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
@@ -2771,8 +2783,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────

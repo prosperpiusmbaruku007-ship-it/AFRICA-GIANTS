@@ -1449,7 +1449,7 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "nssf_split":
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
-        if topic in ("future_year_rate", "sector_minimum_wage"):
+        if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
@@ -2539,3 +2539,23 @@ def repair_nhif_figures(body: str):
     if NHIF_NOT_COVERED_NOTE not in text:
         text = (text + " " if text else "") + NHIF_NOT_COVERED_NOTE
     return text, removed
+
+
+
+# ── NHIF NAMED IN THE QUESTION: APPEND ONE LINE, NEVER REFUSE THE REST (2026-11-23, founder's decision 3) ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# Live (build d997d4d): "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?" was answered by the NSSF engine with NSSF's employee share and NOT A WORD about NHIF -- a reader can take 10% as the NHIF rate. The NSSF part is correct and stays; the reply
+# gains one line saying NHIF is not covered. Applies whenever the QUESTION names NHIF and the reply is not already a refusal (the verb-qualified NHIF forms are refused by the OOC list before this runs, unchanged). R25. (1) Defect: a silent partial answer to a
+# two-scheme question. (2) What CORRECT output could it damage: none removed -- it only appends; a reply that already says NHIF is not covered (D-FIDELITY-26's note, or this line) gets no second copy; an NSSF-only question gets nothing.
+NHIF_APPEND = "NHIF haijafunikwa na Chike — thibitisha na NHIF."
+_NHIF_ALREADY = re.compile(r"haijafunikwa\s+na\s+chike|haijafunika\s+nhif", re.IGNORECASE)
+
+
+def question_names_nhif(question: str) -> bool:
+    return bool(question) and bool(_NHIF.search(question))
+
+
+def append_nhif_note(question: str, text: str) -> str:
+    """`text` with the NHIF-not-covered line appended when the question names NHIF and the text does not already say so; otherwise unchanged."""
+    if not text or not question_names_nhif(question) or _NHIF_ALREADY.search(text):
+        return text
+    return text.rstrip() + "\n\n" + NHIF_APPEND
