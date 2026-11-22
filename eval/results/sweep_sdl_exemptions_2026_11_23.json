@@ -1,8 +1,86 @@
 {
- "swept": 8727,
+ "swept": 8743,
  "changed": [
   {
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Shule binafsi inalipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Nani amesamehewa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Taasisi ya dini inalipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Halmashauri inalipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mkulima mwenye shamba analipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je kuna taasisi zinazosamehewa kulipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Serikali ya Tanzania inalipa SDL kwa wafanyakazi wake?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, kampuni ya madini lazima ilipe SDL kwa wafanyakazi wake?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, kampuni ya madini lazima ilipe SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Duka langu la rejareja linalipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Hoteli inatakiwa kulipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
    "q": "Kampuni yangu inafunza wanafunzi (apprentices) chini ya mpango wa serikali. Je, hii inaathiri wajibu wa SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Shirika lisilo la faida (NGO au asasi ya kiraia) linalipa SDL?",
    "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
    "before": "none",
    "after": "fixed_statement"
@@ -14,32 +92,14 @@
    "after": "fixed_statement"
   },
   {
-   "q": "Serikali ya Tanzania inalipa SDL kwa wafanyakazi wake?",
+   "q": "Shirika lisilo la faida (NGO, asasi ya kiraia) inalipa SDL?",
    "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
    "before": "none",
    "after": "fixed_statement"
   },
   {
-   "q": "Je kuna taasisi zinazosamehewa kulipa SDL?",
-   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
-   "before": "none",
-   "after": "fixed_statement"
-  },
-  {
-   "q": "Ni waajiri gani hawalipi SDL?",
-   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
-   "before": "none",
-   "after": "fixed_statement"
-  },
-  {
-   "q": "Nani amesamehewa SDL?",
-   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
-   "before": "none",
-   "after": "fixed_statement"
-  },
-  {
-   "q": "Shule binafsi inalipa SDL?",
-   "src": "results/sdl_nssf_deploy_live_2026_11_23.json",
+   "q": "Mwajiri mgeni anayefanya kazi Tanzania — analipa SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
    "before": "none",
    "after": "fixed_statement"
   }

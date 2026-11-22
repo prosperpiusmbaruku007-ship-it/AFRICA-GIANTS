@@ -2727,15 +2727,20 @@ _FS_TOPICS = (
      re.compile(r"kizingiti|threshold|kusajili|usajili|sajili|registration|register|lini|deadline|tarehe|faini|adhabu|penalty|ada\s+ya|fomu|form(?![a-z])|namba|nawezaje|jinsi|hesabu|kokotoa|calculate|compute|"
                 r"niliuza|nimeuza|niliuziwa|uliopita|iliyopita|last\s+year|mwaka\s+jana|badala|kurudishiwa|refund|msamaha|exempt|zuio|withhold|makadirio|presumptive")),
     # ---- 2026-11-23 (founder): WHO IS EXEMPT FROM SDL -- a LIST ask ("ni waajiri gani hawalipi SDL?") and a CATEGORY ask ("Shule binafsi inalipa SDL?", "taasisi ya dini inalipa SDL?"). NARROW BY CONSTRUCTION (R17): SDL named, an exemption word or
+    # 2026-11-23 (second widening, founder): an EMPLOYER TYPE with a pay verb is enough -- "Je, kampuni ya madini lazima ilipe SDL?" (the live model reply invented a mining exemption). The statement already says everyone not on the list and not exempted by
+    # Gazette, with 10+ employees, pays. Extra vetoes for the widening: where/how to pay, the payer-or-deduction side ("Mfanyakazi analipa SDL?"), timing.
     # a category word AND a pay/exempt verb, and VETOES -- ANY digit (a headcount or payroll figure stays on the SDL engine), the household/domestic-worker question (it keeps its own hedge), a threshold, a rate, a deadline, a penalty, a how-to.
     # The topic's OWN ask only. Probes both ways: eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl.
     ("sdl_exemptions",
      re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
      re.compile(r"(?=.*(?:waajiri\s+gani|taasisi\s+zipi|nani\s+(?:hawalipi|amesamehewa|hatozwi)|wanaosamehewa|wamesamehewa|amesamehewa|msamaha|haitozwi|hatozwi|hawalipi|wasiolipa|wasiotozwa|zisizolipa|exempt|samehe|"
-                r"shule|chekechea|(?<![a-z])chuo|taasisi\s+ya\s+dini|taasisi\s+za\s+dini|kanisa|msikiti|kidini|(?<![a-z])dini|ubalozi|balozi|halmashauri|manispaa|hisani|charit|shirika\s+la\s+misaada|umoja\s+wa\s+mataifa|taesa|shamba|mkulima|kilimo|mamlaka\s+ya\s+maji|serikali))"
-                r"(?=.*(?:inalipa|analipa|wanalipa|zinalipa|hulipa|hutozwa|inatozwa|anatozwa|wanatozwa|zinatozwa|inahusu|inawahusu|ana\s+wajibu|lazima|wajibu|hawalipi|hailipi|halipi|haitozwi|hatozwi|msamaha|samehe|samehewa|wasiolipa|wasiotozwa|zisizolipa|waajiri\s+gani|taasisi\s+zipi))", re.S),
+                r"shule|chekechea|(?<![a-z])chuo|taasisi\s+ya\s+dini|taasisi\s+za\s+dini|kanisa|msikiti|kidini|(?<![a-z])dini|ubalozi|balozi|halmashauri|manispaa|hisani|charit|shirika\s+la\s+misaada|umoja\s+wa\s+mataifa|taesa|shamba|mkulima|kilimo|mamlaka\s+ya\s+maji|serikali|"
+                r"kampuni|biashara|duka|mgodi|hoteli|mgahawa|saluni|kiwanda|benki|hospitali|zahanati|ofisi|mradi|(?<![a-z])shirika|(?<![a-z])mwajiri|(?<![a-z])waajiri|(?<![a-z])taasisi))"
+                r"(?=.*(?:inalipa|analipa|wanalipa|zinalipa|hulipa|hutozwa|inatozwa|anatozwa|wanatozwa|zinatozwa|inahusu|inawahusu|ana\s+wajibu|lazima|wajibu|hawalipi|hailipi|halipi|haitozwi|hatozwi|msamaha|samehe|samehewa|wasiolipa|wasiotozwa|zisizolipa|waajiri\s+gani|taasisi\s+zipi|"
+                r"ilipe|alipe|walipe|zilipe|ulipe|tulipe|nilipe|inatakiwa|anatakiwa|zinatakiwa|wanatakiwa|inalazimika|analazimika))", re.S),
      re.compile(r"[0-9]|nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesabu|lini|deadline|tarehe|faini|adhabu|penalty|fomu|kujisajili|usajili|jinsi|nawezaje|"
-                r"epz|export\s+processing|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|"
                 r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),

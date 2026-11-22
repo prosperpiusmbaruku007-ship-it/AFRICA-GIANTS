@@ -1,4 +1,4 @@
-"""2026-11-23: the model-free SDL-EXEMPTIONS statement route (founder's decision 2) and the NHIF append (decision 3). R17 probes BOTH ways (eleven of the nineteen exemption probes are vetoed or unrelated, the arm that does the work), the statement's content tied
+"""2026-11-23: the model-free SDL-EXEMPTIONS statement route (founder's decision 2) and the NHIF append (decision 3). R17 probes BOTH ways (twelve of the twenty-nine exemption probes are vetoed or unrelated, the arm that does the work), the statement's content tied
 to the sources, zero model calls, never auto-sent, PLANTS (R26), and the NHIF append's three probes."""
 import importlib.util
 import io
@@ -22,7 +22,7 @@ TOPIC = "sdl_exemptions"
 def _probes():
     with io.open(_PROBES, encoding="utf-8") as fh:
         rows = [json.loads(line) for line in fh if line.strip()]
-    assert len(rows) == 19, len(rows)                         # a loader returning nothing must fail, not pass vacuously (R20)
+    assert len(rows) == 29, len(rows)                         # a loader returning nothing must fail, not pass vacuously (R20)
     assert sum(1 for r in rows if r["expect"] == "statement") >= 7 and sum(1 for r in rows if r["expect"] == "not_statement") >= 10
     return rows
 
@@ -61,7 +61,7 @@ def _answer(q):
     return Orchestrator(_B(), retriever=lambda x: ["f"], ooc_phrases=[], in_scope_phrases=[]).answer(q)
 
 
-@pytest.mark.parametrize("pid", ["se_01", "se_02", "se_03", "se_04"])
+@pytest.mark.parametrize("pid", ["se_01", "se_02", "se_03", "se_04", "se_14", "se_20"])
 def test_the_statement_answers_list_and_category_asks_with_zero_model_calls(pid):
     _B.calls = 0
     reply = _answer(_q(pid))
@@ -96,13 +96,35 @@ def test_plant_the_cue_removed_loses_the_specimen(monkeypatch):
 
 
 def test_plant_the_dini_boundary_removed_recreates_the_madini_collision(monkeypatch):
+    q = "Madini inalipa SDL?"      # no employer-type noun: only the 'dini' stem could carry the category cue (se_14 is now a statement on its employer type, so it no longer isolates the boundary)
+    assert routing.fixed_statement_topic(q) != TOPIC, "the word boundary must stop 'dini' matching inside 'madini' BEFORE the plant"
     new = []
     for n, c, nd, v in routing._FS_TOPICS:
         if n == TOPIC:
             nd = re.compile(nd.pattern.replace("(?<![a-z])dini", "dini"), nd.flags)
         new.append((n, c, nd, v))
     monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
-    assert routing.fixed_statement_topic(_q("se_14")) == TOPIC, "without the word boundary 'madini' matches 'dini'; if not, the boundary is decoration"
+    assert routing.fixed_statement_topic(q) == TOPIC, "without the word boundary 'madini' matches 'dini'; if not, the boundary is decoration"
+
+
+def test_plant_the_employer_type_cue_removed_loses_the_mining_specimen(monkeypatch):
+    new = []
+    for n, c, nd, v in routing._FS_TOPICS:
+        if n == TOPIC:
+            nd = re.compile(nd.pattern.replace("kampuni|biashara|duka|mgodi|hoteli|mgahawa|saluni|kiwanda|benki|hospitali|zahanati|ofisi|mradi|", ""), nd.flags)
+        new.append((n, c, nd, v))
+    monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
+    assert not _is_statement(_q("se_20")), "without the employer-type cue the mining specimen must fall off the route; if not, the widening is decoration"
+
+
+def test_plant_the_widening_vetoes_removed_hijack_the_payer_and_where_to_pay_asks(monkeypatch):
+    new = []
+    for n, c, nd, v in routing._FS_TOPICS:
+        if n == TOPIC:
+            v = re.compile(v.pattern.replace(r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|", ""), v.flags)
+        new.append((n, c, nd, v))
+    monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
+    assert routing.fixed_statement_topic(_q("se_23")) == TOPIC and routing.fixed_statement_topic(_q("se_24")) == TOPIC and routing.fixed_statement_topic(_q("se_27")) == TOPIC
 
 
 def test_new_patterns_contain_no_control_characters():
@@ -141,3 +163,13 @@ def test_no_double_line_when_the_repair_note_is_already_there():
 def test_plant_the_append_unwired_loses_the_line(monkeypatch):
     monkeypatch.setattr(fidelity, "append_nhif_note", lambda q, t: t)
     assert fidelity.NHIF_APPEND not in _answer("NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?").text
+
+
+def test_plant_the_sez_veto_removed_diverts_the_sez_question(monkeypatch):
+    new = []
+    for n, c, nd, v in routing._FS_TOPICS:
+        if n == TOPIC:
+            v = re.compile(v.pattern.replace(r"(?<![a-z])sez(?![a-z])|special\s+economic|", ""), v.flags)
+        new.append((n, c, nd, v))
+    monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
+    assert routing.fixed_statement_topic(_q("se_29")) == TOPIC, "without the SEZ veto the SEZ question must reach the statement; if not, the veto is decoration"
