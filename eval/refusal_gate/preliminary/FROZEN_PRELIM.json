@@ -1,0 +1,17 @@
+{
+ "file": "gate2_prelim_2026_11_22.jsonl",
+ "sha256": "5e969b2441091716378ca576852550543600a1b30918846ca66533e6c2d794bd",
+ "rows": 26,
+ "frozen_utc": "2026-11-22T15:46:27Z",
+ "validator_sha256": "77deec4c11edd8c0a3c7c7e4c3c3fce9885fa32bf0d4bb575c7d4ec64088b6ed",
+ "authored_by": [
+  "external_model:ChatGPT"
+ ],
+ "counts": {
+  "ooc": 19,
+  "hedge": 1,
+  "control": 6
+ },
+ "formal_set": false,
+ "_rule": "PRELIMINARY, n=26, external-model author (weaker independence). Frozen BEFORE any live run; never edited. NOT the formal held-out set."
+}
