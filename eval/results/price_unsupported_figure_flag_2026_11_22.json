@@ -1,0 +1,645 @@
+{
+ "gate": "c2143c0",
+ "fact_path_rows": 282,
+ "flagged_by_judge_verdict": {
+  "correct": {
+   "flagged": 4,
+   "of": 200
+  },
+  "wrong": {
+   "flagged": 2,
+   "of": 60
+  },
+  "none": {
+   "flagged": 0,
+   "of": 21
+  },
+  "undetermined": {
+   "flagged": 1,
+   "of": 1
+  }
+ },
+ "recall_on_wrong_fact_path_replies": "2/60",
+ "false_alarm_on_correct_fact_path_replies": "4/200",
+ "gold_answers_flagged": 25,
+ "training_answers": 1705,
+ "training_answers_flagged": 60,
+ "gate_examples": [
+  {
+   "id": "eval_024",
+   "judge": "correct",
+   "regex_pass": true,
+   "flagged": [
+    "190",
+    "150",
+    "110"
+   ],
+   "reply": "Maana yake ni kipindi chochote cha miezi 12 mfululizo, si lazima kuanzia Januari. Kwa mfano: mauzo ya Julai 2025 hadi Juni 2026 = TZS 190M → sajili VAT. Mauzo ya Mei–Aprili = TZS 150M → bado chini ya kizingiti. Mauzo ya Septemba 2024–Agosti"
+  },
+  {
+   "id": "eval_085",
+   "judge": "wrong",
+   "regex_pass": true,
+   "flagged": [
+    "264,000"
+   ],
+   "reply": "Kushindwa kuwasilisha annual return kwa muda mrefu kunasababisha hatua za kisheria dhidi ya kampuni: faini ya TZS 22,000 kwa kila mwezi wa kuchelewa (TZS 264,000 kwa mwaka kwa kawaida), pamoja na riba. Hatimaye, kampuni inaweza kufutwa kwen"
+  },
+  {
+   "id": "eval_116",
+   "judge": "correct",
+   "regex_pass": true,
+   "flagged": [
+    "33.5%"
+   ],
+   "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitish"
+  },
+  {
+   "id": "eval_119",
+   "judge": "undetermined",
+   "regex_pass": true,
+   "flagged": [
+    "263,000"
+   ],
+   "reply": "Kulingana na GN 605A, wastani wa mshahara wa chini wa sekta binafsi baada ya amri kuanza ni:\n\nTZS 175,000 (sekta ya kilimo ya kawaida)\nTZS 263,000 (maafisa walio na sifa)\nTZS 358,322 (madini ya kimataifa)\n\nHizi si viwango vipya vya 2025/26."
+  },
+  {
+   "id": "eval_229",
+   "judge": "wrong",
+   "regex_pass": false,
+   "flagged": [
+    "1,000,001",
+    "1,200,000",
+    "1,200,001",
+    "1,400,000",
+    "1,400,001",
+    "1,600,000"
+   ],
+   "reply": "Kuna ngazi 8 za mabano ya PAYE: asilimia 0 (hadi TZS 270,000), 8 (TZS 270,001–520,000), 20 (TZS 520,001–760,000), 25 (TZS 760,001–1,000,000), 30 (TZS 1,000,001–1,200,000), 35 (TZS 1,200,001–1,400,000), 40 (TZS 1,400,001–1,600,000), 45 (zaid"
+  },
+  {
+   "id": "eval_235",
+   "judge": "correct",
+   "regex_pass": true,
+   "flagged": [
+    "120"
+   ],
+   "reply": "Kwa pensheni kamili ya NSSF, unahitaji: umri wa miaka 60 (miaka 55 kwa sekta ya uchimbaji madini), na angalau miezi 180 (miezi 120 kwa sekta ya uchimbaji madini). Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_328",
+   "judge": "correct",
+   "regex_pass": true,
+   "flagged": [
+    "9,760,000"
+   ],
+   "reply": "Kwa bidhaa: 3% ya TZS 10,000,000 = TZS 300,000. Kwa huduma: 6% ya TZS 4,000,000 = TZS 240,000. Jumla ya VAT ya zuio ni TZS 540,000. Msambazaji anakusudia kupokea TZS 9,760,000 (bidhaa TZS 9,700,000 + huduma TZS 60,000) na kukupa risiti ya V"
+  }
+ ],
+ "gold_examples": [
+  {
+   "id": "eval_018",
+   "flagged": [
+    "2025"
+   ],
+   "answer": "Hii haijulikani kwa uhakika bila uthibitisho wa TRA. Kiwango cha asilimia 16 kilianzishwa 1 Septemba 2025 lakini kanuni za utekelezaji bado zilisubiri tangazo la Kamishna Mkuu mwishoni mwa 2025. Thibi"
+  },
+  {
+   "id": "eval_027",
+   "flagged": [
+    "1,180,000",
+    "10,800",
+    "1,169,200"
+   ],
+   "answer": "1) Toa invoice yenye VAT ya asilimia 18 — kwa mfano huduma ya TZS 1,000,000 + VAT TZS 180,000 = jumla TZS 1,180,000. 2) Wizara inakata asilimia 6 ya kiasi cha VAT tu (yaani 6% ya TZS 180,000 = TZS 10,"
+  },
+  {
+   "id": "eval_130",
+   "flagged": [
+    "350,000"
+   ],
+   "answer": "Zidisha jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote kwa asilimia 3.5. Mfano: jumla ya mishahara ya wafanyakazi wote ni TZS milioni 10 — SDL = 3.5% × 10,000,000 = TZS 350,000. Thibiti"
+  },
+  {
+   "id": "eval_274",
+   "flagged": [
+    "75,000"
+   ],
+   "answer": "Laki saba na nusu ni TZS 750,000. NSSF ya mfanyakazi ni asilimia 10 ya mshahara ghafi: 10% ya TZS 750,000 = TZS 75,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_280",
+   "flagged": [
+    "1,728,000"
+   ],
+   "answer": "Tumia takwimu hasa: 18 x TZS 480,000 = TZS 8,640,000 jumla ya mishahara. NSSF ni asilimia 20 (mwajiri + mfanyakazi) = TZS 1,728,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_281",
+   "flagged": [
+    "68,000",
+    "40,000",
+    "108,000"
+   ],
+   "answer": "Tumia TZS 920,000. Iko kwenye kundi la nne: PAYE = TZS 68,000 + 25% ya (920,000 - 760,000) = 68,000 + 40,000 = TZS 108,000 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_284",
+   "flagged": [
+    "18,000",
+    "38,000"
+   ],
+   "answer": "Tumia TZS 610,000 (kundi la tatu): PAYE = TZS 20,000 + 20% ya (610,000 - 520,000) = 20,000 + 18,000 = TZS 38,000 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_285",
+   "flagged": [
+    "11,100,000",
+    "388,500"
+   ],
+   "answer": "Robo ya 24 ni 6 (kwa TZS 800,000) na 18 (kwa TZS 350,000). Jumla: 6 x 800,000 + 18 x 350,000 = 4,800,000 + 6,300,000 = TZS 11,100,000. Watu 24 zaidi ya 10, SDL = 3.5% = TZS 388,500 kwa mwezi. Thibitis"
+  },
+  {
+   "id": "eval_287",
+   "flagged": [
+    "19,000,000",
+    "665,000"
+   ],
+   "answer": "Theluthi mbili ya 30 ni 20 (kwa 500,000) na 10 (kwa 900,000). Jumla: 20 x 500,000 + 10 x 900,000 = 10,000,000 + 9,000,000 = TZS 19,000,000. Watu 30 zaidi ya 10, SDL = 3.5% = TZS 665,000 kwa mwezi. Thi"
+  },
+  {
+   "id": "eval_288",
+   "flagged": [
+    "9,400,000",
+    "47,000"
+   ],
+   "answer": "Robo tatu ya 16 ni 12 (kwa 450,000) na 4 (kwa 1,000,000). Jumla: 12 x 450,000 + 4 x 1,000,000 = 5,400,000 + 4,000,000 = TZS 9,400,000. WCF ni asilimia 0.5 = TZS 47,000 kwa mwezi. Thibitisha na WCF (wc"
+  },
+  {
+   "id": "eval_290",
+   "flagged": [
+    "9,300,000",
+    "325,500"
+   ],
+   "answer": "Jumla ya mishahara: 3 x 1,200,000 + 4 x 800,000 + 5 x 500,000 = 3,600,000 + 3,200,000 + 2,500,000 = TZS 9,300,000. Wafanyakazi 12 (zaidi ya 10), SDL = 3.5% = TZS 325,500 kwa mwezi. Thibitisha na TRA ("
+  },
+  {
+   "id": "eval_319",
+   "flagged": [
+    "245,000"
+   ],
+   "answer": "Jumla ya mishahara: 14 x TZS 500,000 = TZS 7,000,000. NSSF: 20% = TZS 1,400,000. SDL: wafanyakazi 14 zaidi ya 10, 3.5% ya TZS 7,000,000 = TZS 245,000. Thibitisha na NSSF/TRA."
+  },
+  {
+   "id": "eval_320",
+   "flagged": [
+    "68,000"
+   ],
+   "answer": "Kwa mfanyakazi MMOJA wa TZS 800,000: PAYE (kundi 4) = 68,000 + 25% x (800,000-760,000) = TZS 78,000. NSSF mfanyakazi = 10% = TZS 80,000 (jumla 20% = 160,000). WCF = 0.5% = TZS 4,000. SDL: HAKUNA — SDL"
+  },
+  {
+   "id": "eval_323",
+   "flagged": [
+    "68,000"
+   ],
+   "answer": "PAYE ya TZS 760,000 (kikomo cha kundi 3) = 20,000 + 20% x (760,000-520,000) = TZS 68,000. SDL: ukifikia wafanyakazi 10, sasa inatozwa: 3.5% ya TZS 7,600,000 = TZS 266,000. Thibitisha na TRA (tra.go.tz"
+  },
+  {
+   "id": "eval_325",
+   "flagged": [
+    "6,900,000",
+    "1,380,000"
+   ],
+   "answer": "Arusha: 6 x 400,000 = 2,400,000. Mwanza: 9 x 500,000 = 4,500,000. Jumla ya mishahara = TZS 6,900,000. NSSF ni 20% = TZS 1,380,000 kwa mwezi. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_326",
+   "flagged": [
+    "128,000",
+    "158,000"
+   ],
+   "answer": "Mkazi (kundi 5): PAYE = 128,000 + 30% x (1,100,000-1,000,000) = TZS 158,000. Asiye mkazi: kiwango cha mkato wa mwisho ni asilimia 15 tambarare = 15% x 1,100,000 = TZS 165,000, siyo mabano. Thibitisha "
+  },
+  {
+   "id": "eval_327",
+   "flagged": [
+    "4,600,000",
+    "23,000"
+   ],
+   "answer": "Jumla ya mishahara: 4 x 700,000 + 6 x 300,000 = 2,800,000 + 1,800,000 = TZS 4,600,000. WCF: 0.5% = TZS 23,000. SDL: watu 10 wamefikia kizingiti, 3.5% = TZS 161,000. Thibitisha na WCF/TRA."
+  },
+  {
+   "id": "eval_334",
+   "flagged": [
+    "68,000",
+    "47,500",
+    "115,500"
+   ],
+   "answer": "Mshahara wa jumla unaotozwa (kama posho na bonasi zinahesabika) = 600,000 + 150,000 + 200,000 = TZS 950,000 (kundi 4): PAYE = 68,000 + 25% x (950,000-760,000) = 68,000 + 47,500 = TZS 115,500. Thibitis"
+  },
+  {
+   "id": "eval_356",
+   "flagged": [
+    "80"
+   ],
+   "answer": "Iko kwenye kundi la pili kwa sehemu ndogo tu: PAYE = 8% ya (271,000 - 270,000) = 8% ya 1,000 = TZS 80 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_358",
+   "flagged": [
+    "20,200"
+   ],
+   "answer": "TZS 521,000 imeingia kundi la tatu kwa TZS 1,000: PAYE = 20,000 + 20% ya (521,000 - 520,000) = 20,000 + 200 = TZS 20,200 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_359",
+   "flagged": [
+    "48,000",
+    "68,000"
+   ],
+   "answer": "TZS 760,000 ni kikomo cha kundi la tatu: PAYE = 20,000 + 20% ya (760,000 - 520,000) = 20,000 + 48,000 = TZS 68,000 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_360",
+   "flagged": [
+    "68,000",
+    "128,000"
+   ],
+   "answer": "TZS 1,000,000 ni kikomo cha kundi la nne: PAYE = 68,000 + 25% ya (1,000,000 - 760,000) = 68,000 + 60,000 = TZS 128,000 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_361",
+   "flagged": [
+    "128,000",
+    "131,000"
+   ],
+   "answer": "Imeingia kundi la tano: PAYE = 128,000 + 30% ya (1,010,000 - 1,000,000) = 128,000 + 3,000 = TZS 131,000 kwa mwezi. Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_395",
+   "flagged": [
+    "68,000"
+   ],
+   "answer": "PAYE (kundi 4) = 68,000 + 25% x (800,000-760,000) = TZS 78,000. Mshahara halisi baada ya PAYE = 800,000 - 78,000 = TZS 722,000 (kabla ya makato mengine). Thibitisha na TRA (tra.go.tz)."
+  },
+  {
+   "id": "eval_399",
+   "flagged": [
+    "10,400",
+    "128,000",
+    "188,000"
+   ],
+   "answer": "Wa TZS 400,000 (kundi 2): 8% x (400,000-270,000) = TZS 10,400. Wa TZS 1,200,000 (kundi 5): 128,000 + 30% x (1,200,000-1,000,000) = TZS 188,000. Thibitisha na TRA (tra.go.tz)."
+  }
+ ],
+ "training_examples": [
+  {
+   "file": "batch_001_cleaned.jsonl",
+   "flagged": [
+    "1,000,000"
+   ],
+   "q": "VAT ya pembejeo (input VAT) ni nini na inafanya kazi vipi?",
+   "answer": "VAT ya pembejeo ni VAT unayolipa kwa wanunuzi wako wakati unununua bidhaa au huduma kwa ajili ya biashara yako. Kama wewe ni msajiliwa VAT, unaweza kudai VAT ya pembejeo dhidi ya VAT ya matokeo (VAT u"
+  },
+  {
+   "file": "batch_001_cleaned.jsonl",
+   "flagged": [
+    "350,000"
+   ],
+   "q": "Kiwango cha SDL ni kiasi gani cha mishahara yangu?",
+   "answer": "Kiwango cha SDL ni asilimia 3.5 ya jumla ya mishahara ya jumla (gross wages) ya wafanyakazi wote. SDL inalipwa na mwajiri peke yake — haikatwi kwa mfanyakazi. Kwa mfano, kama jumla ya mishahara yako y"
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "68,000",
+    "128,000"
+   ],
+   "q": "Viwango vya PAYE Tanzania kwa 2025/2026 ni vipi?",
+   "answer": "Viwango vya PAYE Tanzania Bara (Finance Act 2025): TZS 0–270,000/mwezi: 0%; TZS 270,001–520,000: 8% ya ziada; TZS 520,001–760,000: 20% ya ziada + TZS 20,000; TZS 760,001–1,000,000: 25% ya ziada + TZS "
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "35,832",
+    "71,664"
+   ],
+   "q": "NSSF inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "NSSF inacheswa kwa asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Kwa mshahara wa chini wa TZS 358,322: mfanyakazi analipa TZS 35,832; mwajiri analipa TZS 35,832 pia. Jumlisha: mchango "
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "12,541"
+   ],
+   "q": "SDL inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "SDL (Skills and Development Levy) ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi wote kwa mwajiri mwenye wafanyakazi 10 au zaidi. Kwa mshahara wa chini wa TZS 358,322: SDL = TZS 12,541 kwa mfany"
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "1,792"
+   ],
+   "q": "WCF inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "WCF (Workers Compensation Fund) ni asilimia 0.5 ya jumla ya mishahara ghafi — inalipwa na mwajiri peke yake. Kwa mshahara wa chini wa TZS 358,322: WCF = TZS 1,792 kwa mfanyakazi kwa mwezi. Thibitisha "
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "35,832",
+    "12,541",
+    "1,792",
+    "50,165",
+    "408,487"
+   ],
+   "q": "Gharama yote ya mwajiri kwa mfanyakazi mmoja mwenye mshahara wa chini wa GN 605A ni kiasi gani?",
+   "answer": "Kwa mshahara wa chini wa wastani wa TZS 358,322/mwezi: NSSF ya mwajiri TZS 35,832 (10%); SDL TZS 12,541 (3.5%); WCF TZS 1,792 (0.5%). Jumla ya gharama ya ziada kwa mwajiri: TZS 50,165. Gharama yote ya"
+  },
+  {
+   "file": "batch_002a_cleaned.jsonl",
+   "flagged": [
+    "35,832",
+    "322,490",
+    "52,490",
+    "4,199"
+   ],
+   "q": "PAYE inacheswa vipi kwa mshahara wa chini wa TZS 358,322?",
+   "answer": "Mshahara ghafi TZS 358,322. Punguza NSSF ya mfanyakazi (10%): TZS 358,322 − TZS 35,832 = TZS 322,490. Kanda za PAYE: TZS 0–270,000 = TZS 0; TZS 270,001–322,490 (TZS 52,490 × 8%) = TZS 4,199. PAYE ya m"
+  },
+  {
+   "file": "batch_002b_cleaned.jsonl",
+   "flagged": [
+    "500"
+   ],
+   "q": "Ada ya kibali cha makazi Class C Tanzania ni kiasi gani?",
+   "answer": "Ada ya kibali cha makazi daraja C inaweza kutofautiana kulingana na muda na aina ya kazi. Karibu na USD 500–2,000 kwa mwaka — lakini thibitisha ada halisi za sasa na Idara ya Uhamiaji kupitia tovuti i"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "68,000",
+    "128,000"
+   ],
+   "q": "Viwango vya PAYE Tanzania kwa 2025/2026 ni vipi?",
+   "answer": "Viwango vya PAYE Tanzania Bara (Finance Act 2025): TZS 0–270,000/mwezi: 0%; TZS 270,001–520,000: 8% ya ziada; TZS 520,001–760,000: 20% ya ziada + TZS 20,000; TZS 760,001–1,000,000: 25% ya ziada + TZS "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "35,832",
+    "71,664"
+   ],
+   "q": "NSSF inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "NSSF inacheswa kwa asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi). Kwa mshahara wa chini wa TZS 358,322: mfanyakazi analipa TZS 35,832; mwajiri analipa TZS 35,832 pia. Jumlisha: mchango "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "12,541"
+   ],
+   "q": "SDL inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "SDL (Skills and Development Levy) ni asilimia 3.5 ya jumla ya mishahara ya wafanyakazi wote kwa mwajiri mwenye wafanyakazi 10 au zaidi. Kwa mshahara wa chini wa TZS 358,322: SDL = TZS 12,541 kwa mfany"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "1,792"
+   ],
+   "q": "WCF inacheswa vipi kwa mshahara wa chini wa GN 605A?",
+   "answer": "WCF (Workers Compensation Fund) ni asilimia 0.5 ya jumla ya mishahara ghafi — inalipwa na mwajiri peke yake. Kwa mshahara wa chini wa TZS 358,322: WCF = TZS 1,792 kwa mfanyakazi kwa mwezi. Thibitisha "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "35,832",
+    "12,541",
+    "1,792",
+    "50,165",
+    "408,487"
+   ],
+   "q": "Gharama yote ya mwajiri kwa mfanyakazi mmoja mwenye mshahara wa chini wa GN 605A ni kiasi gani?",
+   "answer": "Kwa mshahara wa chini wa wastani wa TZS 358,322/mwezi: NSSF ya mwajiri TZS 35,832 (10%); SDL TZS 12,541 (3.5%); WCF TZS 1,792 (0.5%). Jumla ya gharama ya ziada kwa mwajiri: TZS 50,165. Gharama yote ya"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "37.5%"
+   ],
+   "q": "Kampuni inanunua mashine ya TZS 50,000,000. Gharama ya mashine hiyo inakatwa kwa mwaka mmoja au inagawanywa miaka mingi?",
+   "answer": "Gharama ya mashine haiwezi kukatwa yote kwa mwaka mmoja. Inagawanywa kwa njia ya uchakavu (depreciation) kulingana na kiwango kilichoandikwa na TRA kulingana na darasa la mali. Kwa mfano, mashine za v"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "70%"
+   ],
+   "q": "Kampuni inapata hasara ya TZS 20,000,000 mwaka huu. Je, hasara hiyo inaweza kubebwa mbele na kupunguza kodi ya miaka ija",
+   "answer": "Ndiyo. Hasara ya biashara inayothibitishwa na TRA inaweza kubebwa mbele na kutumiwa kupunguza mapato yanayotozwa kodi ya miaka ijayo. Hata hivyo, kuna kikomo cha muda: hasara inaweza kubebwa mbele kwa"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "6,000,000"
+   ],
+   "q": "Kodi ya stempu kwenye mkataba wa kukodi nyumba (tenancy/lease agreement) inahesabiwaje?",
+   "answer": "Kodi ya stempu kwenye mkataba wa kukodi nyumba au ardhi ni asilimia 1 ya kodi ya mwaka iliyowekwa (annual reserved rent) — hii inatumika kwa mikataba yote ya kukodi bila kujali muda. Kwa mfano, kodi y"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "1,000"
+   ],
+   "q": "Wakati kampuni mpya inaandikishwa, Hati ya Kuasisi Ushirika (Memorandum of Association) inahitaji kodi ya stempu?",
+   "answer": "Ndiyo. Memorandum of Association ya kampuni inahitaji kodi ya stempu ya TZS 10,000 kulingana na jedwali la Sheria ya Kodi ya Stempu. Hati hii lazima ipigwe stempu wakati wa usajili wa kampuni au kabla"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "75%"
+   ],
+   "q": "Kampuni inataka kubadilisha jina lake. Inafuata mchakato gani wa BRELA?",
+   "answer": "Kubadilisha jina la kampuni kunahitaji: kupitisha azimio maalum (special resolution) la wanahisa wenye asilimia 75 ya kura kuunga mkono mabadiliko ya jina, kuomba kuidhinishwa kwa jina jipya na BRELA "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "75%"
+   ],
+   "q": "Kampuni inataka kufuta usajili wake (deregistration) rasmi. Mchakato wa BRELA ni upi?",
+   "answer": "Kufuta usajili wa kampuni kwa hiari (voluntary dissolution) kunahitaji: kupitisha azimio maalum la wanahisa (75%+), kuteuwa msimamizi wa likwidesheni (liquidator), kulipa madeni yote ya kampuni na kuk"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "52,000",
+    "132,000",
+    "668,000"
+   ],
+   "q": "Jinsi ya kuhesabu mshahara wa mikono (net salary) mfanyakazi anapopata baada ya PAYE na NSSF kukatwa — mfano wa TZS 800,",
+   "answer": "Mahesabu ya mshahara wa mikono (take-home) kwa mshahara ghafi TZS 800,000/mwezi: PAYE = TZS 52,000 (kama ilivyohesabiwa). NSSF ya mfanyakazi (10%) = TZS 80,000. Jumla ya makato = TZS 132,000. Mshahara"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "559,000"
+   ],
+   "q": "PAYE inahesabiwaje kwa mfanyakazi wa saa — analipwa TZS 3,000 kwa saa na anafanya kazi masaa 80 kwa mwezi?",
+   "answer": "Mshahara wa mwezi: 80 saa × TZS 3,000 = TZS 240,000. Kwa sababu TZS 240,000 iko chini ya kiwango cha kwanza cha PAYE cha TZS 270,000 (0%), na pia ni chini ya kiwango ambacho punguzo la kibinafsi kinaw"
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "1,000,001",
+    "128,000",
+    "428,000"
+   ],
+   "q": "Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia ngapi na kinaanza kutumika kwenye mshahara gani?",
+   "answer": "Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia 30, kinatumika kwenye sehemu ya mshahara inayozidi TZS 1,000,000 kwa mwezi. Sehemu yoyote ya mshahara juu ya TZS 1,000,000 kwa mwezi inatozwa 30%. "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "30,000,000",
+    "7,500,000",
+    "22,500,000",
+    "5,625,000"
+   ],
+   "q": "Gari la biashara linaweza kukatwa kama gharama kwa kodi ya mapato? Kiwango cha uchakavu ni kiasi gani?",
+   "answer": "Ndiyo. Magari yanayotumiwa kwa biashara yanaweza kukatwa kwa njia ya uchakavu (depreciation) kwenye kodi ya mapato ya kampuni. Kiwango cha uchakavu kwa magari (motor vehicles) chini ya Sheria ya Kodi "
+  },
+  {
+   "file": "batch_002_cleaned.jsonl",
+   "flagged": [
+    "37.5%",
+    "7,500,000",
+    "12,500,000",
+    "4,687,500"
+   ],
+   "q": "Mashine ya kiwanda inakatwa kwa kiwango gani cha uchakavu kwa kodi ya mapato Tanzania?",
+   "answer": "Mashine na vifaa vya kiwanda (plant and machinery) vinakatwa kwa kiwango cha uchakavu cha asilimia 37.5 kwa mwaka kwa njia ya msingi unaopungua (reducing balance). Hii ni kiwango cha haraka zaidi kuli"
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "7"
+   ],
+   "q": "Je, SDL na PAYE ni kodi moja?",
+   "answer": "Hapana, ni kodi mbili tofauti. PAYE (Pay As You Earn) ni kodi ya mapato inayokatwa kutoka mshahara wa mfanyakazi na mwajiri anapeleka TRA. SDL ni Skills Development Levy (Kodi ya Kukuza Ujuzi) — inayo"
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "1,620,000"
+   ],
+   "q": "Biashara yangu ina wafanyakazi 20 na jumla ya mishahara ni TZS 12,000,000 kwa mwezi. Niambie: SDL, NSSF ya mwajiri, na S",
+   "answer": "Hesabu: SDL (Skills Development Levy — Kodi ya Kukuza Ujuzi) = TZS 12,000,000 × 3.5% = TZS 420,000. NSSF ya mwajiri = TZS 12,000,000 × 10% = TZS 1,200,000. Jumla ya malipo ya mwajiri kwa TRA na NSSF ="
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "3,360,000"
+   ],
+   "q": "Ninataka kujua: SDL ya mwaka mzima kwa kampuni yenye mishahara ya TZS 8,000,000 kwa mwezi na wafanyakazi 13.",
+   "answer": "SDL ya kila mwezi: TZS 8,000,000 × 3.5% = TZS 280,000. SDL ya mwaka mzima: TZS 280,000 × 12 = TZS 3,360,000. Hii inalipwa kwa awamu 12 (kila mwezi), mwisho siku ya 7 ya kila mwezi. SDL = Skills Develo"
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "192,500"
+   ],
+   "q": "Wafanyakazi 11 wanalipwa wastani wa TZS 500,000 kila mmoja. SDL ya mwezi ni TZS ngapi?",
+   "answer": "Jumla ya mishahara: 11 × TZS 500,000 = TZS 5,500,000. SDL (Skills Development Levy — Kodi ya Kukuza Ujuzi): TZS 5,500,000 × 3.5% = TZS 192,500 kwa mwezi. Inalipwa na mwajiri peke yake, mwisho siku ya "
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "125,413"
+   ],
+   "q": "Mwezi huu kulipwa mishahara tu kwa wafanyakazi 10 kila mmoja TZS 358,322 (kiwango cha chini cha mshahara). SDL ni kiasi ",
+   "answer": "Jumla ya mishahara: 10 × TZS 358,322 = TZS 3,583,220. SDL (Skills Development Levy — Kodi ya Kukuza Ujuzi): TZS 3,583,220 × 3.5% = TZS 125,413 (kuzungusha hadi shilingi kamili). Kumbuka: kiwango cha c"
+  },
+  {
+   "file": "batch_003_cleaned.jsonl",
+   "flagged": [
+    "10.5%"
+   ],
+   "q": "Je, kampuni inalazimika kulipa WCF na NSSF zote mbili?",
+   "answer": "Ndiyo. Kampuni inalazimika kulipa NSSF na WCF — ni wajibu tofauti mbili. NSSF: mwajiri 10% + mfanyakazi 10% = 20% ya mshahara mkubwa wa jumla. WCF: mwajiri peke yake asilimia 0.5 ya mshahara mkubwa wa"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "10.5%"
+   ],
+   "q": "Kama mwajiri, gharama zangu za ziada juu ya mshahara wa chini ni nini?",
+   "answer": "Juu ya mshahara wa chini, mwajiri analipa: NSSF asilimia 10 ya mshahara, SDL asilimia 3.5 (kwa waajiri wenye wafanyakazi 10 au zaidi), na WCF asilimia 0.5. Kwa hivyo gharama halisi ni mshahara + asili"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "7,066"
+   ],
+   "q": "Je, PAYE inatumika kwa mfanyakazi anayepata mshahara wa chini wa Shilingi 358,322?",
+   "answer": "Kwa mshahara wa Shilingi 358,322 kwa mwezi, PAYE inaweza kulipwa au la kulingana na mwaka — kwa sababu kiwango cha kwanza cha PAYE cha asilimia sifuri kinaendelea hadi Shilingi 270,000. Sehemu inayozi"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "175,000"
+   ],
+   "q": "Mfanyakazi wa viwanda (manufacturing) ana mshahara wa chini wa kiasi gani?",
+   "answer": "Sekta ya viwanda na uzalishaji ina kiwango chake katika GN 605A. Kiwango hiki ni cha wastani — zaidi ya kiwango cha jumla cha Shilingi 175,000 lakini chini ya sekta za madini. Angalia jedwali la GN 60"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "330,072"
+   ],
+   "q": "Ongezeko la mshahara wa GN 605A lilikuwa asilimia 20 kwa wastani — je, hii ni kweli?",
+   "answer": "Hapana. Ongezeko la wastani lilikuwa asilimia 33.4 — si asilimia 20. Mshahara wa wastani uliongezeka kutoka Shilingi 275,060 hadi Shilingi 358,322. Ongezeko la asilimia 20 lingekuwa likifikia tu Shili"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "48,000",
+    "2,100,000",
+    "2,228,000"
+   ],
+   "q": "Kodi ya mwaka ya makato ya PAYE ya mfanyakazi mwenye mshahara wa Shilingi 8,000,000 kwa mwezi inahesabiwaje?",
+   "answer": "Kwa mshahara wa Shilingi 8,000,000 kwa mwezi, PAYE inahesabika kwa kanda kama ifuatavyo: Shilingi 0: kanda ya asilimia sifuri (hadi 270,000). Shilingi 270,001–520,000 = Shilingi 250,000 × 8% = Shiling"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "3,240,000"
+   ],
+   "q": "Msaada wa kibinafsi (personal relief) wa PAYE ni Shilingi 400,000 kwa mwaka — je, hii ni sahihi?",
+   "answer": "Hapana. Msaada wa kibinafsi wa PAYE kwa mkazi wa Tanzania ni Shilingi 270,000 kwa mwaka — si Shilingi 400,000. Hii inamaanisha mwaka wa mapato ya kwanza kabla ya kutolipwa PAYE ni Shilingi 3,240,000 k"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "16,000"
+   ],
+   "q": "Jinsi ya kuhesabu PAYE ya mfanyakazi mwenye mshahara wa Shilingi 600,000 kwa mwezi?",
+   "answer": "Kwa mshahara wa Shilingi 600,000: Kanda ya 0%: Shilingi 270,000 → kodi sifuri. Kanda ya 8%: Shilingi 270,001–520,000 = Shilingi 250,000 × 8% = Shilingi 20,000. Kanda ya 20%: Shilingi 520,001–600,000 ="
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "7,066"
+   ],
+   "q": "PAYE hairuhusiwi kukatwa kwa wafanyakazi wanaopata mshahara wa chini chini ya Shilingi 500,000 — je, ni kweli?",
+   "answer": "Hapana. PAYE inakatwa MARA TU mapato yanayopita Shilingi 270,000 kwa mwezi — si Shilingi 500,000. Mfanyakazi mwenye mshahara wa Shilingi 358,322 (kiwango cha wastani cha GN 605A) tayari ana PAYE inayo"
+  },
+  {
+   "file": "batch_004_cleaned.jsonl",
+   "flagged": [
+    "10,400"
+   ],
+   "q": "Jinsi ya kuhesabu PAYE ya mfanyakazi mwenye mshahara wa Shilingi 400,000 kwa mwezi?",
+   "answer": "Kwa mshahara wa Shilingi 400,000: Kanda ya 0%: Shilingi 270,000 → kodi sifuri. Kanda ya 8%: Shilingi 270,001–400,000 = Shilingi 130,000 × 8% = Shilingi 10,400. Jumla ya PAYE = Shilingi 10,400 kwa mwez"
+  }
+ ],
+ "note": "lenient support set (whole index): flag counts are a LOWER bound; fact-path only; preliminary Gate 2 set burned and not used"
+}

@@ -1492,6 +1492,10 @@ def _d_page(r, v, t, via="query"):
                  if working else
                  "<div class=w><i>Hakuna hesabu ya mfumo — jibu hili limetoka kwa modeli "
                  "na kumbukumbu pekee, hivyo hakuna hesabu ya kuthibitisha.</i></div>")
+    uf_lines = _core().unsupported_figure_lines(it)
+    if uf_lines:
+        work_html = ("<div style='background:#4a3a10;border:2px solid #ffb84d;color:#ffe9c2;border-radius:8px;padding:10px;margin-bottom:8px;font-weight:700'>"
+                     + "<br>".join(_esc(x) for x in uf_lines) + "</div>") + work_html
     decided = it.get("status") != "pending"
     banner = ""
     if decided:

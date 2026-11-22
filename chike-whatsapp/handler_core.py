@@ -1210,7 +1210,12 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
     queue CANNOT work that way, because sending the approved answer needs the number. Keeping
     them in one store would quietly re-introduce the identifier into the analysis corpus.
     """
+    try:
+        _uf = unsupported_figures(row.get("question"), draft, facts, engine_working, model_calls)
+    except Exception:                                                                    # noqa: BLE001  -- a check that cannot run says so on the card (None), it never blocks the hold
+        _uf = None
     return {
+        "unsupported_figures": _uf,
         "review_id": review_id or row["ts"] + "-" + row["sender_hash"][:8],
         "ts_held": row["ts"],
         "build": row.get("build"),
@@ -1410,6 +1415,103 @@ def evidence_state(item) -> str:
 
 def evidence_is_loud(item) -> bool:
     return evidence_state(item) in EVIDENCE_LOUD
+
+
+# ── THE UNSUPPORTED-FIGURE FLAG (2026-11-22, founder: FLAG-ONLY while every model reply is reviewed) ─────────────────────────────────────────────────────────────────────────────
+# A money amount, a rate or a day/month/year count in a MODEL-WRITTEN fact-path draft that appears in NEITHER the question, NOR the served facts, NOR is one arithmetic step from the two, is shown to the reviewer as
+# "figure not in served facts: X". NOTHING IS REWRITTEN AND NOTHING IS BLOCKED: the reply is unchanged and the reviewer decides. (A hedge/rewrite was priced read-only -- eval/controls/price_unsupported_figure_hedge_2026_11_22.py --
+# and is NOT built: recall on the 60 wrong fact-path replies of the last full gate was 2/60, because 58 are wrong in ways that carry no unsupported figure, so a flag is the honest size of what this can do.)
+#
+# ⛔ KNOWN LIMIT, RECORDED NOT FIXED -- IT IS SUBJECT-BLIND. The test is "does this NUMBER appear anywhere in the support set", never "does it belong to THIS subject". A figure that is correct for one levy and attached to another passes whenever the
+# right number is served for any other subject: an NHIF 0.5% passes when WCF 0.5% is served; a TZS 200,000,000 VAT limit stated as the EFD threshold passes when the VAT threshold row is served. The check finds INVENTED numbers, not MIS-ATTRIBUTED
+# ones; the reviewer is the control for those, and nothing here claims otherwise (R41: a flag's absence is not "the figures are right").
+#
+# TWO TOKENIZER SLIPS FIXED BEFORE THIS WAS WIRED (found in the pricing, which read both as false positives on correct replies):
+#   * an ACT YEAR is not money -- "Sheria ya Fedha 2025" read 2025 as TZS 2,025 because any bare number >= 1000 counted. A plain four-digit 1900-2100 with no unit and no currency before it is a year.
+#   * a DECIMAL COMMA is not a thousands separator -- "asilimia 3,5" was read as 3 and 5. A comma followed by exactly one or two digits is a decimal ("3,5" = 3.5); exactly three digits is thousands ("3,500").
+_UF_NUM = re.compile(r"(?<![\d,.])(\d{1,3}(?:,\d{3})+|\d+,\d{1,2}(?!\d)|\d+(?:\.\d+)?)(?![\d])")
+_UF_UNIT_AFTER = re.compile(r"^\s*(milioni|million|elfu|laki|bilioni|billion|%|asilimia|siku|days?|miezi|months?|wiki|weeks?|miaka|years?)", re.IGNORECASE)
+_UF_UNIT_BEFORE = re.compile(r"(tzs|sh\.?|shilingi|asilimia|siku|miezi|wiki|miaka|usd|\$)\s*$", re.IGNORECASE)
+_UF_SCALE = {"milioni": 1_000_000, "million": 1_000_000, "elfu": 1_000, "laki": 100_000, "bilioni": 1_000_000_000, "billion": 1_000_000_000}
+
+
+def _uf_value(raw):
+    return float(raw.replace(",", ".")) if re.fullmatch(r"\d+,\d{1,2}", raw) else float(raw.replace(",", ""))
+
+
+def _uf_is_year(raw):
+    return bool(re.fullmatch(r"\d{4}", raw)) and 1900 <= int(raw) <= 2100
+
+
+def _uf_figures(text):
+    """[(raw, value, kind)] for each money amount, rate and day/month/year count in `text`. A small bare integer (a list marker, '3:2', an ordinal) and a bare year are not figures."""
+    out = []
+    t = text or ""
+    for m in _UF_NUM.finditer(t):
+        raw = m.group(1)
+        v = _uf_value(raw)
+        after = _UF_UNIT_AFTER.match(t[m.end():m.end() + 14])
+        before = _UF_UNIT_BEFORE.search(t[max(0, m.start() - 12):m.start()])
+        unit = (after.group(1).lower() if after else None) or (before.group(1).lower() if before else None)
+        if unit in _UF_SCALE and after:
+            out.append((raw, v * _UF_SCALE[unit], "money"))
+        elif unit in ("%", "asilimia"):
+            out.append((raw, v, "rate"))
+        elif unit and re.match(r"siku|day|miezi|month|wiki|week|miaka|year", unit):
+            out.append((raw, v, "count"))
+        elif unit in ("tzs", "sh", "sh.", "shilingi", "usd", "$"):
+            out.append((raw, v, "money"))
+        elif v >= 1000 and not _uf_is_year(raw):
+            out.append((raw, v, "money"))
+    return out
+
+
+def _uf_support(question, fact_texts, working):
+    nums = set()
+    for src in (question, working, *fact_texts):
+        for raw in _UF_NUM.findall(str(src or "")):
+            nums.add(_uf_value(raw))
+    qn = {_uf_value(r) for r in _UF_NUM.findall(question or "")}
+    derived = set()
+    for a in qn:
+        for b in nums | qn:
+            for v in (a * b / 100.0, a * b, a + b, abs(a - b), (a / b) if b else None, (b / a) if a else None):
+                if v is not None:
+                    derived.add(round(v, 2))
+    return nums, derived
+
+
+def unsupported_figures(question, draft, facts=(), engine_working=None, model_calls=None):
+    """The figures of a MODEL-WRITTEN fact-path draft that nothing in the exchange supports, as display strings. [] when nothing is unsupported OR the check does not apply (an engine reply, which carries its own working, or a draft the model
+    did not write). Pure; never raises on odd input -- the caller stores None when it cannot run, which the card shows."""
+    if engine_working or not isinstance(draft, str) or not draft.strip():
+        return []
+    if isinstance(model_calls, bool) or not isinstance(model_calls, int) or model_calls < 1:
+        return []
+    nums, derived = _uf_support(question, [str(f) for f in (facts or [])], engine_working)
+    seen, out = set(), []
+    for raw, v, kind in _uf_figures(draft):
+        if v in nums or round(v, 2) in derived or raw in seen:
+            continue
+        seen.add(raw)
+        out.append(raw + ("%" if kind == "rate" else ""))
+    return out
+
+
+UNSUPPORTED_FIGURE_SW = "⚠️ NAMBA ISIYO KWENYE VIGEZO: {figs} — thibitisha chanzo kabla ya kuidhinisha."
+UNSUPPORTED_FIGURE_EN = "Figure not in served facts: {figs} — check the source before approving."
+UNSUPPORTED_FIGURE_NOT_RUN = "(Ukaguzi wa namba haukufanya kazi kwa rasimu hii — soma namba zote mwenyewe. / The figure check did not run for this draft.)"
+
+
+def unsupported_figure_lines(item):
+    """[] when nothing to say; otherwise the card/push lines. A check that could not run is said so (None), because a missing signal must itself be a signal (R41)."""
+    flagged = item.get("unsupported_figures", "unset")
+    if flagged is None:
+        return [UNSUPPORTED_FIGURE_NOT_RUN]
+    if not flagged or flagged == "unset":
+        return []
+    figs = ", ".join(str(x) for x in flagged)
+    return [UNSUPPORTED_FIGURE_SW.format(figs=figs), UNSUPPORTED_FIGURE_EN.format(figs=figs)]
 
 
 # ── THE REVIEW TIMEOUT (founder's decision, 2026-11-13 -- a CHANGE TO THE R7 READING, recorded in CLAUDE.md) ─────────
@@ -1737,6 +1839,8 @@ def notification_text(item, link, reviewer_name=None, renotify=False, autosend_n
         lines.append("• " + (f if len(f) <= _PUSH_FACT_CHARS else f[:_PUSH_FACT_CHARS] + "…"))
     if len(facts) > _PUSH_FACTS_MAX:
         lines.append(f"• …na {len(facts) - _PUSH_FACTS_MAX} zaidi kwenye kiungo")
+    for _l in unsupported_figure_lines(item):
+        lines.append(_l)
     if item.get("fallback"):
         lines += ["⚠️ FALLBACK — modeli haikujibu."]
     if item.get("error_class"):
