@@ -1,0 +1,384 @@
+{
+ "identity": {
+  "build": "56af98b",
+  "rag_rows_loaded": 218,
+  "rag_embeddings_shape": [
+   218,
+   768
+  ],
+  "rag_facts_text_sha256": "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50",
+  "config_rag_fact_count": 218,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795385169.377,
+   "enter_started_ts": 1795385169.388,
+   "enter_done_ts": 1795385219.547,
+   "import_to_enter_s": 0.0,
+   "load_s": 50.2,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "MISS1",
+   "q": "SDL inahusu biashara tu au hata waajiri wa nyumbani?",
+   "reply": "SDL hutozwa kwa kila mwajiri mwenye wafanyakazi 10 au zaidi (Sheria ya Elimu na Mafunzo ya Ufundi); Sheria haisemi kwamba inahusu 'maeneo ya biashara' pekee. Wasiotozwa ni makundi yaliyoorodheshwa kisheria: taasisi za Serikali zinazofadhiliwa kikamilifu kupitia ruzuku ya Serikali, balozi, Umoja wa Mataifa, taasisi za misaada za kimataifa au za kigeni, taasisi za dini, mashirika ya hisani, taasisi za elimu zilizosajiliwa, halmashauri, wanafunzi wa mafunzo kwa vitendo chini ya TaESA, waajiri wa mashambani kwa wafanyakazi wa kilimo, na mamlaka ya maji na usafi wa mazingira kwa vibarua wa miradi ya maji; Waziri wa Fedha pia anaweza kusamehe kwa tangazo la Gazeti. Orodha hiyo haina mwajiri wa nyumbani; kama wafanyakazi wa nyumbani wanahesabiwa kwenye idadi ya 10, hakuna kinachotuonyesha kwa uhakika; thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS2",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "reply": "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa michango kwa mfanyakazi anayepokea au anayestahili manufaa. Kwa mfanyakazi aliyefika 60 au anayepokea pensheni na bado ameajiriwa, thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS3",
+   "q": "Michango ya NSSF inaisha ukifika miaka 60?",
+   "reply": "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa michango kwa mfanyakazi anayepokea au anayestahili manufaa. Kwa mfanyakazi aliyefika 60 au anayepokea pensheni na bado ameajiriwa, thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS4",
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS5",
+   "q": "Shule binafsi inalipa SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS6",
+   "q": "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)\n\nNHIF haijafunikwa na Chike — thibitisha na NHIF.",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MISS6b",
+   "q": "Nani amesamehewa SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CAT",
+   "q": "Taasisi ya dini inalipa SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CAT",
+   "q": "Halmashauri inalipa SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF",
+   "q": "NSSF na NHIF — ni mifumo tofauti au moja?",
+   "reply": "Ni mifumo MIWILI TOFAUTI kabisa. NSSF: hutoa pensheni na manufaa ya muda mrefu. NHIF: hutoa bima ya afya. Ni shirika mbili tofauti zenye masharti tofauti. Thibitisha na NSSF (nssf.go.tz) na NHIF (nhif.or.tz).\n\nNHIF haijafunikwa na Chike — thibitisha na NHIF.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF-NEG",
+   "q": "NSSF ya mfanyakazi ni asilimia ngapi?",
+   "reply": "NSSF ya mfanyakazi ni asilimia 10 ya mshahara wake. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NHIF-NEG",
+   "q": "Makato ya NHIF kwa mshahara wa TZS 800,000 ni kiasi gani?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Nina shule yenye wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, unatakiwa kulipa SDL kwa kuwa una wafanyakazi 15. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?",
+   "reply": "Haijathibitishwa rasmi katika taarifa niliyopata. SDL inategemea idadi ya wafanyakazi wote, lakini sheria inaweza kuwa na vipengele tofauti kwa wafanyakazi wa nyumbani. Thibitisha na TRA (tra.go.tz) kwa hali halisi ya wafanyakazi wako.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL inaanzia wafanyakazi wangapi?",
+   "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Je, kampuni ya madini lazima ilipe SDL kwa wafanyakazi wake?",
+   "reply": "Kampuni za uchimbaji madini zinaweza kuwa na msamaha maalum chini ya Sheria ya Madini Tanzania. Msamaha huo unategemea aina ya shughuli na idadi ya wafanyakazi. Thibitisha na TRA au Wizara ya Madini.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Waajiri wa EPZ (Export Processing Zone) wanaweza kusamehewa SDL?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Wafanyakazi wangu ni 20 na jumla ya mishahara ni TZS 8,000,000 kwa mwezi, SDL ni kiasi gani?",
+   "reply": "Kwa hesabu sahihi, tumia: SDL = 3.5% × TZS 8,000,000 = TZS 280,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 8,000,000 = TZS 280,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP-NEG",
+   "q": "Tuna wafanyakazi 6, je tunatakiwa kulipa SDL?",
+   "reply": "Hapana. SDL inahusu waajiri wenye wafanyakazi 10 AU ZAIDI. Una wafanyakazi 6 tu, chini ya kiwango cha 10, kwa hiyo SDL haikuhusu. Thibitisha na TRA (tra.go.tz).\nHapana. SDL haihusiki: una wafanyakazi 6 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja kwa mwezi: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako. Chanzo: GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kiwango cha VAT kitakuwa asilimia ngapi 2028?",
+   "reply": "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+   "reply": "Hapana. Kizingiti sahihi cha SDL ni wafanyakazi 10 au zaidi — si 4. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": [
+  "replaced"
+ ]
+}
