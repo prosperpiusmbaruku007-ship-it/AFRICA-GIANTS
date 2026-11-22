@@ -199,7 +199,9 @@ SOURCE_FILES = [
 # 48cb213 also carries scripts/rag_payload_gates.py, which this file now imports as a hard
 # dependency and refuses to run without -- so it belongs on this floor on the ordinary
 # "cannot run at all" ground as well.
-EXPECTED_HEAD = 'b0ef5e9'
+# 2026-11-23: b0ef5e9 -> bd4bf61 (the 216 -> 218 packaging commit: the SDL household-employer and NSSF age-60 rows, the revised SDL exemption row, and the three new critical queries). A clone older than bd4bf61 lacks them and would
+# build a 216-row index that fails its own guards, or worse passes them without the new rows.
+EXPECTED_HEAD = 'bd4bf61'
 
 
 def _assert_expected_head_present(local_head, live_sha):

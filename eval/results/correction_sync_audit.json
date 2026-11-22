@@ -72,21 +72,21 @@
       "key": "efd_threshold_tzs_11m",
       "expected_figure": "438",
       "rows": [
-        "Kizingiti cha kuanza kutumia mashine ya EFD: mauzo ya TZS 11,000,000 (milioni kumi na moja) kwa mwaka. Si TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Biashara zote zilizosajiliwa VAT hutumia EFD bila kujali kiwango cha mauzo."
+        "Kizingiti cha kuanza kutumia mashine ya EFD: EFD haina kizingiti cha mauzo kwa mwaka. SI TZS 200,000,000 — hiyo ni kizingiti cha kusajili VAT, si EFD. Na SI TZS 11,000,000."
       ]
     },
     {
       "key": "efd_not_every_business",
       "expected_figure": "438",
       "rows": [
-        "Mauzo yangu ya mwaka ni milioni 15 (au kiasi kingine chochote), sina namba ya VAT -- je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako."
+        "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako."
       ]
     },
     {
       "key": "nssf_payment_deadline",
       "expected_figure": "50",
       "rows": [
-        "NSSF inalipwa ifikapo tarehe 10 ya mwezi unaofuata."
+        "NSSF inalipwa ndani ya MWEZI MMOJA baada ya mwisho wa mwezi wa mishahara — si tarehe 10. Ukichelewa, faini ni asilimia 5 ya kiasi kisicholipwa kwa kila mwezi au sehemu ya mwezi."
       ]
     },
     {
@@ -94,6 +94,13 @@
       "expected_figure": "297",
       "rows": [
         "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi wa usalama na afya kutoka kwa wafanyakazi ulio nao -- ni kuteua, si kuajiri mtu mpya. Kiwandani: mwakilishi 1 kwa kila wafanyakazi 50. Dukani au ofisini: 1 kwa kila 100. Mkaguzi anaweza kuagiza uteuzi hata kwa wafanyakazi 4 au chini ya hapo. Kamati ya usalama inahitajika ukiwa na wawakilishi 2 au zaidi. (NOT a professionally hired/dedicated 'safety officer'.)"
+      ]
+    },
+    {
+      "key": "efd_tra_closure_authority",
+      "expected_figure": "438",
+      "rows": [
+        "Nikikosa kutoa risiti ya EFD adhabu ni nini? TRA inaweza kutoa onyo la maandishi, kutoza faini, kusimamisha kifaa au leseni ya EFD, na kufunga eneo la biashara kwa anayeshindwa mara kwa mara kutoa risiti za EFD (Sheria ya Usimamizi wa Kodi)."
       ]
     },
     {
@@ -117,16 +124,23 @@
     "permit_class_c_categories",
     "corporate_tax_rate",
     "rent_wht_rate",
+    "wcf_accident_reporting_deadline",
     "gn487a_transitional_provision",
     "gn487a_visa_revocation",
     "vat_withholding_remittance_deadline",
     "wcf_rate_0_5_percent_confirmed",
+    "NSSF_split_triggers",
+    "nssf_employer_registration_deadline",
     "efd_approved_supplier_verification",
     "gn487a_mgeni_cap357_definition",
-    "efd_tra_closure_authority",
+    "company_share_value_threshold_5_min",
+    "company_registration_fee_5",
+    "company_registration_fee_no_share_capital",
     "memorandum_articles_of_association_filing_fee",
+    "certified_copy_agreement_law_constitution_fee",
     "document_filing_fee_section_12_act_excluding_balance_sheet",
     "balance_sheet_filing_fee_section_12_act",
+    "late_filing_penalty_monthly_fee_section_12_act",
     "act_section_12",
     "risk_assessment_frequency",
     "minimum_directors",
@@ -138,10 +152,14 @@
     "vat_deferment_limit_date",
     "vat_deferment_threshold_percentage",
     "vat_deferment_minimum_value",
+    "fine_limit",
     "paye_bands_with_examples",
     "sdl_calculation_example",
+    "business_licence_expiry_30_june",
     "presumptive_tax_bands_2022",
-    "brela_foreign_late_filing_penalty"
+    "brela_foreign_late_filing_penalty",
+    "company_registration_fee_bands",
+    "dividend_withholding_rate"
   ],
   "unresolved": [
     "health_and_safety_act_citation",
