@@ -489,8 +489,11 @@ def main():
     # Absolute, because the module-level `os.chdir(REPO)` that used to make this work is gone:
     # a library may not relocate its caller's working directory at import. This was the only
     # cwd-dependent path in the file; every other one already joined REPO.
-    os.makedirs(os.path.join(REPO, os.path.dirname(ARTIFACT)), exist_ok=True)
-    with io.open(os.path.join(REPO, ARTIFACT), "w", encoding="utf-8", newline="\n") as fh:
+    # 2026-11-22: CHIKE_ARTIFACT_DIR redirects the write (tests/conftest.py points the test run at a temp dir, so a full test run no longer rewrites this TRACKED file -- the dirty tree that made the deploy pre-flight Gate 1 refuse).
+    # Run by hand it still writes the tracked path. Read, never assigned (R40: no import-time environment writes in this closure).
+    _dir = os.environ.get("CHIKE_ARTIFACT_DIR") or os.path.join(REPO, os.path.dirname(ARTIFACT))
+    os.makedirs(_dir, exist_ok=True)
+    with io.open(os.path.join(_dir, os.path.basename(ARTIFACT)), "w", encoding="utf-8", newline="\n") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=2)
 
     print(f"built index: {len(keys)} rows")

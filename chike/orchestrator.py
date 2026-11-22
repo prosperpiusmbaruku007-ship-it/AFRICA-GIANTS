@@ -1229,6 +1229,8 @@ class Orchestrator:
         repaired = fidelity.repair_gn605a_sector_count(sub.sub_question.text, repaired)
         # 2026-11-17 (D-FIDELITY-17): a personal name in the body that the question and the served facts do not carry is removed (an office, an institution or an Act is never judged). R25 block at fidelity.strip_unsupported_names.
         repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
+        # 2026-11-22 (D-FIDELITY-26, founder): a figure attached to NHIF is removed (no NHIF rate is held anywhere). R25 block at fidelity.repair_nhif_figures; the unit of removal is the CLAUSE, so the correct NSSF part survives.
+        repaired, _nhif_removed = fidelity.repair_nhif_figures(repaired)
         if repaired != cleaned:
             cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)

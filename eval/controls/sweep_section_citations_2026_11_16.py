@@ -135,7 +135,8 @@ def prove():
     bad += sched
     english_d = [(k, m.group(0)) for k, t in zip(keys, texts) for m in CIT.finditer(t) if not SW.match(m.group(0))]
     res = {"violations": bad, "n_rows": len(texts), "population_D_english_key_citations": english_d}
-    path = os.path.join(REPO, "eval", "results", "sweep_section_citations_proof_2026_11_16.json")
+    # 2026-11-22: CHIKE_ARTIFACT_DIR redirects the write (tests/conftest.py sets it to a temp dir) so a test run never rewrites this tracked file.
+    path = os.path.join(os.environ.get("CHIKE_ARTIFACT_DIR") or os.path.join(REPO, "eval", "results"), "sweep_section_citations_proof_2026_11_16.json")
     json.dump(res, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("violations:", len(bad), "| rows:", len(texts), "| D citations kept:", len(english_d))
     for v in bad:

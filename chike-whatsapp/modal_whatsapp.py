@@ -2200,7 +2200,7 @@ async def seed_timeout_probe(kind: str = "engine", age_min: int = 20):
 
 
 @app.function(image=image, secrets=SECRETS, timeout=120)
-async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
+async def seed_test_draft(label: str = "seed", to_reviewer: bool = False, flag: bool = False):
     """Put ONE synthetic draft in the queue, for verifying the roster mechanics live.
 
     ⛔⛔ A MODAL FUNCTION, NOT A WEB ENDPOINT, AND THAT IS THE SECURITY PROPERTY. Reaching
@@ -2232,13 +2232,22 @@ async def seed_test_draft(label: str = "seed", to_reviewer: bool = False):
         "question": f"[MTIHANI {label}] Nina wafanyakazi 15 — je SDL inanihusu?",
         "model_latency_ms": 0, "fallback": False, "error_class": None,
     }
-    item = core.review_item(
-        row=row, sender=sender,
-        draft=f"[MTIHANI {label}] Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL "
-              f"inatozwa — asilimia 3.5 ya jumla ya mishahara.",
-        engine_working="Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa.",
-        facts=["sdl_rate: SDL ni asilimia 3.5 ya jumla ya mishahara."],
-        review_id=f"TEST-{label}")
+    if flag:
+        # 2026-11-22: a FACT-PATH draft carrying an invented figure, to show the unsupported-figure flag on the real card. Same CLI-only security property as the default seed; the figure is a documented test value, not a claim.
+        item = core.review_item(
+            row=row, sender=sender,
+            draft=f"[MTIHANI {label}] Kizingiti cha EFD ni mauzo ya TZS 11,000,000 kwa mwaka.",
+            engine_working=None, facts=["efd_default: EFD inahitajika kwa kila mfanyabiashara bila kujali mauzo."],
+            review_id=f"TEST-{label}", model_calls=1, guards=[])
+        item["answer_path"] = "fact"
+    else:
+        item = core.review_item(
+            row=row, sender=sender,
+            draft=f"[MTIHANI {label}] Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL "
+                  f"inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+            engine_working="Ndiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa.",
+            facts=["sdl_rate: SDL ni asilimia 3.5 ya jumla ya mishahara."],
+            review_id=f"TEST-{label}")
     REVIEW_QUEUE[item["review_id"]] = item
     sent = await _notify_reviewers(item)
     _mark_notified(item, sent)

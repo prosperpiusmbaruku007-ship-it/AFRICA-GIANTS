@@ -2392,3 +2392,66 @@ def repair_gn605a_sector_count(question: str, body: str) -> str:
     for part in re.split(r"(?<=[.!?\n])", body):
         out.append(part if _D16_NEG.search(part) else _D21_COUNT.sub(fix, part))
     return "".join(out)
+
+
+
+# ── D-FIDELITY-26 (2026-11-22, founder): A FIGURE ATTACHED TO NHIF IS REMOVED -- WE HOLD NO NHIF RATE ────────────────────────────────────────────────────────────────────
+# NHIF (the National Health Insurance Fund) is OUT OF SCOPE (the 2026-11-22 OOC additions refuse the verb-qualified forms) and NO locked fact holds an NHIF rate or amount. So ANY percentage or amount a reply attaches to NHIF is unsupported by
+# construction -- there is no served fact it could be copied from. Founding specimen, LIVE: the mixed question "NSSF na NHIF -- ni mifumo tofauti au moja?" (correctly NOT refused: it compares two schemes) was answered "NHIF: ... (asilimia 0.5
+# mwajiri + asilimia 10 mfanyakazi)" -- WCF's 0.5 and NSSF's 10 attributed to NHIF. The unsupported-figure FLAG cannot see it (both numbers are served, for OTHER subjects: its recorded subject-blindness), so this is a constant rule about a SUBJECT.
+#
+# R25, in writing at the site. (1) WHAT DEFECT DOES IT REPAIR: an invented rate attributed to a scheme we do not cover; one live instance, no corpus count (the corpus holds 3 NHIF questions, none answered with a rate). (2) WHAT CORRECT OUTPUT COULD IT
+# DAMAGE: any sentence that states a figure beside NHIF that is nevertheless true -- e.g. a member COUNT or a founding year written with a thousands separator. We hold no NHIF fact to say such a figure is right, and the decision is that an
+# unsupported figure on an uncovered scheme is removed, not judged. A reply that mentions NHIF WITHOUT a figure is untouched, and so is every figure that belongs to ANOTHER levy in the same sentence (the unit of removal is the CLAUSE).
+#
+# REPAIRED, never withheld, and only the offending clause goes: the correct NSSF part of the founding reply is kept, and one sentence is appended saying NHIF is not covered. Applies to every model-written body that reaches the repair chain.
+_NHIF = re.compile(r"(?<![a-z])nhif(?![a-z])", re.IGNORECASE)
+_NHIF_OTHER = re.compile(r"(?<![a-z])(?:nssf|wcf|sdl|paye|vat|efd|osha|brela|tra)(?![a-z])", re.IGNORECASE)
+_NHIF_FIG = re.compile(r"\d+(?:[.,]\d+)?\s*(?:%|asilimia|percent|per\s*cent)|(?:asilimia|percent)\s*\d+(?:[.,]\d+)?|(?:tzs|tsh|sh\.?|shilingi)\s*\d[\d,.]*|\d{1,3}(?:,\d{3})+|\d+\s*(?:elfu|laki|milioni)", re.IGNORECASE)
+_NHIF_CLAUSE = re.compile(r"((?<=[.!?])\s+|\n+|;\s*|\s+na\s+(?=nhif|nssf|wcf|sdl|paye|vat|efd|osha|brela|tra(?![a-z]))|,\s+(?=nhif|nssf|wcf|sdl|paye|vat|efd|osha|brela|tra(?![a-z])))", re.IGNORECASE)
+_NHIF_BACK = re.compile(r"(?:ya|kwa|za|wa|cha)\s*$", re.IGNORECASE)
+NHIF_NOT_COVERED_NOTE = "Kuhusu NHIF: Chike haijafunika NHIF, kwa hiyo sina kiwango au kiasi chake; thibitisha moja kwa moja na NHIF."
+
+
+def _nhif_figure_attached(clause: str) -> bool:
+    """True when `clause` attaches a figure to NHIF: a figure AFTER the name (before any other levy's name), or one directly before it in 'figure ... ya NHIF'."""
+    for m in _NHIF.finditer(clause):
+        after = clause[m.end():m.end() + 100]
+        other = _NHIF_OTHER.search(after)
+        if _NHIF_FIG.search(after[:other.start()] if other else after):
+            return True
+        before = clause[max(0, m.start() - 45):m.start()]
+        last = None
+        for last in _NHIF_OTHER.finditer(before):
+            pass
+        before = before[last.end():] if last else before
+        if _NHIF_BACK.search(before) and _NHIF_FIG.search(before):
+            return True
+    return False
+
+
+def repair_nhif_figures(body: str):
+    """(repaired body, [removed clauses]). Unchanged, with [], when no clause attaches a figure to NHIF."""
+    if not body or not _NHIF.search(body):
+        return body, []
+    parts = _NHIF_CLAUSE.split(body)                       # clause, separator, clause, ... (the separator is captured)
+    items = [(parts[k], parts[k + 1] if k + 1 < len(parts) else "") for k in range(0, len(parts), 2)]
+    flagged = [bool(c.strip()) and _nhif_figure_attached(c) for c, _ in items]
+    removed = [c.strip() for (c, _), f in zip(items, flagged) if f]
+    if not removed:
+        return body, []
+    text, prev = "", None
+    for k, ((clause, sep), f) in enumerate(zip(items, flagged)):
+        if f or not clause.strip():
+            continue
+        if prev is not None:
+            # adjacent in the original: keep ITS separator; something was removed between them: a full stop, never a dangling connector ("na", ",", ";")
+            text += items[prev][1] if prev == k - 1 else (" " if text[-1:] in ".!?" else ". ")
+        text += clause
+        prev = k
+    text = text.rstrip(" ;,\n")
+    if text and text[-1] not in ".!?":
+        text += "."
+    if NHIF_NOT_COVERED_NOTE not in text:
+        text = (text + " " if text else "") + NHIF_NOT_COVERED_NOTE
+    return text, removed
