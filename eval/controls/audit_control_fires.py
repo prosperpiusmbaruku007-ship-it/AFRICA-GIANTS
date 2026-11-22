@@ -1447,6 +1447,30 @@ def audit_unexercisable():
            'the model stating "siku 42" / "mwaka wa kalenda unaofuatia" for the BRELA annual-return deadline with the correct row at rank 1; "46 sub-sectors" attributed to the mining sector alone',
            _v, 'the live replies of the 2026-11-17 batch-3 verification (build 7b94236)', 'a BRELA fee / penalty-amount / form / how-to / definition question, the corporate income-tax return, the overall 46 total with and without its PKF caveat, a negation', _note)
 
+    # ── 2026-11-22 (PROGRESS 4bb): D-FIDELITY-24, another sector's minimum wage (765,900, energy / international) stated as a MINING rate. PLANTED on the live reply of the 2026-11-18 batch-4 verification, VERBATIM.
+    try:
+        from chike import fidelity as _f24, clarification as _c24
+        _live24 = {r['q']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'batch4_deploy_live_2026_11_18.json'), encoding='utf-8'))['rows']}
+        _q24 = 'Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?'
+        _rep24 = _live24[_q24]['reply']
+        _spec24 = {'the live reply ("madini na nishati ... 765,900") flags': bool(_f24.mining_wage_misattributed(_q24, _rep24)),
+                   'the restatement holds all four mining rates': all(f'{x:,}' in _c24.CONSTANT_RESTATEMENTS['gn605a_mining_wage'] for x in (333500, 397600, 595000, 695000))}
+        _clean24 = [_f24.mining_wage_misattributed(_q24, 'Sekta ya madini: TZS 695,000.') == [],
+                    _f24.mining_wage_misattributed(_q24, 'Madini: 695,000; nishati: 765,900.') == [],
+                    _f24.mining_wage_misattributed('Kima cha chini cha nishati ni kiasi gani?', 'Kampuni za kimataifa ni TZS 765,900 na za ndani TZS 297,000.') == [],
+                    _f24.body_contradicts_d16(_q24, _c24.CONSTANT_RESTATEMENTS['gn605a_mining_wage']) == []]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code24 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired24 = 'fidelity.body_contradicts_d16(' in _code24
+        _v = ('FIRES' if (all(_spec24.values()) and all(_clean24) and _wired24) else 'NOT_WIRED' if (all(_spec24.values()) and all(_clean24)) else 'ERROR')
+        _note = (f'specimens: {_spec24}; clean limbs (must all be True): {_clean24}; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): {_wired24}. '
+                 'Priced (eval/results/price_d24_2026_11_22.json): 1 flag in 13,414 texts, the live specimen; the 5 texts stating a mining rate untouched.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-22: D-FIDELITY-24 another sector\'s minimum wage stated as a mining rate (765,900 energy / international)', 'fidelity',
+           'a confident wrong GN 605A rate on the fact path ("madini na nishati ... karibu TZS 765,900"); mining has four rates, 333,500 to 695,000',
+           _v, 'the live reply of the 2026-11-18 batch-4 verification (build 1c7582c), verbatim', 'each of the four mining rates, a correct energy answer, a per-subject list, a negation, a non-wage text, the restatement itself', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))

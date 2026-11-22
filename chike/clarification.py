@@ -651,6 +651,21 @@ CONSTANT_RESTATEMENTS = {
 }
 
 
+def _mining_wage_restatement() -> str:
+    """D-FIDELITY-24 replacement text: the four mining rates GENERATED from the transcribed schedule (wage_schedule.SCHEDULE), so the figures a user reads cannot drift from the engine's table. Labels follow the Order's own row names."""
+    from .rules_engine import wage_schedule as ws
+    labels = {"a": "uchimbaji na utafutaji wa madini (mining and prospecting minerals)", "b": "leseni ya msingi ya uchimbaji (primary mining licence)",
+              "c": "leseni ya wauzaji (dealer licence)", "d": "leseni za madalali (brokers licences)"}
+    rows = sorted(((int(r[-1]), r[1]) for r in ws.SCHEDULE if r[0] == 10), reverse=True)
+    parts = "; ".join(f"{labels[letter]}: TZS {amount:,}" for amount, letter in rows)
+    energy = {r[1]: int(r[-1]) for r in ws.SCHEDULE if r[0] == 7}
+    return ("Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: " + parts + ". "
+            f"Kiwango cha TZS {energy['a']:,} ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.")
+
+
+CONSTANT_RESTATEMENTS["gn605a_mining_wage"] = _mining_wage_restatement()
+
+
 def constants_restated(topics) -> str:
     """The whole statement for every violated constant topic, in the order given, each once."""
     seen, out = set(), []

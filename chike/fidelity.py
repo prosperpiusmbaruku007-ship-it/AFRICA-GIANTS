@@ -1943,6 +1943,59 @@ def gn605a_subsector_count_misstated(question: str, body: str):
             and not _D23_TOTAL.search(s) and not _D16_NEG.search(s)]
 
 
+# ---- D-FIDELITY-24 (2026-11-22, founder-approved, option A of the mining-vs-energy miss): ANOTHER SECTOR'S MINIMUM WAGE STATED AS A MINING RATE. A CONSTANT (R19), FACT PATH.
+#   specimen (live, build 1c7582c, eval/results/batch4_deploy_live_2026_11_18.json): "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya madini na nishati ni karibu TZS 765,900 kwa mwezi. Thibitisha kiwango halisi cha sekta yako na MLYWF."
+#   the Order (kazi.go.tz official copy, GN No. 605A, edition asserted; transcription in rules_engine.wage_schedule, asserted against the gazette extract): the MINING sector (item 10) has FOUR monthly rates -- brokers 333,500; primary
+#   mining licence 397,600; dealer 595,000; mining and prospecting minerals 695,000. 765,900 is the ENERGY sector, international companies (item 7(a)); domestic energy is 297,000.
+# R25. (1) Defect: a confident wrong rate on the fact path for a sector the Order lists, with the right rows served. (2) What CORRECT output could it damage: any of the four mining rates stated for mining; a correct energy answer (765,900 or
+#   297,000 attributed to energy); a sentence naming BOTH sectors with each figure after its own subject ("Madini: 695,000; nishati: 765,900"); a negation ("si 765,900"); and any text not about the minimum wage (context from the question or the
+#   sentence). ATTRIBUTION is by the nearest preceding subject cue, never by a window (D-FIDELITY-6's two failed designs): the figure belongs to the last sector word before it, EXCEPT a bare coordination of mining with another sector
+#   ("madini na nishati ... 765,900") which attributes ONE figure to BOTH and is the founding specimen. NARROW: only figures the schedule assigns to a sector other than mining are judged; the mining rates are never flagged.
+_D24_CTX = re.compile(r"605\s*a|kima\s+cha\s+chini|mshahara\s+wa\s+chini|kiwango\s+cha\s+chini|minimum\s+wage", re.IGNORECASE)
+_D24_MINING = r"madini|mgodi|migodi|uchimbaji|mchimbaji|wachimbaji|mining|(?<![a-z])miners?(?![a-z])"
+_D24_OTHER = (r"nishati|(?<![a-z])energy|kilimo|agricultur|afya|(?<![a-z])health|ujenzi|construction|hoteli|(?<![a-z])hotel|ulinzi|(?<![a-z])security|usafirishaji|transport|viwanda|manufactur|mawasiliano|telecom|benki|"
+              r"(?<![a-z])bank|shule|(?<![a-z])school|biashara|(?<![a-z])business|kazi\s+za\s+nyumbani|domestic|taka|waste|burudani|michezo|sanaa")
+_D24_SUBJECT = re.compile(r"(?P<mining>" + _D24_MINING + r")|(?P<other>" + _D24_OTHER + r")", re.IGNORECASE)
+_D24_FIGURE = re.compile(r"(?<![\d,.])(\d{1,3}(?:,\d{3})+|\d{6})(?![\d])")
+_D24_COORD = re.compile(r"^\s*(?:na|and|pamoja\s+na|au|or|&|/|,)?\s*$", re.IGNORECASE)
+_D24_OWNERS = None
+
+
+def _d24_non_mining_figures():
+    """The set of monthly figures the schedule assigns ONLY to sectors other than mining. Lazy: wage_schedule is pure data and fidelity must stay importable without it."""
+    global _D24_OWNERS
+    if _D24_OWNERS is None:
+        from .rules_engine import wage_schedule as ws
+        owners = {}
+        for row in ws.SCHEDULE:
+            owners.setdefault(int(row[-1]), set()).add(row[0])
+        _D24_OWNERS = {f for f, secs in owners.items() if 10 not in secs}
+    return _D24_OWNERS
+
+
+def mining_wage_misattributed(question: str, body: str):
+    """[sentence] stating another sector's monthly minimum wage as a MINING rate (alone, or in a bare coordination with another sector). The four mining rates, a correct energy figure, per-subject lists and negations are left alone."""
+    q = question or ""
+    foreign = _d24_non_mining_figures()
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s or not _D24_SUBJECT.search(s) or not (_D24_CTX.search(q) or _D24_CTX.search(s)) or _D16_NEG.search(s):
+            continue
+        cues = [(m.start(), m.end(), "mining" if m.group("mining") else "other") for m in _D24_SUBJECT.finditer(s)]
+        for fm in _D24_FIGURE.finditer(s):
+            if int(fm.group(1).replace(",", "")) not in foreign:
+                continue
+            before = [c for c in cues if c[1] <= fm.start()]
+            if not before:
+                continue
+            last = before[-1]
+            conflated = (last[2] == "other" and len(before) >= 2 and before[-2][2] == "mining" and bool(_D24_COORD.match(s[before[-2][1]:last[0]])))
+            if last[2] == "mining" or conflated:
+                out.append(s.strip())
+                break
+    return out
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -1951,6 +2004,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("brela_annual_return_deadline", s) for s in brela_annual_return_deadline_misstated(question, body)]   # D-FIDELITY-20
     out += [("vat_withholding_start_date", s) for s in vat_withholding_start_misstated(question, body)]   # D-FIDELITY-22
     out += [("gn605a_mining_subsector_count", s) for s in gn605a_subsector_count_misstated(question, body)]   # D-FIDELITY-23
+    out += [("gn605a_mining_wage", s) for s in mining_wage_misattributed(question, body)]   # D-FIDELITY-24
     return out
 
 

@@ -1,0 +1,11 @@
+{
+ "priced": 13414,
+ "state_a_mining_rate": 5,
+ "flags": [
+  {
+   "src": "results/batch4_deploy_live_2026_11_18.json",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "sentence": "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya madini na nishati ni karibu TZS 765,900 kwa mwezi."
+  }
+ ]
+}
