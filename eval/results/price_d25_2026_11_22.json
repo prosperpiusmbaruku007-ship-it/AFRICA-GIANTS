@@ -1,0 +1,17 @@
+{
+ "priced": 13449,
+ "population": 159,
+ "denial_phrase_in_population": 4,
+ "flags": [
+  {
+   "src": "results/gate2_prelim_live_2026_11_22.json",
+   "q": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "sentence": "Kulingana na taarifa uliyotoa, ununuzi wa bidhaa kutoka nje ya nchi (imports) haupaswi kutozwa SDL."
+  },
+  {
+   "src": "results/gate2_prelim_live_2026_11_22.json",
+   "q": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "sentence": "Hivyo, kwa sasa, idadi ya wafanyakazi wako 12 haihitaji malipo ya SDL."
+  }
+ ]
+}

@@ -121,12 +121,15 @@ def test_an_unsupported_computation_type_RAISES_rather_than_inventing_a_threshol
         rules_engine.levy_threshold_statement("vat")
 
 
-def test_exactly_ONE_gate_row_reaches_the_threshold_branch_and_it_is_eval_233():
+def test_exactly_TWO_gate_rows_reach_the_threshold_branch_and_they_are_eval_113_and_eval_233():
     """The population, asserted rather than assumed. If a second row starts reaching this
     branch, its answer changes shape and nobody is looking — the `nat_23` property (an insertion
     perturbs its neighbours) applied to a routing branch."""
     reaching = sorted(i for i, r in GATE.items() if _threshold_parts(r["question_sw"]))
-    assert reaching == ["eval_233"], (
+    # 2026-11-22: eval_113 ("SDL inaanza kulipwa mwajiri ana wafanyakazi wangapi au zaidi?") joined when Path 1a routed number-free "wafanyakazi wangapi" threshold asks. READ, as this test demands:
+    # its gold is "Wafanyakazi 10 au zaidi. Waajiri wenye wafanyakazi chini ya 10 hawajumuishwi ...", the statement it now receives is "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL.
+    # Mwenye wafanyakazi chini ya 10 hana wajibu ...", and it passed at c2143c0 with the model path (judge: correct) -- a correct reply replaced by a correct model-free statement, the same shape as eval_233.
+    assert reaching == ["eval_113", "eval_233"], (
         f"the threshold branch's gate-400 population changed: {reaching}. Each new row needs "
         f"its answer read before this is updated.")
 

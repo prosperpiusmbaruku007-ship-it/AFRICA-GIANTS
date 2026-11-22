@@ -1640,6 +1640,12 @@ def detect_intent(text: str) -> str:
             or _COUNT_TRANSITION.search(ql) or _DERIVE_CUE.search(ql)):
         return explicit
 
+    # Path 1a — an SDL THRESHOLD ask ("SDL inaanzia wafanyakazi wangapi?"). 2026-11-22. It carries NO number, so path 1 (explicit levy + a number) never saw it, and the threshold statement the orchestrator already
+    # holds (`levy_threshold_statement`, answering WHAT the threshold is) was unreachable for this phrasing while reachable for eval_233's. Narrow by construction: the levy is NAMED (SDL only -- NSSF and WCF have no
+    # headcount threshold), the ask is the threshold ask, and the question is about headcount. A headcount in the same question keeps the applicability verdict (the orchestrator's own rule).
+    if explicit == "sdl" and not _has_number(ql) and _SDL_THRESHOLD_COUNT_ASK.search(ql):
+        return "sdl"
+
     # Path 1b — CORPORATE / PARTNERSHIP INCOME TAX. Placed here, BEFORE path 2, specifically so
     # a named entity wins over PAYE's bare `kodi ya mapato` natural-path claim regardless of
     # what payroll context the same message happens to mention — see the reachability note on
@@ -2060,6 +2066,11 @@ _THRESHOLD_ASK = re.compile(
     re.IGNORECASE)
 
 
+# The COUNT ask: "how many employees". NOT the bare token "kizingiti" (a question ABOUT the threshold -- what counts toward it, whether it is the same for WCF -- is not a request for its value), and NOT a question
+# carrying a digit (a premise check or the user's own headcount: the orchestrator keeps those on the applicability path).
+_SDL_THRESHOLD_COUNT_ASK = re.compile(r"(?:wafanyakazi|waajiriwa|mfanyakazi|waajiri)\s+wangapi|(?<![a-z])wangapi(?![a-z])|idadi\s+gani", re.IGNORECASE)
+
+
 def asks_levy_threshold(text: str) -> bool:
     """True when the question asks what a levy's threshold IS, not whether it applies to me."""
     return bool(_THRESHOLD_ASK.search(text))
@@ -2219,6 +2230,13 @@ def asks_levy_statement(text: str) -> bool:
     return bool(is_applicability_question(text) and _OWN_OBLIGATION.search(ql))
 
 
+# 2026-11-22 (preliminary Gate 2 control #24): the everyday first-person "am I REQUIRED to pay" form. "lazima kulipa" and "wajibu wa kulipa" were cues; "natakiwa kulipa" was not, so
+# "Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL?" routed to NONE (fact path) and the model denied SDL for 12 employees with the threshold at rank 1. It is a WORD-BOUNDED regex, not a list entry: the substring
+# "natakiwa kuchangia" sits inside the THIRD-person "a-natakiwa kuchangia" and "i-natakiwa kulipa", and the first draft of this change diverted "Kama mfanyakazi anafikisha miaka 60, je bado anatakiwa kuchangia NSSF?"
+# (a retirement-age question) to the NSSF applicability engine. Money asks still win (asks_applicability's veto).
+_APPLICABILITY_FIRST_PERSON = re.compile(r"(?<![a-z])(?:natakiwa|tunatakiwa)\s+(?:kulipa|kuchangia)(?![a-z])")
+
+
 def asks_applicability(text: str) -> bool:
     """True when the question asks WHETHER the obligation applies (yes/no) rather than HOW
     MUCH — an obligation/threshold cue with no money 'how-much' ask.
@@ -2232,6 +2250,7 @@ def asks_applicability(text: str) -> bool:
     if _has_money_ask(ql):
         return False
     return (any(cue in ql for cue in _APPLICABILITY_CUES)
+            or bool(_APPLICABILITY_FIRST_PERSON.search(ql))
             or bool(_APPLICABILITY_CONCORD.search(ql))
             # ROUTING-GAP-B: the which-of-these and rate-base forms. Both sit behind the
             # money-ask veto above, exactly like every other cue here, so a question that
@@ -2329,6 +2348,16 @@ _NSSF_EMPLOYEE_CONCORD = re.compile(
     + r"|\bnakatwa|\btunakatwa")                            # colloquial 1sg present, and 1pl
 
 
+# 2026-11-22: a cue is matched as a WORD, never a substring. "wa mfanyakazi" sits INSIDE "kwa mfanyakazi" ("kwa mfanyakazi mmoja ..."), so the preposition "kwa" fired the EMPLOYEE cue on a question that asks the
+# EMPLOYER's share. R39's direction: this failure is silent (the figure, 10%, is the same for both parties).
+def _has_word_cue(ql: str, cue: str) -> bool:
+    return re.search(r"(?<![a-z])" + re.escape(cue), ql) is not None
+
+
+_NSSF_EMPLOYER_VERB = re.compile(r"(?<![a-z])mwajiri\s+(?:(?!mfanyakazi)\w+\s+){0,2}?(?:kuchangia|achangie|anachangia|anatakiwa\s+kuchangia|anapaswa\s+kuchangia|atachangia)(?![a-z])")
+_NSSF_EMPLOYEE_VERB = re.compile(r"(?<![a-z])mfanyakazi\s+(?:(?!mwajiri)\w+\s+){0,2}?(?:kuchangia|achangie|anachangia|anatakiwa\s+kuchangia|anapaswa\s+kuchangia|atachangia)(?![a-z])")
+
+
 def nssf_party(text: str) -> str:
     """Which NSSF figure the question asks for: 'employee' | 'employer' | 'total'.
 
@@ -2340,9 +2369,13 @@ def nssf_party(text: str) -> str:
     ql = text.lower()
     if any(cue in ql for cue in _NSSF_TOTAL_CUES):
         return "total"
+    # 2026-11-22: an EXPLICIT "mwajiri ... kuchangia" is the employer's share ("kwa mfanyakazi mmoja mwajiri anatakiwa kuchangia asilimia ngapi", preliminary Gate 2 control #22). It wins over an incidental
+    # employee word, UNLESS the employee is also named as a contributor ("mwajiri anachangia ... na mfanyakazi anachangia"): then both are asked and the total stands.
+    if _NSSF_EMPLOYER_VERB.search(ql):
+        return "total" if _NSSF_EMPLOYEE_VERB.search(ql) else "employer"
     if any(cue in ql for cue in _NSSF_EMPLOYER_CUES):
         return "employer"
-    if any(cue in ql for cue in _NSSF_EMPLOYEE_CUES) or _NSSF_EMPLOYEE_CONCORD.search(ql):
+    if any(_has_word_cue(ql, cue) for cue in _NSSF_EMPLOYEE_CUES) or _NSSF_EMPLOYEE_CONCORD.search(ql):
         return "employee"
     return "total"
 

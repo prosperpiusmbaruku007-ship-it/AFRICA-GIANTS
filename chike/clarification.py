@@ -666,6 +666,12 @@ def _mining_wage_restatement() -> str:
 CONSTANT_RESTATEMENTS["gn605a_mining_wage"] = _mining_wage_restatement()
 
 
+CONSTANT_RESTATEMENTS["sdl_applies_at_threshold"] = (
+    "Mwajiri mwenye wafanyakazi 10 au zaidi (Tanzania Bara) ana wajibu wa kulipa SDL, asilimia 3.5 ya jumla ya mishahara. Wanaosamehewa na sheria ni makundi maalum tu (taasisi za Serikali, mamlaka za serikali za mitaa, "
+    "balozi, Umoja wa Mataifa na mashirika ya kimataifa, taasisi za dini, shule zilizosajiliwa, mashirika ya hisani, na waajiri wa mashamba kwa wafanyakazi wa kilimo tu). Biashara ya kawaida yenye wafanyakazi 10 au zaidi hulipa SDL. "
+    "Thibitisha na TRA (tra.go.tz).")
+
+
 def constants_restated(topics) -> str:
     """The whole statement for every violated constant topic, in the order given, each once."""
     seen, out = set(), []

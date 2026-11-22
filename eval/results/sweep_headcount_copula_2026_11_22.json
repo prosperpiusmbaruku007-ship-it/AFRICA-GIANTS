@@ -1,0 +1,29 @@
+{
+ "swept": 8656,
+ "changed": [
+  {
+   "q": "Nina duka la rejareja, wafanyakazi wangu ni 8 tu. Nimeambiwa lazima nilipie SDL hata kama sijafikisha wafanyakazi 10, ni kweli?",
+   "src": "eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl",
+   "before": 10,
+   "after": null
+  },
+  {
+   "q": "Umejitokeza mara ngapi mshauri? Wafanyakazi wangu ni 12. Je, ni lazima nilipie SDL?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": null,
+   "after": 12
+  },
+  {
+   "q": "Wafanyakazi wangu ni 10, mishahara jumla milioni 6 — SDL ni ngapi na PAYE inahusu nani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": null,
+   "after": 10
+  },
+  {
+   "q": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "src": "results/gate2_prelim_live_2026_11_22.json",
+   "before": null,
+   "after": 12
+  }
+ ]
+}

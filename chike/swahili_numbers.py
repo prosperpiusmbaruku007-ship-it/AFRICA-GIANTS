@@ -657,6 +657,14 @@ _COPULA_HEADCOUNT = re.compile(
     rf"((?:{_SPELLED_COUNT})(?:\s+na\s+(?:{_SPELLED_COUNT}))?|\d{{1,4}})\b")
 
 
+# 2026-11-22 (preliminary Gate 2 control #24, "Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL?"): the NOUN-FIRST copula. Every pattern above reads "<noun> <N>" ("nina wafanyakazi 12") or "<N> <noun>"; "wafanyakazi wangu ni 12"
+# puts "ni" between the noun and the number, so the stated headcount was INVISIBLE and the SDL threshold ask fell to the generic statement instead of "yes, 12 is over 10" (R31: an extractor missing for a signal the
+# engine accepts). NARROW: a possessive, then "ni", then a number NOT followed by a threshold-statement tail ("wafanyakazi wetu ni 10 au zaidi" states a RULE, not the user's count). Tried LAST, after every
+# existing pattern, so a headcount stated the old way always wins; the second-group and multiple-group vetoes above still run first.
+_NOUN_COPULA_HEADCOUNT = re.compile(
+    rf"\b(?:{_PEOPLE_NOUN})\s+(?:wangu|wetu|wake|wako|wao)\s+ni\s+(\d{{1,4}})\b(?!\s*(?:au\s+(?:zaidi|chini)|na\s+(?:zaidi|kuendelea)))")
+
+
 def parse_count(text):
     """Best-effort employee/people count (small integer), or None.
 
@@ -695,6 +703,9 @@ def parse_count(text):
         v = _value_small(token.split())
         if v > 0:
             return int(v)
+    m = _NOUN_COPULA_HEADCOUNT.search(text_l)
+    if m:
+        return int(m.group(1))
     return None
 
 
@@ -732,7 +743,8 @@ def sole_headcount(text):
     if _ANY_HEADCOUNT is None:
         _ANY_HEADCOUNT = re.compile(
             rf"(?:{_PEOPLE_NOUN})\s+(\d{{1,4}})|\b(\d{{1,4}})\s+(?:{_PEOPLE_NOUN})|"
-            rf"\b(\d{{1,4}})\s+wana(?:lipwa|pata)\b")
+            rf"\b(\d{{1,4}})\s+wana(?:lipwa|pata)\b|"
+            rf"\b(?:{_PEOPLE_NOUN})\s+(?:wangu|wetu|wake|wako|wao)\s+ni\s+(\d{{1,4}})\b")
     count = parse_count(text)
     if count is None:
         return None

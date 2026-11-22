@@ -1,0 +1,773 @@
+{
+ "swept": 8656,
+ "changed": [
+  {
+   "q": "SDL inaanza kulipwa mwajiri ana wafanyakazi wangapi au zaidi?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "intent": [
+    "sdl",
+    "sdl"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kizingiti cha SDL ni wafanyakazi wangapi?",
+   "src": "eval/accuracy_gate/false_premise_pairs_016.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Wafanyakazi wangapi wanatakiwa kabla ya kulipa SDL",
+   "src": "eval/refusal_gate/concord_1pl_in_scope_020.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Severance pay ni kiasi gani kwa mfanyakazi wa miaka 3?",
+   "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl",
+   "intent": [
+    "fixed_statement",
+    "fixed_statement"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "SDL inahusu waajiri wenye wafanyakazi wangapi?",
+   "src": "eval/fidelity/constant_guards_probes_2026_11_16.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Hiyo WCF 0.5% nikate kwa mfanyakazi?",
+   "src": "eval/fidelity/d15_constant_probes_2026_11_17.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri asiye na TIN hawezi kuomba kibali cha kazi kwa mfanyakazi wake wa kigeni -- je, ni kweli?",
+   "src": "eval/fidelity/d18_batch_probes_2026_11_17.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Nina wafanyakazi watatu dukani. NSSF inatakiwa nikate 10% kwa mfanyakazi tu, ile 10% nyingine ya mwajiri haihusiki na mimi, au siyo?",
+   "src": "eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Nina wafanyakazi 4 kwenye duka langu. Je, mwajiri anatakiwa kuchangia 10% ya mshahara wao kwenye NSSF?",
+   "src": "eval/fidelity/negated_premise_heldout/negated_premise_set2_AUTHORED.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "total",
+    "employer"
+   ]
+  },
+  {
+   "q": "Gharama yote ya mwajiri kwa mfanyakazi mmoja mwenye mshahara wa chini wa GN 605A ni kiasi gani?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002a_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kampuni yangu ilikata PAYE kidogo sana kwa mfanyakazi kwa makosa ya hesabu. Ninafanyaje marekebisho?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Posho ya usafiri ya TZS 50,000 kwa mwezi inayolipwa kwa mfanyakazi — inatozwa PAYE au la?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "intent": [
+    "paye",
+    "paye"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "PAYE inahesabiwaje kwa mfanyakazi wa saa — analipwa TZS 3,000 kwa saa na anafanya kazi masaa 80 kwa mwezi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "intent": [
+    "paye",
+    "paye"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kiwango cha chini cha SDL ni wafanyakazi wangapi? Na Zanzibar inajumuishwa?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri mkuu anapaswa kulipa NSSF nzima ikiwa mfanyakazi ana kazi nyingine?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Je, hakuna kiwango cha chini cha NSSF kwa mfanyakazi wa nusu muda?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mshahara mdogo zaidi kwa mfanyakazi wa kawaida ni shilingi ngapi sasa hivi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Je, PAYE inatumika kwa mfanyakazi anayepata mshahara wa chini wa Shilingi 358,322?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "paye",
+    "paye"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Ikiwa mfanyakazi ameumia kazini, ninapaswa kuripoti lini na wapi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "fixed_statement",
+    "fixed_statement"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri hanahitaji kulipa PAYE kwa mfanyakazi wa muda mfupi au wa msimu — je, hii ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri ana wajibu gani wa kutoa payslip kwa mfanyakazi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Manufaa ya WCF yanajumuisha nini kwa mfanyakazi aliyeumia?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri asiye na TIN hawezi kuomba kibali cha kazi kwa mfanyakazi wake wa kigeni — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri anahitaji kujua gharama za uzingatiaji (compliance) za kila mfanyakazi mpya anayeajiri Tanzania — ni kiasi gani kwa mfanyakazi mmoja?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "NSSF inakataa kulipa pensheni ikiwa mfanyakazi amestaafu mapema kwa hiari — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri anaweza kupunguza au kuzuia fidia ya WCF ikiwa mfanyakazi mwenyewe alisababisha ajali — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba inayolipwa kwa mfanyakazi mgeni — ni mapato yanayolazimika PAYE?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kampuni inatoa nyumba kwa mfanyakazi mgeni bila gharama — je, thamani yake ni mapato?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Tax equalization (usawa wa kodi) ni nini kwa mfanyakazi mgeni?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Je, malipo ya ugawaji (redundancy pay) kwa mfanyakazi mgeni yanabeba PAYE?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "SDL inaanzia kwa wafanyakazi wangapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Nilitenga akaunti ya NSSF kwa mfanyakazi — hii inaniepushaje na WCF?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Niwe nawezaje kuhakikisha kodi ya faida ya gari kwa mfanyakazi chini ya 1000cc na chini ya miaka 5 inalipwa kwa usahihi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Chike, hizo 'Other Employment Taxes' unazozitaja, ile 10% inayokatwa kwa mfanyakazi ni kwa ajili ya nini hasa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Je, mgao wa 60% kwa mfanyakazi mwenye ulemavu wa muda unatokana na kiasi chote cha mshahara au kuna marekebisho?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Je, kiasi cha NSSF kinachokatwa kwa mfanyakazi ni sawasawa na kile kinachochangiwa na mwajiri?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kwa faida ya uzazi ya 100%, je, NSSF ndio italipa hizo pesa zote moja kwa moja kwa mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Unamaanisha eti mwajiri anapaswa kutoa taarifa kwa mfanyakazi kuhusu kustaafu muda gani kabla ya kustaafu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Nina uhakika gani kuwa mfanyakazi wangu si 'non-citizen' kwa maana ya GN487A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Ikiwa mfanyakazi wangu analipwa Sh. 200,000 kwa mwezi, itabidi nimkatae PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "paye",
+    "paye"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kama nitashindwa kulipa PAYE kwa mfanyakazi ambaye si mkazi, kuna adhabu gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mshauri Chike, kikomo cha wafanyakazi cha SDL ni wangapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Kama mwajiri, najua SDL ni jukumu langu. Je, kuna makato yoyote ya SDL yanayoweza kutokea kwa mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "SDL inaanza kutozwa kwa wafanyakazi wangapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Ni asilimia ngapi ya mshahara inatakiwa kulipa kama WCF kwa mfanyakazi mmoja?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "wcf",
+    "wcf"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kama nilishindwa kutoa huduma za matibabu kwa mfanyakazi aliyeumia kazini, kuna adhabu gani chini ya section 13(7)?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mchango wa WCF hulipwa na mwajiri au hukatwa kwa mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mpangilio wa usajili wa BRELA ukoje, nisajili TRA kwa TIN lini, na nisajili NSSF lini kwa mfanyakazi wangu wa kwanza?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Chike, SDL inaanza kutozwa mfanyakazi wa mangapi kwa biashara yangu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Hadi wafanyakazi wangapi ndio bado siezi lazimika kulipa SDL?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Chike, SDL inatakiwa kuanzia mfanyakazi wangapi hivi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+   "src": "results/coverage_batch_draft1.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "src": "results/coverage_batch_draft1.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+   "src": "results/coverage_profiles_fixed_after.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Nimepokea taarifa ya ajali kutoka kwa mfanyakazi, nina siku ngapi kumjulisha WCF?",
+   "src": "results/followup_2026_11_16_final.json",
+   "intent": [
+    "fixed_statement",
+    "fixed_statement"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Habari, kwa mfanyakazi mmoja mwajiri anatakiwa kuchangia asilimia ngapi ya mshahara wake NSSF?",
+   "src": "results/gate2_prelim_live_2026_11_22.json",
+   "intent": [
+    "nssf",
+    "nssf"
+   ],
+   "nssf_party": [
+    "employee",
+    "employer"
+   ]
+  },
+  {
+   "q": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "src": "results/gate2_prelim_live_2026_11_22.json",
+   "intent": [
+    "none",
+    "sdl"
+   ],
+   "nssf_party": [
+    "total",
+    "total"
+   ]
+  },
+  {
+   "q": "Ikiwa mfanyakazi ameumia kazini, mwajiri anamwarifu WCF ndani ya muda gani?",
+   "src": "results/mlywf_resourcing.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "P9 form kwa mfanyakazi mgeni — ni nini na inapaswa kutolewa lini?",
+   "src": "results/precondition_quarantine_2026_10_08.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Kuna tofauti gani kati ya makato mawili yanayokatwa kwenye mshahara — ni kitu kimoja?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Muhtasari: PAYE kwa mfanyakazi mgeni Tanzania — mambo 6 makuu.",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri anahitaji nini kwa mfanyakazi mgeni mpya — hatua za PAYE?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  },
+  {
+   "q": "Mwajiri anatoa cheti gani kwa mfanyakazi wakati anamaliza kazi ili kuthibitisha PAYE iliyokatwa?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "intent": [
+    "none",
+    "none"
+   ],
+   "nssf_party": [
+    "employee",
+    "total"
+   ]
+  }
+ ]
+}

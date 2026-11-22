@@ -1996,6 +1996,44 @@ def mining_wage_misattributed(question: str, body: str):
     return out
 
 
+# ---- D-FIDELITY-25 (2026-11-22, from preliminary Gate 2 control #24): "SDL NOT PAYABLE" STATED TO AN EMPLOYER WHOSE OWN STATED HEADCOUNT IS AT OR ABOVE THE THRESHOLD. A CONSTANT COMPARISON (R19), FACT PATH.
+#   specimen (live, build 7643e18, eval/results/gate2_prelim_live_2026_11_22.json gp_24): "...ununuzi wa bidhaa kutoka nje ya nchi (imports) haupaswi kutozwa SDL. Hivyo, kwa sasa, idadi ya wafanyakazi wako 12 haihitaji malipo ya SDL."
+#   the facts served at rank 1 said the opposite ("Kizingiti cha SDL ni wafanyakazi 10 au zaidi", plus a worked example for 12 employees); the model contradicted them.
+#   the constant (locked facts sdl_threshold, sdl_exemption_categories; VETA Act Cap.82 s.19(1), nine categories): SDL applies to Mainland employers with 10 OR MORE employees, EXCEPT the nine statutory exemption categories.
+# R19: this compares the USER'S OWN stated count to a fixed threshold. It is NOT a derived-amount check (Guard B): no lawful transformation of "12 employees" makes "you need not pay SDL" true unless the employer is in an exempt category,
+#   and the exemption vocabulary is a VETO in the question AND in the sentence.
+# R25. (1) Defect: a confident wrong applicability verdict (a 12-employee employer told it owes no SDL). (2) What CORRECT output could it damage: the engine's own statement ("Mwenye wafanyakazi chini ya 10 hana wajibu ..."), an exempt employer
+#   (government, local authority, embassy, UN, aid body, religious body, school, charity, farm: any of those words in the question or the sentence vetoes), a negated denial ("si kweli kwamba haulipi"), a count below 10, a count the extractor
+#   does not read (sole_headcount returns None for two counts -- the safe direction), and any sentence that does not name SDL. NARROW: the question names SDL, states ONE headcount of 10 or more, and names no exempt category.
+_D25_Q_SDL = re.compile(r"(?<![a-z])sdl(?![a-z])|skills\s+development\s+levy|tozo\s+la\s+mafunzo", re.IGNORECASE)
+_D25_EXEMPT = re.compile(
+    r"serikali|halmashauri|manispaa|ubalozi|balozi|diplomat|umoja\s+wa\s+mataifa|(?<![a-z])un(?![a-z])|kimataifa|misaada|msaada|dini|kanisa|msikiti|shule|chuo|elimu|hisani|charit|mkulima|kilimo|shamba|farm|isipokuwa|msamaha|exempt|"
+    r"taasisi\s+ya|sheria\s+ya\s+elimu", re.IGNORECASE)
+_D25_DENY = re.compile(
+    r"haihitaji\s+(?:kulipa|malipo)|hauhitaji\s+(?:kulipa|malipo)|haulipi|hulipi|huna\s+wajibu|hana\s+wajibu|haupaswi\s+kulipa|haupaswi\s+kutozwa|hautakiwi\s+kulipa|haitakiwi\s+kulipa|"
+    r"haitozwi|hautozwi|haihusiki|haikuhusu|hakuna\s+(?:wajibu|malipo\s+ya\s+sdl)|haipaswi\s+kutozwa|not\s+(?:payable|required\s+to\s+pay)|no\s+obligation", re.IGNORECASE)
+_D25_BELOW = re.compile(r"chini\s+ya\s+(?:10|kumi)|pungufu\s+ya\s+10|less\s+than\s+10|fewer\s+than\s+10|hajafikisha|haijafikia|hawajafikisha|haujafikisha", re.IGNORECASE)
+# added after the FIRST pricing (13,449 texts, 5 flags, 3 of them false): (a) a question ABOUT the threshold ("Kizingiti cha SDL ni wafanyakazi 10 au ...") states "10" as the RULE, not as the user's headcount; (b) a second, SMALLER count in
+# the question ("wafanyakazi 12, msimu mwingine 6") or in the sentence ("miezi yenye 6 huna wajibu", "only 9 employees") means the sentence is discussing the below-threshold case, which is correct.
+_D25_THRESHOLD_Q = re.compile(r"kizingiti|kikomo|threshold|kiwango\s+cha\s+chini", re.IGNORECASE)   # NOT "wangapi": the founding specimen asks the threshold AND states its own headcount
+_D25_SMALL_NUMBER = re.compile(r"(?<![\d,.])[1-9](?![\d,.])")
+_D25_NEGATED_DENIAL = re.compile(r"si\s+kweli|sivyo|siyo\s+kweli|ni\s+makosa|hapana,?\s+(?:unatakiwa|unapaswa|inatozwa|unalipa)", re.IGNORECASE)
+
+
+def sdl_denied_above_threshold(question: str, body: str):
+    """[sentence] telling an employer whose OWN stated headcount is 10 or more that SDL is not payable, when the question names no exempt category. The engine's below-threshold statement, exempt-category talk and negated denials are left alone."""
+    q = question or ""
+    if not _D25_Q_SDL.search(q) or _D25_EXEMPT.search(q) or _D25_THRESHOLD_Q.search(q) or _D25_SMALL_NUMBER.search(q):
+        return []
+    from .swahili_numbers import sole_headcount
+    n = sole_headcount(q)
+    if n is None or n < 10:
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body or "")
+            if s and _D25_Q_SDL.search(s) and _D25_DENY.search(s) and not _D25_BELOW.search(s) and not _D25_EXEMPT.search(s) and not _D25_NEGATED_DENIAL.search(s)
+            and not _D25_SMALL_NUMBER.search(s)]
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -2005,6 +2043,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("vat_withholding_start_date", s) for s in vat_withholding_start_misstated(question, body)]   # D-FIDELITY-22
     out += [("gn605a_mining_subsector_count", s) for s in gn605a_subsector_count_misstated(question, body)]   # D-FIDELITY-23
     out += [("gn605a_mining_wage", s) for s in mining_wage_misattributed(question, body)]   # D-FIDELITY-24
+    out += [("sdl_applies_at_threshold", s) for s in sdl_denied_above_threshold(question, body)]   # D-FIDELITY-25
     return out
 
 

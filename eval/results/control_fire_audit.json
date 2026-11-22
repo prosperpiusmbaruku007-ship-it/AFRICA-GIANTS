@@ -5,7 +5,7 @@
   "method": "R23 applied to controls: plant the thing each control exists to catch (POSITIVE, must block) and a clean case (NEGATIVE, must pass). A control needs both to count as working.",
   "prompted_by": "the pre-push secret scan, which invoked scan_for_keys.py bare and so scanned zero files on every push in this project's history, while a passing test certified it by checking the hook mentioned the script.",
   "tally": {
-    "FIRES": 40,
+    "FIRES": 41,
     "DISABLED": 1,
     "NOT_WIRED": 1,
     "OBSERVED": 3
@@ -49,8 +49,8 @@
       "layer": "repo_gate",
       "claims_to_block": "an API key committed into a source file",
       "verdict": "FIRES",
-      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\leak.py",
-      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\clean.py",
+      "positive_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\leak.py",
+      "negative_specimen": "--files C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\clean.py",
       "note": "planted -> exit 1; clean -> exit 0. FIXED 2026-08-24; the bare invocation this replaced was INERT"
     },
     {
@@ -67,8 +67,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a training pair citing a banned, eval-only or DNS-dead source",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\src_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\src_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\src_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\src_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -76,8 +76,8 @@
       "layer": "repo_gate",
       "claims_to_block": "nssf.or.tz (DNS-failing) anywhere in a pair, including answer TEXT",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\dead_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\dead_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\dead_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\dead_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -85,8 +85,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a pair asserting a value locked_facts.json marks as WRONG",
       "verdict": "FIRES",
-      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\lf_bad.jsonl",
-      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\lf_ok.jsonl",
+      "positive_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\lf_bad.jsonl",
+      "negative_specimen": "--file C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\lf_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -94,8 +94,8 @@
       "layer": "repo_gate",
       "claims_to_block": "a held-out eval question leaking into the SFT training file (R6)",
       "verdict": "FIRES",
-      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\train_bad.jsonl",
-      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\train_ok.jsonl",
+      "positive_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\train_bad.jsonl",
+      "negative_specimen": "--cleaned-dir C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\cleaned --sft-train C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\train_ok.jsonl",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
     {
@@ -103,7 +103,7 @@
       "layer": "repo_gate",
       "claims_to_block": "a locked fact that is neither in the RAG index nor human-adjudicated",
       "verdict": "FIRES",
-      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpg9v5k1v6\\facts_drift.json",
+      "positive_specimen": "--facts C:\\Users\\jhjh\\AppData\\Local\\Temp\\tmpnl1i2p6_\\facts_drift.json",
       "negative_specimen": "",
       "note": "planted -> exit 1; clean -> exit 0. "
     },
@@ -421,6 +421,15 @@
       "positive_specimen": "the live reply of the 2026-11-18 batch-4 verification (build 1c7582c), verbatim",
       "negative_specimen": "each of the four mining rates, a correct energy answer, a per-subject list, a negation, a non-wage text, the restatement itself",
       "note": "specimens: {'the live reply (\"madini na nishati ... 765,900\") flags': True, 'the restatement holds all four mining rates': True}; clean limbs (must all be True): [True, True, True, True]; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): True. Priced (eval/results/price_d24_2026_11_22.json): 1 flag in 13,414 texts, the live specimen; the 5 texts stating a mining rate untouched."
+    },
+    {
+      "id": "2026-11-22: SDL routing (first-person applicability, number-free threshold ask) + noun-first headcount + NSSF employer party + D-FIDELITY-25 (SDL denied above the threshold)",
+      "layer": "routing+fidelity",
+      "claims_to_block": "a 12-employee employer told SDL is not payable (route none, rank-1 fact contradicted); the EMPLOYER share question answered with the EMPLOYEE share (\"kwa mfanyakazi\" matched the cue \"wa mfanyakazi\")",
+      "verdict": "FIRES",
+      "positive_specimen": "the two WRONG controls of the preliminary Gate 2 run, live replies verbatim",
+      "negative_specimen": "a third-person \"anatakiwa kuchangia\", a threshold PREMISE check, an all-levies question, a correct SDL verdict, the restatement itself",
+      "note": "specimens: {'gp_24 now routes to the SDL engine (was none)': True, 'gp_24 states a headcount of 12 to the extractor': True, 'the live gp_24 reply (SDL not payable at 12 employees) flags (D-FIDELITY-25)': True, 'gp_22 resolves to the EMPLOYER share (was employee)': True}; clean limbs (must all be True): [True, True, True, True, True]; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): True. Blast radius: eval/results/sweep_sdl_party_routing_2026_11_22.json, sweep_headcount_copula_2026_11_22.json; guard priced (eval/results/price_d25_2026_11_22.json): 2 flags in 13,449 texts, both the specimen sentences."
     },
     {
       "id": "AUTO-SEND route allowlist",

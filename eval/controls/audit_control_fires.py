@@ -1471,6 +1471,33 @@ def audit_unexercisable():
            'a confident wrong GN 605A rate on the fact path ("madini na nishati ... karibu TZS 765,900"); mining has four rates, 333,500 to 695,000',
            _v, 'the live reply of the 2026-11-18 batch-4 verification (build 1c7582c), verbatim', 'each of the four mining rates, a correct energy answer, a per-subject list, a negation, a non-wage text, the restatement itself', _note)
 
+    # ── 2026-11-22 (PROGRESS 4bc): the SDL routing + headcount + NSSF party fixes and D-FIDELITY-25, founded on the two WRONG controls of the preliminary Gate 2 run (gp_24, gp_22). PLANTED on the live replies, VERBATIM.
+    try:
+        from chike import fidelity as _f25, clarification as _c25, routing as _r25
+        _gp = {r['id']: r for r in json.load(open(os.path.join(REPO, 'eval', 'results', 'gate2_prelim_live_2026_11_22.json'), encoding='utf-8'))['rows']}
+        _q24, _rep24 = _gp['gp_24']['question'], _gp['gp_24']['reply']
+        _q22 = _gp['gp_22']['question']
+        _spec25 = {'gp_24 now routes to the SDL engine (was none)': _r25.detect_intent(_q24) == 'sdl',
+                   'gp_24 states a headcount of 12 to the extractor': _r25.swn.sole_headcount(_q24) == 12,
+                   'the live gp_24 reply (SDL not payable at 12 employees) flags (D-FIDELITY-25)': len(_f25.sdl_denied_above_threshold(_q24, _rep24)) == 2,
+                   'gp_22 resolves to the EMPLOYER share (was employee)': _r25.nssf_party(_q22) == 'employer'}
+        _clean25 = [_r25.detect_intent('Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?') == 'none',
+                    _r25.detect_intent('Kizingiti cha SDL ni wafanyakazi 4, sivyo?') == 'none',
+                    _r25.nssf_party('Nilipe SDL, NSSF, PAYE na WCF kwa mfanyakazi mmoja mwenye TZS 800,000 — nionyeshe vyote.') == 'total',
+                    _f25.sdl_denied_above_threshold('Nina wafanyakazi 12. Je, nalipa SDL?', 'Ndiyo. Una wafanyakazi 12 (10 au zaidi), hivyo SDL inatozwa.') == [],
+                    _f25.body_contradicts_d16(_q24, _c25.CONSTANT_RESTATEMENTS['sdl_applies_at_threshold']) == []]
+        with open(os.path.join(REPO, 'chike', 'orchestrator.py'), encoding='utf-8') as _f:
+            _code25 = '\n'.join(ln.split('#', 1)[0] for ln in _f.read().splitlines())
+        _wired25 = 'fidelity.body_contradicts_d16(' in _code25
+        _v = ('FIRES' if (all(_spec25.values()) and all(_clean25) and _wired25) else 'NOT_WIRED' if (all(_spec25.values()) and all(_clean25)) else 'ERROR')
+        _note = (f'specimens: {_spec25}; clean limbs (must all be True): {_clean25}; wired through the D-FIDELITY-16 fact-path replacement (comments stripped): {_wired25}. '
+                 'Blast radius: eval/results/sweep_sdl_party_routing_2026_11_22.json, sweep_headcount_copula_2026_11_22.json; guard priced (eval/results/price_d25_2026_11_22.json): 2 flags in 13,449 texts, both the specimen sentences.')
+    except Exception as _exc:
+        _v, _note = 'ERROR', f'{type(_exc).__name__}: {str(_exc)[:160]}'
+    record('2026-11-22: SDL routing (first-person applicability, number-free threshold ask) + noun-first headcount + NSSF employer party + D-FIDELITY-25 (SDL denied above the threshold)', 'routing+fidelity',
+           'a 12-employee employer told SDL is not payable (route none, rank-1 fact contradicted); the EMPLOYER share question answered with the EMPLOYEE share ("kwa mfanyakazi" matched the cue "wa mfanyakazi")',
+           _v, 'the two WRONG controls of the preliminary Gate 2 run, live replies verbatim', 'a third-person "anatakiwa kuchangia", a threshold PREMISE check, an all-levies question, a correct SDL verdict, the restatement itself', _note)
+
     # ── THE AUTO-SEND ROUTE ALLOWLIST, 2026-11-16 (a narrowing of the R7 amendment) ──────
     try:
         _spec = importlib.util.spec_from_file_location('_hc_audit', os.path.join(REPO, 'chike-whatsapp', 'handler_core.py'))
