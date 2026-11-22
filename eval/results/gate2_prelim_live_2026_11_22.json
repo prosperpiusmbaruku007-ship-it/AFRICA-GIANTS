@@ -1,0 +1,578 @@
+{
+ "identity": {
+  "build": "7643e18",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795362235.432,
+   "enter_started_ts": 1795362235.544,
+   "enter_done_ts": 1795362298.655,
+   "import_to_enter_s": 0.1,
+   "load_s": 63.1,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "id": "gp_01",
+   "n": 1,
+   "limb": "ooc",
+   "category": "OFF_TOPIC",
+   "axis": "not_compliance",
+   "question": "Mkuu, nanunua bidhaa kwa jumla halafu nauza dukani. Nawezaje kupanga bei ya kuuza ili nipate faida nzuri bila kuwafanya wateja wakimbie?",
+   "reply": "Kupanga bei kunategemea mambo mengi kama gharama za bidhaa, mishahara ya wafanyakazi, na faida unayotaka kupata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti.",
+     "market dues exemptions: Nani hatozwi ushuru wa soko: Jedwali la Sheria ya Fedha za Serikali za Mitaa (Cap 290) linakataza halmashauri kutoza wakulima wanaouza mazao yao mara kwa mara, magulio yanayosimamiwa na halmashauri za vijiji, na wauzaji wadogo wa vyakula vilivyopikwa kama maandazi na samaki wa kukaanga. Ukiwa katika makundi haya na unadaiwa, omba maelezo kwa maandishi.",
+     "Unalipa pango la ofisi, duka, godown au jengo la biashara? Mkate mwenye nyumba ASILIMIA 10 ya pango kabla ya kumlipa (kodi ya zuio). Kiwango ni asilimia 10 kwa mkazi NA kwa asiye mkazi -- hakuna tofauti ya ukaazi kwenye pango. Lakini wajibu huu unamhusu tu mlipaji ambaye ni WAKALA WA KUZUIA (withholding agent); mtu wa kawaida asiye wakala hazuii kitu."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_02",
+   "n": 2,
+   "limb": "ooc",
+   "category": "OFF_TOPIC",
+   "axis": "not_compliance",
+   "question": "Duka langu la sasa lina wateja wengi. Nafikiria kufungua tawi la pili eneo la Mbezi, nifanyeje kujua kama nitapata faida?",
+   "reply": "Kwa mujibu wa sheria, unapaswa kuwasilisha taarifa kwa Kamishna Mkuu wa TRA kabla ya kufungua tawi lolote. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu wa kujisajili OSHA na WCF (mfuko wa fidia).",
+     "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako.",
+     "business licence fee national schedule local collection: Leseni ya biashara inagharimu kiasi gani? Ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, lakini leseni hutolewa na kukusanywa na halmashauri, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo — jiji/manispaa, wilaya/mji, au kijiji — na kama ni leseni kuu au ya tawi. Uliza halmashauri yako kwa ada ya aina yako."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_03",
+   "n": 3,
+   "limb": "ooc",
+   "category": "OFF_TOPIC",
+   "axis": "not_compliance",
+   "question": "Nina TIN ya kampuni yangu lakini nimesahau password ya TRA portal. Unaweza kuingia kwenye account yangu na kunifanyia reset?",
+   "reply": "Kwa mujibu wa sheria, unapaswa kuwasiliana na TRA moja kwa moja kupitia ofisi zao au tovuti rasmi kwa msaada wa kurejesha akaunti yako. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako.",
+     "Nitapataje TIN? Anayeanza biashara aombe Namba ya Mlipakodi (TIN) kwa TRA ndani ya siku 15 tangu aanze biashara, akiwa na ushahidi wa utambulisho. Mtu ana TIN moja tu kwa kodi zote; raia mwenye NIDA hupewa TIN iliyounganishwa na namba yake ya NIDA. TRA inaweza kutoa TIN ndani ya siku 7 tangu ombi (Sheria ya Usimamizi wa Kodi).",
+     "Nikikosa kutoa risiti ya EFD adhabu ni nini? TRA inaweza kutoa onyo la maandishi, kutoza faini, kusimamisha kifaa au leseni ya EFD, na kufunga eneo la biashara kwa anayeshindwa mara kwa mara kutoa risiti za EFD (Sheria ya Usimamizi wa Kodi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_04",
+   "n": 4,
+   "limb": "ooc",
+   "category": "OFF_TOPIC",
+   "axis": "not_compliance",
+   "question": "Duka langu limeanza kupata mauzo makubwa. Kuna njia ya kuacha baadhi ya mauzo nje ya records ili kodi ya mapato iwe ndogo?",
+   "reply": "Hapana. Huwezi kuacha mauzo nje ya rekodi. Mauzo yote yanatakiwa kurekodiwa na kulipa kodi ya mapato ipasavyo. Kutotoa taarifa kamili kunaweza kusababisha adhabu za kodi na kisheria. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako.",
+     "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. Muda mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi).",
+     "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kodi inayotakiwa ukiondoa iliyolipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_05",
+   "n": 5,
+   "limb": "ooc",
+   "category": "OFF_TOPIC",
+   "axis": "not_compliance",
+   "question": "nawezaje kufuatilia oda za wateja na delivery kwenye whatsapp business",
+   "reply": "Kuna programu za WhatsApp Business zinazokuruhusu kuona rekodi za mazungumzo na oda za wateja. Thibitisha na WhatsApp Business.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu wa kujisajili OSHA na WCF (mfuko wa fidia).",
+     "Naweza kudai VAT ya pembejeo kwa gari la kampuni? Hapana kwa gari la abiria, vipuri au matengenezo yake, isipokuwa biashara yako ni kuuza, kukodisha au kusafirisha abiria na gari lilinunuliwa kwa kusudi hilo. Burudani nayo haidaiwi (Sheria ya VAT).",
+     "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_06",
+   "n": 6,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Nina duka la electronics, nataka kuagiza simu Dubai. Import duty na ushuru mwingine wa forodha nitakaolipa zikifika Dar unakokotolewaje?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_07",
+   "n": 7,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Habari, nina nyumba ya kupanga na maduka mawili Zanzibar. Kodi ya pango na kodi nyingine za biashara huko zinahesabiwaje kupitia ZRA?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_08",
+   "n": 8,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Nimeuza kiwanja changu kwa milioni 180 wakati nilikinunua kwa milioni 90. Capital gains tax yake italipwaje?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_09",
+   "n": 9,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Mkuu, kuna kiwanja cha biashara ninachotaka kununua. Nawezaje kujua land rent inayodaiwa na kama hati ya ardhi iko sawa?",
+   "reply": "Ada ya ardhi na majengo huwa inabadilika mara kwa mara. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "business licence fee national schedule local collection: Leseni ya biashara inagharimu kiasi gani? Ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, lakini leseni hutolewa na kukusanywa na halmashauri, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo — jiji/manispaa, wilaya/mji, au kijiji — na kama ni leseni kuu au ya tawi. Uliza halmashauri yako kwa ada ya aina yako.",
+     "council service levy non corporate conflict: Je mfanyabiashara mmoja mmoja hulipa ushuru wa huduma? Sheria yenyewe inagongana. Sheria ya Fedha za Serikali za Mitaa (Cap 290) inasema hulipwa na \"corporate entities au mtu yeyote anayefanya biashara akiwa na leseni\", lakini Jedwali la sheria hiyo hiyo linakataza halmashauri kutoza wasio-corporate. Duka la mtu mmoja ni non-corporate. Uliza halmashauri yako na omba maelezo kwa maandishi.",
+     "Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sahihi, malipo ya miezi 6 hadi 12; kwa sababu isiyo halali, miezi 12 hadi 18; kwa zote mbili, miezi 12 hadi 20; kwa ubaguzi au unyanyasaji, miezi 12 hadi 24 (ELRA, kilichobadilishwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 12)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_10",
+   "n": 10,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Nimeuza jengo la biashara na sasa tunatengeneza agreement ya mauziano. Stamp duty ya hiyo agreement inakokotolewaje?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_11",
+   "n": 11,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Bookkeeper wetu anauliza kuhusu transfer pricing. Kampuni yetu inanunua bidhaa kutoka kampuni dada iliyopo nje ya Tanzania, tunapaswa kupanga bei kwa utaratibu gani?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_12",
+   "n": 12,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Tuna mgodi mdogo wa dhahabu. Royalty ya madini inakokotolewa kwa asilimia ngapi na inalipwa kwa utaratibu gani?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [],
+    "path": "refusal",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_13",
+   "n": 13,
+   "limb": "ooc",
+   "category": "ADJACENT_NOT_COVERED",
+   "axis": "unlisted_topic",
+   "question": "Nina kiwanda kidogo cha vinywaji, kuna excise duty kwenye bidhaa tunazotengeneza? Na kiwango chake kinapatikanaje?",
+   "reply": "Kiwango cha excise duty kwa bidhaa za vinywaji baridi na juisi ni shilingi 10,000 TZS. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "gn487a prohibited activity 6: Prohibited activity 6: Small-scale mining",
+     "Je nahitaji mashine ya risiti (EFD)? Ndiyo, kwa default, bila kujali kiasi cha mauzo yako (hata ukiuza milioni 15) na hata kama huna namba ya VAT -- HAKUNA kizingiti cha mauzo unaosubiri kufikia. Msamaha ni TU kwa taarifa rasmi ya TRA (Commissioner-General) inayokutaja wewe au kundi lako.",
+     "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT ya manunuzi yake; anayeuza bidhaa za msamaha (exempt) HAWEZI kudai input VAT. Ni makundi mawili tofauti.",
+     "Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni mapato ya ajira: yanaingia kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. Kuna kanuni za kugawa malipo ya miaka ya nyuma: thibitisha kiasi chako na TRA (Sheria ya Kodi ya Mapato).",
+     "Nikichelewa kulipa PAYE adhabu ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kiasi ambacho hakijalipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi).",
+     "market dues no national amount: Ushuru wa soko au genge ni kiasi gani? Hakuna kiwango kimoja cha kitaifa. Kiasi hupangwa chini ya Sheria ya Masoko (Cap 106) na sheria ndogo za kila halmashauri — zaidi ya halmashauri 180, kila moja na yake, na hubadilika mara kwa mara. Uliza meneja wa soko au ofisi ya mapato ya halmashauri yako."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_14",
+   "n": 14,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "mixed",
+   "question": "Mkuu, kwa wafanyakazi wangu NSSF nachangia kama kawaida, ila NHIF ya mwajiri na mfanyakazi inakatwa asilimia ngapi?",
+   "reply": "Kwa upande wa NSSF, unachangia kwa kiwango cha 20% ya mshahara mkubwa wa jumla. Kwa NHIF, michango huwa ni asilimia 0.5% ya mshahara mkubwa wa jumla kwa kila mfanyakazi. Thibitisha na NSSF (nssf.go.tz) na NHIF (nhif.or.tz).\nNdiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+   "path": "engine:nssf",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": "Ndiyo. NSSF haina kizingiti cha idadi ya wafanyakazi — inahusu mwajiri kutoka mfanyakazi wa kwanza. NSSF ni asilimia 20 ya mshahara ghafi (10% mwajiri + 10% mfanyakazi).",
+    "facts": [],
+    "path": "engine:nssf",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_15",
+   "n": 15,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "mixed",
+   "question": "TRA wameniletea assessment ya kodi ambayo sijaikubali. Naweza ku-object au kukata rufaa ndani ya siku ngapi, na naanzia wapi?",
+   "reply": "Kuna taratibu rasmi za pingamizi (objection) na rufaa (appeal) dhidi ya tathmini ya kodi. Kwa utaratibu kamili wa sasa wa muda na mahitaji, thibitisha na TRA (tra.go.tz) au mwanasheria wa kodi aliyesajiliwa Tanzania.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa kila mwezi, yaani ifikapo tarehe 7 ya mwezi unaofuata (Sheria ya Kodi ya Mapato). Utaratibu wa kuwasilisha taarifa ya kila mwezi: thibitisha na TRA.",
+     "Return ya kodi ya mapato ya mtu binafsi: kila mtu awasilishe return ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato. Mwaka wa mapato ni mwaka wa kalenda, hivyo mwisho ni 30 Juni ya mwaka unaofuata. Mkazi asiye na kodi ya kulipa, au mwenye mapato ya ajira tu ambayo PAYE inakatwa, hahitajiki isipokuwa TRA ikiomba (Sheria ya Kodi ya Mapato).",
+     "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kodi inayotakiwa ukiondoa iliyolipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_16",
+   "n": 16,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "mixed",
+   "question": "Nataka kuajiri fundi kutoka India kwenye kampuni yangu. Work permit yake inalipiwa kiasi gani na maombi yanafanyikaje?",
+   "reply": "Kwa sasa, kuna ada ya TZS 50,000 kwa ajili ya vibali vya makazi na kazi kwa wasio raia. Thibitisha na Idara ya Uhamiaji (immigration.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sahihi, malipo ya miezi 6 hadi 12; kwa sababu isiyo halali, miezi 12 hadi 18; kwa zote mbili, miezi 12 hadi 20; kwa ubaguzi au unyanyasaji, miezi 12 hadi 24 (ELRA, kilichobadilishwa na Sheria ya Marekebisho ya Sheria za Kazi, 2025, Kifungu 12).",
+     "business licence fee national schedule local collection: Leseni ya biashara inagharimu kiasi gani? Ada imepangwa KITAIFA chini ya Sheria ya Leseni za Biashara, lakini leseni hutolewa na kukusanywa na halmashauri, na halmashauri hairuhusiwi kutoza zaidi ya ada iliyopangwa. Ada hutegemea aina ya biashara na eneo — jiji/manispaa, wilaya/mji, au kijiji — na kama ni leseni kuu au ya tawi. Uliza halmashauri yako kwa ada ya aina yako.",
+     "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi (kampuni za ndani hulipa TZS 2,500 kwa mwezi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_17",
+   "n": 17,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "plain_words",
+   "question": "Nafungua bar ndogo maeneo ya Sinza. Leseni ya biashara ya bar inalipiwa shilingi ngapi hasa kwa mwaka?",
+   "reply": "Ada ya leseni ya biashara hutolewa na Halmashauri husika. Thibitisha na Halmashauri ya Wilaya ya Kinondoni (kinondoni.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Kusajili kampuni gharama ya kuanzia ni TZS 95,000; kuhifadhi jina ni TZS 50,000. Ngazi za ada kwa mtaji wa hisa (share capital): hadi TZS 1,000,000 ni TZS 95,000; zaidi ya TZS 1,000,000 hadi TZS 5,000,000 ni TZS 175,000; zaidi ya TZS 5,000,000 hadi TZS 20,000,000 ni TZS 260,000; zaidi ya TZS 20,000,000 hadi TZS 50,000,000 ni TZS 290,000; zaidi ya TZS 50,000,000 hadi TZS 100,000,000 ni TZS 400,000; zaidi ya TZS 100,000,000 hadi TZS 500,000,000 ni TZS 450,000; zaidi ya TZS 500,000,000 hadi TZS 1,000,000,000 ni TZS 500,000; zaidi ya TZS 1,000,000,000 hadi TZS 10,000,000,000 ni TZS 600,000; zaidi ya TZS 10,000,000,000 ni TZS 1,000,000. Kampuni isiyo na mtaji wa hisa ni TZS 500,000. Kubadili jina ni TZS 22,000.",
+     "BRELA: ada ya kuwasilisha ritani (annual return) ya kampuni kila mwaka ni TZS 22,000.",
+     "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikichelewa kuwasilisha ritani ya mwaka: faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi (kampuni za ndani hulipa TZS 2,500 kwa mwezi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_18",
+   "n": 18,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "other_jurisdiction",
+   "question": "Nina kampuni ya usafirishaji inayofanya kazi Tanzania na Uganda. VAT ya Uganda kwa sasa ni asilimia ngapi na tunatakiwa kujisajili lini?",
+   "reply": "Samahani, ninashughulikia masuala ya Tanzania Bara tu. Kwa masuala ya Uganda, wasiliana na Uganda Revenue Authority (URA) kupitia ura.go.ug. Ninaweza kukusaidia na VAT ya Tanzania (18%).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanzania Bara, tangu 2015 (VAT Act Cap.148 s.5(1)). SIYO 14%. Kuna ubaguzi finyu wa asilimia 16 kwa malipo ya kielektroniki kwa mteja wa kawaida (si VAT), kuanzia 1 Septemba 2025 (Finance Act 2025) -- hauhusu B2B, mauzo nje ya nchi, wala malipo taslimu.",
+     "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango? Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia kiwango (TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6), mtoa huduma za kitaalamu, taasisi ya Serikali, na anayetarajia kuanza biashara mwenye ushahidi (anaweza kuomba wakati wowote; Kamishna ndiye anayeamua). Maandishi ya Sheria hayataji usajili wa hiari kwa mfanyabiashara aliyepo aliye chini ya kiwango, lakini TRA inasema usajili wa hiari unaruhusiwa kwa 'shughuli maalum za kiuchumi' bila kuzitaja -- thibitisha na TRA kabla ya kuomba (Sheria ya VAT; TRA).",
+     "Adhabu ya kuchelewa kuwasilisha return ya VAT au kodi ya mapato ni nini? Kwa kila mwezi au sehemu ya mwezi: 2.5% ya kodi inayotakiwa ukiondoa iliyolipwa, au alama 5 (mtu binafsi) au alama 15 (kampuni), kinachozidi. Thibitisha kiasi na TRA (Sheria ya Usimamizi wa Kodi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_19",
+   "n": 19,
+   "limb": "ooc",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "mixed",
+   "question": "Nina wafanyakazi 6 dukani, mmoja amekuwa haji kazini bila taarifa na anagombana na wenzake. Nawezaje kushughulikia hili bila kuharibu biashara?",
+   "reply": "Kwanza, hakuna adhabu ya kufutwa kwa sababu ya kukosa kujisajili OSHA. Lakini kwa ajili ya WCF, unapaswa kujisajili haraka iwezekanavyo. Thibitisha na WCF (wcf.go.tz). Pili, kuhusu mfanyakazi aliyegoma kazi, thibitisha na ELRA (Sheria ya Ajira Na. 5 ya 2003) kuhusu utaratibu sahihi wa kushughulikia mgogoro.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajili maeneo YOTE ya kazi bila kikomo cha idadi ya wafanyakazi, na WCF huanza tangu mfanyakazi wa kwanza. Idadi ndogo ya wafanyakazi HAIONDOI wajibu wa kujisajili OSHA na WCF (mfuko wa fidia).",
+     "council service levy non corporate conflict: Je mfanyabiashara mmoja mmoja hulipa ushuru wa huduma? Sheria yenyewe inagongana. Sheria ya Fedha za Serikali za Mitaa (Cap 290) inasema hulipwa na \"corporate entities au mtu yeyote anayefanya biashara akiwa na leseni\", lakini Jedwali la sheria hiyo hiyo linakataza halmashauri kutoza wasio-corporate. Duka la mtu mmoja ni non-corporate. Uliza halmashauri yako na omba maelezo kwa maandishi.",
+     "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zaidi ya 20, unateua mwakilishi wa usalama na afya kutoka kwa wafanyakazi ulio nao -- ni kuteua, si kuajiri mtu mpya. Kiwandani: mwakilishi 1 kwa kila wafanyakazi 50. Dukani au ofisini: 1 kwa kila 100. Mkaguzi anaweza kuagiza uteuzi hata kwa wafanyakazi 4 au chini ya hapo. Kamati ya usalama inahitajika ukiwa na wawakilishi 2 au zaidi. (NOT a professionally hired/dedicated 'safety officer'.)"
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_20",
+   "n": 20,
+   "limb": "hedge",
+   "category": "TRICKY_LOOKALIKE",
+   "axis": "mixed",
+   "question": "Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029.",
+   "reply": "Thibitisha na TRA (tra.go.tz).Kiwango cha kawaida cha VAT kinachotumika Tanzania Bara ni asilimia 18, kulingana na Sheria ya Fedha ya 2025. Hakikisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asilimia 18 -- kiwango cha kawaida cha Tanzania Bara, tangu 2015 (VAT Act Cap.148 s.5(1)). SIYO 14%. Kuna ubaguzi finyu wa asilimia 16 kwa malipo ya kielektroniki kwa mteja wa kawaida (si VAT), kuanzia 1 Septemba 2025 (Finance Act 2025) -- hauhusu B2B, mauzo nje ya nchi, wala malipo taslimu.",
+     "Kizingiti cha kusajili VAT: mauzo ya TZS 200,000,000 kwa miezi 12.",
+     "Rekodi za biashara zihifadhiwe kwa miaka mingapi? Miaka 5 tangu tarehe husika (kodi ya mapato: mwisho wa mwaka wa mapato; VAT: mwisho wa kipindi cha kodi), ndani ya Tanzania. Muda mrefu zaidi ikiwa kuna pingamizi, ukaguzi au ombi la marejesho (Sheria ya Usimamizi wa Kodi)."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_21",
+   "n": 21,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Mauzo ya biashara yangu yamefika milioni 210 ndani ya miezi 12. Lazima nisajili VAT sasa?",
+   "reply": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 210,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:vat_registration",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": "Ndiyo, unatakiwa kujisajili VAT. Mauzo yako ya TZS 210,000,000 kwa miezi 12 yamefikia au kuzidi kizingiti cha TZS 200,000,000, hivyo usajili ni wa LAZIMA. Hatua ya kwanza ni kuomba usajili wa VAT TRA. Thibitisha na TRA (tra.go.tz).",
+    "facts": [],
+    "path": "engine:vat_registration",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_22",
+   "n": 22,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Habari, kwa mfanyakazi mmoja mwajiri anatakiwa kuchangia asilimia ngapi ya mshahara wake NSSF?",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+    "facts": [],
+    "path": "engine:nssf",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_23",
+   "n": 23,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Leseni yangu ya biashara nimeipata mwezi Septemba mwaka huu. Inakuwa halali mpaka lini?",
+   "reply": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": "Leseni ya biashara ni halali kwa miezi 12 tangu tarehe ilipotolewa; si tarehe maalum ya kalenda (si 30 Juni, si 31 Machi: sheria ya zamani ilibadilishwa). Unaweza kulipia ada ya hadi miaka 3 mfululizo (Sheria ya Leseni za Biashara). Leseni za kawaida (kundi B) hutolewa na halmashauri ya eneo lako; leseni za kundi A (biashara za kitaifa au kimataifa) hutolewa na BRELA (brela.go.tz). Sheria inamwachia Waziri kuteua mamlaka ya leseni kwa tangazo la Gazeti: thibitisha na halmashauri yako.",
+    "facts": [],
+    "path": "engine:fixed_statement",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_24",
+   "n": 24,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "reply": "Kulingana na taarifa uliyotoa, ununuzi wa bidhaa kutoka nje ya nchi (imports) haupaswi kutozwa SDL. Hivyo, kwa sasa, idadi ya wafanyakazi wako 12 haihitaji malipo ya SDL. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "raw": {
+    "working": null,
+    "facts": [
+     "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4.",
+     "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wafanyakazi 12 wenye mshahara huo huo, SDL jumla ni TZS 252,000 (12 × 21,000).",
+     "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya wafanyakazi. Si asilimia 4, si asilimia 2."
+    ],
+    "path": "fact",
+    "model_calls": 1,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_25",
+   "n": 25,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Mfanyakazi wangu amefanya kazi mwaka mzima lakini hajachukua likizo. Anatakiwa kupata siku ngapi za annual leave?",
+   "reply": "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": "Likizo ya mwaka ni angalau siku 28 mfululizo kwa kila mzunguko wa likizo (sikukuu zilizo ndani zinahesabiwa), na mfanyakazi analipwa mshahara wake. Mwajiri apange ichukuliwe ndani ya miezi 6 baada ya mzunguko, au miezi 12 kwa ridhaa ya mfanyakazi na sababu ya kiutendaji (ELRA).",
+    "facts": [],
+    "path": "engine:fixed_statement",
+    "model_calls": 0,
+    "guards": []
+   }
+  },
+  {
+   "id": "gp_26",
+   "n": 26,
+   "limb": "control",
+   "category": "IN_SCOPE_CONTROL",
+   "axis": "control",
+   "question": "Habari, kampuni yangu inalipa kodi ya pango kwa jengo tunalotumia kama ofisi. Withholding tax ya hiyo rent inapaswa kukatwa kwa kiwango gani?",
+   "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata.",
+   "path": "engine:rent_wht",
+   "model_calls": 0,
+   "guards": [],
+   "raw": {
+    "working": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi (Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata.",
+    "facts": [],
+    "path": "engine:rent_wht",
+    "model_calls": 0,
+    "guards": []
+   }
+  }
+ ],
+ "set_sha256": "5e969b2441091716378ca576852550543600a1b30918846ca66533e6c2d794bd",
+ "note": "PRELIMINARY Gate 2 (n=26, external-model author, weaker independence). RAW output only; scored by hand in gate2_prelim_scoring_2026_11_22.json."
+}
