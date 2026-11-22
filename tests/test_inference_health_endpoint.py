@@ -61,9 +61,12 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # ⭐ BUMPED 2026-11-17 (batch 3): ONE row appended (company_annual_return_deadline, index 215); 215 -> 216 rows. Previous value, kept for rollback:
 # 456838235c40f757c4b833571763c9cfa5754ffc170d5c11af336cf5653a0e13 -- the 215-row index of e9e429e. Computed from the fetched HF file (dataset commit 8dfb5d56, built from edd7357),
 # verified IDENTICAL (rows and order) to the local build, and verified to equal the served index on the first 215 rows (text and embedding) with row 215 the only addition, BEFORE it was committed.
+# BUMPED 2026-11-23: TWO rows appended (sdl_domestic_workers_scope 216, nssf_contributions_age_60 217) and row 174 (sdl_exemption_categories) revised in place; 216 -> 218 rows. Previous value, kept for rollback:
+# 4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a -- the 216-row index of 8dfb5d56. Computed from the fetched HF file (Kaggle run of b3d43af, baseline bd4bf61), verified IDENTICAL (rows and order) to build_fact_texts(),
+# and verified to differ from the served index at row 174 ONLY (215 embeddings identical to the served ones within 1e-5), BEFORE it was committed.
 EXPECTED_SERVED_SHA256 = (
-    "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a")
-EXPECTED_ROWS = 216
+    "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50")
+EXPECTED_ROWS = 218
 
 
 def _src():

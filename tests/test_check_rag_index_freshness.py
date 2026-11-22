@@ -446,21 +446,24 @@ def test_against_live_repo_state_is_fresh_after_the_part_xii_regen():
     artifacts `C`, content matching — where it cannot evaporate because someone committed a file.
     """
     ok, report = check(repo_dir=REPO)
-    # TWENTY-EIGHTH FLIP (2026-11-23), back to PENDING: 218 built vs 216 served. ONE served row differs in place (174, the revised consolidated SDL exemption row) and TWO rows are built but not yet served (216 SDL household-employer
-    # hedge, 217 NSSF age-60 hedge). (Twenty-seventh flip, kept for provenance: FRESH after the batch-3 regen, HF dataset commit 8dfb5d56, built from edd7357.) The served files must still be the 216-row index until the regen lands.
-    assert ok is False, (
-        f"the live repo reports FRESH: the 2026-11-23 regen has landed. Flip back to `ok is True` / 218 rows, delete the pending_r15 pins for sdl_domestic_workers_scope and nssf_contributions_age_60 in scripts/check_facts_index_sync.py, and re-assert the specifics: {report}")
-    assert report["content_matches"] is False, report
+    # TWENTY-NINTH FLIP (2026-11-23), back to FRESH: the SDL / NSSF regen shipped (Kaggle run of b3d43af; fetched files verified IDENTICAL, rows and order, to the local build; differing from the previously served index at row 174 ONLY) and was
+    # dual-committed. (Twenty-eighth flip, kept for provenance: PENDING, 218 built vs 216 served.)
+    assert ok is True, (
+        f"the live repo reports STALE after the 2026-11-23 regen's dual-commit. The content limb IS the verdict, so this means "
+        f"build_fact_texts() over this tree no longer equals a served file -- do not flip this back to False to make it green; "
+        f"find what moved: {report}")
+    assert report["content_matches"] is True, report
     assert report["content_build_error"] is None, report
+    assert report["diverging"] == {}, report["diverging"]
     for _d in ("kaggle", "chike-inference"):
         with open(os.path.join(REPO, _d, "rag_facts_text.json"), encoding="utf-8") as _fh:
             _served = json.load(_fh)
-        assert len(_served) == 216, (_d, len(_served))
-        assert not any("Haijathibitishwa. SDL hutozwa kila mwajiri" in t or "Sheria haisemi hivyo wala kinyume" in t for t in _served), (_d, "the two new rows must NOT be served until the regen lands")
-        assert "Waziri wa Fedha anaweza kusamehe kwa Gazeti" not in _served[174], (_d, "row 174 still carries the OLD exemption wording until the regen lands")
-        assert _served[215].startswith("Annual return ya BRELA kwa kampuni inapaswa kuwasilishwa lini?"), (_d, "row 215 is still the company annual-return row")
+        assert len(_served) == 218, (_d, len(_served))
+        assert sum("Haijathibitishwa. SDL hutozwa kila mwajiri" in t for t in _served) == 1 and sum("Sheria haisemi hivyo wala kinyume" in t for t in _served) == 1, (_d, "each new guard anchor resolves to exactly one row")
+        assert "Waziri wa Fedha anaweza kusamehe kwa Gazeti" in _served[174], (_d, "row 174 carries the REVISED exemption wording")
+        assert _served[215].startswith("Annual return ya BRELA kwa kampuni inapaswa kuwasilishwa lini?"), (_d, "row 215 is the company annual-return row")
         assert "Waziri anayehusika na masuala ya kazi" in _served[213], (_d, "row 213 still states the issuer BY OFFICE")
-    assert report["embedding_rows_match"] is False, report      # 218 built rows vs 216 shipped embedding rows: pending, same flip
+    assert report["embedding_rows_match"] is True, report
     assert report["built_rows"] == 218, report["built_rows"]
     assert report["_stale_inputs_is_provenance_only"], "the provenance label is gone"
     assert not report["missing_inputs"] and not report["missing_artifacts"], (
@@ -519,18 +522,17 @@ def test_content_limb_passes_on_the_real_built_texts():
     row 9 still carries the BASE/SOURCE separation (seventeenth flip). (Eighteenth flip, kept for provenance: PENDING that regen --
     208 built vs 184 served, the first 184 differing only at rows 1, 26, 58, 90, 95.)"""
     ok, rep = check(repo_dir=REPO, content_fn=lambda: (REAL_TEXTS, None))
-    # TWENTY-EIGHTH FLIP (2026-11-23), back to PENDING: 218 built vs 216 served. ONE served row differs in place (174, the REVISED consolidated SDL exemption row: ten R.E.2023 paragraphs + (k) + the Gazette power) and TWO rows are appended
-    # (216 the SDL household-employer hedge, 217 the NSSF age-60 hedge). Asserted row by row so that "PENDING" cannot quietly become "something else changed". (Twenty-seventh flip, kept for provenance: FRESH after the batch-3 regen,
-    # 216 rows, REAL == SERVED.) The served files must still be the 216-row index until the regen lands.
-    assert ok is False, (
-        f"the real builder's output now matches the served index: the 2026-11-23 regen has landed. Flip back to `ok is True`, 218 rows, and re-assert the specifics: {rep}")
-    assert rep["content_matches"] is False
-    assert len(REAL_TEXTS) == 218 and len(SERVED_TEXTS) == 216
-    _moved = [i for i in range(216) if REAL_TEXTS[i] != SERVED_TEXTS[i]]
-    assert _moved == [174], _moved
-    assert "Waziri wa Fedha anaweza kusamehe kwa Gazeti" in REAL_TEXTS[174] and "Waziri wa Fedha" not in SERVED_TEXTS[174] and "Kifungu" not in REAL_TEXTS[174]
-    assert REAL_TEXTS[216].startswith("Wafanyakazi wa nyumbani wanahesabiwa kwenye kizingiti cha SDL?") and "Haijathibitishwa" in REAL_TEXTS[216] and "Kifungu" not in REAL_TEXTS[216]
-    assert REAL_TEXTS[217].startswith("Michango ya NSSF inakoma ukifika miaka 60?") and "Sheria haisemi hivyo wala kinyume" in REAL_TEXTS[217] and "Kifungu" not in REAL_TEXTS[217]
+    # TWENTY-NINTH FLIP (2026-11-23), back to FRESH -- the SDL / NSSF regen shipped (Kaggle run of b3d43af, baseline bd4bf61, 218 facts, 86 guards PASS; fetched files verified IDENTICAL, rows and order, to build_fact_texts(), and verified to differ
+    # from the previously served index at row 174 ONLY (215 embeddings identical to the served ones within 1e-5)). 218 rows, REAL == SERVED. (Twenty-eighth flip, kept for provenance: PENDING, 218 built vs 216 served: row 174 revised in place, 216/217 appended.)
+    assert ok is True, (
+        f"the real builder's output no longer matches the served index. If a fact or the builder has changed, an R15 regen is owed and "
+        f"THAT is the fix -- not flipping this: {rep}")
+    assert rep["content_matches"] is True
+    assert rep["diverging"] == {}, rep["diverging"]
+    assert len(REAL_TEXTS) == 218 and len(SERVED_TEXTS) == 218 and REAL_TEXTS == SERVED_TEXTS
+    assert "Waziri wa Fedha anaweza kusamehe kwa Gazeti" in SERVED_TEXTS[174] and "mamlaka ya maji" in SERVED_TEXTS[174] and "Kifungu" not in SERVED_TEXTS[174]
+    assert SERVED_TEXTS[216].startswith("Wafanyakazi wa nyumbani wanahesabiwa kwenye kizingiti cha SDL?") and "Haijathibitishwa" in SERVED_TEXTS[216] and "Kifungu" not in SERVED_TEXTS[216]
+    assert SERVED_TEXTS[217].startswith("Michango ya NSSF inakoma ukifika miaka 60?") and "Sheria haisemi hivyo wala kinyume" in SERVED_TEXTS[217] and "Kifungu" not in SERVED_TEXTS[217]
     assert SERVED_TEXTS[215].startswith("Annual return ya BRELA kwa kampuni inapaswa kuwasilishwa lini?")
     assert "Waziri anayehusika na masuala ya kazi" in SERVED_TEXTS[213] and "Ofisi ya Waziri Mkuu" in SERVED_TEXTS[213]
 

@@ -328,7 +328,7 @@ PINNED = {
         "faini ni TZS 70,000 kwa kila mwezi au sehemu ya mwezi"),
     # needle moved 2026-11-16 with the R44 strip: it was "Kifungu 16(2)", a section number, which is no longer in served text (it lives in primary_source).
     "osha_registration_before_operations": ("present_elsewhere", "hakuna muda wa siku baada ya kufungua"),
-    "sdl_exemption_categories": ("present_elsewhere", "zisizolipa SDL"),
+    "sdl_exemption_categories": ("present_elsewhere", "Nani hatozwi SDL?"),   # 2026-11-23: re-adjudicated against the REVISED row 174 (the old needle "zisizolipa SDL" belonged to the superseded wording); the new needle is the revised row's own lead
 
     # late_filing_penalty_monthly_fee: found 2026-08-26, by the sibling-match audit the fee
     # consolidation prompted (eval/results/sibling_match_audit.json). This key was NEVER
@@ -482,8 +482,8 @@ PINNED = {
     # ---- 2026-11-17 batch 3: ONE NEW fact, SHIPPED by the Kaggle regen (converted from pending_r15).
     "company_annual_return_deadline": ("present_elsewhere", "siku 28 baada ya tarehe hiyo"),   # shipped by the batch-3 regen (HF dataset commit 8dfb5d56, built from edd7357): converted from pending_r15
     # 2026-11-23: TWO NEW rows built (216, 217) and NOT yet served -- pending the Kaggle regen; flip to present_elsewhere with the anchors below when it lands.
-    "sdl_domestic_workers_scope": ("pending_r15", None),
-    "nssf_contributions_age_60": ("pending_r15", None),
+    "sdl_domestic_workers_scope": ("present_elsewhere", "Haijathibitishwa. SDL hutozwa kila mwajiri"),   # shipped by the 2026-11-23 regen (Kaggle run of b3d43af): converted from pending_r15
+    "nssf_contributions_age_60": ("present_elsewhere", "Sheria haisemi hivyo wala kinyume"),   # shipped by the 2026-11-23 regen: converted from pending_r15
 }
 
 

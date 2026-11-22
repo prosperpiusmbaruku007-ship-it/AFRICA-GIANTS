@@ -157,7 +157,7 @@ def test_the_real_shipped_index_rejects_the_superseded_count():
     from chike.retrieval import Retriever, RetrievalIndexError
     with open(TXT, encoding='utf-8') as f:
         n = len(json.load(f))
-    assert n == 216, f'expected the shipped index to be the 216-row R15 regen (2026-11-17 batch 3), got {n}'
+    assert n == 218, f'expected the shipped index to be the 218-row R15 regen (2026-11-23: SDL household-employer + NSSF age-60 rows, revised SDL exemption row), got {n}'
     with pytest.raises(RetrievalIndexError):
         Retriever(emb_path=EMB, texts_path=TXT, expected_fact_count=183).preflight()
 
