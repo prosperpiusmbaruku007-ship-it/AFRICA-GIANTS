@@ -78,6 +78,9 @@ LIVE = {
     # 2026-11-23: the two live replies of build d997d4d, question VERBATIM; the body is the live fabricated list / wrong YES. The route, not a guard, is the control.
     'sdl_exemptions': ('Shule binafsi inalipa SDL?',
         'Shule binafsi zenye wafanyakazi 10+ zinatozwa SDL. Thibitisha na TRA (tra.go.tz).'),
+    # 2026-11-23: the live reply of build a8a0274 to the payer question, VERBATIM; right on the payer, then an invented sentence. The route is the control, not a guard.
+    'sdl_payer': ('Mwajiri au mfanyakazi analipa SDL?',
+        'MWAJIRI (si mfanyakazi) ndiye anayelipa SDL. Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa. Mfanyakazi hapunguziwi kitu kwenye mshahara wake kwa sababu ya SDL.'),
 }
 
 
@@ -265,7 +268,7 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
 # 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
 # (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
-PAYE_NO_GUARD = frozenset({"sdl_exemptions", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+PAYE_NO_GUARD = frozenset({"sdl_exemptions", "sdl_payer", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

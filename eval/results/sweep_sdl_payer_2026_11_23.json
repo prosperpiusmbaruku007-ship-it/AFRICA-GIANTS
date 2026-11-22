@@ -1,0 +1,157 @@
+{
+ "swept": 8756,
+ "changed": [
+  {
+   "q": "Je, SDL inakatwa kutoka mshahara wa mfanyakazi na kulipwa TRA?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, si kweli kwamba SDL hailipwi na mfanyakazi?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inakatwa kwenye mshahara wa mfanyakazi au inalipwa na mwajiri?",
+   "src": "eval/accuracy_gate/quantity_instruction_heldout_024.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inakatwa kwa mfanyakazi?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Nani analipa SDL?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mimi ni mfanyakazi, je SDL itakatwa kwenye mshahara wangu?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL haikatwi kwenye mshahara wa mfanyakazi, sivyo?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Is SDL deducted from the employee or does the employer pay it?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inalipwa na mwajiri, mfanyakazi, au wote wawili?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Accountant wetu anasema SDL inakatwa kutoka mshahara wa mfanyakazi. Je, hiyo ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inakatwa kutoka kwa mfanyakazi au mwajiri ndiye analipa?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mfanyakazi wangu ameuliza kwa nini SDL imekatwa kwenye payslip yake — ni sahihi kuikata?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, SDL inabeba na mwajiri peke yake au pia mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mzigo wa kulipa SDL unahusisha mfanyakazi au mwajiri tu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Kama mwajiri, najua SDL ni jukumu langu. Je, kuna makato yoyote ya SDL yanayoweza kutokea kwa mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inalipwa na mwajiri au inakatwa kwa mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, SDL inatakiwa kulipwa na mfanyakazi pia au ni mwajiri tu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mimi kama mwajiri, je, mimi ndiye niliyeweka mzigo wa kulipa SDL pekee?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Je, kuna kesi yoyote ambapo mfanyakazi anaweza kulipa SDL?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_019.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Is SDL deducted from an employee's salary and paid to TRA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Is it not true that SDL is not paid by the employee?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "My employee asked why SDL was deducted from their payslip — is it correct to deduct it?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Our accountant says SDL is deducted from the employee's salary. Is that true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "SDL inalipwa na mwajiri au mfanyakazi?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": "none",
+   "after": "fixed_statement"
+  }
+ ],
+ "exemptions_lost": [],
+ "both": []
+}

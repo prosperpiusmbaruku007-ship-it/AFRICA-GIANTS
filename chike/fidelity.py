@@ -1449,7 +1449,7 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "nssf_split":
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
-        if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions"):
+        if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here

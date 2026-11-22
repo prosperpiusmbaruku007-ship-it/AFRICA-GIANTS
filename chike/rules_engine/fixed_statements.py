@@ -55,6 +55,9 @@ ANNUAL_RETURN = "brela_annual_return_deadline"
 # confident WRONG YES (registered educational institutions are exempt), both with the correct row served at rank <= 3. The list is a CONSTANT, so it is stated whole, model-free: the LESSON, recorded in PROGRESS, is that for a constant the model
 # contradicts even at rank 1-3 a statement route beats another guard (guards are the backstop, not the fix).
 SDL_EXEMPTIONS = "sdl_exemptions"
+# 2026-11-23 (founder): WHO PAYS SDL / IS IT DEDUCTED FROM THE EMPLOYEE. The live reply to "Mwajiri au mfanyakazi analipa SDL?" was right on the payer and then invented "Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa"
+# (SDL is a levy on payroll, not a penalty). The payer is a CONSTANT (locked fact sdl_payer), so it is stated, model-free, excluded from auto-send, rather than guarded (the standing lesson of PROGRESS 4bh).
+SDL_PAYER = "sdl_payer"
 # 2026-11-22 (founder, preliminary Gate 2 #20): a rate asked for a FUTURE year ("kiwango rasmi cha VAT kitakachotumika 2028/2029"). The honest answer is two limbs held together: the rate of a year whose Finance Act has not been passed is UNKNOWN,
 # and the CURRENT rates we hold, each with the instrument it rests on. Same discipline as the rest of this route: model-free, whole, excluded from auto-send. The figures are locked facts vat_standard_rate (18%) and sdl_rate (3.5%, FA2023).
 FUTURE_YEAR_RATE = "future_year_rate"
@@ -211,10 +214,18 @@ STATEMENTS = {
         "Founder-approved text, whole: every category stated, none selected, so it answers a LIST ask and a CATEGORY ask (a school, a religious body, a council) with the same sentence. Household employers are in none of these; whether domestic workers count toward the ten is the "
         "OTHER hedge (sdl_domestic_workers_scope) and that question is vetoed off this route. R44: the Act is named, no section number",
     ),
+    SDL_PAYER: (
+        "sdl_payer",
+        "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). "
+        "Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+        "Locked fact sdl_payer (VETA Act Cap.82 R.E.2023 s.14(2): the levy is a sum equal to the stated percentage of the total gross monthly emoluments payable BY THE EMPLOYER to his employees; no provision of ss.14-19 makes any part deductible from "
+        "employee emoluments; direct read 2026-09-02, edition asserted). 'Si adhabu' is the Act's own word: it is a LEVY (s.14), which is what the live 'Ni adhabu kwa mwajiri ...' invention got wrong. No rate and no headcount threshold are stated here: those "
+        "questions are vetoed off this route to the SDL engine / rate statement. R44: the Act is named, no section number. Founding specimen: build a8a0274 live, 'Mwajiri au mfanyakazi analipa SDL?'",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER})
 
 
 def fixed_statement(topic) -> ComputationResult:

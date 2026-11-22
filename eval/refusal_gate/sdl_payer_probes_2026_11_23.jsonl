@@ -1,0 +1,21 @@
+{"id": "pp_01", "question": "Mwajiri au mfanyakazi analipa SDL?", "expect": "payer", "guards_against": "FOUNDING SPECIMEN (live, build a8a0274): right on the payer, then invented 'Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa'."}
+{"id": "pp_02", "question": "SDL inakatwa kwa mfanyakazi?", "expect": "payer", "guards_against": "Deduction ask, the founder's own example."}
+{"id": "pp_03", "question": "Nani analipa SDL?", "expect": "payer", "guards_against": "Who-pays ask with no party named."}
+{"id": "pp_04", "question": "Mimi ni mfanyakazi, je SDL itakatwa kwenye mshahara wangu?", "expect": "payer", "guards_against": "An employee asking about their own pay (a held corpus question)."}
+{"id": "pp_05", "question": "SDL haikatwi kwenye mshahara wa mfanyakazi, sivyo?", "expect": "payer", "guards_against": "A NEGATED / premise form: the statement is the whole rule, so it answers a premise check too."}
+{"id": "pp_06", "question": "Is SDL deducted from the employee or does the employer pay it?", "expect": "payer", "guards_against": "English phrasing (held corpus)."}
+{"id": "pp_07", "question": "SDL inalipwa na mwajiri, mfanyakazi, au wote wawili?", "expect": "payer", "guards_against": "The 'both' form (held corpus)."}
+{"id": "pp_08", "question": "SDL inahesabiwaje? Ni mwajiri au mfanyakazi analipa?", "expect": "not_payer", "guards_against": "TWO-PART: how it is computed AND who pays. The statement answers only the payer half and would silently drop the other (found by the corpus sweep: the stem 'hesab' was not vetoed)."}
+{"id": "pp_09", "question": "Mfanyakazi mwenye mshahara wa TZS 800,000 anakatwa SDL kiasi gani?", "expect": "not_payer", "guards_against": "A FIGURE and a how-much ask: an amount question stays off the statement (digit veto)."}
+{"id": "pp_10", "question": "SDL inakatwa kwa mfanyakazi wa nyumbani?", "expect": "not_payer", "guards_against": "The household question keeps its own hedge (founder's veto)."}
+{"id": "pp_11", "question": "Shule binafsi inalipa SDL?", "expect": "not_payer", "guards_against": "An exemption ask: it belongs to the exemptions statement, not this one."}
+{"id": "pp_12", "question": "SDL na NSSF zinakatwa kwa mfanyakazi?", "expect": "not_payer", "guards_against": "Another levy named: a two-part question (NSSF IS deducted from the employee; the statement would be wrong about it by implication)."}
+{"id": "pp_13", "question": "Mwajiri analipa SDL lini?", "expect": "not_payer", "guards_against": "A DEADLINE ask stays on its own route."}
+{"id": "pp_14", "question": "Mfanyakazi analipa SDL wapi?", "expect": "not_payer", "guards_against": "WHERE to pay: how-to-pay stays on its own route."}
+{"id": "pp_15", "question": "Kiwango cha SDL kinachokatwa kwa mfanyakazi ni asilimia ngapi?", "expect": "not_payer", "guards_against": "A RATE ask stays on its own route."}
+{"id": "pp_16", "question": "Mfanyakazi wangu ana ulemavu — anapaswa kulipwa SDL?", "expect": "not_payer", "guards_against": "Bad first draft (bare 'mfanyakazi' hijacked it): a disability question is not a payer ask."}
+{"id": "pp_17", "question": "Posho ya usafiri ya mfanyakazi inahusika kwenye SDL?", "expect": "not_payer", "guards_against": "Bad first draft (bare 'mfanyakazi' / 'mshahara'): whether an allowance is in the SDL BASE is not a payer ask (no 'hesab' stem, so ONLY the narrow payer ask keeps it off the statement)."}
+{"id": "pp_18", "question": "Is SDL a deductible expense for Corporate Tax?", "expect": "not_payer", "guards_against": "Bad first draft (bare 'deduct'): a tax-deductibility question; also 'Statutory Deduction Levy' (a name question)."}
+{"id": "pp_19", "question": "Je, kampuni ya madini lazima ilipe SDL?", "expect": "not_payer", "guards_against": "The mining specimen belongs to the exemptions statement."}
+{"id": "pp_20", "question": "Faini ya SDL inalipwa na mwajiri au mfanyakazi?", "expect": "not_payer", "guards_against": "A PENALTY ask beside the payer words: the statement says nothing about fines."}
+{"id": "pp_21", "question": "Mwajiri analipa SDL?", "expect": "not_payer", "guards_against": "No payer-side cue (the asker names only the employer): it stays on the exemptions statement, which also says the employer pays. Recorded so the choice is visible, not accidental."}

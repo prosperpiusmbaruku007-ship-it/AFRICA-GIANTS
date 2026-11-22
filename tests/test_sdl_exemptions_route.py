@@ -124,7 +124,7 @@ def test_plant_the_widening_vetoes_removed_hijack_the_payer_and_where_to_pay_ask
             v = re.compile(v.pattern.replace(r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|", ""), v.flags)
         new.append((n, c, nd, v))
     monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
-    assert routing.fixed_statement_topic(_q("se_23")) == TOPIC and routing.fixed_statement_topic(_q("se_24")) == TOPIC and routing.fixed_statement_topic(_q("se_27")) == TOPIC
+    assert routing.fixed_statement_topic(_q("se_24")) == TOPIC and routing.fixed_statement_topic(_q("se_27")) == TOPIC   # se_23 (who pays) moved to the sdl_payer route on 2026-11-23; the shared payer-side veto still stops it here, so it is no longer a plant specimen
 
 
 def test_new_patterns_contain_no_control_characters():

@@ -2641,6 +2641,16 @@ _FS_ASK = re.compile(
     r"anastahili|ananistahili|astahili|nastahili|inadaiwa|how\s+(?:many|much|long)|what\s+is)")
 _FS_OTHER_LEVY = re.compile(
     r"(?<![a-z])(?:nssf|paye|sdl|wcf|zuio|makato|michango|makadirio|presumptive|kodi\s+ya\s+mapato)")
+# 2026-11-23: the PAYER / DEDUCTION ask of SDL, defined ONCE. The sdl_payer route needs it and the sdl_exemptions route vetoes it, so the two can never both match. NARROW (the first draft, bare mfanyakazi / mshahara, hijacked
+# ~30 questions about the compute base, disability, benefits in kind and headcount): a DEDUCTION word, or an explicit WHO-PAYS form. Raw strings (R39).
+_SDL_PAYER_ASK = re.compile(
+    r"(?<![a-z])[a-z]*kat(?:wa|wi|we)(?![a-z])|makato|deducted\s+from|correct\s+to\s+deduct|kuikata|payslip|"
+    r"nani\s+(?:analipa|anayelipa|anapaswa\s+kulipa|anatakiwa\s+kulipa|hulipa|anabeba|analipishwa)|anayelipa|mlipaji|mzigo\s+wa\s+kulipa|jukumu\s+la\s+kulipa|"
+    r"(?:inalipwa|hulipwa|inatakiwa\s+kulipwa|inapaswa\s+kulipwa|hailipwi|halipwi|inabeba|inabebwa|hubeba|hubebwa)\s+na\s+(?:mwajiri|mfanyakazi|mwajiriwa|wote)|"
+    r"(?:mwajiri|mfanyakazi)\s+(?:au|ama|na)\s+(?:mwajiri|mfanyakazi)|"
+    r"mfanyakazi\s+(?:analipa|analipishwa|alipe|hulipa|anaweza\s+kulipa|anapaswa\s+kulipa|anatakiwa\s+kulipa)|"
+    r"paid\s+by\s+the\s+(?:employee|employer)|employee\s+pay|employer\s+pay")
+
 _FS_TOPICS = (
     ("notice",
      re.compile(r"(?<![a-z])(?:notisi|notice)(?![a-z])"),
@@ -2741,6 +2751,18 @@ _FS_TOPICS = (
      re.compile(r"[0-9]|nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesabu|lini|deadline|tarehe|faini|adhabu|penalty|fomu|kujisajili|usajili|jinsi|nawezaje|"
                 r"epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|vipi|kuomba|(?<![a-z])omba|ombi|"
                 r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|"
+                + _SDL_PAYER_ASK.pattern + r"|"
+                r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
+    # ---- 2026-11-23 (founder): WHO PAYS SDL / IS IT DEDUCTED FROM THE EMPLOYEE. A CONSTANT (locked fact sdl_payer: the levy is payable BY THE EMPLOYER, nothing deductible from emoluments), so a model-free statement, not another guard
+    # (the live reply to "Mwajiri au mfanyakazi analipa SDL?" invented "Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa"). NARROW BY CONSTRUCTION (R17): SDL named, a PAYER-SIDE cue (the employee, a deduction word, "nani analipa"),
+    # and VETOES for every neighbour -- any digit (a payroll/headcount figure stays on the SDL engine), an exemption ask (its own statement), the household question, rate/threshold/deadline/penalty/form/where/how, another levy named.
+    # Mutually exclusive with sdl_exemptions by construction (that entry vetoes the payer-side cues). Probes both ways: eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl.
+    ("sdl_payer",
+     re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
+     _SDL_PAYER_ASK,
+     re.compile(r"[0-9]|msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
+                r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|lini|deadline|tarehe|muda|baada\s+ya|faini|adhabu|penalty|fomu|kujisajili|usajili|jinsi|nawezaje|vipi|"
+                r"wapi|namna|njia|akaunti|control|malipo\s+ya|kuomba|(?<![a-z])omba|ombi|epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|"
                 r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
@@ -2780,6 +2802,7 @@ _FS_TOPIC_ASK = {
     "business_licence_fee_and_validity": re.compile(r"lini|gani|ngapi|muda|(?<![a-z])je(?![a-z])|kiasi|how|when|\?"),
     "sector_minimum_wage": _SECTOR_WAGE_ASK,
     "sdl_exemptions": re.compile(r"\?|(?<![a-z])(?:gani|zipi|nani|je|inalipa|analipa|wanalipa|hutozwa|inatozwa|anatozwa|msamaha|hawalipi|haitozwi)(?![a-z])"),
+    "sdl_payer": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|inalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ninatozwa|natozwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
     "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
@@ -2788,8 +2811,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────

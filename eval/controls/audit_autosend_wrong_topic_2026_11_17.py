@@ -74,7 +74,7 @@ PROBES = [
     # ---- sdl / nssf / wcf
     ("sdl", "Nina wafanyakazi 12 na mishahara TZS 6,000,000, SDL ni kiasi gani?", {"sdl"}, "CONTROL"),
     ("sdl", "Nikiacha kulipa SDL kwa wafanyakazi wangu 15, nitatozwa faini kiasi gani?", {N, "sdl"}, "SDL penalty with a headcount"),
-    ("sdl", "SDL inalipwa na nani, mwajiri au mfanyakazi?", {N, "sdl"}, "incidence"),
+    ("sdl", "SDL inalipwa na nani, mwajiri au mfanyakazi?", {N, "sdl", "fixed_statement"}, "incidence -- since 2026-11-23 the model-free sdl_payer statement answers it (engine:fixed_statement, excluded from auto-send), which is the CORRECT answer; it was {N, sdl} while the model answered it"),
     ("nssf", "Mshahara wa mfanyakazi ni TZS 800,000 kwa mwezi, NSSF ni ngapi?", {"nssf"}, "CONTROL"),
     ("nssf", "Nitapata pensheni kiasi gani nikistaafu NSSF?", {N}, "benefits, not contributions"),
     ("nssf", "Nikichelewa kulipa NSSF kwa mfanyakazi mwenye mshahara 800,000, faini ni ngapi?", {N, "nssf"}, "penalty beside a wage"),
