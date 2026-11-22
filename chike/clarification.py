@@ -679,7 +679,7 @@ CONSTANT_RESTATEMENTS["sdl_scope_by_premises"] = (
     "Kama wafanyakazi wa nyumbani wanahesabiwa kwenye idadi ya 10, hakuna kinachotuonyesha kwa uhakika; thibitisha na TRA (tra.go.tz) kabla ya kuamua.")
 CONSTANT_RESTATEMENTS["nssf_contributions_age_60"] = (
     "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). "
-    "Sheria haisemi kwamba michango inaanza kukoma wala kuendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa michango kwa mfanyakazi anayepokea au anayestahili manufaa. "
+    "Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa michango kwa mfanyakazi anayepokea au anayestahili manufaa. "
     "Kwa mfanyakazi aliyefika 60 au anayepokea pensheni na bado ameajiriwa, thibitisha na NSSF (nssf.go.tz).")
 
 
