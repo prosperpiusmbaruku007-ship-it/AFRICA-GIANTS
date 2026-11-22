@@ -3,3 +3,5 @@ eval/fidelity/negated_premise_heldout/negated_premise_AUTHORED.jsonl text eol=lf
 eval/fidelity/negated_premise_heldout/FROZEN.json text eol=lf
 eval/fidelity/negated_premise_heldout/negated_premise_set2_AUTHORED.jsonl text eol=lf
 eval/fidelity/negated_premise_heldout/FROZEN_set2.json text eol=lf
+eval/refusal_gate/preliminary/gate2_prelim_2026_11_22.jsonl text eol=lf
+eval/refusal_gate/preliminary/FROZEN_PRELIM.json text eol=lf
