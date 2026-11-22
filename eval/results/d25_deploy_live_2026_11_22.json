@@ -1,0 +1,205 @@
+{
+ "identity": {
+  "build": "a78f5d0",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795365140.052,
+   "enter_started_ts": 1795365140.06,
+   "enter_done_ts": 1795365177.175,
+   "import_to_enter_s": 0.0,
+   "load_s": 37.1,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "SDL",
+   "q": "Naagiza vipuri vya magari kutoka Japan na kuviuza hapa Dar. Wafanyakazi wangu ni 12, je, natakiwa kulipa SDL na inaanzia wafanyakazi wangapi?",
+   "reply": "Ndiyo, unatakiwa kulipa SDL kwa sababu una wafanyakazi 12. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 12 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL",
+   "q": "Duka langu lina wafanyakazi 22 na huuza nguo zilizoagizwa kutoka China. Je, tunatakiwa kulipa SDL?",
+   "reply": "Ndiyo, duka linalouza bidhaa zilizosambazwa linaweza kuwa na wajibu wa SDL. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 22 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL",
+   "q": "SDL inaanzia wafanyakazi wangapi?",
+   "reply": "Mwajiri mwenye wafanyakazi 10 au zaidi ana wajibu wa kulipa SDL. Mwenye wafanyakazi chini ya 10 hana wajibu wa kulipa SDL.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-NEG",
+   "q": "Tuna wafanyakazi 6, je tunatakiwa kulipa SDL?",
+   "reply": "Hapana. SDL inahusu waajiri wenye wafanyakazi 10 AU ZAIDI. Una wafanyakazi 6 tu, chini ya kiwango cha 10, kwa hiyo SDL haikuhusu. Thibitisha na TRA (tra.go.tz).\nHapana. SDL haihusiki: una wafanyakazi 6 (chini ya 10). SDL inahusu waajiri wenye wafanyakazi 10 au zaidi.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PARTY",
+   "q": "Habari, kwa mfanyakazi mmoja mwajiri anatakiwa kuchangia asilimia ngapi ya mshahara wake NSSF?",
+   "reply": "Sehemu ya mwajiri ni asilimia 10 ya mshahara ghafi wa mfanyakazi. Mwajiri hulipa kutoka pesa zake mwenyewe — HAIKATWI kwenye mshahara wa mfanyakazi. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PARTY",
+   "q": "Kwa mfanyakazi mmoja, mwajiri anapaswa kuchangia kiasi gani NSSF?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "PARTY-NEG",
+   "q": "NSSF ya mfanyakazi ni asilimia ngapi?",
+   "reply": "NSSF ya mfanyakazi ni asilimia 10 ya mshahara wake. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "reply": "Ndiyo, kwa mujibu wa sheria, michango ya NSSF huendelea hadi umri wa miaka 60. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Kizingiti cha SDL ni wafanyakazi 4, sivyo?",
+   "reply": "Hapana. Kizingiti cha SDL ni wafanyakazi 10 AU ZAIDI — si 4. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?",
+   "reply": "Hapana — wafanyakazi wa nyumbani (domestic workers) hawamo katika kizingiti cha SDL. SDL inalenga waajiri wenye wafanyakazi 10+ katika MAENEO YA BIASHARA (commercial premises). Wafanyakazi wa nyumbani wanaofanya kazi nyumbani kwa familia moja (si ofisi ya biashara) hawaingii kwenye kizingiti cha SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24-NEG",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}

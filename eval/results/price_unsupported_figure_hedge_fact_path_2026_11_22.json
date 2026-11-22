@@ -1,0 +1,115 @@
+{
+ "gate": "c2143c0",
+ "rows": 400,
+ "fact_path_rows": 282,
+ "stats": {
+  "texts_with_figures": 126,
+  "figures": 329,
+  "unsupported_vs_question_and_index": 23,
+  "unsupported_after_one_step_derivation": 16,
+  "texts_that_would_be_touched": 8
+ },
+ "touched_by_judge_verdict": {
+  "correct": {
+   "touched": 5,
+   "of": 200
+  },
+  "wrong": {
+   "touched": 2,
+   "of": 60
+  },
+  "none": {
+   "touched": 0,
+   "of": 21
+  },
+  "undetermined": {
+   "touched": 1,
+   "of": 1
+  }
+ },
+ "recall_on_wrong_fact_path_replies": "2/60",
+ "wrong_fact_path_replies_not_touched": 58,
+ "touched": [
+  {
+   "id": "eval_024",
+   "judge": "correct",
+   "regex_pass": true,
+   "unsupported": [
+    "190 (money)",
+    "150 (money)",
+    "110 (money)"
+   ],
+   "reply": "Maana yake ni kipindi chochote cha miezi 12 mfululizo, si lazima kuanzia Januari. Kwa mfano: mauzo ya Julai 2025 hadi Juni 2026 = TZS 190M → sajili VAT. Mauzo ya Mei–Aprili = TZS 150M → bado chini ya kizingiti. Mauzo ya Septemba 2024–Agosti"
+  },
+  {
+   "id": "eval_085",
+   "judge": "wrong",
+   "regex_pass": true,
+   "unsupported": [
+    "264000 (money)"
+   ],
+   "reply": "Kushindwa kuwasilisha annual return kwa muda mrefu kunasababisha hatua za kisheria dhidi ya kampuni: faini ya TZS 22,000 kwa kila mwezi wa kuchelewa (TZS 264,000 kwa mwaka kwa kawaida), pamoja na riba. Hatimaye, kampuni inaweza kufutwa kwen"
+  },
+  {
+   "id": "eval_096",
+   "judge": "correct",
+   "regex_pass": true,
+   "unsupported": [
+    "2009 (money)"
+   ],
+   "reply": "Ndiyo, ni kosa la kisheria chini ya Sheria ya NSSF Na. 13 ya 2009. Mwajiri anayeshindwa kusajilisha wafanyakazi wake NSSF anakabiliwa na faini ya hadi TZS 5,000,000 au miezi 12 jela, pamoja na riba. Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_116",
+   "judge": "correct",
+   "regex_pass": true,
+   "unsupported": [
+    "33.5 (rate)"
+   ],
+   "reply": "Ongezeko la wastani la sekta binafsi ni asilimia 33.4 — si 33.5. Hakuna ongezeko la wastani la kitaifa la asilimia 33.5 katika GN 605A. Ongezeko linatofautiana sana kulingana na sekta: kutoka TZS 20,000 hadi TZS 195,000 kwa mwezi. Thibitish"
+  },
+  {
+   "id": "eval_119",
+   "judge": "undetermined",
+   "regex_pass": true,
+   "unsupported": [
+    "263000 (money)"
+   ],
+   "reply": "Kulingana na GN 605A, wastani wa mshahara wa chini wa sekta binafsi baada ya amri kuanza ni:\n\nTZS 175,000 (sekta ya kilimo ya kawaida)\nTZS 263,000 (maafisa walio na sifa)\nTZS 358,322 (madini ya kimataifa)\n\nHizi si viwango vipya vya 2025/26."
+  },
+  {
+   "id": "eval_229",
+   "judge": "wrong",
+   "regex_pass": false,
+   "unsupported": [
+    "1e+06 (money)",
+    "1.2e+06 (money)",
+    "1.2e+06 (money)",
+    "1.4e+06 (money)",
+    "1.4e+06 (money)",
+    "1.6e+06 (money)",
+    "1.6e+06 (money)"
+   ],
+   "reply": "Kuna ngazi 8 za mabano ya PAYE: asilimia 0 (hadi TZS 270,000), 8 (TZS 270,001–520,000), 20 (TZS 520,001–760,000), 25 (TZS 760,001–1,000,000), 30 (TZS 1,000,001–1,200,000), 35 (TZS 1,200,001–1,400,000), 40 (TZS 1,400,001–1,600,000), 45 (zaid"
+  },
+  {
+   "id": "eval_235",
+   "judge": "correct",
+   "regex_pass": true,
+   "unsupported": [
+    "120 (count)"
+   ],
+   "reply": "Kwa pensheni kamili ya NSSF, unahitaji: umri wa miaka 60 (miaka 55 kwa sekta ya uchimbaji madini), na angalau miezi 180 (miezi 120 kwa sekta ya uchimbaji madini). Thibitisha na NSSF (nssf.go.tz)."
+  },
+  {
+   "id": "eval_328",
+   "judge": "correct",
+   "regex_pass": true,
+   "unsupported": [
+    "9.76e+06 (money)"
+   ],
+   "reply": "Kwa bidhaa: 3% ya TZS 10,000,000 = TZS 300,000. Kwa huduma: 6% ya TZS 4,000,000 = TZS 240,000. Jumla ya VAT ya zuio ni TZS 540,000. Msambazaji anakusudia kupokea TZS 9,760,000 (bidhaa TZS 9,700,000 + huduma TZS 60,000) na kukupa risiti ya V"
+  }
+ ],
+ "note": "support set = question numbers + EVERY index row's numbers + one-step arithmetic: lenient, so unsupported counts are a LOWER bound; the preliminary Gate 2 set is burned and not used"
+}
