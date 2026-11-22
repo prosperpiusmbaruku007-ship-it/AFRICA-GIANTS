@@ -1,0 +1,214 @@
+{
+ "export_rows": 3936,
+ "matching_rows": 27,
+ "read": 27,
+ "unread_row_ids": [],
+ "asserting_something_unsupported_or_wrong": 13,
+ "bad_row_ids": [
+  257,
+  400,
+  740,
+  965,
+  1227,
+  1416,
+  1545,
+  1836,
+  2041,
+  2444,
+  2645,
+  3447,
+  3792
+ ],
+ "rows": [
+  {
+   "row": 173,
+   "verdict": "BORDERLINE",
+   "why": "NGO 'kwa kawaida zinalipa SDL'; only charitable organisations as the Act defines them are exempt, so 'NGO' alone is neither",
+   "q": "Shirika lisilo la faida (NGO, asasi ya kiraia) inalipa SDL?",
+   "a": "NGO na asasi za kiraia zenye wafanyakazi 10 au zaidi wanaolipwa mshahara kwa kawaida zinalipa SDL. Kuwa si la faida hakutoi msamaha wa kiotomatikilai. Thibitisha na TRA hali ya usajili wa SDL wa shirika lako."
+  },
+  {
+   "row": 257,
+   "verdict": "WRONG_PROCESS",
+   "why": "says an NGO must apply and obtain TRA confirmation; the exemption is by statutory category or Minister's Gazette notice",
+   "q": "NGO yetu ina wafanyakazi 15. Je, tunasamehewa SDL?",
+   "a": "Mashirika yasiyo ya faida (NGO) yanaweza kuwa na msamaha wa SDL — Skills Development Levy (Kodi ya Kukuza Ujuzi) — kulingana na hali ya usajili na shughuli zao. Msamaha si wa moja kwa moja — NGO lazima iombe na kupata ut"
+  },
+  {
+   "row": 400,
+   "verdict": "INVENTED",
+   "why": "a formal application to the Commissioner citing EPZ status as a ground; no such route in the Act or the held TRA pages",
+   "q": "Mwajiri anaweza kuomba msamaha wa SDL vipi?",
+   "a": "Mwajiri anayetaka msamaha wa SDL lazima aandike ombi rasmi kwa Kamishna wa TRA akitoa sababu za kisheria za msamaha, kama vile hadhi ya EPZ, hali ya shirika lisilo la faida, au msamaha mwingine uliowekwa kisheria. Ombi l"
+  },
+  {
+   "row": 473,
+   "verdict": "OK_HEDGED",
+   "why": "some farming may be exempt, confirm with TRA: consistent with s.19(1)(j)",
+   "q": "Mimi mkulima naajiri wafanyakazi wa msimu — SDL ya msimu na NSSF kwa wafanyakazi wa msimu zikoje?",
+   "a": "Kwa SDL, wajibu hutegemea kama unafikia wafanyakazi 10 au zaidi katika mwezi husika, na baadhi ya shughuli za kilimo zinaweza kuwa na msamaha — thibitisha hali yako na TRA. NSSF (20%) na WCF (0.5%) huanza tangu mfanyakaz"
+  },
+  {
+   "row": 740,
+   "verdict": "OVERBROAD",
+   "why": "'government agencies generally need not pay'; the Act exempts a body WHOLLY financed through Government subvention",
+   "q": "Taasisi ya serikali (government agency) inayolipa mishahara kwa wafanyakazi 50 — je, inalipa SDL?",
+   "a": "Mashirika ya serikali kwa ujumla hayalazimiki kulipa SDL — Skills Development Levy (Kodi ya Kukuza Ujuzi) — kama ilivyoelezwa na TRA. SDL inahusu hasa sekta binafsi. Hata hivyo, msamaha huu unatofautiana kwa aina ya taas"
+  },
+  {
+   "row": 797,
+   "verdict": "NOT_SDL",
+   "why": "VAT of SEZ companies, out of scope",
+   "q": "Kampuni ya SEZ Tanzania inasamehewa VAT kwenye manunuzi yake yote?",
+   "a": "Swali hili liko nje ya maarifa yangu ya sasa. Mimi ni Chike kutoka Africa Giants — ninashughulikia VAT, PAYE, SDL, NSSF, WCF, BRELA, na usajili wa biashara Tanzania Bara kwa biashara za kawaida. Msamaha wa VAT kwa kampun"
+  },
+  {
+   "row": 959,
+   "verdict": "OK_HEDGED",
+   "why": "charities may be exempt, confirm with TRA",
+   "q": "Shirika lisilo la kiserikali (NGO) linaloajiri wafanyakazi 15 — aina ya usajili wa BRELA, swali la msamaha wa SDL, na je NSSF ni lazima bila kujali SDL?",
+   "a": "NGO husajiliwa chini ya utaratibu tofauti (Msajili wa NGO), si kama kampuni ya BRELA. Kwa SDL, huanza kwa waajiri wenye wafanyakazi 10, lakini mashirika ya hisani yanaweza kuwa na msamaha — thibitisha hali yenu na TRA. N"
+  },
+  {
+   "row": 965,
+   "verdict": "UNSUPPORTED",
+   "why": "'EPZ companies usually have an SDL exemption': no held source says so",
+   "q": "Kampuni ya EPZ (Export Processing Zone) inalipa SDL?",
+   "a": "Makampuni ya EPZ kawaida yana msamaha au vivutio maalum vya kodi ikiwemo SDL. Hata hivyo, masharti mahususi yanategemea mikataba ya TIC/EPZ ya kila kampuni. Thibitisha na TRA au TIC ili kujua hali halisi ya kampuni yako."
+  },
+  {
+   "row": 1227,
+   "verdict": "UNSUPPORTED",
+   "why": "lists SDL exemption among SEZ benefits: no held source says so",
+   "q": "Faida za kufanya biashara ndani ya Eneo Maalum la Uchumi (Special Economic Zone — SEZ) Tanzania ni zipi?",
+   "a": "Biashara zilizoidhinishwa kwenye SEZ Tanzania zinapata faida kadhaa: msamaha wa kodi ya mapato ya kampuni kwa miaka 10 ya kwanza, msamaha wa VAT na ushuru wa forodha kwenye bidhaa za uingizaji zinazotumiwa kwenye uzalish"
+  },
+  {
+   "row": 1367,
+   "verdict": "NOT_SDL",
+   "why": "import duty, out of scope",
+   "q": "Ninaleta dawa za kilimo kutoka India — ushuru wa kuingiza ni asilimia ngapi?",
+   "a": "Swali hili liko nje ya maarifa yangu ya sasa. Ushuru wa dawa za kilimo (agricultural inputs import duty) unaweza kuwa na msamaha maalum au asilimia tofauti kulingana na aina — hii ni mada ya Customs and Excise nje ya wig"
+  },
+  {
+   "row": 1416,
+   "verdict": "UNSUPPORTED",
+   "why": "EPZ may obtain an SDL exemption by TRA approval: no held source says so",
+   "q": "Waajiri wa EPZ (Export Processing Zone) wanaweza kusamehewa SDL?",
+   "a": "Kampuni zilizosajiliwa rasmi kwenye EPZ Tanzania zinaweza kupata msamaha wa SDL kama sehemu ya msururu wa motisha za uwekezaji. Hata hivyo, msamaha huu si wa kiotomatiki — kampuni lazima ithibitishe hadhi yake ya EPZ na "
+  },
+  {
+   "row": 1545,
+   "verdict": "PARTLY_WRONG",
+   "why": "parastatals 'pay like any other employer unless specially exempted'; the Act exempts those wholly financed through subvention",
+   "q": "Kampuni inayomilikiwa na Serikali (parastatal) inalipa SDL?",
+   "a": "Kwa ujumla ndiyo — taasisi zinazomilikiwa na Serikali (parastatals) kama TANESCO, TPA, na NMB zinazolipa mishahara ya wafanyakazi zinatakiwa kulipa SDL kama mwajiri mwingine yeyote, isipokuwa zitakazokuwa zimepata msamah"
+  },
+  {
+   "row": 1836,
+   "verdict": "WRONG",
+   "why": "'private schools and colleges may be required to pay SDL if they have 10+ employees': registered educational institutions are exempt (s.19(1)(g)). THE LIVE WRONG REPLY ('Shule binafsi zenye wafanyakazi 10+ zinatozwa SDL') MIRRORS THIS ROW",
+   "q": "Shule au chuo binafsi chenye walimu 20 — je, kinalipa SDL?",
+   "a": "Shule na vyuo binafsi vinavyofanya kazi kama biashara binafsi vinaweza kutakiwa kulipa SDL — Skills Development Levy (Kodi ya Kukuza Ujuzi) — ikiwa vina wafanyakazi 10 au zaidi. Msamaha unategemea hali ya usajili (NGO, t"
+  },
+  {
+   "row": 2041,
+   "verdict": "UNSUPPORTED",
+   "why": "'EPZ companies have an SDL exemption': no held source says so",
+   "q": "Kampuni yetu iko katika Eneo la Usindikaji wa Uuzaji Nje (EPZ). Je, tunalipa SDL?",
+   "a": "Kampuni zilizo ndani ya Eneo la Usindikaji wa Uuzaji Nje (Export Processing Zone — EPZ) zina msamaha wa SDL — Skills Development Levy (Kodi ya Kukuza Ujuzi) — kulingana na faida za EPZ. Msamaha huu ni sehemu ya vivutio v"
+  },
+  {
+   "row": 2402,
+   "verdict": "NOT_EXEMPTION",
+   "why": "allowance in the SDL base",
+   "q": "Posho ya usafiri ninayowapa wafanyakazi — inahesabika kwenye msingi wa SDL na kwenye PAYE?",
+   "a": "Kwa SDL, malipo ya fedha ya wafanyakazi hujumuishwa katika jumla inayotozwa asilimia 3.5. Kwa PAYE, posho za fedha kwa kawaida ni sehemu ya mapato ya ajira yanayotozwa, isipokuwa zile zilizosamehewa mahsusi; kwa jinsi po"
+  },
+  {
+   "row": 2444,
+   "verdict": "PARTLY_WRONG",
+   "why": "lists SDL among the duties of a PRIVATE SCHOOL ('kama walimu >=10'); registered educational institutions are exempt",
+   "q": "Mwalimu wa shule ya msingi ya binafsi (private primary school) — shule inalipa kodi gani?",
+   "a": "Shule binafsi za msingi zinaweza kuwa na wajibu wa: (1) PAYE kwa walimu waliohiriwa; (2) NSSF, SDL (kama walimu ≥10), WCF; (3) Usajili wa biashara BRELA na leseni ya elimu kutoka Wizara ya Elimu; (4) VAT kama mauzo ya ad"
+  },
+  {
+   "row": 2445,
+   "verdict": "OK_HEDGED",
+   "why": "charities may be exempt, confirm with TRA",
+   "q": "Tunaanzisha shirika lisilo la kiserikali (NGO) tutakaloajiri wafanyakazi 10 — mpangilio wa usajili ukoje ikiwemo NSSF, OSHA na SDL?",
+   "a": "NGO husajiliwa chini ya utaratibu tofauti (Msajili wa NGO), si kupitia BRELA kama kampuni. Kwa wafanyakazi 10, NSSF (20%), WCF (0.5%) na OSHA huanza tangu mfanyakazi wa kwanza, na PAYE hukatwa kwa wanaopata zaidi ya TZS "
+  },
+  {
+   "row": 2645,
+   "verdict": "PARTLY_WRONG",
+   "why": "private school with 30 staff: 'ungeingia' (you would be in) with 'some education institutions may be exempt'; registered educational institutions are exempt",
+   "q": "Nina shule ya binafsi, wafanyakazi 30 — je kuna msamaha wa SDL, na PAYE, NSSF, OSHA zikoje?",
+   "a": "SDL kwa kawaida huanza kwa waajiri wenye wafanyakazi 10, na kwa wafanyakazi 30 ungeingia; hata hivyo baadhi ya taasisi za elimu zinaweza kuwa na msamaha — thibitisha hali ya shule yako na TRA. PAYE hukatwa kwa wafanyakaz"
+  },
+  {
+   "row": 2753,
+   "verdict": "NOT_EXEMPTION",
+   "why": "export profits are taxed; SDL named in passing",
+   "q": "Biashara ya mikoba ya ngozi inayouza nje ya nchi (export) haina kodi yoyote Tanzania — mauzo ya nje ni huru kabisa — je, ni sahihi?",
+   "a": "Si sahihi kabisa. Mauzo ya nje (exports) yanaweza kuwa huru au kuwa na kiwango cha sifuri cha VAT Tanzania, lakini FAIDA inayotokana na biashara ya mauzo ya nje bado inalipishwa kodi ya mapato ya biashara kwa asilimia 30"
+  },
+  {
+   "row": 2773,
+   "verdict": "NOT_SDL",
+   "why": "out-of-scope refusal",
+   "q": "Kampuni yangu ina faida ya mwaka 0 kwa sababu bado inajenga — je, inapaswa kulipa kodi yoyote?",
+   "a": "Swali hili liko nje ya maarifa yangu ya sasa. Kodi inayotumika kwa kampuni mpya bado katika hatua ya ujenzi (pre-revenue/construction phase) — kama AMT, provisional tax, au msamaha wa kipindi fulani — ni mada ya Income T"
+  },
+  {
+   "row": 2888,
+   "verdict": "NOT_SDL",
+   "why": "PAYE of EPZ, out-of-scope refusal",
+   "q": "PAYE ya wafanyakazi wanaoajiriwa na kampuni ya EPZ Tanzania — kuna msamaha wowote?",
+   "a": "Swali hili liko nje ya maarifa yangu ya sasa. Mimi ni Chike kutoka Africa Giants — ninashughulikia VAT, PAYE, SDL, NSSF, WCF, BRELA, na usajili wa biashara Tanzania Bara kwa biashara za kawaida. Matibabu ya PAYE kwa kamp"
+  },
+  {
+   "row": 2894,
+   "verdict": "OK_HEDGED",
+   "why": "government, embassies, religious and charitable bodies 'usually' exempt: consistent with the list, confirm with TRA",
+   "q": "Je kuna taasisi zinazosamehewa kulipa SDL?",
+   "a": "Ndiyo — taasisi za serikali, balozi za kigeni, pamoja na mashirika ya kidini na ya hisani kwa kawaida husamehewa SDL. Kwa uthibitisho wa msamaha wa taasisi yako mahsusi, wasiliana na TRA (tra.go.tz)."
+  },
+  {
+   "row": 3447,
+   "verdict": "UNSUPPORTED",
+   "why": "SEZ company 'may obtain an SDL exemption', confirmed by EPZA: no held source says so",
+   "q": "Kampuni ya uwekezaji wa nje iliyopo kwenye SEZ (Special Economic Zone) — je, inalipa SDL?",
+   "a": "Kampuni zilizo ndani ya Special Economic Zone (SEZ) — kama vile EPZ — zinaweza kupata msamaha wa SDL (Skills Development Levy — Kodi ya Kukuza Ujuzi) kama sehemu ya vivutio vya uwekezaji. Msamaha wa SEZ unathibitishwa na"
+  },
+  {
+   "row": 3563,
+   "verdict": "OK_HEDGED",
+   "why": "an honest out-of-scope hedge on SEZ",
+   "q": "Kampuni yangu ya SEZ inalipa SDL au la?",
+   "a": "Swali hili liko nje ya maarifa yangu ya sasa. Msamaha wa SDL na kodi nyingine kwa kampuni za SEZ (Special Economic Zone) Tanzania unategemea masharti maalum ya mikataba ya SEZ iliyoandikwa na EPZA — hii iko nje ya wigo w"
+  },
+  {
+   "row": 3622,
+   "verdict": "OK_HEDGED",
+   "why": "farm workers: some sectors may be exempt, confirm with TRA",
+   "q": "Nina wafanyakazi wa kilimo — je wanasamehewa SDL? PAYE je?",
+   "a": "SDL inahusu waajiri wenye wafanyakazi 10 au zaidi kwa asilimia 3.5 ya mishahara, na baadhi ya sekta zinaweza kuwa na misamaha — hali ya kilimo unatakiwa kuithibitisha na TRA. Kwa PAYE, mfanyakazi yeyote wa kilimo anayepa"
+  },
+  {
+   "row": 3792,
+   "verdict": "WRONG_PROCESS",
+   "why": "NGO exemption must be proven to TRA every year, 'no written TRA exemption means SDL remains': invented process; exemption is by statutory category or Gazette",
+   "q": "Shirika lisilo la faida (NGO au asasi ya kiraia) linalipa SDL?",
+   "a": "NGO na asasi za kiraia zilizosajiliwa rasmi zinaweza kupata msamaha wa SDL — lakini si kwa kiotomatiki. Mashirika lazima yathibitishe hadhi yao ya msamaha kwa TRA kila mwaka. Ikiwa NGO inaajiri wafanyakazi na inalipa mis"
+  },
+  {
+   "row": 3827,
+   "verdict": "NOT_EXEMPTION",
+   "why": "GN487A and tax liability; SDL named in passing",
+   "q": "GN 487A na PAYE — je, mgeni anayekiuka GN 487A bado analazimishwa kulipa PAYE?",
+   "a": "Ndiyo — hata biashara inayokiuka GN 487A bado ina wajibu wa kodi. Ukiukwaji wa GN 487A ni kosa la biashara/uhamiaji — hauathiri wajibu wa kodi wa TRA. TRA inaweza kuhitaji: (1) Malipo ya PAYE, VAT, SDL, na kodi nyingine "
+  }
+ ],
+ "note": "UNREAD rows are NOT clean; the pattern is a lower bound on the population (R21)"
+}

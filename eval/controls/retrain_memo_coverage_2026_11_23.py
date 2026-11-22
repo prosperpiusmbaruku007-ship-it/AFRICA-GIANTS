@@ -7,7 +7,7 @@ current code does with it:
   GUARD    -- the question still reaches the model, and a guard changed or replaced the stored reply (`guards` non-empty and the text differs)
   OPEN     -- the question still reaches the model and the stored reply comes out UNCHANGED: nothing covers it
   REFUSED  -- the OOC list refuses it
-POPULATION AND ITS LIMITS (R22): (1) the 26 MODEL rows of the c2143c0 gate adjudication (eval/results/gate_c2143c0_adjudication_2026_11_16.json) -- NOT 23: 23 is the size of that gate's false-pass QUEUE, a different population; (2) this week's
+POPULATION AND ITS LIMITS (R22): (1) the 26 MODEL rows of the c2143c0 gate adjudication (eval/results/gate_c2143c0_adjudication_2026_11_16.json) plus eval_029 (reclassified in, PROGRESS 4ab) = 27 replayed; of these, 23 were still on the model at 4ab (026 less 229/239/348/355 plus 029) and that is the founder's "23" -- an earlier draft of this docstring said 23 was the false-pass queue size, which is a coincidence of the same number (the queue was 23 too); (2) this week's
 model contradictions of a served rank-1..3 row, with the reply text taken VERBATIM from the committed live artifacts. A stub that returns the same stored reply for every model call is an APPROXIMATION on the compute path (the slot extractor's model
 fallback also receives it): the route and guard columns are what the code does; "OPEN" is an upper bound on what a guard would not touch, and it says nothing about whether the live model would repeat the reply (it is greedy, so it usually does, R24).
 The gate's replies came from a Kaggle host (R24b); this arm never compares text across hosts for correctness, only asks what today's code does with a text.
@@ -70,7 +70,8 @@ def main():
     adj = _load("gate_c2143c0_adjudication_2026_11_16.json")
     gate = {r["id"]: r for r in _load("gate_production_c2143c0.json")["rows"]}
     rows = []
-    for rid in adj["miss_classes"]["MODEL"]["ids"]:
+    # the 26 MODEL rows of the adjudication PLUS eval_029 (reclassified into MODEL by PROGRESS 4ab, which lists the 23 that remained after four were taken off the model: the founder's "23")
+    for rid in list(adj["miss_classes"]["MODEL"]["ids"]) + ["eval_029"]:
         g = gate[rid]
         stored = g.get("raw_generated") or g.get("generated") or ""
         out = replay(g["question_sw"], stored)

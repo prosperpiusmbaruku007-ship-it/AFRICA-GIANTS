@@ -2,7 +2,7 @@
  "harness": "eval/controls/retrain_memo_coverage_2026_11_23.py",
  "tally": {
   "GATE c2143c0 MODEL": {
-   "OPEN": 20,
+   "OPEN": 21,
    "ROUTE": 4,
    "GUARD": 2
   },
@@ -509,6 +509,25 @@
    "topic": null,
    "now": "Kwa hesabu kamili:\n\nSDL = 3.5% × TZS 4,800,000 = TZS 168,000\nNSSF = 20% × TZS 4,800,000 = TZS 960,000\nWCF = 0.5% × TZS 4,800,000 = TZS 24,000\n\nJumla ya malipo ya mwajiri = TZS 252,000\n\nFaida ya mwajiri = TZS 1,000,000 − madeni − NSSF − WCF = TZS 760,000\n\nSDL inakatwa kabla ya kutoa faida, si baadaye",
    "text_changed": true
+  },
+  {
+   "set": "GATE c2143c0 MODEL",
+   "id": "eval_029",
+   "q": "VAT ya pembejeo yangu inazidi VAT ya matokeo kwa mwezi huu — nifanye nini?",
+   "stored": "Wasilisha return ya VAT ya kawaida tarehe 20 ya mwezi unaofuata, ikionyesha tofauti ya VAT ya pembejeo (input VAT) > VAT ya matokeo (output VAT). Utapata marejesho ya VAT uliyolipa zaidi. Thibitisha na TRA (tra.go.tz).",
+   "why": {
+    "class": "GOLD",
+    "idx_checked": "?",
+    "note": "reply right but omits carry-forward; acceptable"
+   },
+   "cls": "OPEN",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "intent": "none",
+   "topic": null,
+   "now": "Wasilisha return ya VAT ya kawaida tarehe 20 ya mwezi unaofuata, ikionyesha tofauti ya VAT ya pembejeo (input VAT) > VAT ya matokeo (output VAT). Utapata marejesho ya VAT uliyolipa zaidi. Thibitisha na TRA (tra.go.tz).",
+   "text_changed": false
   },
   {
    "set": "THIS WEEK",

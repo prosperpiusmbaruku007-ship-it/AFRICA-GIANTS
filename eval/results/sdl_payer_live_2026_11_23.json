@@ -1,0 +1,299 @@
+{
+ "identity": {
+  "build": "a67462c",
+  "rag_rows_loaded": 218,
+  "rag_embeddings_shape": [
+   218,
+   768
+  ],
+  "rag_facts_text_sha256": "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50",
+  "config_rag_fact_count": 218,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795388347.033,
+   "enter_started_ts": 1795388347.047,
+   "enter_done_ts": 1795388396.345,
+   "import_to_enter_s": 0.0,
+   "load_s": 49.3,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "PAYER",
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "SDL inakatwa kwa mfanyakazi?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "Nani analipa SDL?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "Mimi ni mfanyakazi, je SDL itakatwa kwenye mshahara wangu?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "SDL haikatwi kwenye mshahara wa mfanyakazi, sivyo?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "Is SDL deducted from the employee or does the employer pay it?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL inahesabiwaje? Ni mwajiri au mfanyakazi analipa?",
+   "reply": "SDL inahesabiwaje kwa asilimia 3.5 ya jumla ya mishahara ghafi (gross payroll) ya wafanyakazi wote. Mlipaji ni MWAJIRI pekee — hakatiwi kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Mfanyakazi mwenye mshahara wa TZS 800,000 anakatwa SDL kiasi gani?",
+   "reply": "Ili nihesabu SDL, niambie idadi ya wafanyakazi walio kwenye orodha ya mishahara.",
+   "path": "engine:sdl:ask",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL inakatwa kwa mfanyakazi wa nyumbani?",
+   "reply": "Hapana — SDL haikatwi kwa mfanyakazi wa nyumbani. Ni kodi ya mwajiri pekee, si kwa ajili ya kulipia mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Faini ya SDL inalipwa na mwajiri au mfanyakazi?",
+   "reply": "Faini ya SDL inalipwa na MWAJIRI pekee -- si mfanyakazi. Ni adhabu ya mwajiri aliyeshindwa kuwasilisha kiasi kamili cha SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Mwajiri analipa SDL lini?",
+   "reply": "Mwajiri analipa SDL ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Mfanyakazi analipa SDL wapi?",
+   "reply": "Mfanyakazi anachangia SDL kupitia mwajiri wake. Ni jukumu la mwajiri kukata 3.5% ya mishahara ya mfanyakazi na kuwasilisha fedha hizo TRA ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL na NSSF zinakatwa kwa mfanyakazi?",
+   "reply": "Hapana — ni makato ya mwajiri pekee. Mfanyakazi hakatiwi chochote katika SDL au NSSF. Ni mwajiri ndiye anayebeba gharama hizo. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EXEMPT",
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EXEMPT",
+   "q": "Je, kampuni ya madini lazima ilipe SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RATE",
+   "q": "Kiwango cha SDL ni asilimia ngapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)\n\nNHIF haijafunikwa na Chike — thibitisha na NHIF.",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": []
+}
