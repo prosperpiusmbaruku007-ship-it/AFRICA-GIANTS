@@ -1,0 +1,393 @@
+{
+ "identity": {
+  "build": "7f70681",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795369992.607,
+   "enter_started_ts": 1795369992.623,
+   "enter_done_ts": 1795370019.499,
+   "import_to_enter_s": 0.0,
+   "load_s": 26.9,
+   "gpu": "NVIDIA L4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "OOC",
+   "q": "Excise duty ya bia na pombe ni asilimia ngapi?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC",
+   "q": "Vinywaji ninavyouza vina ushuru wa bidhaa, kiwango chake ni kipi?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC",
+   "q": "Makato ya NHIF kwa mshahara wa TZS 800,000 ni kiasi gani?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC",
+   "q": "Mkuu, kwa wafanyakazi wangu NSSF nachangia kama kawaida, ila NHIF ya mwajiri na mfanyakazi inakatwa asilimia ngapi?",
+   "reply": "Samahani, swali hili liko nje ya mada yangu. Ninasaidia tu maswali ya biashara na kodi Tanzania Bara — BRELA, TRA, NSSF, OSHA, SDL, PAYE, VAT, EFD, WCF, na GN487A. Kwa swali hili wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyehitimu.",
+   "path": "refusal",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC-NEG",
+   "q": "NSSF na NHIF — ni mifumo tofauti au moja?",
+   "reply": "Ni mifumo MIWILI TOFAUTI kabisa. NSSF: hutoa pensheni na manufaa ya muda mrefu (asilimia 10 mwajiri + asilimia 10 mfanyakazi). NHIF: hutoa bima ya afya (asilimia 0.5 mwajiri + asilimia 10 mfanyakazi). Ni mifumo miwili tofauti yenye malengo tofauti. Thibitisha na nssf.go.tz na nhif.or.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC-NEG",
+   "q": "Mfanyakazi wangu ana bima ya afya ninayomlipia, je malipo hayo yanaingia kwenye PAYE yake?",
+   "reply": "Malipo ya bima ya afya yanayolipwa na mwajiri kwa niaba ya mfanyakazi huwa si mapato ya ajira na hayakatiwi PAYE. Lakini ikiwa bima hiyo inalipiwa kwa njia nyingine (kama posho ya fedha), basi inaweza kuwa mapato ya ajira. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC-NEG",
+   "q": "Makato ya NSSF ya mfanyakazi ni asilimia ngapi ya mshahara?",
+   "reply": "Makato ya NSSF ya mfanyakazi ni asilimia 10 ya mshahara wake. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "OOC-NEG",
+   "q": "Ninauza bidhaa za duka, kiwango cha VAT ni asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha VAT ni asilimia 18. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT",
+   "q": "Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029.",
+   "reply": "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT",
+   "q": "Kiwango cha SDL itakuwa ngapi mwaka 2027?",
+   "reply": "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT",
+   "q": "What will the VAT rate be in 2028?",
+   "reply": "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT-NEG",
+   "q": "Kiwango cha VAT ni asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha VAT ni asilimia 18. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT-NEG",
+   "q": "Nitasajiliwa VAT 2028 ikiwa mauzo ni 200M, kiwango ni kipi?",
+   "reply": "Kiwango cha VAT ni asilimia 18% kulingana na sheria. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FUT-NEG",
+   "q": "Kiwango cha kodi ya mapato ya kampuni mwaka 2025 kilikuwa asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha kodi ya mapato ya kampuni Tanzania ni asilimia 30 ya faida inayotozwa kodi. Kampuni zilizoorodheshwa DSE zenye angalau asilimia 25 ya hisa kwa umma hulipa asilimia 25 kwa miaka 3 tangu kuorodheshwa. Hii ni kiwango — SI hesabu ya TZS kutoka mauzo: faida (si mauzo) ndiyo msingi wa kodi hii, na faida haiwezi kupatikana kutoka mauzo peke yake.",
+   "path": "engine:corporate_tax",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE",
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja kwa mwezi: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako. Chanzo: GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE",
+   "q": "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja kwa mwezi: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako. Chanzo: GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE",
+   "q": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+   "reply": "Sekta ya ulinzi binafsi ina viwango zaidi ya kimoja kwa mwezi: kampuni ya kimataifa TZS 292,000; kampuni ya ndani TZS 197,000. Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako. Chanzo: GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE-FIG",
+   "q": "Dada wa kazi anayelipwa 150000 kwa mwezi, je ni halali?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja, kuanzia TZS 80,000 hadi TZS 328,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kulinganisha TZS 150,000 kwa mwezi bila kujua aina ya kazi hasa. Viwango ni: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:minimum_wage",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE-FIG",
+   "q": "Mfanyakazi wangu wa nyumbani nampa 90000 kwa mwezi, ni sawa?",
+   "reply": "Sekta ya kazi za nyumbani ina viwango zaidi ya kimoja, kuanzia TZS 80,000 hadi TZS 328,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kulinganisha TZS 90,000 kwa mwezi bila kujua aina ya kazi hasa. Viwango ni: mwajiri ni mwanadiplomasia au mfanyabiashara mkubwa TZS 328,000; mwajiri ni afisa mwenye stahili TZS 265,000; haishi nyumbani kwa mwajiri TZS 160,000; kazi nyingine za nyumbani TZS 80,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:minimum_wage",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE-NEG",
+   "q": "Wafanyakazi wa nyumbani (domestic workers) hawamo kwenye GN 605A — ni kweli?",
+   "reply": "Hapana, si kweli. Wafanyakazi wa nyumbani wamejumuishwa katika GN 605A. Hakuna msamaha kwa wafanyakazi wa nyumbani. Wote wanastahili kiwango kilichowekwa kulingana na sekta na subsekta yao. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE-NEG",
+   "q": "GN 605A inahusu wafanyakazi wa sekta ya kilimo?",
+   "reply": "Kilimo kimejumuisha katika GN 605A — lakini kina kiwango chake maalum kinachotofautiana na viwanda, ofisi, maduka, na sekta nyingine. Kwa hiyo mkulima/mfanyabiashara wa kilimo ana kiwango chake maalum katika amri hii. Thibitisha kiwango halisi cha sekta yako na PKF Eastern Africa au TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "WAGE-NEG",
+   "q": "mteja amenunua kwa shilingi 2000 tu nampa risiti ya mashine au inaruhusiwa kuandika kwa mkono",
+   "reply": "Kwa mujibu wa sheria, unatakiwa kutoa risiti ya mashine (EFD receipt) kwa kila mauzo bila kujali kiasi. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:minimum_wage": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Namlipa mlinzi wangu 200000 kwa mwezi, je ni halali?",
+   "reply": "Sekta ya ulinzi binafsi ina viwango zaidi ya kimoja, kuanzia TZS 197,000 hadi TZS 292,000 kwa mwezi (GN 605A, Jedwali la Pili, inayotumika tangu 1 Januari 2026), hivyo siwezi kulinganisha TZS 200,000 kwa mwezi bila kujua aina ya kazi hasa. Viwango ni: kampuni ya kimataifa TZS 292,000; kampuni ya ndani TZS 197,000. Niambie ni kipi kinakuhusu nami nitalinganisha. Thibitisha na Ofisi ya Kazi (kazi.go.tz).",
+   "path": "engine:minimum_wage",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}
