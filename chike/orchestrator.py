@@ -867,6 +867,8 @@ class Orchestrator:
         topic = routing.fixed_statement_topic(sq.text)
         if topic is None:
             return SubAnswer(sub_question=sq, text=clarification.FIXED_STATEMENT_NO_TOPIC, needs_clarification=True)
+        if topic == "sector_minimum_wage":                # the one DYNAMIC topic: the body is built from the sector the question names (never from a static table)
+            return self._deterministic_answer(sq, rules_engine.sector_wage_statement(sq.text))
         return self._deterministic_answer(sq, rules_engine.fixed_statement(topic))
 
     def _answer_rent_wht(self, sq: SubQuestion) -> SubAnswer:
@@ -1178,7 +1180,7 @@ class Orchestrator:
             # The reply is still a model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
             # The WHOLE body is replaced, so the replacement answers EVERY fixed-statement topic the question names (a two-part
             # question must not lose its second limb), each as its own whole statement.
-            topics = routing.fixed_statement_topics(sub.sub_question.text)
+            topics = [t for t in routing.fixed_statement_topics(sub.sub_question.text) if t != "sector_minimum_wage"]   # a dynamic, route-only topic has no static statement to substitute
             return dataclasses.replace(
                 sub, text="\n\n".join(rules_engine.fixed_statement(t).working for t in topics),
                 raw_text=sub.text, needs_clarification=False, guard="replaced")

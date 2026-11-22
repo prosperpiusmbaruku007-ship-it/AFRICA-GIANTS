@@ -1,0 +1,47 @@
+{
+ "swept": 8693,
+ "changed": [
+  {
+   "q": "Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029.",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Kiwango cha VAT kitakuwa asilimia ngapi 2028?",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Kiwango cha SDL itakuwa ngapi mwaka 2027?",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "sdl",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Mwaka ujao kiwango cha VAT kitakuwa kipi?",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Naomba kujua viwango vya kodi vitakavyotumika mwaka 2030",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "What will the VAT rate be in 2028?",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "none",
+   "after": "fixed_statement"
+  },
+  {
+   "q": "Kiwango cha NSSF kitakuwa asilimia ngapi mwaka ujao?",
+   "src": "eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl",
+   "before": "nssf",
+   "after": "fixed_statement"
+  }
+ ]
+}

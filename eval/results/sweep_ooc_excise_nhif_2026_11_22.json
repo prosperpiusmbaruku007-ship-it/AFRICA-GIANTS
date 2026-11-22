@@ -1,0 +1,304 @@
+{
+ "n_questions": 8662,
+ "candidates": {
+  "excise duty": {
+   "n": 11,
+   "hits": [
+    {
+     "q": "Gari la zamani linalouza Tanzania — ushuru wa biashara (excise duty) ni ngapi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl"
+    },
+    {
+     "q": "Sheria ya Tanzania inasema nini kuhusu ushuru wa kupindukia (excise duty) kwa vinywaji baridi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl"
+    },
+    {
+     "q": "Kampuni ya bima inalipa ushuru gani Tanzania — excise duty au kitu kingine?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Excise duty kwa bia na pombe Tanzania ni asilimia ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Je, Excise Duty ya 10% inahusu matangazo yote ya biashara au kuna mahususi tu?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Kama nitaleta gari lenye miaka 9 sokoni, nitawekwa kodi ya excise duty ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Watu wangu wanapanga kutangaza kwa redio, TV na magazeti kuhusu betting na michezo mingine. Hii kodi ya excise duty inahusu tangazo zao kwa asilimia ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Ushuru wa bidhaa (excise duty) kwenye bidhaa ninazozalisha hapa nchini ni kiasi gani?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "Nina kiwanda kidogo cha vinywaji, kuna excise duty kwenye bidhaa tunazotengeneza? Na kiwango chake kinapatikanaje?",
+     "src": "results/gate2_prelim_live_2026_11_22.json"
+    },
+    {
+     "q": "A used car being sold in Tanzania — what is the applicable excise duty?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    },
+    {
+     "q": "What does Tanzanian law say about excise duty on soft drinks?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    }
+   ]
+  },
+  "ushuru wa bidhaa": {
+   "n": 2,
+   "hits": [
+    {
+     "q": "Ushuru wa bidhaa (excise duty) kwenye bidhaa ninazozalisha hapa nchini ni kiasi gani?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "vinywaji ninavyouza vina ushuru wa bidhaa, kiwango chake ni kipi?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    }
+   ]
+  },
+  "ushuru wa bizaa": {
+   "n": 0,
+   "hits": []
+  },
+  "makato ya nhif": {
+   "n": 0,
+   "hits": []
+  },
+  "nhif ya wafanyakazi": {
+   "n": 0,
+   "hits": []
+  },
+  "nhif ya mwajiri": {
+   "n": 1,
+   "hits": [
+    {
+     "q": "Mkuu, kwa wafanyakazi wangu NSSF nachangia kama kawaida, ila NHIF ya mwajiri na mfanyakazi inakatwa asilimia ngapi?",
+     "src": "results/gate2_prelim_live_2026_11_22.json"
+    }
+   ]
+  },
+  "nhif ya waajiriwa": {
+   "n": 0,
+   "hits": []
+  }
+ },
+ "stems": {
+  "excise": {
+   "n": 11,
+   "hits": [
+    {
+     "q": "Gari la zamani linalouza Tanzania — ushuru wa biashara (excise duty) ni ngapi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl"
+    },
+    {
+     "q": "Sheria ya Tanzania inasema nini kuhusu ushuru wa kupindukia (excise duty) kwa vinywaji baridi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl"
+    },
+    {
+     "q": "Kampuni ya bima inalipa ushuru gani Tanzania — excise duty au kitu kingine?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Excise duty kwa bia na pombe Tanzania ni asilimia ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Je, Excise Duty ya 10% inahusu matangazo yote ya biashara au kuna mahususi tu?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Kama nitaleta gari lenye miaka 9 sokoni, nitawekwa kodi ya excise duty ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Watu wangu wanapanga kutangaza kwa redio, TV na magazeti kuhusu betting na michezo mingine. Hii kodi ya excise duty inahusu tangazo zao kwa asilimia ngapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Ushuru wa bidhaa (excise duty) kwenye bidhaa ninazozalisha hapa nchini ni kiasi gani?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "Nina kiwanda kidogo cha vinywaji, kuna excise duty kwenye bidhaa tunazotengeneza? Na kiwango chake kinapatikanaje?",
+     "src": "results/gate2_prelim_live_2026_11_22.json"
+    },
+    {
+     "q": "A used car being sold in Tanzania — what is the applicable excise duty?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    },
+    {
+     "q": "What does Tanzanian law say about excise duty on soft drinks?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    }
+   ]
+  },
+  "ushuru wa bi": {
+   "n": 3,
+   "hits": [
+    {
+     "q": "Gari la zamani linalouza Tanzania — ushuru wa biashara (excise duty) ni ngapi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl"
+    },
+    {
+     "q": "Ushuru wa bidhaa (excise duty) kwenye bidhaa ninazozalisha hapa nchini ni kiasi gani?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "vinywaji ninavyouza vina ushuru wa bidhaa, kiwango chake ni kipi?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    }
+   ]
+  },
+  "nhif": {
+   "n": 3,
+   "hits": [
+    {
+     "q": "NSSF na NHIF — ni mifumo tofauti au moja?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl"
+    },
+    {
+     "q": "Mkuu, kwa wafanyakazi wangu NSSF nachangia kama kawaida, ila NHIF ya mwajiri na mfanyakazi inakatwa asilimia ngapi?",
+     "src": "results/gate2_prelim_live_2026_11_22.json"
+    },
+    {
+     "q": "NSSF and NHIF — are they different or the same scheme?",
+     "src": "results/sweep_vat_cues_2026_11_12.json"
+    }
+   ]
+  },
+  "bima ya afya": {
+   "n": 6,
+   "hits": [
+    {
+     "q": "Faida ya bima ya afya ya mfanyakazi inayolipwa na mwajiri haitozi PAYE kamwe — je, ni kweli?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+    },
+    {
+     "q": "NSSF Tanzania inashughulikia bima ya afya (health insurance) — NSSF italipa gharama za hospitali za mwajiriwa — je, ni sahihi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl"
+    },
+    {
+     "q": "Nalipa premium ya bima ya afya kwa wafanyakazi wangu — je, inaweza kukatwa kama gharama ya kodi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Bima ya afya (health insurance) inaathiriwa na insurance premium levy kama bima ya gari?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl"
+    },
+    {
+     "q": "Bima ya afya ya wafanyakazi inayolipwa na mwajiri — inahusika kwenye SDL base au la?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl"
+    },
+    {
+     "q": "Malipo ya bima ya afya ninayowalipia wafanyakazi ni marupurupu yanayotozwa PAYE?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    }
+   ]
+  },
+  "bima za afya": {
+   "n": 1,
+   "hits": [
+    {
+     "q": "Premiums za bima za afya za wafanyakazi zinastahili msamaha wa insurance premium levy?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+    }
+   ]
+  },
+  "afya": {
+   "n": 21,
+   "hits": [
+    {
+     "q": "Ni wafanyakazi wa aina gani wanahitaji uchunguzi wa afya wa mara kwa mara?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+    },
+    {
+     "q": "Faida ya bima ya afya ya mfanyakazi inayolipwa na mwajiri haitozi PAYE kamwe — je, ni kweli?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl"
+    },
+    {
+     "q": "OSHA Tanzania inasimamia usalama wa mahali pa kazi tu — si afya ya wafanyakazi — je, ni sahihi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl"
+    },
+    {
+     "q": "NSSF Tanzania inashughulikia bima ya afya (health insurance) — NSSF italipa gharama za hospitali za mwajiriwa — je, ni sahihi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl"
+    },
+    {
+     "q": "Daktari anasema: 'Huduma za afya zimesamehewa VAT — kwa hivyo sijasajilishwa.' Je, hoja hii ni sahihi?",
+     "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl"
+    },
+    {
+     "q": "Nalipa premium ya bima ya afya kwa wafanyakazi wangu — je, inaweza kukatwa kama gharama ya kodi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl"
+    },
+    {
+     "q": "Bima ya afya (health insurance) inaathiriwa na insurance premium levy kama bima ya gari?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl"
+    },
+    {
+     "q": "Bima ya afya ya wafanyakazi inayolipwa na mwajiri — inahusika kwenye SDL base au la?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl"
+    },
+    {
+     "q": "Premiums za bima za afya za wafanyakazi zinastahili msamaha wa insurance premium levy?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl"
+    },
+    {
+     "q": "Unamaanisha nini hasa kwa tathmini ya hatari za usalama na afya?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Je, bado inachukua siku 28 kupata Leseni ya Usalama na Afya kazini kama ilivyokuwa zamani?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Wakati mwingine ilichukua siku ngapi kupata leseni ya afya na usalama kazini?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Leseni ya Kukidhi Matakwa ya Sheria ya Usalama na Afya mahali pa kazi inaitwaje rasmi kwa Kiingereza au kifupi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Hii Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003 inahusu nini hasa kwenye biashara ndogo kama yangu?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Kuna hasara gani nikishindwa kutimiza masharti ya Sheria Na. 5 ya Afya na Usalama Mahali pa Kazi ya mwaka 2003?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Nina biashara ndogo na nimeambiwa lazima nitimize masharti ya Sheria ya Afya na Usalama ya mwaka 2003. Je, Sheria hii inahusu wafanyakazi wangapi ili niweze kuitumia?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Je, ni faini gani inaweza kutozwa endapo biashara yangu itashindwa kutekeleza mahitaji ya afya na usalama kazini kama inavyoelekezwa na Sheria ya Afya na Usalama ya mwaka 2003?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Katika Sheria ya Afya na Usalama ya mwaka 2003, neno 'majukumu ya mwajiri' linamaanisha nini hasa kwa upande wa biashara yangu?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl"
+    },
+    {
+     "q": "Nahitaji kamati ya usalama na afya kazini kwa wafanyakazi wangapi?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "Sheria gani inasimamia usalama na afya kazini Tanzania?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    },
+    {
+     "q": "Malipo ya bima ya afya ninayowalipia wafanyakazi ni marupurupu yanayotozwa PAYE?",
+     "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl"
+    }
+   ]
+  }
+ }
+}

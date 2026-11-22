@@ -1,0 +1,269 @@
+{
+ "swept": 8704,
+ "changed": [
+  {
+   "q": "Kima cha chini cha mshahara kwa sekta ya ulinzi ni TZS ngapi",
+   "src": "eval/refusal_gate/concord_1pl_in_scope_020.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "nina wafanyakazi wa shamba je kima cha chini cha mshahara ni kiasi gani",
+   "src": "eval/refusal_gate/ooc_adversarial_in_scope_015.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "src": "eval/refusal_gate/sector_wage_statement_probes_2026_11_22.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+   "src": "eval/refusal_gate/sector_wage_statement_probes_2026_11_22.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+   "src": "eval/refusal_gate/sector_wage_statement_probes_2026_11_22.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+   "src": "eval/refusal_gate/sector_wage_statement_probes_2026_11_22.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kwa mwajiri wa hoteli na utalii, mshahara wa chini ni Shilingi ngapi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Mfanyakazi wa viwanda (manufacturing) ana mshahara wa chini wa kiasi gani?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Sekta yangu ya kilimo (crop/animal) — mshahara wa chini ni ngapi kulingana na GN605A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Hoteli ya nyota 5 — mshahara wa chini kwa wafanyakazi ni ngapi kulingana na GN605A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Sekta ya benki za biashara — mshahara wa chini kwa GN605A ni ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Je, kampuni za ujenzi zinatumia kiwango gani cha mshahara wa chini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Viwango vya sekta ya uchimbaji madini (mining) ni ngapi kwa GN605A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kama biashara yangu ipo sekta ya viwanda (industrial) — mshahara wa chini ni ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara kwa mchimbaji madini ni kiasi gani?",
+   "src": "results/d24_deploy_live_2026_11_22.json",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Mgodi wangu mdogo wa dhahabu, kima cha chini cha mshahara kwa wachimbaji ni shilingi ngapi kwa mwezi?",
+   "src": "results/d24_deploy_live_2026_11_22.json",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Kima cha chini cha mshahara sekta ya nishati ni kiasi gani?",
+   "src": "results/d24_deploy_live_2026_11_22.json",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  },
+  {
+   "q": "Nampa mfanyakazi wangu TZS 160,000 kwa mwezi, hii inaruhusiwa?",
+   "src": "results/pipeline_v15_live_byte_identity_d54ec17.json",
+   "intent": [
+    "none",
+    "minimum_wage"
+   ],
+   "topics": [
+    [],
+    []
+   ]
+  },
+  {
+   "q": "For a hotel and tourism employer, what is the minimum wage?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "intent": [
+    "none",
+    "fixed_statement"
+   ],
+   "topics": [
+    [],
+    [
+     "sector_minimum_wage"
+    ]
+   ]
+  }
+ ]
+}

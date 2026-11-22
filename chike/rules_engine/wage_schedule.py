@@ -206,7 +206,7 @@ _CUES = [
      r'yaya|mlezi wa watoto|'
      # 2026-11-13: the commonest way to ask ("mfanyakazi wa nyumbani", "kazi za nyumbani") was missing; GN 605A item 4 is literally
      # titled "Domestic Work or Services". Still SECTOR-ONLY: it lists the four rates and never picks one.
-     r'mfanyakazi wa nyumbani|wafanyakazi wa nyumbani|msaidizi wa nyumbani|kazi za nyumbani)\b', 4, None),
+     r'mfanyakazi (?:wangu |wetu )?wa nyumbani|wafanyakazi (?:wangu |wetu )?wa nyumbani|msaidizi wa nyumbani|kazi za nyumbani)\b', 4, None),   # 2026-11-22: a possessive between the noun and `wa nyumbani` broke the cue
     # sector 5 — hotel and hospitality
     (r'\b(nyota (?:nne|tano)|four star|five star)\b', 5, 'a'),
     (r'\b(nyota tatu|three star)\b', 5, 'b'),

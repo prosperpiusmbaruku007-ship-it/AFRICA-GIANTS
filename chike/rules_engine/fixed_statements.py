@@ -51,6 +51,9 @@ LICENCE_FEE_VALIDITY = "business_licence_fee_and_validity"
 # 2026-11-18 (founder, after the batch-3 live check): the COMPANY annual-return deadline. The row was at rank 1 and the model still stated "siku 42" / "mwaka wa kalenda unaofuatia" (4az), a different wrong value from the
 # ones D-FIDELITY-20 catches, so only a model-free statement reaches it. Same discipline, same exclusion from auto-send.
 ANNUAL_RETURN = "brela_annual_return_deadline"
+# 2026-11-22 (founder, preliminary Gate 2 #20): a rate asked for a FUTURE year ("kiwango rasmi cha VAT kitakachotumika 2028/2029"). The honest answer is two limbs held together: the rate of a year whose Finance Act has not been passed is UNKNOWN,
+# and the CURRENT rates we hold, each with the instrument it rests on. Same discipline as the rest of this route: model-free, whole, excluded from auto-send. The figures are locked facts vat_standard_rate (18%) and sdl_rate (3.5%, FA2023).
+FUTURE_YEAR_RATE = "future_year_rate"
 
 
 def _paye_bands_text() -> str:
@@ -184,10 +187,19 @@ STATEMENTS = {
         "BOTH LIMBS of a two-part question, whole: the fee limb from locked fact business_licence_fee_national_schedule_local_collection (its clause 'leseni hutolewa na kukusanywa na halmashauri' is DROPPED here because the validity limb says Category A is "
         "issued by BRELA and the two must not contradict inside one answer) and the validity statement of business_licence_validity (Cap.101 R.E.2023 s.7(1)-(2); BRELA Newsletter No.10, portal tier). No figure of a FEE is stated: the Schedule varies by trade and area",
     ),
+    FUTURE_YEAR_RATE: (
+        "vat_standard_rate",
+        "Kiwango cha kodi cha mwaka ujao au mwaka wa baadaye hakijulikani bado: viwango hubadilishwa tu na Sheria ya Fedha ya kila mwaka, ambayo hupitishwa Juni na kuanza kutumika 1 Julai, kwa hiyo siwezi kukupa kiwango rasmi cha mwaka ambao "
+        "Sheria yake haijatoka. Viwango vya sasa tulivyo navyo: VAT ya kawaida ni asilimia 18 (Sheria ya VAT, haijabadilika tangu 2015); SDL ni asilimia 3.5 ya mishahara ghafi (tangu 1 Julai 2023, Sheria ya Fedha 2023; ilikuwa asilimia 4). "
+        "Kwa bajeti, tumia viwango hivi vya sasa kama makadirio tu, na uthibitishe na TRA (tra.go.tz) Sheria ya Fedha ya mwaka husika itakapotoka.",
+        "Locked facts vat_standard_rate (18% general rate, VAT Act Cap.148, 'unchanged since 2015'; the 16% B2C e-payment carve-out is deliberately NOT stated here: it is CONFIRMED-SECONDARY) and sdl_rate (3.5% from 1 Jul 2023, Finance Act 2023, was 4%). "
+        "The Finance Act is passed in June and commences 1 July: Finance Act 2025 commenced 1 Jul 2025 (locked facts) and the rates of a year whose Act has not been passed are unknowable, which is the point. 'Current' is as held in the locked facts, not a "
+        "claim that Finance Act 2026 was read for these two rates. Founding specimen: preliminary Gate 2 #20 (gp_20), 'kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029'",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE})
 
 
 def fixed_statement(topic) -> ComputationResult:

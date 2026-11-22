@@ -154,3 +154,36 @@ def sector_rates_statement(sector_no, paid, period="monthly") -> ComputationResu
                 "candidate_low": lo, "candidate_high": hi},
         note="sector identified, sub-sector unresolved — rates stated, no verdict",
     )
+
+
+def sector_wage_statement(text) -> ComputationResult:
+    """THE NO-FIGURE ASK: "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?" (2026-11-22, preliminary Gate 2). Every monthly rate of the asked sector, from the transcribed Schedule, no model.
+
+    WHY A STATEMENT AND NOT A CLARIFICATION. There was no route at all: the two no-figure phrasings fell to the model, which answered "karibu TZS 80,000" -- the LOWEST of the four domestic-work rates, stated as if it were the
+    rate. The four rates turn on who the employer is and whether the worker lives in the household, so the answer is the whole table with none selected -- the same discipline as the other fixed statements. Where the question
+    names a work that settles the row, that row is stated first AND the sector's others follow, so a reader who is in a different row is not left holding the wrong figure.
+
+    Never auto-sent (it travels as the `fixed_statement` route, which handler_core excludes). Raises on a question whose sector does not resolve: a statement route with nothing to state must not guess (R31)."""
+    outcome, value = ws.resolve(text)
+    if outcome not in (ws.SECTOR, ws.ROW):
+        raise ValueError("no sector resolves from the question")
+    sector_no, sub = (value, None) if outcome == ws.SECTOR else value
+    rows = ws.BY_SECTOR[sector_no]
+    name = ws.SECTOR_NAMES_SW[sector_no]
+    tail = f"Chanzo: {_GAZETTE}, {_IN_FORCE}. Viwango vya kwa saa, siku na wiki pia vimo kwenye Agizo hilo. {_CONFIRM}"
+    if len(rows) == 1:
+        working = f"Kima cha chini cha mshahara kwa sekta ya {name} ni {tzs(ws.rate(rows[0]))} kwa mwezi. {tail}"
+    else:
+        options = "; ".join(f"{ws.SUB_LABELS_SW.get((r[0], r[1]), r[2])} {tzs(ws.rate(r))}" for r in rows)
+        lead = ""
+        advice = " Kiwango kinachokuhusu kinategemea aina ya kazi, kwa hiyo usichukue kimoja bila kujua kipi ni chako."
+        if sub is not None and (sector_no, sub) in ws.BY_ROW:
+            row = ws.BY_ROW[(sector_no, sub)]
+            lead = f"Kwa kazi uliyotaja ({ws.SUB_LABELS_SW.get((row[0], row[1]), row[2])}) kiwango ni {tzs(ws.rate(row))} kwa mwezi. "
+            advice = ""                                  # a row IS settled: the "do not pick one" caution would contradict the sentence above it
+        working = f"{lead}Sekta ya {name} ina viwango zaidi ya kimoja kwa mwezi: {options}.{advice} {tail}"
+    return ComputationResult(
+        computation="fixed_statement", applicable=True, amount=None, working=working,
+        inputs={"topic": "sector_minimum_wage", "sector": sector_no, "sub": sub},
+        note="GN 605A sector rates stated whole from the transcribed Schedule (wage_schedule.SCHEDULE); no figure asked, none computed",
+    )

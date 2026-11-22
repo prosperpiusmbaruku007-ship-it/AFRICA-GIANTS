@@ -69,7 +69,8 @@ def test_resolve_phrases_yields_the_production_135_26_set():
     # tier1a_wh_007_20260603, OUR OWN TRAINING PAIR. The genuinely-OOC b008_refusal_008
     # ("Shirika la madini linanipa mrabaha") stays refused via the conjunction. In-scope
     # unchanged at 26. See tests/test_ooc_phrase_narrowing.py.
-    assert len(ooc) == 135
+    # 135 -> 141 on 2026-11-22: excise duty (3 phrases incl. the `bizaa` variant) and verb-qualified NHIF (3). See tests/test_ooc_excise_nhif.py.
+    assert len(ooc) == 141
     assert len(in_scope) == 26
 
 
@@ -153,8 +154,8 @@ def test_orchestrator_classify_uses_the_full_production_set():
     # Resolved from config, not the removed 8-phrase stub (107 after the SAFETY-1 audit,
     # 125 after the 2026-08-14 orthographic-variant additions, 132 after the 2026-08-15
     # concord closure, 136 after the 2026-09-23 `soko la hisa` narrowing, 135 after the
-    # 2026-09-29 bare-`mrabaha` narrowing).
-    assert len(orch.ooc_phrases) == 135
+    # 2026-09-29 bare-`mrabaha` narrowing, 141 after the 2026-11-22 excise-duty + verb-qualified NHIF additions).
+    assert len(orch.ooc_phrases) == 141
     assert len(orch.in_scope_phrases) == 26
     assert orch.classify("BRELA ada ni ngapi?") is True
     assert orch.classify("mrabaha wa madini ni ngapi?") is False

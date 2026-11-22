@@ -109,7 +109,7 @@ def test_the_real_config_still_yields_the_full_list():
     # 136 -> 135 on 2026-09-29: bare `mrabaha` removed in favour of the OOC_CONJUNCTIONS
     # mining_royalty rule -- only MINING royalty is out of scope, and the bare form refused
     # our own training pair tier1a_wh_007_20260603.
-    assert len(ooc) == 135, f'expected the full list of 135, got {len(ooc)}'
+    assert len(ooc) == 141, f'expected the full list of 141, got {len(ooc)}'
 
 
 # --- credential hygiene ----------------------------------------------------------------

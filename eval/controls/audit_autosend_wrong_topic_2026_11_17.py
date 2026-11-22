@@ -83,7 +83,7 @@ PROBES = [
     ("wcf", "Mfanyakazi ameumia kazini, nitoe taarifa WCF ndani ya siku ngapi?", {"fixed_statement", N}, "accident reporting"),
     ("wcf", "Mfanyakazi aliyeumia kazini anastahili fidia ya kiasi gani?", {N}, "compensation benefit, not the contribution"),
     # ---- minimum_wage / efd / partnership
-    ("minimum_wage", "Mshahara wa chini wa sekta ya kilimo ni kiasi gani?", {"minimum_wage", N}, "CONTROL-ish: sector minimum"),
+    ("minimum_wage", "Mshahara wa chini wa sekta ya kilimo ni kiasi gani?", {"minimum_wage", "fixed_statement", N}, "CONTROL-ish: sector minimum. 2026-11-22: was {minimum_wage, none}; the no-figure sector ask now routes to the sector-wage STATEMENT (fixed_statement), which is the right answer and is excluded from auto-send"),
     ("minimum_wage", "Mshahara wa chini Kenya ni kiasi gani?", {N}, "another country"),
     ("minimum_wage", "Mshahara wa chini wa wafanyakazi wa serikali ni kiasi gani?", {N, "minimum_wage"}, "public sector (500,000) vs the private order"),
     ("minimum_wage", "Nikimlipa mfanyakazi wa duka TZS 150,000 kwa mwezi, ni chini ya mshahara wa chini?", {"minimum_wage", N}, "compliance check"),

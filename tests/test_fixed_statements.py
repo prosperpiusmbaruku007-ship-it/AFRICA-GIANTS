@@ -72,6 +72,9 @@ LIVE = {
     # 2026-11-18: the two live wrong replies of build 7b94236 (eval/results/annual_return_phrasings_live_2026_11_17.json), VERBATIM -- the correct row was at rank 1.
     'brela_annual_return_deadline': ('Annual return ya kampuni inatakiwa kuwasilishwa ndani ya muda gani?',
         'Annual return ya kampuni inatakiwa kuwasilishwa ndani ya siku 42 tangu tarehe ya kumbukumbu ya usajili. Thibitisha na BRELA (brela.go.tz).'),
+    # 2026-11-22: the preliminary Gate 2 #20 (gp_20), question VERBATIM; the body is the shape of the failure (a rate asserted for a year whose Finance Act does not exist yet). The route, not a guard, is the control.
+    'future_year_rate': ('Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029.',
+        'Kiwango rasmi cha VAT kitakachotumika mwaka 2028/2029 ni asilimia 18. Thibitisha na TRA (tra.go.tz).'),
 }
 
 
@@ -259,7 +262,7 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
 # 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
 # (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
-PAYE_NO_GUARD = frozenset({"brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+PAYE_NO_GUARD = frozenset({"future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

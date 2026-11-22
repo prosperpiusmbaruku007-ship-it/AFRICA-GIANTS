@@ -346,7 +346,9 @@ _WAGE_PAY_CUES = ["namlipa", "ninalipa", "nawalipa", "namlipia", "nimemlipa", "n
                   # CONCORD: `tunamlipa`/`tunawalipa` were here and their perfect-tense
                   # siblings were not — one class, half enumerated, exactly the pattern.
                   "tunalipa", "tumemlipa", "tumemlipia",
-                  "analipwa", "wanalipwa", "analipwaga", "hulipwa", "walipwa"]
+                  "analipwa", "wanalipwa", "analipwaga", "hulipwa", "walipwa",
+                  # 2026-11-22 (preliminary Gate 2 / PROGRESS 5): the RELATIVE passive ("dada wa kazi ANAYELIPWA 150000 kwa mwezi, je ni halali?") was a pay cue nobody had listed; `analipwa` is not a substring of it.
+                  "anayelipwa", "wanaolipwa"]
 
 # THE EMPLOYEE'S OWN SIDE — the th_16 class asked from the other direction.
 #
@@ -392,11 +394,19 @@ _WAGE_NALIPA_WORKER_PATTERN = (r"(?<![a-z])nalipa\s+(?:dada|mlinzi|walinzi|mfany
                                r"mhudumu|kijana)\b")
 _WAGE_NALIPA_WORKER = re.compile(_WAGE_NALIPA_WORKER_PATTERN)
 
+# COLLOQUIAL "NAMPA" (I give him) AS PAY (2026-11-22): "Mfanyakazi wangu wa nyumbani NAMPA 90000 kwa mwezi, ni sawa?". Word-bounded on BOTH sides (`nampata` contains `nampa`) and it is only a PAY cue as the routing's third conjunct: it still needs a payroll
+# magnitude AND a floor term or a lawfulness frame, so "nampa mama 90000 ..." with no floor term and no frame never reaches the wage route. 1sg and 1pl, him/her and them.
+# ...AND ONLY WITH A WORKER NOUN IN THE QUESTION (the first sweep found "mteja amenunua kwa shilingi 2000 tu nampa RISITI ya mashine au inaruhusiwa kuandika kwa mkono" -- an EFD question -- diverted to the wage engine on "nampa" + 2000 + "inaruhusiwa").
+# Unlike `_WAGE_NALIPA_WORKER` the noun may come BEFORE the verb ("Mfanyakazi wangu wa nyumbani nampa 90000"), so it is a question-level test.
+_WAGE_WORKER_NOUN = re.compile(r"(?<![a-z])(?:dada|mlinzi|walinzi|mfanyakazi|wafanyakazi|mpishi|dereva|msaidizi|mhudumu|kijana|yaya|house\s?(?:girl|boy))(?![a-z])")
+_WAGE_NAMPA = re.compile(r"(?<![a-z])(?:na|nina|tuna)(?:m|wa)pa(?![a-z])")
+
 
 def _has_wage_pay_cue(ql: str) -> bool:
     """A pay cue in either direction — the employer paying, or the worker being paid."""
     return (any(c in ql for c in _WAGE_PAY_CUES) or bool(_WAGE_PAY_CONCORD.search(ql))
-            or bool(_WAGE_NALIPA_WORKER.search(ql)))
+            or bool(_WAGE_NALIPA_WORKER.search(ql))
+            or (bool(_WAGE_NAMPA.search(ql)) and bool(_WAGE_WORKER_NOUN.search(ql))))
 
 
 # WHO IS ASKING — needed because the clarification copy addresses somebody, and until the
@@ -1617,6 +1627,12 @@ def detect_intent(text: str) -> str:
     """
     ql = text.lower()
 
+    # PATH 0 — A RATE ASKED FOR A FUTURE YEAR, WITH NO MONEY FIGURE (2026-11-22). Placed FIRST because the year itself is a number: "kiwango cha SDL itakuwa ngapi mwaka 2027?" would otherwise reach the SDL rate statement (which states 3.5% and
+    # never says that a later year's rate is unknown) or the compute path via `_DERIVE_CUE` ("itakuwa ngapi"). A question that also carries a money figure keeps its engine route: it is a computation under current law. The topic's own cue,
+    # rate word, tax word, vetoes and ask all still apply inside `fixed_statement_topic`.
+    if fixed_statement_topic(text) == "future_year_rate" and not _has_money_magnitude(ql):
+        return "fixed_statement"
+
     # Path 1 — explicit levy named + a number. GUARD (mirrors the natural-path money-ask
     # guard and the applicability-vs-amount guard): only COMMIT to compute when a computation
     # is actually needed. A bare incidental number — a rate ('asilimia 3.5'), a day ('siku
@@ -2703,6 +2719,13 @@ _FS_TOPICS = (
                 r"kufuta|kufutwa|kubadili|mabadiliko|mkurugenzi|wakurugenzi|director|hisa|shares|mwanzo|kusajili\s+kampuni|jina\s+la|"
                 # added after the first corpus sweep (27 diversions, 5 not about the deadline): a payment / late / foreign / definition / strike-off question has its own fact
                 r"lip(?:a|wa|ia)(?![a-z])|lipaje|lipwaje|toz(?:wa|a)|chelewa|chelewesha|kigeni|foreign|ni\s+nini|what\s+is|(?:how|after\s+how)\s+many|fufuliwa|futwa|kufunguliwa|ufutwe|struck?\s+off|strike\s+off|consequences|matokeo|hatari|nitakayopata|nini\s+kitatokea")),
+    # ---- 2026-11-22 (founder, preliminary Gate 2 #20): a tax RATE asked for a FUTURE year (an explicit year >= 2027, or "mwaka ujao"). NARROW BY CONSTRUCTION (R17): a future-year cue AND a rate word, a TAX word, a veto for every
+    # other thing a future-dated question can ask (threshold, registration, deadline, penalty, how-to, a computation), and the topic's OWN ask only. Authored probes both ways: eval/refusal_gate/future_year_rate_probes_2026_11_22.jsonl.
+    ("future_year_rate",
+     re.compile(r"(?<![0-9/.,])20(?:2[7-9]|[3-9][0-9])(?![0-9])|mwaka\s+ujao|mwaka\s+unaofuata|miaka\s+ijayo|next\s+year|future\s+year"),
+     re.compile(r"(?=.*(?:kiwango|viwango|(?<![a-z])rate|asilimia|percent|%))(?=.*(?:kodi|(?<![a-z])tax|(?<![a-z])vat(?![a-z])|ushuru|paye|(?<![a-z])sdl(?![a-z])|nssf|wcf|ongezeko\s+la\s+thamani))", re.S),
+     re.compile(r"kizingiti|threshold|kusajili|usajili|sajili|registration|register|lini|deadline|tarehe|faini|adhabu|penalty|ada\s+ya|fomu|form(?![a-z])|namba|nawezaje|jinsi|hesabu|kokotoa|calculate|compute|"
+                r"niliuza|nimeuza|niliuziwa|uliopita|iliyopita|last\s+year|mwaka\s+jana|badala|kurudishiwa|refund|msamaha|exempt|zuio|withhold|makadirio|presumptive")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
@@ -2716,6 +2739,8 @@ _FS_TOPICS = (
 # topic ("Likizo ya mwaka haizidi wiki mbili ..., sivyo?", "... hastahili malipo ya kuachishwa kazi, sivyo?") fell to the model, which answered "siku 30" and "miezi 10". The statement for these four is the WHOLE rule
 # (every limb, no selection), so it is a correct and safe answer to a premise check too. NOT given to the three newer topics, whose statements are hedged and whose premise-check forms are deliberately vetoed
 # (eval_343). Raw strings (R39). The topic cue AND the existing vetoes (other levy named, a second topic matching) still apply.
+# the HOW-MUCH ask of the no-figure sector-wage statement (defined here because _FS_TOPIC_ASK below reads it; the vetoes and predicate are at `asks_sector_wage_statement`)
+_SECTOR_WAGE_ASK = re.compile(r"(?<![a-z])(?:ngapi|kiasi\s+gani|kipi|gani)(?![a-z])|how\s+much|what\s+is|what's")
 _FS_PREMISE_ASK = re.compile(
     r"(?:sivyo|siyo|si\s+ndiyo|ndiyo|si\s+kweli|ni\s+kweli|au\s+siyo|au\s+nimekosea)\s*\?\s*$"
     r"|(?<![a-z])(?:haizidi|hazidi|hastahili|haistahili|hahitaji|hahitajiki|sihitaji|sihitajiki|sitakiwi|siwezi|hawezi|haiwezi|hailipwi|halipwi|haitoshi|inatosha)(?![a-z])")
@@ -2737,6 +2762,8 @@ _FS_TOPIC_ASK = {
     "individual_income_tax_return": re.compile(r"lini|muda|mwisho|deadline|tarehe|siku|miezi|mwezi\s+gani|ndani\s+ya|kuwasilisha|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|kusubiri|naweza"),
     "tin_apply_deadline": re.compile(r"lini|siku|muda|ndani\s+ya|haraka|kuomba|(?<![a-z])omba|ombi|kujiandikisha|kujisajili|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|sihitaji|haja|hitaji|lazima|kwanza|nipate|kupata|pata(?:je)?|(?<![a-z])je(?![a-z])|\?"),
     "business_licence_fee_and_validity": re.compile(r"lini|gani|ngapi|muda|(?<![a-z])je(?![a-z])|kiasi|how|when|\?"),
+    "sector_minimum_wage": _SECTOR_WAGE_ASK,
+    "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
     "brela_annual_return_deadline": re.compile(r"(?<![a-z])lini(?![a-z])|muda\s+gani|ndani\s+ya|mwisho|deadline|tarehe|siku\s+ngapi|when|"
@@ -2744,8 +2771,32 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate"})
+
+
+# ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────
+# "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?" had NO route (R31): the minimum-wage branch needs a wage figure, so the model answered "karibu TZS 80,000", the lowest of the four domestic-work rates. The statement
+# is every rate of the asked sector (rules_engine.sector_wage_statement). It is NARROW BY CONSTRUCTION (R17): a floor cue, NO money figure (a figure is a lawfulness/comparison question for the engine), a HOW-MUCH ask, a resolvable SECTOR, and
+# vetoes for every other thing a floor-cue question asks. The vetoes are the measured wrong-topic diversions of eval/results/wage_fix_options_2026_11_22.json: a premise check ("hawamo ... ni kweli?"), a comparison/variation ("kuliko", "tofauti"),
+# an applicability question ("inahusu"), a count ("sekta ndogo ngapi") and a lawfulness ask. Raw strings throughout (R39). Travels as the `fixed_statement` route, so it is never auto-sent.
+_SECTOR_WAGE_VETO = re.compile(
+    r"ni\s+kweli|si\s+kweli|sivyo|siyo|hawamo|hamo|haimo|haupo|haziko|"
+    r"kuliko|tofauti|tofautiana|zaidi\s+ya|(?<![a-z])juu(?![a-z])|linganisha|"
+    r"inahusu|zinahusu|inawahusu|inatumika|zinatumika|sekta\s+ndogo|sub-?sector|idadi|"
+    r"halali|kisheria|kosa|adhabu|faini|kiuka|kinyume")
+
+
+def asks_sector_wage_statement(text: str) -> bool:
+    """True for a no-figure, how-much, sector-resolvable minimum-wage question with none of the vetoed asks. Pure, no model."""
+    ql = text.lower()
+    # An AMOUNT, not a currency WORD: `_has_money_magnitude` counts "shilingi" alone, so "...ni shilingi ngapi?" (the ask itself) looked like a figure and the route declined its own founding phrasing (found by the first probe run).
+    if not any(c in ql for c in _MIN_WAGE_CUES) or any(a >= swn.MIN_PLAUSIBLE_AMOUNT for a in swn.parse_amounts(ql)):
+        return False
+    if not _SECTOR_WAGE_ASK.search(ql) or _SECTOR_WAGE_VETO.search(ql):
+        return False
+    from .rules_engine import wage_schedule as ws
+    return ws.resolve(text)[0] in (ws.SECTOR, ws.ROW)
 
 
 def fixed_statement_topics(text: str):
@@ -2758,6 +2809,8 @@ def fixed_statement_topics(text: str):
     for name, cue, need, veto in _FS_TOPICS:
         if cue.search(ql) and (need is None or need.search(ql)) and not (veto is not None and veto.search(ql)):
             hits.append(name)
+    if asks_sector_wage_statement(text):
+        hits.append("sector_minimum_wage")
     return hits
 
 

@@ -1,0 +1,18 @@
+{"id": "fy_01", "question": "Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029.", "expect_route": "future_year_rate", "guards_against": "Founding specimen: preliminary Gate 2 #20 (gp_20), VERBATIM."}
+{"id": "fy_02", "question": "Kiwango cha VAT kitakuwa asilimia ngapi 2028?", "expect_route": "future_year_rate", "guards_against": "Short form, explicit future year."}
+{"id": "fy_03", "question": "Kiwango cha SDL itakuwa ngapi mwaka 2027?", "expect_route": "future_year_rate", "guards_against": "SDL named: the year is a number and `_DERIVE_CUE` ('itakuwa ngapi') would send it to compute; PATH 0 must win."}
+{"id": "fy_04", "question": "Mwaka ujao kiwango cha VAT kitakuwa kipi?", "expect_route": "future_year_rate", "guards_against": "'mwaka ujao' form, no digit."}
+{"id": "fy_05", "question": "Naomba kujua viwango vya kodi vitakavyotumika mwaka 2030", "expect_route": "future_year_rate", "guards_against": "Plural, generic levy."}
+{"id": "fy_06", "question": "What will the VAT rate be in 2028?", "expect_route": "future_year_rate", "guards_against": "English form."}
+{"id": "fy_07", "question": "Kiwango cha NSSF kitakuwa asilimia ngapi mwaka ujao?", "expect_route": "future_year_rate", "guards_against": "NSSF named; the statement is the whole answer (principle + the two rates we hold)."}
+{"id": "fy_08", "question": "Kiwango cha VAT ni asilimia ngapi?", "expect_route": "not_future_year_rate", "guards_against": "CURRENT rate, no future cue: must keep its fact-path route."}
+{"id": "fy_09", "question": "Nitasajiliwa VAT 2028 ikiwa mauzo ni 200M, kiwango ni kipi?", "expect_route": "not_future_year_rate", "guards_against": "Carries a money figure: a computation/threshold under current law, not this statement."}
+{"id": "fy_10", "question": "Mwaka ujao nataka kusajili kampuni, ada ya BRELA ni kiasi gani?", "expect_route": "not_future_year_rate", "guards_against": "'mwaka ujao' with a fee ask and no tax rate."}
+{"id": "fy_11", "question": "Mwaka ujao nikifikisha mauzo ya milioni 200 nitalazimika kusajili VAT, kiwango ni asilimia ngapi?", "expect_route": "not_future_year_rate", "guards_against": "Threshold/registration veto: the real question is whether to register."}
+{"id": "fy_12", "question": "Kiwango cha kodi ya mapato ya kampuni mwaka 2025 kilikuwa asilimia ngapi?", "expect_route": "not_future_year_rate", "guards_against": "A PAST year carries no future cue."}
+{"id": "fy_13", "question": "Mkataba wa kazi unaisha 2028, ninahitaji kutoa notisi ya siku ngapi?", "expect_route": "not_future_year_rate", "guards_against": "A future year with no rate word and no tax word."}
+{"id": "fy_14", "question": "Mwaka ujao nitaanza kulipa SDL, ni wafanyakazi wangapi nikifikisha?", "expect_route": "not_future_year_rate", "guards_against": "'wangapi' contains 'ngapi'; no rate word, so no route."}
+{"id": "fy_15", "question": "Faini ya kuchelewa kuwasilisha return mwaka ujao ni asilimia ngapi?", "expect_route": "not_future_year_rate", "guards_against": "Penalty veto."}
+{"id": "fy_16", "question": "NSSF 20% mwaka ujao ni kiasi gani kwa mshahara wa TZS 800,000?", "expect_route": "not_future_year_rate", "guards_against": "Money figure: engine route."}
+{"id": "fy_17", "question": "Kiwango cha VAT cha mwaka 2026/2027 ni kipi?", "expect_route": "not_future_year_rate", "guards_against": "FY 2026/27 began 1 Jul 2026 and is CURRENT: the lookbehind keeps '/2027' from reading as a future year."}
+{"id": "fy_18", "question": "Mwaka ujao PAYE kwa mshahara wa 900000 itakuwa kiasi gani?", "expect_route": "not_future_year_rate", "guards_against": "Money figure: PAYE engine."}
