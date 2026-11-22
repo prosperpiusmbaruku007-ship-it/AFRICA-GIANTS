@@ -1,0 +1,65 @@
+{
+ "questions": 8626,
+ "min_wage_cue": 254,
+ "no_figure": 218,
+ "B_today": [
+  "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+  "nina wafanyakazi wa shamba je kima cha chini cha mshahara ni kiasi gani",
+  "GN 605A inahusu wafanyakazi wa sekta ya kilimo?",
+  "Je, mfanyakazi wa nyumbani (domestic worker) ana kiwango cha mshahara wa chini?",
+  "Je, mfanyakazi wa kilimo ana kiwango tofauti cha mshahara wa chini?",
+  "Mfanyakazi wa benki ana kiwango cha juu cha mshahara wa chini kuliko wengine?",
+  "Mfanyakazi wa viwanda (manufacturing) ana mshahara wa chini wa kiasi gani?",
+  "Wafanyakazi wa nyumbani (domestic workers) hawamo kwenye GN 605A — ni kweli?",
+  "Sekta yangu ya kilimo (crop/animal) — mshahara wa chini ni ngapi kulingana na GN605A?",
+  "Hoteli ya nyota 5 — mshahara wa chini kwa wafanyakazi ni ngapi kulingana na GN605A?",
+  "Sekta ya benki za biashara — mshahara wa chini kwa GN605A ni ngapi?",
+  "Je, kampuni za ujenzi zinatumia kiwango gani cha mshahara wa chini?",
+  "Viwango vya sekta ya uchimbaji madini (mining) ni ngapi kwa GN605A?",
+  "Kama biashara yangu ipo sekta ya viwanda (industrial) — mshahara wa chini ni ngapi?",
+  "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+  "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+  "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+  "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+  "query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+  "For a hotel and tourism employer, what is the minimum wage?",
+  "query: Mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta?"
+ ],
+ "B_with_extra_cues": [
+  "mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+  "nina wafanyakazi wa shamba je kima cha chini cha mshahara ni kiasi gani",
+  "GN 605A inahusu wafanyakazi wa sekta ya kilimo?",
+  "Je, mfanyakazi wa nyumbani (domestic worker) ana kiwango cha mshahara wa chini?",
+  "Je, mfanyakazi wa kilimo ana kiwango tofauti cha mshahara wa chini?",
+  "Mfanyakazi wa benki ana kiwango cha juu cha mshahara wa chini kuliko wengine?",
+  "Mfanyakazi wa viwanda (manufacturing) ana mshahara wa chini wa kiasi gani?",
+  "Wafanyakazi wa nyumbani (domestic workers) hawamo kwenye GN 605A — ni kweli?",
+  "Sekta yangu ya kilimo (crop/animal) — mshahara wa chini ni ngapi kulingana na GN605A?",
+  "Hoteli ya nyota 5 — mshahara wa chini kwa wafanyakazi ni ngapi kulingana na GN605A?",
+  "Sekta ya benki za biashara — mshahara wa chini kwa GN605A ni ngapi?",
+  "Je, kampuni za ujenzi zinatumia kiwango gani cha mshahara wa chini?",
+  "Viwango vya sekta ya uchimbaji madini (mining) ni ngapi kwa GN605A?",
+  "Kama biashara yangu ipo sekta ya viwanda (industrial) — mshahara wa chini ni ngapi?",
+  "Sekta ya madini ina sekta ndogo ngapi kwenye GN 605A?",
+  "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+  "Kima cha chini cha mshahara kwa mfanyakazi wa duka ni kiasi gani?",
+  "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+  "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?",
+  "Mshahara wa chini kwa dada wa kazi za nyumbani ni kiasi gani?",
+  "query: mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta",
+  "For a hotel and tourism employer, what is the minimum wage?",
+  "query: Mimi ni mkulima nina vibarua je kima cha chini kinatofautiana kwa sekta?"
+ ],
+ "A_replies_seen": 16,
+ "A_flags": [
+  {
+   "src": "batch4_deploy_live_2026_11_18.json",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "figures_of_other_sectors": [
+    765900
+   ],
+   "asked_sector": 10,
+   "reply": "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya madini na nishati ni karibu TZS 765,900 kwa mwezi. Thibitisha kiwango halisi cha sekta yako na MLYWF."
+  }
+ ]
+}
