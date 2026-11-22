@@ -675,8 +675,9 @@ CONSTANT_RESTATEMENTS["sdl_applies_at_threshold"] = (
 # D-FIDELITY-27 / 28 (2026-11-22): replacement copy for two unsupported scope claims. These are the PROPOSED fact texts (founder to approve before the regen); R44: the Act is named, no section number (it lives in the fact's metadata).
 CONSTANT_RESTATEMENTS["sdl_scope_by_premises"] = (
     "SDL hutozwa kwa kila mwajiri mwenye wafanyakazi 10 au zaidi (Sheria ya Elimu na Mafunzo ya Ufundi); Sheria haisemi kwamba inahusu 'maeneo ya biashara' pekee. "
-    "Waajiri wasiotozwa ni wale tisa walioorodheshwa kisheria (serikali, halmashauri, balozi, Umoja wa Mataifa, mashirika ya misaada, taasisi za dini, shule zilizosajiliwa, mashirika ya hisani, na waajiri wa mashambani kwa wafanyakazi wa kilimo). "
-    "Kama wafanyakazi wa nyumbani wanahesabiwa kwenye idadi ya 10, hakuna kinachotuonyesha kwa uhakika; thibitisha na TRA (tra.go.tz) kabla ya kuamua.")
+    "Wasiotozwa ni makundi yaliyoorodheshwa kisheria: taasisi za Serikali zinazofadhiliwa kikamilifu kupitia ruzuku ya Serikali, balozi, Umoja wa Mataifa, taasisi za misaada za kimataifa au za kigeni, taasisi za dini, mashirika ya hisani, "
+    "taasisi za elimu zilizosajiliwa, halmashauri, wanafunzi wa mafunzo kwa vitendo chini ya TaESA, waajiri wa mashambani kwa wafanyakazi wa kilimo, na mamlaka ya maji na usafi wa mazingira kwa vibarua wa miradi ya maji; Waziri wa Fedha pia anaweza kusamehe kwa tangazo la Gazeti. "
+    "Orodha hiyo haina mwajiri wa nyumbani; kama wafanyakazi wa nyumbani wanahesabiwa kwenye idadi ya 10, hakuna kinachotuonyesha kwa uhakika; thibitisha na TRA (tra.go.tz) kabla ya kuamua.")
 CONSTANT_RESTATEMENTS["nssf_contributions_age_60"] = (
     "Umri wa miaka 60 ni umri wa pensheni wa NSSF: ndio unaoamua lini pensheni ya uzee inapatikana (michango isiyopungua miezi 180; kustaafu mapema kunawezekana ndani ya miaka 5 kabla yake). "
     "Sheria haisemi kwamba michango inakoma wala inaendelea kwa sababu ya umri wa 60, na haimwondolei mwajiri wajibu wa michango kwa mfanyakazi anayepokea au anayestahili manufaa. "

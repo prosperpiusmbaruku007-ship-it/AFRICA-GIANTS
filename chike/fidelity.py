@@ -2010,7 +2010,8 @@ def mining_wage_misattributed(question: str, body: str):
 _D25_Q_SDL = re.compile(r"(?<![a-z])sdl(?![a-z])|skills\s+development\s+levy|tozo\s+la\s+mafunzo", re.IGNORECASE)
 _D25_EXEMPT = re.compile(
     r"serikali|halmashauri|manispaa|ubalozi|balozi|diplomat|umoja\s+wa\s+mataifa|(?<![a-z])un(?![a-z])|kimataifa|misaada|msaada|dini|kanisa|msikiti|shule|chuo|elimu|hisani|charit|mkulima|kilimo|shamba|farm|isipokuwa|msamaha|exempt|"
-    r"taasisi\s+ya|sheria\s+ya\s+elimu", re.IGNORECASE)
+    r"taasisi\s+ya|sheria\s+ya\s+elimu|"
+    r"mamlaka\s+ya\s+maji|usafi\s+wa\s+mazingira|water\s+supply|taesa|intern|wanafunzi", re.IGNORECASE)   # 2026-11-22: the two categories the R.E.2023 list and Finance Act 2024 s.112 add (TaESA interns, (k) water authorities) -- vetoes only, so it can only flag LESS
 _D25_DENY = re.compile(
     r"haihitaji\s+(?:kulipa|malipo)|hauhitaji\s+(?:kulipa|malipo)|haulipi|hulipi|huna\s+wajibu|hana\s+wajibu|haupaswi\s+kulipa|haupaswi\s+kutozwa|hautakiwi\s+kulipa|haitakiwi\s+kulipa|"
     r"haitozwi|hautozwi|haihusiki|haikuhusu|hakuna\s+(?:wajibu|malipo\s+ya\s+sdl)|haipaswi\s+kutozwa|not\s+(?:payable|required\s+to\s+pay)|no\s+obligation", re.IGNORECASE)
