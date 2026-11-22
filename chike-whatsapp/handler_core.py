@@ -2129,3 +2129,51 @@ def transcript_filename(row, unique=None) -> str:
     stamp = str(row.get("ts", "")).replace(":", "")
     suffix = unique or uuid.uuid4().hex[:6]
     return f"{month}/{stamp}-{row.get('sender_hash', 'anon')}-{suffix}.json"
+
+
+# ── THE DAILY MODEL CANARY (2026-11-22, founder-approved at ~USD 0.07-0.10 a day) ─────────────────────────────────────────────────────────────────────────────────────
+# WHY: with no traffic a dead GPU path is invisible -- `model_watch` only advances on a REAL question, and the shallow web-tier check cannot see the GPU. Once a day, at 08:00 EAT, ONE fixed question goes through the MODEL
+# path of production; the outcome pings its OWN healthchecks.io check (never the bridge heartbeat: that one pings every 2 minutes and would mask a failed canary within 2 minutes). A canary that never runs is caught by SILENCE
+# (the check's own schedule + grace), a canary that runs and fails by `/fail`.
+# R26: a canary is worthless if it can pass while testing nothing, so the verdict requires the reply to have come from the MODEL (model_calls >= 1) AND to carry the expected figure. A model-free reply, a missing or unknown
+# count, an error, an empty reply or a wrong figure are all FAILS (fail closed).
+CANARY_QUESTION = "Ada ya annual return BRELA ni shilingi ngapi?"
+CANARY_EXPECT = ("22,000",)                      # BRELA annual-return filing fee, locked fact; verified live twice 2026-11-22 (fact path, 1 model call, byte-identical)
+CANARY_WINDOW_START_S = 5 * 3600                 # 05:00 UTC = 08:00 EAT
+CANARY_WINDOW_END_S = 5 * 3600 + 1800            # a 5-minute scheduler tick always lands inside a 30-minute window
+
+
+def canary_due(now_ts, already_claimed):
+    """True inside the daily window when today's canary has NOT been claimed. Pure; the exactly-once decision is made by the caller with `put(skip_if_exists=True)` (R43), never by a field read here."""
+    if already_claimed:
+        return False
+    try:
+        sec = int(float(now_ts)) % 86400
+    except (TypeError, ValueError):
+        return False
+    return CANARY_WINDOW_START_S <= sec < CANARY_WINDOW_END_S
+
+
+def canary_date(now_ts):
+    import datetime
+    return datetime.datetime.fromtimestamp(float(now_ts), datetime.timezone.utc).strftime("%Y-%m-%d")
+
+
+def canary_verdict(out, expect=CANARY_EXPECT):
+    """('ok' | 'fail', reason). FAIL CLOSED on everything that is not a model-written reply carrying every expected figure."""
+    if not isinstance(out, dict):
+        return "fail", "no response object"
+    if out.get("error"):
+        return "fail", f"the model path errored ({str(out.get('error'))[:80]})"
+    reply = out.get("reply")
+    if not isinstance(reply, str) or not reply.strip():
+        return "fail", "empty reply"
+    calls = out.get("model_calls")
+    if isinstance(calls, bool) or not isinstance(calls, int):
+        return "fail", f"model_calls is {calls!r}, not an integer: cannot show the model was reached"
+    if calls < 1:
+        return "fail", "the reply was model-free (model_calls 0): the canary exists to exercise the MODEL"
+    missing = [e for e in expect if e not in reply]
+    if missing:
+        return "fail", f"the reply lacks the expected figure {missing}: {reply[:120]!r}"
+    return "ok", ""

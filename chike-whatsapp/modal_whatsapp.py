@@ -731,7 +731,9 @@ def _bridge_status_now():
 # healthy poll and `<url>/fail` when it detects a problem; the service emails the founder on a fail ping AND when pings
 # STOP -- which also covers Modal's scheduler dying, the one failure an emailing watcher cannot report. The URL is a
 # credential (anyone holding it can mark the check healthy): it is never logged, never returned, never in /health.
-# The SMTP path below is kept but UNUSED -- the poll no longer calls it.
+# ⛔ THE SMTP PATH BELOW IS DEAD CODE (marked 2026-11-22, founder's decision): NOTHING CALLS IT and it can never send (ALERT_SMTP_* / ALERT_TO are not configured). healthchecks.io is the ONLY alert path. The stored
+# `last_alert_email_ok` / `last_alert_email_error` fields in the session record are STALE leftovers from before 2026-11-13, not evidence of an attempt. Kept, not deleted, only because tests reference it; do not read its
+# presence as a working channel (an alert path never seen to deliver is an inert control, R26).
 _ALERT_KEYS = ("HEALTHCHECK_PING_URL",)
 _SMTP_KEYS = ("ALERT_SMTP_HOST", "ALERT_SMTP_USER", "ALERT_SMTP_PASS", "ALERT_TO")
 
@@ -744,13 +746,13 @@ def _smtp_configured():
     return all(os.environ.get(k, "") for k in _SMTP_KEYS)
 
 
-def _ping_healthcheck(kind, body=""):
+def _ping_healthcheck(kind, body="", url_env="HEALTHCHECK_PING_URL"):
     """(ok, error). kind 'ok' -> the check's ping URL; 'fail' -> `<url>/fail`. Three attempts (the service's own advice),
     each 10 s. The error is a CLASS or an HTTP status -- never the URL, which is the credential."""
     import time
     import urllib.error
     import urllib.request
-    url = os.environ.get("HEALTHCHECK_PING_URL", "").strip()
+    url = os.environ.get(url_env, "").strip()
     if not url:
         return False, "not configured"
     if not url.startswith("https://"):
@@ -776,7 +778,7 @@ def _ping_healthcheck(kind, body=""):
 
 
 def _send_alert_email(subject, body):
-    """(ok, detail). UNUSED since 2026-11-13 (the poll pings healthchecks.io instead); kept, with its own SMTP_* keys,
+    """DEAD CODE -- NOTHING CALLS THIS and it cannot send (SMTP unconfigured); healthchecks.io is the ONLY alert path (2026-11-22). (ok, detail). UNUSED since 2026-11-13 (the poll pings healthchecks.io instead); kept, with its own SMTP_* keys,
     so a second channel can be switched back on without rewriting it. EMAIL TO THE FOUNDER, NOT WHATSAPP: the channel
     being watched is the one that failed. This is not a participant send path."""
     import smtplib
@@ -1845,12 +1847,67 @@ def review_queue(token: str = None, include_sender: bool = False):
 # Rewrites a transcript row whose send was pending when it was written, once WhatsApp's late
 # delivery receipt has landed. Touches only `send_*` / receipt fields of rows this app wrote, and
 # has no send path: it reads the bridge ledger and writes the record.
+# THE DAILY MODEL CANARY -- see handler_core.CANARY_*. It does NOT take a scheduled-function slot (the workspace limit is 5 and tests/test_review_timeout.py holds this app to 4): the existing 5-minute
+# `reconcile_receipts` tick checks the daily window and `.spawn()`s this UNSCHEDULED function, which has its own 30-minute timeout (a GPU scarcity start has taken ~20 minutes). `.spawn()` and not a detached coroutine:
+# Modal tracks a spawned call to completion (R16b). The once-a-day decision is `put(skip_if_exists=True)` on a per-date key (R43: never a read-then-write).
+# STRUCTURAL LIMITS, asserted by AST in tests/test_model_canary.py: no WhatsApp send, no queue / transcript / review access, one model call, one ping.
+def _maybe_spawn_canary(now):
+    core = _core()
+    if not core.canary_due(now, False):
+        return None
+    day = core.canary_date(now)
+    if not BRIDGE_WATCH.put(f"canary_claim_{day}", now, skip_if_exists=True):
+        return None                                                  # another tick already claimed today's canary
+    run_model_canary.spawn()
+    print(f"[canary] spawned for {day}", flush=True)
+    return day
+
+
+@app.function(image=image, secrets=SECRETS, timeout=1800)
+def run_model_canary():
+    import time
+    core = _core()
+    t0 = time.time()
+    try:
+        out = ChikeModel().run.remote(core.CANARY_QUESTION)
+    except Exception as e:                                           # noqa: BLE001
+        out = {"error": type(e).__name__}
+    kind, reason = core.canary_verdict(out)
+    latency = round(time.time() - t0, 1)
+    configured = bool(os.environ.get("HEALTHCHECK_CANARY_URL", "").strip())
+    ping_ok, ping_err = (_ping_healthcheck(kind, (reason or "")[:1000], url_env="HEALTHCHECK_CANARY_URL") if configured else (False, "not configured"))
+    state = {"last_run_ts": time.time(), "verdict": kind, "reason": reason, "latency_s": latency, "ping_ok": ping_ok, "ping_error": ping_err,
+             "path": (out or {}).get("answer_path") or (out or {}).get("path"), "model_calls": (out or {}).get("model_calls")}
+    try:
+        BRIDGE_WATCH["model_canary"] = state
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[canary] state not stored: {type(e).__name__}", flush=True)
+    print(f"[canary] {kind} latency={latency}s ping_ok={ping_ok}{'' if ping_ok else ' ping_error=' + str(ping_err)} {reason}", flush=True)
+    return {"verdict": kind, "reason": reason, "latency_s": latency}
+
+
+def _model_canary_health():
+    try:
+        last = dict(BRIDGE_WATCH.get("model_canary") or {})
+    except Exception:                                                # noqa: BLE001
+        last = {}
+    import time
+    return {"configured": bool(os.environ.get("HEALTHCHECK_CANARY_URL", "").strip()),
+            "daily_at": "05:00 UTC (08:00 EAT), spawned by the 5-minute reconcile tick",
+            "last": {**{k: last.get(k) for k in ("verdict", "reason", "latency_s", "ping_ok", "path", "model_calls")},
+                     "age_s": (int(time.time() - float(last["last_run_ts"])) if last.get("last_run_ts") else None)}}
+
+
 @app.function(image=image, secrets=SECRETS, timeout=300, schedule=_sched(modal.Period(minutes=5)))
 def reconcile_receipts():
     import time
     core = _core()
     done = dropped = left = orphaned = 0
     now = time.time()
+    try:
+        _maybe_spawn_canary(now)           # never allowed to break the reconcile loop; a canary that is lost is caught by the SILENCE of its own check
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[canary] not spawned: {type(e).__name__}", flush=True)
     for mid in list(PENDING_ROWS.keys()):
         try:
             key = PENDING_ROWS[mid]
@@ -2389,6 +2446,7 @@ def health():
         # move out from under them.
         **_token_fingerprint_flat("WAPPFLY_TOKEN"),
         "bridge": _bridge_health(),
+        "model_canary": _model_canary_health(),
     }
 
 
