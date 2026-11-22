@@ -1102,7 +1102,9 @@ class Orchestrator:
                     sub.sub_question.text, cleaned, sub.computation.working)
                 # D-FIDELITY-11 (2026-11-16): a PAYE band edge assigned to the wrong band ("TZS 760,000 ni kiwango cha pili cha PAYE (8%)"; it is the top of the 20% band). A constant
                 # comparison, so it needs no engine result; blanking is safe for the same reason as every rule above -- the working still renders and it has the right band.
-                or fidelity.body_misnames_paye_band(cleaned)):
+                or fidelity.body_misnames_paye_band(cleaned)
+                # D-FIDELITY-25b (2026-11-22, founder, three conditions at fidelity.sdl_body_contradicts_verdict): a model sentence whose SDL polarity contradicts the engine's boolean on an UNNEGATED applicability question. Body only; the working renders.
+                or fidelity.sdl_body_contradicts_verdict(sub.sub_question.text, cleaned, sub.computation)):
             cleaned = ""
             guard = "blanked"
         elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text):

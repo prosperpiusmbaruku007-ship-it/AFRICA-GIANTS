@@ -1,0 +1,21 @@
+{
+ "swept": 4276,
+ "hits": [
+  {
+   "rule": "D28",
+   "src": "reply:d25_deploy_live_2026_11_22.json",
+   "q": "Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?",
+   "flagged": [
+    "Ndiyo, kwa mujibu wa sheria, michango ya NSSF huendelea hadi umri wa miaka 60."
+   ]
+  },
+  {
+   "rule": "D27",
+   "src": "reply:d25_deploy_live_2026_11_22.json",
+   "q": "Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?",
+   "flagged": [
+    "SDL inalenga waajiri wenye wafanyakazi 10+ katika MAENEO YA BIASHARA (commercial premises)."
+   ]
+  }
+ ]
+}

@@ -2036,6 +2036,73 @@ def sdl_denied_above_threshold(question: str, body: str):
             and not _D25_SMALL_NUMBER.search(s)]
 
 
+# ---- D-FIDELITY-25b (2026-11-22, founder-approved with THREE CONDITIONS): D-FIDELITY-25 EXTENDED TO THE SDL COMPUTE PATH. A compute-path reply is `model body + engine working`, so a model-written sentence can contradict the engine's SDL
+#   verdict. The three conditions, each load-bearing and each pinned by a plant: (1) UNNEGATED applicability questions only -- eval_394 showed the engine's own verdict LEAD can be the wrong half on a negated premise ("Je, NSSF si ya hiari?"
+#   answered "Ndiyo." to a question nobody asked), so a negated question is never judged; (2) the body's polarity is compared with the engine's `applicable` BOOLEAN, never with its lead word; (3) BLANK THE BODY ONLY -- the working still
+#   renders, so the user loses a sentence and keeps the answer.
+# R25. (1) Defect: a model sentence telling an employer SDL does not apply when the engine computed that it does (or the reverse). (2) What CORRECT output could it damage: an exempt employer (any exempt-category word in the question or the
+#   sentence vetoes: the engine knows only the headcount, so its boolean can be the wrong half there), a below-threshold sentence, a negated denial, any sentence not naming SDL, a negated question. Narrow: SDL named, an engine SDL verdict
+#   with a boolean, a plain applicability question.
+_D25B_NEGATED_Q = re.compile(r"(?<![a-z])(?:si|siyo|sivyo|haihitaji|hahitaji|hauhitaji|hailipwi|halipwi|haitozwi|sihitaji|sitakiwi|hatakiwi|hautakiwi|haulipi|hawalipi|hakuna|hamna)(?![a-z])|ni\s+kweli", re.IGNORECASE)
+_D25B_AFFIRM = re.compile(r"unalazimika\s+kulipa|unatakiwa\s+kulipa|unapaswa\s+kulipa|lazima\s+ulipe|inakuhusu|utalipa|inatozwa|ndiyo", re.IGNORECASE)
+_D25B_NEG_IN_SENTENCE = re.compile(r"(?<![a-z])(?:hapana|huna|hana|hutakiwi|haulazimiki|haupaswi|hautozwi|haitozwi|haikuhusu|si)(?![a-z])|chini\s+ya\s+(?:10|kumi)", re.IGNORECASE)
+
+
+def sdl_body_contradicts_verdict(question: str, body: str, computation):
+    """[sentence] whose SDL polarity contradicts the engine's boolean on an unnegated applicability question. [] otherwise. Pure."""
+    if computation is None or getattr(computation, "computation", None) != "sdl" or not isinstance(getattr(computation, "applicable", None), bool):
+        return []
+    q = question or ""
+    if not _D25_Q_SDL.search(q) or _D25_EXEMPT.search(q) or _D25B_NEGATED_Q.search(q):
+        return []
+    from .routing import is_applicability_question
+    if not is_applicability_question(q):
+        return []
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s or not _D25_Q_SDL.search(s) or _D25_EXEMPT.search(s) or _D25_NEGATED_DENIAL.search(s):
+            continue
+        if computation.applicable and _D25_DENY.search(s) and not _D25_BELOW.search(s):
+            out.append(s.strip())
+        elif (not computation.applicable) and _D25B_AFFIRM.search(s) and not _D25B_NEG_IN_SENTENCE.search(s):
+            out.append(s.strip())
+    return out
+
+
+# ---- D-FIDELITY-27 / 28 (2026-11-22, founder decision 3): TWO UNSUPPORTED SCOPE CLAIMS, FACT PATH. Constants about what a LAW SAYS (R19), so no engine result is needed. Both REPLACED (the fact path cannot be blanked) with the proposed fact text.
+# D-FIDELITY-27 -- SDL scope stated by PREMISES. Specimen (live, build a78f5d0, d25_deploy_live_2026_11_22.json): "SDL inalenga waajiri wenye wafanyakazi 10+ katika MAENEO YA BIASHARA (commercial premises) ... Wafanyakazi wa nyumbani ... hawaingii kwenye
+#   kizingiti cha SDL." Primary text read 2026-11-22 (VETA Act Cap.82 R.E.2023, TRA-hosted, sha256 eac6e92d...): the levy is charged on "every employer who has in his employment ten or more employees"; the words "domestic" and "premises" appear NOWHERE in the Act.
+# D-FIDELITY-28 -- NSSF contributions tied to AGE 60. Specimen (live, same run): "michango ya NSSF huendelea hadi umri wa miaka 60". NSSF Act Cap.50 R.E.2023 (sha256 2a820e67...): age 60 is "pensionable age" and appears only in BENEFIT provisions; Parts III-IV set no age at which
+#   contributions start or stop; s.20 does not relieve the employer for an employee in receipt of or entitled to a benefit. So a claim that contributions stop at 60 OR continue until 60 is unsupported either way.
+# R25. (1) Defect: an invented SDL scope rule (one live reply) and an invented NSSF age cut-off (one live reply). (2) What CORRECT output could they damage: a sentence that DENIES the premises rule ("SDL haitegemei maeneo ya biashara"), a pension-eligibility sentence
+#   about age 60 that does not speak of contributions, an early-retirement sentence (55), and a sentence that says contributions are NOT tied to age. Each is vetoed by a negation cue or by requiring the word for contributions beside the age.
+_D27_SDL = re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy", re.IGNORECASE)
+_D27_PREMISES = re.compile(r"maeneo\s+ya\s+biashara|commercial\s+premises|business\s+premises|mahali\s+pa\s+biashara|ofisi\s+ya\s+biashara|biashara\s+pekee|premises", re.IGNORECASE)
+_D27_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haitegemei|haihusu|haihusiani|haina|hakuna|not|no)(?![a-z])", re.IGNORECASE)
+_D28_CONTRIB = re.compile(r"michango|mchango|contribution|kuchangia|inachangiwa|huchangiwa|hulipwa\s+michango", re.IGNORECASE)
+_D28_AGE60_CLAIM = re.compile(
+    r"(?:huendelea|hudumu|zinaendelea|inaendelea|huisha|zinaisha|inaisha|hukoma|zinakoma|inakoma|hukatwa|huchangiwa|hulipwa|inalipwa)[^.]{0,70}(?:hadi|mpaka|until|till|baada\s+ya)\s+(?:umri\s+wa\s+)?(?:miaka\s+)?60(?![0-9])"
+    r"|(?:ukifikisha|ukifika|akifikisha|akifika|anapofikisha|unapofikisha|baada\s+ya\s+kufikisha)\s+(?:umri\s+wa\s+)?(?:miaka\s+)?60(?![0-9])[^.]{0,70}(?:hahitaji|huhitaji|hauhitaji|hakuna\s+michango|haulipi|huacha|hukoma|hawajibiki|haitajiki|hahitajiki)",
+    re.IGNORECASE)
+_D28_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haikomi|hazikomi|haziishi|haitegemei|haihusiani)(?![a-z])|haijafungwa|haijafungamana", re.IGNORECASE)
+
+
+def sdl_scope_by_premises(question: str, body: str):
+    """[sentence] stating that SDL turns on commercial premises / places of business. A sentence that DENIES the rule is left alone."""
+    if not body or not _D27_SDL.search((question or "") + " " + body):
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body)
+            if s and _D27_PREMISES.search(s) and (_D27_SDL.search(s) or _D27_SDL.search(question or "")) and not _D27_NEG.search(s)]
+
+
+def nssf_contributions_tied_to_age_60(question: str, body: str):
+    """[sentence] stating that NSSF contributions continue until, or stop at, age 60. Pension-eligibility and early-retirement sentences (no word for contributions) and sentences that deny the tie are left alone."""
+    if not body:
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body)
+            if s and _D28_CONTRIB.search(s) and _D28_AGE60_CLAIM.search(s) and not _D28_NEG.search(s)]
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -2046,6 +2113,8 @@ def body_contradicts_d16(question: str, body: str):
     out += [("gn605a_mining_subsector_count", s) for s in gn605a_subsector_count_misstated(question, body)]   # D-FIDELITY-23
     out += [("gn605a_mining_wage", s) for s in mining_wage_misattributed(question, body)]   # D-FIDELITY-24
     out += [("sdl_applies_at_threshold", s) for s in sdl_denied_above_threshold(question, body)]   # D-FIDELITY-25
+    out += [("sdl_scope_by_premises", s) for s in sdl_scope_by_premises(question, body)]   # D-FIDELITY-27
+    out += [("nssf_contributions_age_60", s) for s in nssf_contributions_tied_to_age_60(question, body)]   # D-FIDELITY-28
     return out
 
 
