@@ -1,0 +1,157 @@
+{
+ "identity": {
+  "build": "7643e18",
+  "rag_rows_loaded": 216,
+  "rag_embeddings_shape": [
+   216,
+   768
+  ],
+  "rag_facts_text_sha256": "4dc60c37d8c28cd0beb4e020fab8f6d61b4407c0b64e9e4c13a8600658a7c84a",
+  "config_rag_fact_count": 216,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795362235.432,
+   "enter_started_ts": 1795362235.544,
+   "enter_done_ts": 1795362298.655,
+   "import_to_enter_s": 0.1,
+   "load_s": 63.1,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "D24",
+   "q": "Mshahara wa chini wa sekta ya madini ni kiasi gani kwa mujibu wa GN 605A?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24",
+   "q": "Kima cha chini cha mshahara kwa mchimbaji madini ni kiasi gani?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24",
+   "q": "Mgodi wangu mdogo wa dhahabu, kima cha chini cha mshahara kwa wachimbaji ni shilingi ngapi kwa mwezi?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24",
+   "q": "Kiwango cha chini cha mshahara sekta ya madini kwa mwezi?",
+   "reply": "Sekta ya Madini katika GN 605A (kipengele cha 10) ina viwango vinne vya kima cha chini kwa mwezi, kulingana na aina ya leseni au shughuli: uchimbaji na utafutaji wa madini (mining and prospecting minerals): TZS 695,000; leseni ya wauzaji (dealer licence): TZS 595,000; leseni ya msingi ya uchimbaji (primary mining licence): TZS 397,600; leseni za madalali (brokers licences): TZS 333,500. Kiwango cha TZS 765,900 ni cha sekta ya nishati (kampuni za kimataifa), si cha madini. Thibitisha kiwango cha aina yako ya leseni na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24-NEG",
+   "q": "Kima cha chini cha mshahara sekta ya nishati ni kiasi gani?",
+   "reply": "Kulingana na GN 605A, viwango vilivyothibitishwa kwa sekta ya nishati ni TZS 765,900 kwa mwezi. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D24-NEG",
+   "q": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni kiasi gani?",
+   "reply": "Kima cha chini cha mshahara kwa mfanyakazi wa nyumbani ni karibu TZS 80,000 kwa mwezi. Thibitisha na GN 605A (sekta ya huduma za nyumbani).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D23-NEG",
+   "q": "GN 605A inashughulikia sekta ngapi na sekta ndogo ngapi za mishahara ya chini?",
+   "reply": "GN 605A inashughulikia sekta 16 na sekta ndogo 46 za mishahara ya chini. Thibitisha na TanzLII.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D23-NEG",
+   "q": "Sekta ya madini ina sekta ndogo ngapi kwenye GN 605A?",
+   "reply": "Agizo la Kima cha Chini cha Mshahara kwa Sekta Binafsi (GN 605A) lina sekta 16 katika Ratiba yake ya Kwanza. Sekta ya Madini (kipengele cha 10) ina vipengele vinne tu, kila kimoja na kiwango chake: uchimbaji na utafutaji wa madini, leseni ya msingi ya uchimbaji, leseni ya wauzaji (dealer), na leseni za madalali (brokers). Idadi ya 46 ni takwimu ya sekta ndogo kwa sekta zote kwa pamoja (kutoka PKF), si ya sekta ya madini peke yake, na Agizo lenyewe halitaji idadi hiyo: thibitisha na kazi.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AR-NEG",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}
