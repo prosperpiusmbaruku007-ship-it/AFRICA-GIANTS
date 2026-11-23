@@ -1,0 +1,14 @@
+{"id": "mv_01", "question": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_medical_services", "guards_against": "FOUNDING SPECIMEN (live, 84d8621): the model answered 'Ndiyo ... anatakiwa kusajili VAT'."}
+{"id": "mv_02", "question": "Je, huduma za kliniki zinatozwa VAT?", "expect": "vat_medical_services", "guards_against": "clinic, is it charged."}
+{"id": "mv_03", "question": "Do doctors have to register for VAT?", "expect": "vat_medical_services", "guards_against": "English form."}
+{"id": "mv_04", "question": "Daktari binafsi aliyefungua kliniki ndogo anahitaji kusajili VAT?", "expect": "vat_medical_services", "guards_against": "a clinic owner asking about registration: the statement (exempt on two conditions, registration not settled) is the right answer. First draft wrote none: a wrong expectation."}
+{"id": "mv_05", "question": "Huduma za meno zimesamehewa VAT?", "expect": "vat_medical_services", "guards_against": "dental, exempt?"}
+{"id": "mv_06", "question": "Muuguzi anayetoa huduma nyumbani anatakiwa kusajili VAT?", "expect": "vat_medical_services", "guards_against": "nurse, registration (a service outside an approved institution: the statement says both limbs are required)."}
+{"id": "mv_07", "question": "Daktari mwenye mauzo ya TZS 30,000,000 anatakiwa kusajili VAT?", "expect": "none", "guards_against": "a figure: the registration engine."}
+{"id": "mv_08", "question": "Dawa zinatozwa VAT?", "expect": "none", "guards_against": "medicines are a DIFFERENT exempt item."}
+{"id": "mv_09", "question": "Bima ya afya inatozwa VAT?", "expect": "none", "guards_against": "health INSURANCE is another exempt item."}
+{"id": "mv_10", "question": "Daktari akichelewa kusajili VAT adhabu ni nini?", "expect": "none", "guards_against": "a penalty."}
+{"id": "mv_11", "question": "Daktari anasajili VAT hiari?", "expect": "none", "guards_against": "voluntary registration."}
+{"id": "mv_12", "question": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_professional_services", "guards_against": "an ENGINEER stays on the professional-services route (mutual exclusion)."}
+{"id": "mv_13", "question": "Wakili anatakiwa kusajili VAT bila kujali mauzo?", "expect": "vat_professional_services", "guards_against": "a lawyer stays on the professional-services route."}
+{"id": "mv_14", "question": "Huduma za afya zinatozwa VAT kiasi gani?", "expect": "vat_medical_services", "guards_against": "a RATE ask about health services: the exempt statement answers it (not charged when both limbs hold). First draft wrote none: a wrong expectation."}

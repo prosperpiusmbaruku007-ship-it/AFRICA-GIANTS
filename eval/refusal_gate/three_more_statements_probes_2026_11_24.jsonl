@@ -1,0 +1,31 @@
+{"id": "sb_01", "question": "Msingi wa kukokotoa SDL ni nini — posho zinaingia?", "expect": "sdl_base", "guards_against": "natural base ask with allowances."}
+{"id": "sb_02", "question": "Are allowances included in the SDL base?", "expect": "sdl_base", "guards_against": "English form."}
+{"id": "sb_03", "question": "SDL inakokotolewa kwa jumla ya mishahara ghafi au mshahara wa msingi tu?", "expect": "sdl_base", "guards_against": "gross vs basic."}
+{"id": "sb_04", "question": "Bonasi na kamisheni zinahesabiwa kwenye SDL?", "expect": "sdl_base", "guards_against": "bonus + commission."}
+{"id": "sb_05", "question": "How does an employer calculate the SDL amount payable each month?", "expect": "sdl_base", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): the reply said 'gross payroll (cash basis) ... si pamoja na posho za fedha'."}
+{"id": "sb_06", "question": "Posho za safari zinahesabiwa kwenye mshahara ghafi wa SDL?", "expect": "sdl_base", "guards_against": "travel allowance."}
+{"id": "sb_07", "question": "SDL inakokotolewa kwa mshahara wa TZS 6,000,000 — msingi ni upi?", "expect": "none", "guards_against": "a figure: the SDL engine."}
+{"id": "sb_08", "question": "SDL ni asilimia ngapi?", "expect": "none", "guards_against": "a RATE question: the rate statement, not the base."}
+{"id": "sb_09", "question": "Pesa za SDL zinakwenda wapi?", "expect": "none", "guards_against": "where the money goes."}
+{"id": "sb_10", "question": "Nalipa SDL wapi na kwa fomu gani?", "expect": "sdl_how_to_file_pay", "guards_against": "filing route stays on its own route."}
+{"id": "sb_11", "question": "Posho za NSSF zinahesabiwa kwenye msingi wa NSSF?", "expect": "none", "guards_against": "another levy's base: not the SDL base."}
+{"id": "sb_12", "question": "Shule inalipa SDL kwenye posho za walimu?", "expect": "sdl_exemptions", "guards_against": "an exemption category: it must reach the EXEMPTIONS statement, not the base (first draft wrote none: a wrong expectation, the older route owns it)."}
+{"id": "sb_13", "question": "How does TRA conduct an SDL audit and what do they examine?", "expect": "sdl_audit_hedge", "guards_against": "audit stays on the audit hedge."}
+{"id": "lr3_01", "question": "SDL, NSSF na PAYE ni asilimia ngapi?", "expect": "levy_rates_three", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): 'PAYE ni asilimia 8 (0%-270%...) ... 14%'."}
+{"id": "lr3_02", "question": "Viwango vya SDL, NSSF na PAYE ni vipi?", "expect": "levy_rates_three", "guards_against": "plural 'viwango'."}
+{"id": "lr3_03", "question": "What are the rates of SDL, NSSF and PAYE?", "expect": "levy_rates_three", "guards_against": "English form."}
+{"id": "lr3_04", "question": "SDL, NSSF na PAYE ni asilimia ngapi ya mshahara wa 800000?", "expect": "none", "guards_against": "a figure: the engine / model."}
+{"id": "lr3_05", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?", "expect": "sdl_nssf_paye_party", "guards_against": "the party question stays on the party route."}
+{"id": "lr3_06", "question": "SDL, NSSF na PAYE zinalipwa lini?", "expect": "levy_deadlines_three", "guards_against": "the deadline question reaches the deadline route, not the rate one."}
+{"id": "lr3_07", "question": "SDL, NSSF, PAYE na WCF ni asilimia ngapi?", "expect": "none", "guards_against": "a FOURTH levy named."}
+{"id": "lr3_08", "question": "SDL na NSSF ni asilimia ngapi?", "expect": "none", "guards_against": "two levies: the older rate paths, not this three-levy statement."}
+{"id": "lr3_09", "question": "SDL, NSSF na PAYE nikichelewa adhabu ni asilimia ngapi?", "expect": "none", "guards_against": "a penalty rate, not the levy rates."}
+{"id": "ld3_01", "question": "SDL na NSSF na PAYE zinalipwa lini?", "expect": "levy_deadlines_three", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): '...michango ya NSSF, ifikapo tarehe 7'."}
+{"id": "ld3_02", "question": "Je, SDL, NSSF na PAYE zote zinalipwa tarehe 7?", "expect": "levy_deadlines_three", "guards_against": "premise with the NSSF-7th error: the statement corrects it."}
+{"id": "ld3_03", "question": "Tarehe ya mwisho ya SDL, NSSF na PAYE ni ipi?", "expect": "levy_deadlines_three", "guards_against": "last-date form."}
+{"id": "ld3_04", "question": "When are SDL, NSSF and PAYE due?", "expect": "levy_deadlines_three", "guards_against": "English form."}
+{"id": "ld3_05", "question": "SDL na PAYE zinalipwa lini?", "expect": "sdl_paye_deadline", "guards_against": "two levies stay on the two-levy route."}
+{"id": "ld3_06", "question": "SDL, NSSF na PAYE zinalipwa wapi?", "expect": "none", "guards_against": "where to pay: model."}
+{"id": "ld3_07", "question": "SDL, NSSF na PAYE nikichelewa kulipa adhabu ni nini?", "expect": "none", "guards_against": "a penalty."}
+{"id": "ld3_08", "question": "SDL, NSSF, PAYE na WCF zinalipwa lini?", "expect": "none", "guards_against": "a fourth levy."}
+{"id": "ld3_09", "question": "Ninaweza kulipa SDL, NSSF na PAYE siku tofauti?", "expect": "none", "guards_against": "a permission ask."}

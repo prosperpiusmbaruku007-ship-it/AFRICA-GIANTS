@@ -24,3 +24,11 @@ Queued 2026-11-17. The served index is 215 rows. The next regen batch applies ev
 
 - **The training pair that teaches the wrong claim.** `datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl:67` (and its `sft/train_sft.jsonl` copy) opens correctly (anniversary date, "si lazima mwaka wa kifedha") and then CONTRADICTS itself: "Kanuni ya jumla: wasilisha annual return ndani ya miezi 12 ya mwisho wa mwaka wa biashara wako." That sentence is the likeliest origin of the model's 12-month claim. **Proposed repair (awaiting the founder, R37 read first):** drop that sentence and put the rule in its place ("Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni)."), identical in the authored file and the export, with a reach test, exactly as the 2026-11-17 GN 605A repairs.
 - `corporate_income_tax_return.wrong_patterns[0]` is already narrowed off BRELA text (no regen needed).
+
+---
+
+## 3. QUEUED 2026-11-24 (founder: "don't do now"): WCF's contribution BASE — the remaining "cash" half
+
+`scripts/locked_facts.json` `wcf_threshold_no_minimum` still says "WCF: 0.5% of gross cash emoluments, from employee 1", and so do `wcf_rate_0_5_percent_confirmed` (rates.py comment) and the WCF rate statement's base wording. The SDL half of the same sentence was corrected on 2026-11-24 against VETA Act s.14(3) ("gross monthly emoluments" INCLUDES allowances; the word "cash" is not in that Act). **The WCF base is defined by a DIFFERENT Act — the Workers Compensation Act Cap.263 — that was NOT read for this.**
+
+**To do:** cache the Workers Compensation Act Cap.263 R.E.2023 (edition asserted in `scripts/check_source_editions.py`), read the contribution provision and its definition of earnings / emoluments / wages verbatim, check Finance Acts 2024/2025/2026 and the WCF Regulations (GN 185/2016) for amendment (R29), and then EITHER confirm "cash" with the quoted text OR correct the wording in `wcf_threshold_no_minimum` (the SDL-correct half is already done), the WCF rate fact and its statement, and fix the corresponding index row (66) in the next regen. **Do not assume the SDL answer carries over: the two Acts define their bases separately.** Owner: the next regen window. Expiry: before the next WCF-touching change (R35: a queue item with no date lapses).

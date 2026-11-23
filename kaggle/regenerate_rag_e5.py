@@ -420,6 +420,13 @@ critical_queries = [
     ('SDL household workers scope', 'query: Wafanyakazi wa nyumbani (domestic workers) — wanaathiri kizingiti cha SDL?', ['Haijathibitishwa. SDL hutozwa kila mwajiri']),
     ('NSSF contributions at age 60', 'query: Kama mfanyakazi anafikisha umri wa miaka 60, je bado anatakiwa kuchangia NSSF?', ['Sheria haisemi hivyo wala kinyume']),
     ('SDL exempt employers (revised row)', 'query: Ni waajiri gani hawalipi SDL?', ['Waziri wa Fedha anaweza kusamehe kwa Gazeti']),
+    # 2026-11-24: TWO NEW rows (the SDL base: allowances ARE in it; medical services are VAT-exempt on two conditions) and SIX rows revised in place (GN487A non-citizen and citizen penalties per the gazetted Order; the SDL payment form no longer asserted; p45_not_tanzanian without a stale section number;
+    # the SDL half of two 'cash emoluments' rows). Questions are VERBATIM committed fixtures where one exists (the doctor and the SDL-calculation specimens are live replies of build 84d8621 / b96e8a8); anchors are the PHRASE that carries the claim and match exactly ONE row.
+    ('SDL base includes allowances', 'query: Msingi wa kukokotoa SDL ni nini — posho zinaingia?', ['posho zote (safari, malazi, burudani)']),
+    ('Medical services VAT-exempt', 'query: Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?', ['Huduma za afya ni msamaha zikitolewa']),
+    ('GN487A non-citizen: fine OR imprisonment', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['AU kifungo kisichozidi miezi 6']),
+    ('GN487A citizen facilitator: fixed fine', 'query: Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A ni nini?', ['anayemsaidia mgeni kukiuka GN487A: faini ya']),
+    ('SDL payment form not asserted', 'query: Nalipa SDL kwa fomu gani?', ['Jina la fomu halijathibitishwa']),
     # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
     # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
     # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:

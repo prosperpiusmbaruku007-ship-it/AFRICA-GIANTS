@@ -1,0 +1,244 @@
+[
+ {
+  "n": 1,
+  "q": "Mwajiri analazimika kuweka rekodi gani za PAYE?",
+  "a": "Mwajiri lazima aweke: orodha ya wafanyakazi na TIN zao, hesabu za mishahara, hesabu za PAYE kwa kila mfanyakazi, stakabadhi za malipo ya TRA, na fomu za PAYE P9. Rekodi hizi zinahifadhiwa kwa miaka 5. Thibitisha na TRA.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_002_cleaned.jsonl",
+    21
+   ],
+   [
+    "train",
+    "cleaned_pairs\\batch_002a_cleaned.jsonl",
+    21
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    531
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    2350
+   ]
+  ],
+  "p9": [
+   "Mwajiri lazima aweke: orodha ya wafanyakazi na TIN zao, hesabu za mishahara, hesabu za PAYE kwa kila mfanyakazi, stakabadhi za malipo ya TRA, na fomu za PAYE P9."
+  ],
+  "d29": []
+ },
+ {
+  "n": 2,
+  "q": "Wakati TRA inakagua PAYE ya kampuni yangu, wanakagua nini hasa?",
+  "a": "Wakati wa ukaguzi wa PAYE, TRA wanakagua: orodha ya mishahara (payroll) kwa miaka yote inayopitiwa, rekodi za benki za malipo ya mshahara, mikataba ya ajira ya wafanyakazi, return za PAYE zilizowasilishwa, fomu za P9 zilizotolewa kwa wafanyakazi, vielelezo vya michango ya ziada kama posho za nyumba na usafiri, na malipo yoyote yanayosemekana kuwa ya 'mkopo' au 'kama ada'. Tofauti kati ya rekodi za benki na payroll ni dalili kuu ya udanganyifu.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_002_cleaned.jsonl",
+    104
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    3238
+   ]
+  ],
+  "p9": [
+   "Wakati wa ukaguzi wa PAYE, TRA wanakagua: orodha ya mishahara (payroll) kwa miaka yote inayopitiwa, rekodi za benki za malipo ya mshahara, mikataba ya ajira ya wafanyakazi, return za PAYE zilizowasilishwa, fomu za P9 zilizotolewa kwa wafanyakazi, vielelezo vya michango ya ziada kama posho za nyumba na usafiri, na malipo yoyote yanayosemekana kuwa ya 'mkopo' au 'kama ada'."
+  ],
+  "d29": []
+ },
+ {
+  "n": 3,
+  "q": "Fomu ya P45 inatumika Tanzania wakati mfanyakazi anaondoka kazini — je, hii ni kweli?",
+  "a": "Hapana. Fomu ya P45 ni fomu ya Uingereza (UK) na HAIPO Tanzania. Tanzania inatumia Hati ya Kuondoka (Leaving Certificate) na fomu ya P9 (taarifa ya mwaka ya PAYE). Mwajiri hutoa Hati ya Kuondoka kwa mfanyakazi anayeacha kazi, si P45.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_004_cleaned.jsonl",
+    90
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    360
+   ]
+  ],
+  "p9": [
+   "Tanzania inatumia Hati ya Kuondoka (Leaving Certificate) na fomu ya P9 (taarifa ya mwaka ya PAYE)."
+  ],
+  "d29": []
+ },
+ {
+  "n": 4,
+  "q": "P9 inawasilishwa kwa TRA kupitia ujumbe wa simu (SMS) — je, hii ni sahihi?",
+  "a": "Hapana. P9 (taarifa ya mwaka ya PAYE) inawasilishwa kupitia mfumo wa kielektroniki wa TRA (TRA Online/e-filing system) au ofisi ya TRA. Ujumbe wa simu peke yake haukubaliki kwa uwasilishaji rasmi wa P9. Wasilisha kupitia njia sahihi za TRA.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_004_cleaned.jsonl",
+    114
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    339
+   ]
+  ],
+  "p9": [
+   "P9 (taarifa ya mwaka ya PAYE) inawasilishwa kupitia mfumo wa kielektroniki wa TRA (TRA Online/e-filing system) au ofisi ya TRA.",
+   "Ujumbe wa simu peke yake haukubaliki kwa uwasilishaji rasmi wa P9."
+  ],
+  "d29": []
+ },
+ {
+  "n": 5,
+  "q": "Je, mfanyakazi mgeni anaondoka Tanzania kabla ya mwisho wa mwaka — jinsi ya kushughulikia PAYE yake?",
+  "a": "Wakati mfanyakazi mgeni anaondoka Tanzania kabla ya mwaka wa kodi kumalizika: (1) Hesabu PAYE ya mwaka nzima kulingana na muda wa kufanya kazi Tanzania; (2) Fanya marekebisho ya mwisho ya PAYE kwa mwezi wa mwisho; (3) Toa P9 form inayoonyesha kipindi kilichofaa; (4) Futa usajili wa mfanyakazi kwenye mfumo wa PAYE TRA. Thibitisha hatua za mwisho na TRA.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_006_cleaned.jsonl",
+    218
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    1752
+   ]
+  ],
+  "p9": [
+   "Wakati mfanyakazi mgeni anaondoka Tanzania kabla ya mwaka wa kodi kumalizika: (1) Hesabu PAYE ya mwaka nzima kulingana na muda wa kufanya kazi Tanzania; (2) Fanya marekebisho ya mwisho ya PAYE kwa mwezi wa mwisho; (3) Toa P9 form inayoonyesha kipindi kilichofaa; (4) Futa usajili wa mfanyakazi kwenye mfumo wa PAYE TRA."
+  ],
+  "d29": []
+ },
+ {
+  "n": 6,
+  "q": "Mfanyakazi mgeni ambaye amesajiliwa NSSF, analipa PAYE, na ana TIN — ana hali nzuri?",
+  "a": "Ndiyo — mfanyakazi mwenye TIN, PAYE inayokatwa kwa usahihi, na NSSF inayochangiwa — ana hali nzuri ya kodi Tanzania. Hii ni muundo sahihi wa kufuata. Mwajiri pia anahitaji SDL (kama wafanyakazi ≥10) na WCF (0.5%) zilizolipwa. Hifadhi kumbukumbu zote za P9 na malipo kwa ajili ya ukaguzi wowote wa TRA.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_006_cleaned.jsonl",
+    235
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    2243
+   ]
+  ],
+  "p9": [
+   "Hifadhi kumbukumbu zote za P9 na malipo kwa ajili ya ukaguzi wowote wa TRA."
+  ],
+  "d29": []
+ },
+ {
+  "n": 7,
+  "q": "Mfanyakazi mgeni aliyesha-resign — mwajiri anahitaji kulipa PAYE ya mwisho lini?",
+  "a": "PAYE ya mshahara wa mwisho (terminal benefits — mshahara wa mwisho, posho ya kuachana, likizo iliyobaki inayolipwa) inapaswa kukokotolewa, kukatwa, na kuwasilishwa TRA ifikapo tarehe 7 ya mwezi unaofuata baada ya malipo ya mwisho. Toa P9 kwa mfanyakazi baada ya malipo ya mwisho.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_006_cleaned.jsonl",
+    243
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    697
+   ]
+  ],
+  "p9": [
+   "Toa P9 kwa mfanyakazi baada ya malipo ya mwisho."
+  ],
+  "d29": []
+ },
+ {
+  "n": 8,
+  "q": "SDL na NSSF — zote zinalipwa tarehe 7 — je, kwa akaunti moja au tofauti?",
+  "a": "SDL na NSSF zinazalipwa tarehe 7 lakini kwa taasisi TOFAUTI. SDL inalipwa TRA (Tanzania Revenue Authority) kwa akaunti ya TRA. NSSF inalipwa NSSF (National Social Security Fund) kwa akaunti ya NSSF. Lipia kwa akaunti sahihi — kulipa SDL kwa akaunti ya NSSF au kinyume chake kutasababisha matatizo ya upatanisho.",
+  "locs": [
+   [
+    "train",
+    "cleaned_pairs\\batch_006_cleaned.jsonl",
+    278
+   ],
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    2390
+   ]
+  ],
+  "p9": [],
+  "d29": [
+   "SDL na NSSF zinazalipwa tarehe 7"
+  ]
+ },
+ {
+  "n": 9,
+  "q": "Je, kuna adhabu nikishindwa kulipa PAYE P9 ifikapo Machi 31?",
+  "a": "Ndio, huwa kuna adhabu kwa kuchelewesha malipo ya kodi, ikiwemo PAYE P9. Maelezo kamili ya adhabu na riba unapaswa kuangalia moja kwa moja na mamlaka za kodi (tra.go.tz).",
+  "locs": [
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    156
+   ],
+   [
+    "train",
+    "sft_shaped_pairs\\cleaned_pairs_batch_014.jsonl",
+    798
+   ]
+  ],
+  "p9": [
+   "Ndio, huwa kuna adhabu kwa kuchelewesha malipo ya kodi, ikiwemo PAYE P9."
+  ],
+  "d29": []
+ },
+ {
+  "n": 10,
+  "q": "PAYE hukokotolewa kila mwezi au mara moja kwa mwaka?",
+  "a": "PAYE hukatwa na kuwasilishwa kila mwezi kufikia tarehe 7 ya mwezi unaofuata, kisha husuluhishwa mara moja kwa mwaka kupitia fomu ya P9. Makato ya mwezi ni ya awali, na usuluhishi wa mwaka huhakikisha jumla ni sahihi. Thibitisha na TRA (tra.go.tz).",
+  "locs": [
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    3163
+   ],
+   [
+    "train",
+    "sft_shaped_pairs\\cleaned_pairs_batch_015.jsonl",
+    92
+   ]
+  ],
+  "p9": [
+   "PAYE hukatwa na kuwasilishwa kila mwezi kufikia tarehe 7 ya mwezi unaofuata, kisha husuluhishwa mara moja kwa mwaka kupitia fomu ya P9."
+  ],
+  "d29": []
+ },
+ {
+  "n": 11,
+  "q": "Nini maana ya PAYE P9 hasa kwa biashara ndogo kama yangu?",
+  "a": "PAYE P9 ni fomu ya taarifa ya mwisho ya mwaka kwa ajili ya kodi ya mapato inayokatwa moja kwa moja kutoka kwenye mshahara wa mfanyakazi (Pay As You Earn). Inathibitisha jumla ya kodi iliyokatwa na kulipwa kwa ajili ya mfanyakazi husika kwa mwaka wa kodi. Thibitisha maelezo zaidi na mamlaka husika (tra.go.tz).",
+  "locs": [
+   [
+    "train",
+    "sft\\train_sft.jsonl",
+    3243
+   ],
+   [
+    "train",
+    "sft_shaped_pairs\\cleaned_pairs_batch_014.jsonl",
+    799
+   ]
+  ],
+  "p9": [
+   "PAYE P9 ni fomu ya taarifa ya mwisho ya mwaka kwa ajili ya kodi ya mapato inayokatwa moja kwa moja kutoka kwenye mshahara wa mfanyakazi (Pay As You Earn)."
+  ],
+  "d29": []
+ }
+]

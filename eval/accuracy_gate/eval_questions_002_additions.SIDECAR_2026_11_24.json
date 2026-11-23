@@ -1,0 +1,20 @@
+{
+ "frozen_file": "eval_questions_002_additions.jsonl",
+ "frozen_sha256": "2123ee81b109e672a20f2241f00b183e573a6e65d7a79d2b19750d89670fe24a",
+ "recorded": "2026-11-24",
+ "why_a_sidecar": "the gate file is not edited (founder, 2026-11-24); this file records what the corrected key says. The scorer reads the file, so an adjudication of eval_203 reads THIS sidecar (R12b outcome WRONG_GOLD), exactly as the 2026-11-17 np_13 / s2_07 sidecars.",
+ "corrections": [
+  {
+   "id": "eval_203",
+   "change": "ANSWER TEXT only; the polarity (Hapana, no P45 in Tanzania) is UNCHANGED",
+   "original": {
+    "correct_answer_sw": "Hapana. Fomu ya P45 haipo katika mfumo wa kodi wa Tanzania — ni fomu ya Uingereza. Badala yake tumia fomu ya P9 au cheti cha kuondoka kazini. Thibitisha na TRA."
+   },
+   "corrected": {
+    "correct_answer_sw": "Hapana. Fomu ya P45 haipo katika mfumo wa kodi wa Tanzania — ni fomu ya Uingereza. Kinacholingana nayo Tanzania ni cheti cha zuio cha mwaka (withholding certificate) cha Sheria ya Kodi ya Mapato; 'P9' ni neno la Kenya (KRA), si la Tanzania. Thibitisha na TRA."
+   },
+   "reason": "the key recommended 'fomu ya P9' (Kenyan KRA terminology; TRA has no such form) and a 'cheti cha kuondoka kazini' that locked fact p45_not_tanzanian's correction_note removed as an unverified addition. A model that answers correctly (withholding certificate) is marked WRONG by the old key.",
+   "evidence": "locked facts p45_not_tanzanian (corrected 2026-09-01) and paye_p9_deadline; Income Tax Act Cap.332 R.E.2023 s.110(3)(b) (the annual withholding certificate, served by 30 January), direct read 2026-10-05; CLAUDE.md Section 11 ('P9 is Kenyan')."
+  }
+ ]
+}

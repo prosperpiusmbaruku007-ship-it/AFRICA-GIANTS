@@ -205,6 +205,10 @@ PINNED = {
     # late_payment_penalty_rate ... the moment the next regen ships".
     "late_payment_penalty_rate": ("absent", None),
 
+    # 2026-11-24: written for the SDL-base item (VETA Act s.14(3): allowances included); its index row is APPENDED (precompute _BATCH_2026_11_24, row 219) so pending_r15 until the Kaggle regen runs. test_pending_r15_keys_are_still_pending removes this pin the moment the key resolves.
+    "sdl_base_includes_allowances": ("pending_r15", None),
+    "medical_services_vat_exempt": ("pending_r15", None),   # 2026-11-24: the medical-VAT row, APPENDED (220th) like the SDL base
+
     # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
     # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
     # now resolve by EXACT key match against the new index -- confirmed via check(), not

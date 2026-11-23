@@ -21,7 +21,7 @@ NEW = ("sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party")
 SDL_TOPICS = ("sdl_payer", "sdl_exemptions") + NEW
 EXPECT = {"premise": "sdl_employee_premise", "filing": "sdl_how_to_file_pay", "nssf_party": "sdl_nssf_party", "payer": "sdl_payer", "none": None,
           # 2026-11-23 (ten more statements): three of the none-probes now reach their OWN new routes (see each probe's expect_history); they must still reach none of the three SDL routes above.
-          "audit_hedge": "sdl_audit_hedge", "paye_party": "sdl_nssf_paye_party", "nssf_only": "nssf_party"}
+          "audit_hedge": "sdl_audit_hedge", "paye_party": "sdl_nssf_paye_party", "nssf_only": "nssf_party", "sdl_base": "sdl_base"}
 
 
 def _load(path):
@@ -32,7 +32,7 @@ def _load(path):
 def _probes():
     rows = _load(_PROBES)
     assert len(rows) == 38, len(rows)                          # a loader returning nothing must fail, not pass vacuously (R20)
-    assert sum(1 for r in rows if r["expect"] == "none") >= 15 and sum(1 for r in rows if r["expect"] in ("premise", "filing", "nssf_party")) >= 19   # 18 -> 15: three moved to their own routes (expect_history)
+    assert sum(1 for r in rows if r["expect"] == "none") >= 14 and sum(1 for r in rows if r["expect"] in ("premise", "filing", "nssf_party")) >= 19   # 18 -> 14 (n_03 moved to sdl_base on 2026-11-24): three moved to their own routes (expect_history)
     return rows
 
 

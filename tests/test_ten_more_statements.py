@@ -141,7 +141,8 @@ def test_party_statements_state_the_employee_nssf_is_deducted_and_paye_is_the_em
 
 def test_professional_statement_gives_no_invented_reason_and_does_not_cover_doctors():
     assert "bila kutoa sababu" in _w("vat_professional_services")
-    assert routing.fixed_statement_topic("Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?") is None
+    # 2026-11-24: the doctor question is now owned by vat_medical_services (it must NOT be the professional-services statement)
+    assert routing.fixed_statement_topic("Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?") == "vat_medical_services"
 
 
 # ── D-FIDELITY-29: NSSF stated as due by the 7th ───────────────────────────────────────────────

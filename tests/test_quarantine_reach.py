@@ -150,6 +150,20 @@ ADJUDICATED_KEEPS = {
                 "the fix is a POSITIVE row teaching s.95, an addition rather than a deletion."),
         },
     ],
+    "datasets/tier1a/sft/val_sft.jsonl": [
+        {
+            "needle": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": (
+                "2026-11-24: MOVED from train_sft.jsonl to val_sft.jsonl by the export regeneration after the corpus repairs (generate_sft.py splits train/val over the WHOLE set, so removing rows reshuffles which file a kept row lands in; the row itself is unchanged and still the adjudicated correct restoration). The exported copy of the b008_paye_adv_002 restoration above. It is present "
+                "here BECAUSE the restoration went to the authored corpus and the export was "
+                "then regenerated, which is the R36-correct direction: a restoration written "
+                "into datasets/tier1a/sft/ by hand would be overwritten on the next rebuild and "
+                "would have no authored source. Pinned by CONTENT, never by line -- this file is "
+                "reshuffled on every rebuild, and eleven specimens pinned by file:line into it "
+                "all failed at once on 2026-10-07."),
+        },
+    ],
     "datasets/tier1a/sft/train_sft.jsonl": [
         {
             "needle": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri",
@@ -183,18 +197,6 @@ ADJUDICATED_KEEPS = {
                     "REMOVED over a correctly-attached or deliberately-avoided 'tarehe 20', "
                     "after train_sft:3196 and the row restored earlier the same day -- so "
                     "that sweep's over-removal count is three, not one."),
-        },
-        {
-            "needle": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%",
-            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
-            "why": (
-                "The exported copy of the b008_paye_adv_002 restoration above. It is present "
-                "here BECAUSE the restoration went to the authored corpus and the export was "
-                "then regenerated, which is the R36-correct direction: a restoration written "
-                "into datasets/tier1a/sft/ by hand would be overwritten on the next rebuild and "
-                "would have no authored source. Pinned by CONTENT, never by line -- this file is "
-                "reshuffled on every rebuild, and eleven specimens pinned by file:line into it "
-                "all failed at once on 2026-10-07."),
         },
         {
             "needle": "Bendi TANO za PAYE Tanzania 2025/2026 — sahihi kamili",

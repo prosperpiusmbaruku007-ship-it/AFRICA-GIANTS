@@ -3,10 +3,10 @@
 {"id": "tp_03", "question": "Mfanyakazi anakatwa PAYE, NSSF na SDL kwenye mshahara wake?", "expect": "sdl_nssf_paye_party", "guards_against": "employee-deduction form, three levies in another order."}
 {"id": "tp_04", "question": "Is SDL, NSSF and PAYE deducted from the employee?", "expect": "sdl_nssf_paye_party", "guards_against": "English form."}
 {"id": "tp_05", "question": "SDL na NSSF zinakatwa kwa mfanyakazi?", "expect": "sdl_nssf_party", "guards_against": "the TWO-levy question must stay on the older route (the composite needs PAYE)."}
-{"id": "tp_06", "question": "SDL, NSSF na PAYE ni asilimia ngapi?", "expect": "none", "guards_against": "a RATE question about three levies is not a party question."}
+{"id": "tp_06", "question": "SDL, NSSF na PAYE ni asilimia ngapi?", "expect": "levy_rates_three", "guards_against": "EXPECT INVERTED 2026-11-24 (was none: a RATE question about three levies is not a party question.). Now owned by the three-levy RATE statement (founder-approved 2026-11-24)."}
 {"id": "tp_07", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi mwenye mshahara wa 800000?", "expect": "none", "guards_against": "a figure: the engine / model path, never a party statement."}
 {"id": "tp_08", "question": "SDL, NSSF, PAYE na WCF zinakatwa kwa mfanyakazi?", "expect": "none", "guards_against": "a FOURTH levy named: the composite does not cover WCF."}
-{"id": "tp_09", "question": "SDL, NSSF na PAYE zinalipwa lini?", "expect": "none", "guards_against": "a deadline question, not a party question (the PAYE+SDL deadline route needs no NSSF)."}
+{"id": "tp_09", "question": "SDL, NSSF na PAYE zinalipwa lini?", "expect": "levy_deadlines_three", "guards_against": "EXPECT INVERTED 2026-11-24 (was none: a deadline question, not a party question (the PAYE+SDL deadline route needs no NSSF).). Now owned by the three-levy DEADLINE statement (founder-approved 2026-11-24)."}
 {"id": "tp_10", "question": "SDL, NSSF na PAYE zinalipwa wapi?", "expect": "none", "guards_against": "where to pay: model."}
 {"id": "np_01", "question": "NSSF inakatwa kwa mfanyakazi?", "expect": "nssf_party", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): 'Ndiyo ... 10% sawa na 20%' (garbled)."}
 {"id": "np_02", "question": "Nani analipa NSSF?", "expect": "nssf_party", "guards_against": "who-pays form."}
@@ -63,7 +63,7 @@
 {"id": "vp_02", "question": "Mhasibu lazima ajisajili VAT hata kama mauzo yake ni madogo?", "expect": "vat_professional_services", "guards_against": "profession + registration + regardless."}
 {"id": "vp_03", "question": "Do lawyers have to register for VAT regardless of turnover?", "expect": "vat_professional_services", "guards_against": "English form."}
 {"id": "vp_04", "question": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_professional_services", "guards_against": "engineer, professional service."}
-{"id": "vp_10", "question": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "none", "guards_against": "A DOCTOR must NOT get the professional-services statement: medical services are an exempt supply (found by reading the sweep; the first draft of this probe expected the statement, which would have been a confident error)."}
+{"id": "vp_10", "question": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_medical_services", "guards_against": "EXPECT INVERTED 2026-11-24 (was none: A DOCTOR must NOT get the professional-services statement: medical services are an exempt supply (found by reading the sweep; the first draft of this probe expected the statement, which would have been a confident error).). A DOCTOR must still NOT get the professional-services statement; the medical-services statement (exempt on two conditions, registration hedged) is now the intended owner."}
 {"id": "vp_11", "question": "Wakili mpya aliyeidhinishwa leo — anaweza kuanza kufanya kazi bila kusajili VAT kwanza?", "expect": "none", "guards_against": "a timing / start-practising question the statement does not answer."}
 {"id": "vp_05", "question": "Wakili mwenye mauzo ya TZS 30,000,000 anatakiwa kusajili VAT?", "expect": "none", "guards_against": "a figure: the registration engine."}
 {"id": "vp_06", "question": "Naweza kusajili VAT kwa hiari kama mhasibu?", "expect": "vat_voluntary_registration", "guards_against": "voluntary registration: the OLDER voluntary route owns it, not the professional-services statement (first draft wrote none: a wrong expectation)."}
@@ -83,7 +83,7 @@
 {"id": "sp_02", "question": "SDL na PAYE zinalipwa lini?", "expect": "sdl_paye_deadline", "guards_against": "plain deadline form."}
 {"id": "sp_03", "question": "SDL and PAYE are due on what date?", "expect": "sdl_paye_deadline", "guards_against": "English form."}
 {"id": "sp_04", "question": "Tarehe ya mwisho ya SDL na PAYE ni ipi?", "expect": "sdl_paye_deadline", "guards_against": "last-date form."}
-{"id": "sp_05", "question": "SDL na NSSF na PAYE zinalipwa lini?", "expect": "none", "guards_against": "NSSF is a THIRD levy with a different deadline: the composite declines."}
+{"id": "sp_05", "question": "SDL na NSSF na PAYE zinalipwa lini?", "expect": "levy_deadlines_three", "guards_against": "EXPECT INVERTED 2026-11-24 (was none: NSSF is a THIRD levy with a different deadline: the composite declines.). Now owned by the three-levy DEADLINE statement: NSSF is told one month, SDL and PAYE the 7th."}
 {"id": "sp_06", "question": "SDL na PAYE zinalipwa wapi?", "expect": "none", "guards_against": "where to pay: model."}
 {"id": "sp_07", "question": "SDL na PAYE nikichelewa adhabu ni nini?", "expect": "none", "guards_against": "a penalty."}
 {"id": "sp_08", "question": "SDL inalipwa lini?", "expect": "none", "guards_against": "SDL ALONE with a time word: it must NOT reach the SDL+PAYE composite (no PAYE named); it reaches no statement route and that is the contract (first draft wrote sdl_payer by mistake)."}
@@ -94,5 +94,5 @@
 {"id": "au_04", "question": "Nitajiandaaje kwa SDL audit ya TRA?", "expect": "sdl_audit_hedge", "guards_against": "preparation form."}
 {"id": "au_05", "question": "Ukaguzi wa SDL kwa mwajiri mwenye wafanyakazi 15 na mshahara wa 6,000,000 unafanyikaje?", "expect": "none", "guards_against": "digits: the engine / model."}
 {"id": "au_06", "question": "Ukaguzi wa PAYE unafanyikaje?", "expect": "none", "guards_against": "another levy's audit: no route."}
-{"id": "au_07", "question": "How does an employer calculate the SDL amount payable each month?", "expect": "none", "guards_against": "calculation, not audit."}
+{"id": "au_07", "question": "How does an employer calculate the SDL amount payable each month?", "expect": "sdl_base", "guards_against": "EXPECT INVERTED 2026-11-24 (was none: calculation, not audit.). Now owned by the SDL BASE statement (the calculation ask is answered with the base and the 3.5%)."}
 {"id": "au_08", "question": "Pesa za SDL zinakwenda wapi?", "expect": "none", "guards_against": "where the money goes, not audit."}

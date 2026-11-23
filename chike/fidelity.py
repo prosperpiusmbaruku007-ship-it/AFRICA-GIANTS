@@ -1150,6 +1150,76 @@ def unsupported_body_figures(question: str, body: str, working: str):
             if amount not in known]
 
 
+# ---- D-FIDELITY-31 (2026-11-24, founder: build and price; wire ONLY with 0 gold flags and every flag read): A MONEY FIGURE IN A COMPUTE BODY THAT NO ENGINE PRODUCED AND NO ONE-STEP ARITHMETIC REACHES.
+# Founding specimen (live, b96e8a8 and 84d8621, eval/results/sdl_three_routes_live_2026_11_23.json): the SDL+NSSF compute reply says "SDL ... TZS 210,000 (TZS 150,000 kwa mwajiri)"; the engine produced 210,000 and the NSSF figures, 150,000 is in neither the question
+# nor any working, and `guards=[]`. D-FIDELITY-9 is off there (its gate is "the question supplies no figure at all") and its loose form is 1/14 precise because the user's own figures, per-head breakdowns and net pay are all LEGITIMATE derivations (eval_092, eval_296, eval_395).
+# THE DIFFERENCE FROM THAT LOOSE RULE IS THE SUPPORT SET. A body amount is supported if it is (1) a figure in the question, (2) a figure in ANY engine working of the request (SIBLING levies included: a sibling's figure is not an invention), or (3) a ONE-STEP result of two supported
+# amounts (x + y, x - y, x * y, x / y), of a supported amount and a RATE present in the question / the workings / the locked rate set (x * r), or of a supported amount and a COUNT the question states (x / n, x * n: a per-head share). 150,000 is 2.5% of 6,000,000 and 2.5% is
+# in none of those sets, so it is unsupported; a two-step derivation by the model (x * r * 12) is flagged although correct: a KNOWN LIMIT, priced.
+# R25. (1) Defect: a shilling figure the engine did not produce and no one-step arithmetic reaches (one live reply). (2) What CORRECT output could it damage: a per-head breakdown, a net pay, a daily-wage product, a rate-times-payroll figure and a figure the user supplied are all supported by rule (3);
+#   a two-step annual figure is the exception, and the action (BODY BLANKED, the working still renders) costs one sentence, never the answer.
+_D31_RATE = re.compile(r"(\d+(?:[.,]\d+)?)\s*%|asilimia\s+(\d+(?:[.,]\d+)?)", re.IGNORECASE)
+_D31_COUNT = re.compile(r"(?<![\d.,])(\d{1,3})(?![\d%])(?![.,]\d)")   # "wafanyakazi 5," is a count; "1,500" and "3.5" are not (pricing: a trailing comma had hidden the headcount)
+# RATES are only those PRESENT in the exchange (question + workings). A first draft added a broad locked-rate set and the founding specimen escaped: 150,000 = 0.25 x 600,000 (NSSF's employer half), a coincidence a wide rate set manufactures. STATUTORY CONSTANTS are a separate, derived set (the
+# PAYE band edges, their +1 edges and base amounts, the presumptive ceilings), read from rates.py so they cannot drift: pricing found three stored replies and TWO GOLD answers flagged only for citing a band edge (270,000 / 270,001 / 760,001).
+def _d31_constants():
+    from .rules_engine import rates as _rates
+    out = {int(_rates.PRESUMPTIVE_TURNOVER_CEILING), int(_rates.PRESUMPTIVE_NEW_BUSINESS_EXEMPT_UPPER)}
+    for lower, _rate, base in _rates.PAYE_BANDS:
+        for v in (int(lower), int(lower) + 1, int(base)):
+            if v >= _FIG_FLOOR:
+                out.add(v)
+    return out
+
+
+def _d31_rates(text: str):
+    out = set()
+    for m in _D31_RATE.finditer(text or ""):
+        tok = (m.group(1) or m.group(2) or "").replace(",", ".")
+        try:
+            out.add(round(float(tok) / 100.0, 6))
+        except ValueError:
+            pass
+    return out
+
+
+def _d31_supported(amount: int, known, rates, counts) -> bool:
+    if amount in known:
+        return True
+    base = sorted(known)[:40]
+    cand = set()
+    for x in base:
+        for r in rates:
+            cand.add(round(x * r))
+        for n in counts:
+            cand.add(round(x * n))
+            if n:
+                cand.add(round(x / n))
+        for y in base:
+            cand.add(x + y)
+            cand.add(abs(x - y))
+            if x * y < 10 ** 13:
+                cand.add(x * y)
+            if y:
+                cand.add(round(x / y))
+    return any(abs(amount - c) <= 1 for c in cand)
+
+
+def unproduced_figures(question: str, body: str, workings: str):
+    """[(amount, sentence)] for money the body asserts that is in no supported set (see D-FIDELITY-31). `workings` is EVERY engine working of the request, joined. Pure."""
+    if not body or not workings:
+        return []
+    known = _figures(question) | _figures(workings) | _d31_constants()
+    rates = _d31_rates((question or "") + " " + workings)
+    counts = {int(m.group(1)) for m in _D31_COUNT.finditer(question or "") if 1 <= int(m.group(1)) <= 999}
+    # A rate STATED IN THE SAME SENTENCE as the figure is part of the body's own derivation ("NSSF = 20% x TZS 4,800,000 = TZS 960,000"): priced on eval_324. A WRONG rate is D-FIDELITY-6's job; a figure with no rate and no derivation (the founding specimen) is not helped by this.
+    return [(amount, sentence) for amount, sentence in _asserted_figures(body) if not _d31_supported(amount, known, rates | _d31_rates(sentence), counts)]
+
+
+def body_states_unproduced_figure(question: str, body: str, workings: str) -> bool:
+    return bool(unproduced_figures(question, body, workings))
+
+
 def body_states_unsupported_figure(question: str, body: str, working: str) -> bool:
     """True iff the body asserts a money figure nothing in the exchange can support."""
     return bool(unsupported_body_figures(question, body, working))
@@ -1450,7 +1520,7 @@ def fixed_figure_violations(question: str, body: str):
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
         if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party",
-                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"):
+                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
@@ -2132,10 +2202,12 @@ _D29_SEVEN = re.compile(r"(?:siku|tarehe)\s+(?:ya\s+)?(?:7|saba)(?![0-9])|(?<![0
 _D29_MONTH = re.compile(r"mwezi\s+mmoja|one\s+month|calendar\s+month|siku\s+30(?![0-9])|30\s+days", re.IGNORECASE)
 _D29_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|not|wala|tofauti)(?![a-z])", re.IGNORECASE)
 _D29_ANAPHOR = re.compile(r"zote\s+mbili|(?<![a-z])zote(?![a-z])|hizi\s+zote|(?<![a-z])both(?![a-z])|all\s+(?:three|of\s+them)", re.IGNORECASE)
+# the live replies run sentences together with NO space after the full stop ("...tra.go.tz).NSSF inalipwa ... (nssf.go.tz).PAYE inalipwa ..."), so a split on punctuation + whitespace merged the NSSF one-month clause with the PAYE 7th clause and the month guard excused the error:
+_D29_SENT = re.compile(r"(?<=[.!?])\s+|(?<=[.!?])(?=[A-Z])|\n+")
 _D29_CLAUSE = re.compile(r"[;:|]|\s+(?:lakini|ila|wakati|while|but|whereas)\s+", re.IGNORECASE)
 # A LIST of levies ("SDL na NSSF", "PAYE, NSSF, WCF na kodi", "SDL + PAYE"): the unit a deadline attaches to. Priced over the corpus (eval/results/price_d29_d30_2026_11_23.json): the first draft asked only "is NSSF in the same clause as a 7th" and flagged four
 # CORRECT training rows (a `|`-separated table, the nssf.go.tz DOMAIN read as a levy, "PAYE kufikia tarehe 7" where the 7th belongs to PAYE, a sentence the splitter could not break at ".)"). The deadline belongs to the list directly BEFORE it (or, when none, directly after).
-_D29_LEVY_LIST = re.compile(r"(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz)(?:\s*(?:,|\+|&|na|and|au|pamoja\s+na|sambamba\s+na)\s*(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz))*", re.IGNORECASE)
+_D29_LEVY_LIST = re.compile(r"(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz)(?:\s*(?:,|\+|&|na|and|au|pamoja\s+na|sambamba\s+na)\s*(?:michango\s+ya\s+|mchango\s+wa\s+|malipo\s+ya\s+|contributions?\s+(?:of\s+|to\s+)?)?(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz))*", re.IGNORECASE)
 
 
 def _d29_list_for_deadline(clause, m7):
@@ -2154,7 +2226,7 @@ def nssf_deadline_misstated(question: str, body: str):
     if not body or not _D29_NSSF.search(body):
         return []
     out, prev_named_nssf = [], False
-    for s in _SENTENCE_SPLIT.split(body):
+    for s in _D29_SENT.split(body):
         if not s or not s.strip():
             continue
         for clause in _D29_CLAUSE.split(s):

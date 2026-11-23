@@ -1,0 +1,37 @@
+{
+ "population": {
+  "stored_replies": 580,
+  "with_body_and_working": 61,
+  "excluded_working_moved_or_error": 376,
+  "gold_checked": 300
+ },
+ "founding_specimen_flags_150000": true,
+ "stored_flags": 2,
+ "gold_flags": 0,
+ "stored_rows": [
+  {
+   "src": "eval/results/gate_production_0e11c3d.json",
+   "id": "eval_324",
+   "q": "Biashara yangu ina mishahara TZS 4,800,000 kwa watu 13, na madeni TZS 2,000,000, na faida TZS 1,000,000 — SDL yangu ni ngapi?",
+   "unproduced": [
+    [
+     252000,
+     "Kwa hesabu kamili: SDL = 3.5% × TZS 4,800,000 = TZS 168,000 NSSF = 20% × TZS 4,800,000 = TZS 960,000 WCF = 0.5% × TZS 4,800,000 = TZS 24,000 Jumla ya malipo ya mwajiri = TZS 252,000 Faida ya mwajiri ="
+    ]
+   ]
+  },
+  {
+   "src": "eval/results/targeted_route_verification_2026_10_09.json",
+   "id": "th_22",
+   "q": "Nina mfanyakazi mmoja tu — je nalipa WCF?",
+   "unproduced": [
+    [
+     50000,
+     "Kwa mfanyakazi MMOJA: WCF = TZS 50,000 kwa mwaka (0.5% ya mshahara)."
+    ]
+   ]
+  }
+ ],
+ "gold_rows": [],
+ "decision_rule": "wire ONLY if gold_flags == 0 AND the founding specimen flags AND every stored flag has been read and is a genuine unproduced figure (or is a priced, stated, KNOWN-LIMIT two-step derivation)"
+}

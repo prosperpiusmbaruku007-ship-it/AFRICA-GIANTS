@@ -2896,6 +2896,34 @@ _FS_TOPICS = (
                r"(?<![a-z])(?:nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])|" + _SDL_FILE_ASK.pattern + r"|" + _SDL_PAYER_ASK.pattern
                # from reading the first sweep: a PERMISSION ask, a past-payment / compliance scenario, WHEN a levy STARTS, closure, seasonal staff and a bonus are different questions the deadline statement does not answer
                + r"|(?<![a-z])naweza|ninaweza|can\s+i|kawia|kukawia|nilikawia|inaonekana|tulilipa|nililipa|nimelipa|tumelipa|taratibu|inaanza|kuanza|nianze|inafungwa|kufunga|kufungwa|closing|msimu|seasonal|bonasi|bonus")),
+    # ---- 2026-11-24 (founder): the SDL BASE and the two THREE-LEVY statements. Probes both ways: eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl; every diversion over the held questions READ.
+    # SDL base (VETA Act s.14(3): allowances INCLUDED). Amounts, rates-only asks, other levies, exemptions, penalties, dates and where/how-to-pay veto; a calculation ASK is welcome (the statement gives the base and the 3.5%).
+    ("sdl_base",
+     re.compile(_NEW_SDL),
+     re.compile(r"msingi|(?<![a-z])base(?![a-z])|inakokotolewa|inahesabiwa|kinahesabiwa|kinakokotolewa|inajumuisha|zinajumuisha|posho|allowance|bonasi|bonus|kamisheni|commission|emolument|ghafi|gross|(?<![a-z])includes?(?![a-z])|calculat"),
+     re.compile(r"[0-9]|" + _NEW_MONEY + r"|" + _NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate(?![a-z])|(?<![a-z])lini(?![a-z])|deadline|tarehe|" + _NEW_PENALTY_WORDS + r"|kujisajili|usajili|kuomba|(?<![a-z])omba|ombi|"
+               + _SDL_FILE_ASK.pattern + r"|" + _SDL_PAYER_ASK.pattern + r"|audit|ukaguzi|(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])|"
+               # from reading the sweep: WHICH WORKERS count (casual / contract), WHICH MONTH's pay applies, aggregation across businesses and a director's fee are different questions the base statement does not answer
+               r"casual|muda\s+mfupi|short-term|mkataba|contract|januari|desemba|january|december|mwezi\s+uliopita|kila\s+biashara|jumla\s+au|separately|each\s+business|tofauti|mkurugenzi|director")),
+    # three levies, RATE: "SDL, NSSF na PAYE ni asilimia ngapi?" (live: "PAYE ni asilimia 8 ... 14%"). A rate ask is needed; amounts, dates, penalties, where/how, the payer ask (the party route's) and every other levy veto.
+    ("levy_rates_three",
+     re.compile(_NEW_SDL),
+     re.compile(r"(?=.*(?<![a-z])nssf(?![a-z]))(?=.*(?<![a-z])paye(?![a-z]))(?=.*(?:asilimia|[kv]iwango|(?<![a-z])rates?(?![a-z])|percent|%|ngapi))", re.S),
+     re.compile(r"[0-9]|" + _NEW_MONEY + r"|" + _NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|kiasi\s+gani|kokotoa|hesab|kokot|(?<![a-z])lini(?![a-z])|deadline|tarehe|muda|" + _NEW_PENALTY_WORDS + r"|kujisajili|usajili|kuomba|(?<![a-z])omba|ombi|"
+               + _SDL_FILE_ASK.pattern + r"|" + _SDL_PAYER_ASK.pattern + r"|(?<![a-z])(?:wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])")),
+    # three levies, DEADLINE: SDL and PAYE by the 7th, NSSF one month after the month end (live: "... michango ya NSSF, ifikapo tarehe 7"). A time ask is needed; amounts, rates, penalties, where/how, the payer ask and every other levy veto.
+    ("levy_deadlines_three",
+     re.compile(_NEW_SDL),
+     re.compile(r"(?=.*(?<![a-z])nssf(?![a-z]))(?=.*(?<![a-z])paye(?![a-z]))", re.S),
+     re.compile(_NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|kiasi\s+gani|asilimia|[kv]iwango|(?<![a-z])rate|kokotoa|hesab|kokot|" + _NEW_PENALTY_WORDS + r"|kujisajili|usajili|kuomba|(?<![a-z])omba|ombi|" + _NEW_MONEY + r"|[0-9]{2,}|"
+               + _SDL_FILE_ASK.pattern + r"|" + _SDL_PAYER_ASK.pattern + r"|(?<![a-z])(?:wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])|(?<![a-z])naweza|ninaweza|can\s+i|kawia|kukawia|inaanza|kuanza|inafungwa|kufunga|kufungwa|bonasi|bonus")),
+    # 2026-11-24 (founder): MEDICAL services and VAT. The live reply to "Daktari ... anatakiwa kusajili VAT?" was "Ndiyo"; health care is an EXEMPT supply on two conditions. A health word AND a VAT registration / tax ask; amounts, voluntary, penalties, how-to, refunds,
+    # other taxes, medicines / equipment / laboratories (a different exempt item) and health INSURANCE veto. The VAT-professional route vetoes the same health words, so the two are exclusive by construction.
+    ("vat_medical_services",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?:daktari|madaktari|doctor|kliniki|clinic|hospitali|hospital|muuguzi|nurse|meno|dental|dentist|matibabu|huduma\s+za\s+afya|health\s+(?:care|services?)|medical|ukunga|midwi))(?=.*(?:sajili|register|usajili|registration|kodi|tozwa|inatozwa|hutozwa|charge|msamaha|exempt|zimesamehewa))", re.S),
+     re.compile(r"[0-9]|" + _NEW_MONEY + r"|hiari|voluntar|" + _NEW_PENALTY_WORDS + r"|refund|rejesho|kughairi|kufuta|kujiondoa|cancel|deregist|zuio|withhold|(?<![a-z])efd|risiti|dawa|medicine|pharmac|vifaa|equipment|maabara|laborator|bima|insurance|"
+               r"(?<![a-z])(?:nssf|paye|sdl|wcf|brela|wht)(?![a-z])|kodi\s+ya\s+mapato|fomu|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni|(?<![a-z])lini(?![a-z])|tarehe|deadline|kuanza|(?<![a-z])start|newly|mpya")),
     # B4 SDL audit: no source holds how TRA audits SDL, so the statement is a hedge (the live reply invented an eight-point audit and "P9 forms"). Amounts, exemptions, rates and other levies veto.
     ("sdl_audit_hedge",
      re.compile(_NEW_SDL),
@@ -2949,6 +2977,10 @@ _FS_TOPIC_ASK = {
     "brela_late_annual_return": re.compile(r"\?|nini|gani|ngapi|kiasi|(?<![a-z])je(?![a-z])|matokeo|what|consequence|how\s+much"),
     "sdl_paye_deadline": re.compile(r"(?<![a-z])lini(?![a-z])|tarehe|siku|deadline|muda|wakati|mwisho|ifikapo|kabla|(?<![a-z])due(?![a-z])|(?<![a-z])date|when|by\s+the"),
     "sdl_audit_hedge": re.compile(r"\?|vipi|jinsi|namna|how|what|nini|gani|(?<![a-z])je(?![a-z])"),
+    "vat_medical_services": re.compile(r"\?|(?<![a-z])je(?![a-z])|anatakiwa|inatozwa|hutozwa|lazima|msamaha|exempt|zimesamehewa|sajili|register|charge|tozwa|kodi"),
+    "sdl_base": re.compile(r"\?|nini|gani|vipi|(?<![a-z])je(?![a-z])|inajumuisha|zinajumuisha|(?<![a-z])includes?(?![a-z])|calculat|inahesabiwa|inakokotolewa|kinahesabiwa|kinakokotolewa"),
+    "levy_rates_three": re.compile(r"asilimia|[kv]iwango|(?<![a-z])rates?(?![a-z])|percent|%|ngapi"),
+    "levy_deadlines_three": re.compile(r"(?<![a-z])lini(?![a-z])|tarehe|siku|deadline|muda|wakati|mwisho|ifikapo|kabla|(?<![a-z])due(?![a-z])|(?<![a-z])date|when|by\s+the"),
     "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
@@ -2957,8 +2989,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────

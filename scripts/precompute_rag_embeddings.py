@@ -45,7 +45,7 @@ E5_PASSAGE_PREFIX = 'passage: '
 # --- Concise, Swahili-dominant text for high-stakes facts (SHORT, no long English tail) ---
 CONCISE_BILINGUAL_FACTS = {
     'gn487a_penalty_noncitizen':
-        'Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au kifungo miezi 6, na kufutwa kwa visa.',
+        'Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi) AU kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi. Kiwango cha juu cha faini hakijatajwa.',
 
     # Swahili-first grounding for the phone-repair activity. The 15 prohibited-activity
     # facts are otherwise English-only (key: value fallback) and match Swahili queries
@@ -60,7 +60,7 @@ CONCISE_BILINGUAL_FACTS = {
         'electronic devices.)',
 
     'gn487a_penalty_citizen_facilitator':
-        'Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini si zaidi ya TZS 5,000,000 (milioni tano), au kifungo si zaidi ya miezi 3.',
+        'Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini ya TZS 5,000,000 (milioni tano) AU kifungo kisichozidi miezi 3.',
 
     # Retrieval-targeted restatement of the facilitator penalty using the exact
     # 'kukopesha leseni' collocation. lv_01/fp_01 showed the model overrides the
@@ -1152,6 +1152,19 @@ _BATCH_2026_11_23 = {
 }
 _COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('sdl_domestic_workers_scope', 'nssf_contributions_age_60')
 CONCISE_BILINGUAL_FACTS.update(_BATCH_2026_11_23)
+
+# ─── 2026-11-24: TWO NEW rows (the SDL base: allowances are IN it; medical services are VAT-exempt on two conditions), founder-approved fact, appended after the 2026-11-23 rows so no existing row number moves ─────────────────────────────────────────────────────
+# Ask-aligned lead (R15), short (the 172-char draft measured rank 1 where a 415-char one fell to 4), no section number in the Swahili text (R44). Benefits in kind are deliberately NOT asserted either way.
+_BATCH_2026_11_24 = {
+    'sdl_base_includes_allowances':
+        "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara ghafi ya mwezi, ikijumuisha posho zote (safari, malazi, burudani), bonasi na kamisheni. Faida zisizo za fedha hazijatajwa: thibitisha na TRA.",
+    'form_number_payment_credit_slip':      # REWRITTEN IN PLACE (row 108 keeps its position: the key is not in _COVERAGE_NEW_KEYS): the served text was a long English key-prefixed sentence at rank 14 for the live question; a short ask-aligned Swahili lead is the measured lever (R15)
+        "Nalipa SDL kwa fomu gani? Jina la fomu halijathibitishwa: ritani ya SDL inawasilishwa TRA kupitia IDRAS na malipo kwa Kamishna kufikia tarehe 7. ITX 300.01.E ni ya mwongozo wa zamani, si uhakika. Thibitisha na TRA.",
+    'medical_services_vat_exempt':
+        "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa na taasisi iliyoidhinishwa na Serikali NA mtaalamu aliyesajiliwa. Kusajili VAT kwa huduma zilizosamehewa tu: haijathibitishwa, uliza TRA.",
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('sdl_base_includes_allowances', 'medical_services_vat_exempt')
+CONCISE_BILINGUAL_FACTS.update(_BATCH_2026_11_24)
 
 
 def build_fact_text(key: str, value: str) -> str:

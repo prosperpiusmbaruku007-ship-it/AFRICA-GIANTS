@@ -4,8 +4,8 @@
   "_contract": "Any check that reads a cached source MUST call assert_edition(path, expected) first. A file whose edition is UNDECLARED may not be used to settle a figure.",
   "_generated_by": "scripts/check_source_editions.py --build",
   "counts": {
-    "files": 90,
-    "declared": 38,
+    "files": 92,
+    "declared": 40,
     "undeclared": 52,
     "superseded": 3
   },
@@ -613,6 +613,24 @@
       "kind": "portal",
       "edition": "UNDECLARED",
       "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "tra/tra_sdl_page_en_2026_11_23.html": {
+      "sha256": "c1d613e36baaec8f4f4c7660286c3b32f146b07f3dfbf35347b5c7f53525f327",
+      "bytes": 58399,
+      "captured_local_mtime_utc": "2026-11-23T21:46:55Z",
+      "kind": "portal",
+      "edition": "capture of tra.go.tz/page/skills-development-levy-sdl (EN) on 2026-11-23T21:46:12Z",
+      "edition_evidence": "fetched 2026-11-23T21:46:12Z (curl, HTTP 200). States the return is submitted 'to TRA through IDRAS on or before the 7th day of the month following the payroll month' and (EN) payment 'to the respective Tax Region'; names NO payment form, control number or bank (no 'ITX' / '300.01'). The raw sha256 differs from the 2026-11-22 capture recorded in PROGRESS 4bj/4bk (f9bad8ad...): the page embeds a per-request csrf_token, so the 11-22 bytes are NOT reproducible; the substantive statements were re-compared and are unchanged. The 11-22 file was never cached.",
+      "superseded": false
+    },
+    "tra/tra_sdl_page_sw_2026_11_23.html": {
+      "sha256": "130e0614ed29b9c2b7ff4e11a2863191ee0d609223606c18ebf6dec4820b3db4",
+      "bytes": 58165,
+      "captured_local_mtime_utc": "2026-11-23T21:46:55Z",
+      "kind": "portal",
+      "edition": "capture of tra.go.tz/sw/page/skills-development-levy-sdl (SW) on 2026-11-23T21:46:12Z",
+      "edition_evidence": "fetched 2026-11-23T21:46:12Z (curl, HTTP 200). States 'ritani kila mwezi kupitia IDRAS kabla au ifikapo tarehe 7 ya mwezi unaofuata'; names no payment form. Raw sha256 differs from the 2026-11-22 record (bc3b3159...) because of the page's per-request csrf_token; substance unchanged.",
       "superseded": false
     },
     "tra/tra_sdl_sw.txt": {

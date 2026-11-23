@@ -1,0 +1,287 @@
+{
+  "_what": "Local offline dry-run of the 2026-11-24 R15 regen package (218 -> 220: SDL base, medical VAT; six rows revised in place), before Kaggle.",
+  "_model": "intfloat/multilingual-e5-base",
+  "_offline": "HF_HUB_OFFLINE=1; weights already cached locally. The regen header's 'weights do not download locally' is true of DOWNLOADING, not of loading.",
+  "prospective_row_count": 220,
+  "deployed_row_count": 218,
+  "⚠️_rag_fact_count_must_be_bumped": {
+    "from": 218,
+    "to": 220,
+    "where": "kaggle/chike_config.json rag_fact_count",
+    "⛔_WHEN": "IN THE SAME COMMIT AS THE FETCHED .npy/.json ARTIFACTS, NEVER BEFORE. modal_app.py asserts this count against the loaded index and REFUSES TO SERVE on a mismatch (verified live 2026-08-24: HTTP 500). The config is fetched from GitHub at runtime, so bumping it while production still holds the old index takes production DOWN."
+  },
+  "anchor_uniqueness_new_guards": [
+    {
+      "guard": "SDL base: allowances are in it (the live calculation question that produced 'si pamoja na posho za fedha')",
+      "anchor": "posho zote (safari, malazi, burudani)",
+      "matches": 1,
+      "rows": [
+        218
+      ]
+    },
+    {
+      "guard": "Medical services are VAT-exempt on two conditions (the live 'Ndiyo ... anatakiwa kusajili VAT')",
+      "anchor": "Huduma za afya ni msamaha zikitolewa",
+      "matches": 1,
+      "rows": [
+        219
+      ]
+    },
+    {
+      "guard": "GN487A non-citizen penalty: fine OR imprisonment (the Order's wording; row 20 revised in place)",
+      "anchor": "AU kifungo kisichozidi miezi 6",
+      "matches": 1,
+      "rows": [
+        20
+      ]
+    },
+    {
+      "guard": "GN487A facilitator: a fixed TZS 5,000,000 fine OR up to 3 months (row 21 revised in place)",
+      "anchor": "anayemsaidia mgeni kukiuka GN487A: faini ya",
+      "matches": 1,
+      "rows": [
+        21
+      ]
+    },
+    {
+      "guard": "SDL payment form is NOT asserted (row 108 revised in place)",
+      "anchor": "Jina la fomu halijathibitishwa",
+      "matches": 1,
+      "rows": [
+        108
+      ]
+    }
+  ],
+  "anchor_faults_ALL_committed_guards": [
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "osha husajili",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "wcf huanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "mfanyakazi wa kwanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    }
+  ],
+  "anchor_faults_blocking": [],
+  "new_guards": [
+    {
+      "name": "SDL base: allowances are in it (the live calculation question that produced 'si pamoja na posho za fedha')",
+      "anchor": "posho zote (safari, malazi, burudani)",
+      "from": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl sb_01; the specimen is the live reply of b96e8a8 (eval/results/sdl_three_routes_live_2026_11_23.json)",
+      "why_this_anchor": "the phrase that carries the claim; a bare 'SDL' matches a dozen rows.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara ghafi ya mwezi, ikijumuisha posho zote (s",
+        "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya ",
+        "Kizingiti cha SDL ni wafanyakazi 10 au zaidi. Wafanyakazi 10 hasa wanalipa SDL (wako ndani). Si 11, si 4."
+      ]
+    },
+    {
+      "name": "Medical services are VAT-exempt on two conditions (the live 'Ndiyo ... anatakiwa kusajili VAT')",
+      "anchor": "Huduma za afya ni msamaha zikitolewa",
+      "from": "eval/results/ten_more_statements_live_2026_11_23.json (the live NEG row of build 84d8621)",
+      "why_this_anchor": "the exemption clause exists only in the new row.",
+      "in_top3": true,
+      "rank": 2,
+      "top3": [
+        "Mtaalamu anayetoa huduma za kitaalamu zenye leseni au chama cha taaluma lazima ajisajili VAT bila kujali kiasi",
+        "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa na taasisi iliyoidhinishwa na Serikali N",
+        "Je naweza kujisajili VAT kwa hiari ukiwa chini ya kiwango? Njia zilizotajwa wazi na Sheria ya VAT ni: kufikia "
+      ]
+    },
+    {
+      "name": "GN487A non-citizen penalty: fine OR imprisonment (the Order's wording; row 20 revised in place)",
+      "anchor": "AU kifungo kisichozidi miezi 6",
+      "from": "the committed GN487A critical query (kaggle/regenerate_rag_e5.py 'GN487A penalty'), VERBATIM",
+      "why_this_anchor": "the old row said 'na/au'; 'AU kifungo kisichozidi' exists only in the revised row.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi) AU kifungo kisic",
+        "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini ya TZS 5,000,000 (milioni tano) AU kifung",
+        "Kukopesha, kukodisha au kukabidhi leseni yako ya biashara kwa mgeni ni kosa chini ya GN487A. Raia anayekopesha"
+      ]
+    },
+    {
+      "name": "GN487A facilitator: a fixed TZS 5,000,000 fine OR up to 3 months (row 21 revised in place)",
+      "anchor": "anayemsaidia mgeni kukiuka GN487A: faini ya",
+      "from": "AUTHORED (no committed fixture asks the facilitator penalty in these words); the gate row eval_163 is the closest",
+      "why_this_anchor": "the old row said 'faini si zaidi ya'; 'GN487A: faini ya' exists only in the revised row. The first draft anchored on the figure itself, which tests/test_anchor_provenance.py rejects (5,000,000 is the wrong-for-a-non-citizen value on the sibling fact).",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A: faini ya TZS 5,000,000 (milioni tano) AU kifung",
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania bado ni mge",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi) AU kifungo kisic"
+      ]
+    },
+    {
+      "name": "SDL payment form is NOT asserted (row 108 revised in place)",
+      "anchor": "Jina la fomu halijathibitishwa",
+      "from": "the live specimen of a67462c ('SDL inalipwa kwa fomu ITX 300.01.E ...') VERBATIM in eval/fidelity/ fixtures",
+      "why_this_anchor": "the Swahili hedge exists only in the revised row; the first draft anchored on an English sentence of the long fact text, which sat at rank 14.",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Nalipa SDL kwa fomu gani? Jina la fomu halijathibitishwa: ritani ya SDL inawasilishwa TRA kupitia IDRAS na mal",
+        "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa",
+        "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu na nusu (asilimia 3.5) ya mishahara ya "
+      ]
+    }
+  ],
+  "displacement_regressions_caused_by_this_package": [],
+  "pre_existing_failures_not_caused_by_this_package": [
+    {
+      "guard": "Phone repair activity",
+      "anchors": [
+        "phone', 'simu', 'activity 3"
+      ],
+      "prospective_top3": [
+        "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa wasio raia ",
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi) AU kif"
+      ],
+      "deployed_top3": [
+        "Kutengeneza au ukarabati wa simu na vifaa vya kielektroniki ni shughuli iliyozuiliwa kwa wasio raia ",
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "Faini kwa mgeni (raia wa kigeni) anayevunja GN487A: si chini ya TZS 10,000,000 (milioni kumi), na/au"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "GN487A marriage no exemption",
+      "anchors": [
+        "kuoa', 'kuolewa"
+      ],
+      "prospective_top3": [
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN"
+      ],
+      "deployed_top3": [
+        "Kuoa au kuolewa na raia wa Tanzania HAKUKUPI msamaha wa GN487A wala uraia. Mgeni aliyeoa Mtanzania b",
+        "presumptive tax bands 2022: Kodi ya makadirio (presumptive income tax) kwa mtu binafsi, kwa MAUZO ya",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "BRELA striking-off (Q13 verbatim)",
+      "anchors": [
+        "defunct', 'mahakama kuu', 'sura 212"
+      ],
+      "prospective_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN",
+        "compliance license processing time old: 28 days"
+      ],
+      "deployed_top3": [
+        "employer notification deadline before retirement: 6 months",
+        "Naweza kufuta, kufunga au kuondoa kampuni yangu iliyosajiliwa kwenye daftari la BRELA? Ndiyo — HAKUN",
+        "compliance license processing time old: 28 days"
+      ],
+      "passes_on_deployed_index": false
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchors": [
+        "osha husajili', 'wcf huanza', 'mfanyakazi wa kwanza"
+      ],
+      "prospective_top3": [
+        "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajil",
+        "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zai",
+        "employer notification deadline before retirement: 6 months"
+      ],
+      "deployed_top3": [
+        "Nina wafanyakazi wawili tu (au mmoja) dukani — je bado najisajili mahali fulani? Ndiyo. OSHA husajil",
+        "Afisa wa usalama kazini: HAPANA, mwajiri halazimiki kumwajiri afisa maalum. Ukiwa na wafanyakazi zai",
+        "employer notification deadline before retirement: 6 months"
+      ],
+      "passes_on_deployed_index": false
+    }
+  ],
+  "changed_rows_self_retrieve": [
+    {
+      "key": "p45_not_tanzanian",
+      "row": 4,
+      "self_retrieves": true
+    },
+    {
+      "key": "gn487a_penalty_noncitizen",
+      "row": 20,
+      "self_retrieves": true
+    },
+    {
+      "key": "gn487a_penalty_citizen_facilitator",
+      "row": 21,
+      "self_retrieves": true
+    },
+    {
+      "key": "wcf_threshold_no_minimum",
+      "row": 66,
+      "self_retrieves": true
+    },
+    {
+      "key": "SDL_source_law",
+      "row": 89,
+      "self_retrieves": true
+    },
+    {
+      "key": "form_number_payment_credit_slip",
+      "row": 108,
+      "self_retrieves": true
+    },
+    {
+      "key": "sdl_base_includes_allowances",
+      "row": 218,
+      "self_retrieves": true
+    },
+    {
+      "key": "medical_services_vat_exempt",
+      "row": 219,
+      "self_retrieves": true
+    }
+  ],
+  "verdict": "SAFE TO RUN"
+}

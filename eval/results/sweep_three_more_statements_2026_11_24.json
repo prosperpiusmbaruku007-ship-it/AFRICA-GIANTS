@@ -1,0 +1,422 @@
+{
+ "swept": 8887,
+ "changed": [
+  {
+   "q": "Je, gharama za bima ya afya ninazolipia wafanyakazi zinahesabiwa kwenye SDL?",
+   "src": "eval/refusal_gate/ooc_excise_nhif_probes_2026_11_22.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Posho ya usafiri ya mfanyakazi inahusika kwenye SDL?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "How does an employer calculate the SDL amount payable each month?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL, NSSF na PAYE ni asilimia ngapi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_rates_three"
+   ]
+  },
+  {
+   "q": "SDL, NSSF na PAYE zinalipwa lini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_deadlines_three"
+   ]
+  },
+  {
+   "q": "SDL na NSSF na PAYE zinalipwa lini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_deadlines_three"
+   ]
+  },
+  {
+   "q": "Msingi wa kukokotoa SDL ni nini — posho zinaingia?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Are allowances included in the SDL base?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inakokotolewa kwa jumla ya mishahara ghafi au mshahara wa msingi tu?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Bonasi na kamisheni zinahesabiwa kwenye SDL?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Posho za safari zinahesabiwa kwenye mshahara ghafi wa SDL?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Viwango vya SDL, NSSF na PAYE ni vipi?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_rates_three"
+   ]
+  },
+  {
+   "q": "What are the rates of SDL, NSSF and PAYE?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_rates_three"
+   ]
+  },
+  {
+   "q": "Je, SDL, NSSF na PAYE zote zinalipwa tarehe 7?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_deadlines_three"
+   ]
+  },
+  {
+   "q": "Tarehe ya mwisho ya SDL, NSSF na PAYE ni ipi?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_deadlines_three"
+   ]
+  },
+  {
+   "q": "When are SDL, NSSF and PAYE due?",
+   "src": "eval/refusal_gate/three_more_statements_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "levy_deadlines_three"
+   ]
+  },
+  {
+   "q": "SDL inahesabiwaje — inatumika kwenye mshahara wa msingi peke yake au posho pia?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inahesabiwa juu ya mishahara halisi (net) au mishahara kabla ya kodi (gross)?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inahesabiwa kwa mshahara mzima au mshahara wa msingi (basic salary) tu?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba na posho ya usafiri — zinajumuishwa kwenye SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Bonasi ya mwisho wa mwaka — inajumuishwa kwenye msingi wa SDL?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL base inajumuisha bonasi za mwisho wa mwaka — je, au haijumuishi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inakokotolewa kwa mshahara wa jumla (gross salary) peke yake — au inajumuisha faida zisizo za fedha kama nyumba na gari?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Mwajiri anampa mfanyakazi nyumba ya kuishi bure — thamani ya nyumba hiyo inaongezwa kwenye SDL base?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Bonasi ya mwisho wa mwaka inalipwa kwa fedha — inaingizwa kwenye SDL base?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Bima ya afya ya wafanyakazi inayolipwa na mwajiri — inahusika kwenye SDL base au la?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inakokotolewa kwa msingi gani wa mishahara?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inahesabiwa kwenye kitu gani hasa cha mshahara?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "SDL inahesabiwa kwenye mshahara wa gross au net?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Housing allowance and transport allowance — are they included in SDL?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "How is SDL calculated — does it apply to basic salary only or allowances too?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Is SDL calculated on net salaries or gross salaries (before tax)?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Is SDL calculated on total salary or basic salary only?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  },
+  {
+   "q": "Year-end bonus — is it included in the SDL base?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_base"
+   ]
+  }
+ ],
+ "onto_new": 34,
+ "other": 0,
+ "newly_both": [],
+ "membership": {
+  "sdl_base": 26,
+  "levy_rates_three": 3,
+  "levy_deadlines_three": 5
+ },
+ "baseline": "git show HEAD:chike/routing.py"
+}

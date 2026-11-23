@@ -869,7 +869,7 @@ class Orchestrator:
             return SubAnswer(sub_question=sq, text=clarification.FIXED_STATEMENT_NO_TOPIC, needs_clarification=True)
         if topic == "sector_minimum_wage":                # the one DYNAMIC topic: the body is built from the sector the question names (never from a static table)
             return self._deterministic_answer(sq, rules_engine.sector_wage_statement(sq.text))
-        return self._deterministic_answer(sq, rules_engine.fixed_statement(topic))
+        return self._deterministic_answer(sq, rules_engine.fixed_statement(topic, sq.text))   # the question is read by ONE topic only (gn487a_penalties: an explicit "Hapana" when a stated figure contradicts the Order)
 
     def _answer_rent_wht(self, sq: SubQuestion) -> SubAnswer:
         """Rent WHT is 10% for BOTH residencies (Cap.332 First Schedule para 4(b)(ii)) —
@@ -1242,6 +1242,28 @@ class Orchestrator:
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)
 
     @staticmethod
+    def _unproduced_figure_guard(subs: Sequence[SubAnswer]) -> list:
+        """D-FIDELITY-31 (2026-11-24, founder: wired ONLY because the pricing showed 0 gold flags and every stored flag read, eval/results/price_d31_2026_11_24.json).
+
+        A compute body that asserts a money figure no engine working of the request produced, and no ONE-STEP arithmetic from the question's figures, rates and counts reaches, is BLANKED (the working still renders: one sentence is lost, never the answer).
+        It runs as a pass over ALL compute sub-answers because a sibling levy's figure in this body is NOT an invention, so the support set must hold every sibling's working. The founding specimen is the live SDL+NSSF reply with 'TZS 150,000 kwa mwajiri'.
+        A model-free statement (computation 'fixed_statement') has no model body and is skipped.
+        """
+        comps = [sa for sa in subs if sa.computation is not None]
+        if not comps:
+            return list(subs)
+        workings = " ".join(str(getattr(sa.computation, "working", "") or "") for sa in comps)
+        question = " ".join(sa.sub_question.text for sa in comps)
+        out = []
+        for sa in subs:
+            if (sa.computation is not None and getattr(sa.computation, "computation", None) != "fixed_statement"
+                    and not sa.needs_clarification and sa.text
+                    and fidelity.body_states_unproduced_figure(question, sa.text, workings)):
+                sa = dataclasses.replace(sa, text="", guard="blanked")
+            out.append(sa)
+        return out
+
+    @staticmethod
     def _cross_levy_guard(subs: Sequence[SubAnswer]) -> list:
         """D-FIDELITY-2 — blank a compute body that volunteers a WRONG figure for a SIBLING levy.
 
@@ -1394,8 +1416,8 @@ class Orchestrator:
             # pooled fact generation over the fact sub-questions only. Compute parts are
             # NEVER folded into the fact generation (that would forfeit the authoritative
             # deterministic figure — the one load-bearing reason per-part generation exists).
-            subs = self._cross_levy_guard(
-                [self._resolve_premise(self._answer_sub(sq)) for sq in compute_parts])
+            subs = self._unproduced_figure_guard(self._cross_levy_guard(
+                [self._resolve_premise(self._answer_sub(sq)) for sq in compute_parts]))   # D-FIDELITY-31 runs after the cross-levy pass
             if covered_fact_parts:
                 fact_question = " ".join(sq.text for sq in covered_fact_parts)
                 subs.append(self._answer_facts_single_pass(

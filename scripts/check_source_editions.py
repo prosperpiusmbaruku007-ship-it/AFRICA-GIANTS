@@ -271,6 +271,16 @@ DECLARED = {
         'edition': 'capture of tra.go.tz/ajax/faq/57 on 2026-11-16',
         'edition_evidence': "fetched 2026-11-16 (this session; a regulator FAQ has no edition, so the capture date is the honest answer). States: 'Voluntary registration is also allowed for certain specific economic activities' and names none.",
     },
+    'tra/tra_sdl_page_en_2026_11_23.html': {
+        'kind': 'portal',
+        'edition': 'capture of tra.go.tz/page/skills-development-levy-sdl (EN) on 2026-11-23T21:46:12Z',
+        'edition_evidence': "fetched 2026-11-23T21:46:12Z (curl, HTTP 200). States the return is submitted 'to TRA through IDRAS on or before the 7th day of the month following the payroll month' and (EN) payment 'to the respective Tax Region'; names NO payment form, control number or bank (no 'ITX' / '300.01'). The raw sha256 differs from the 2026-11-22 capture recorded in PROGRESS 4bj/4bk (f9bad8ad...): the page embeds a per-request csrf_token, so the 11-22 bytes are NOT reproducible; the substantive statements were re-compared and are unchanged. The 11-22 file was never cached.",
+    },
+    'tra/tra_sdl_page_sw_2026_11_23.html': {
+        'kind': 'portal',
+        'edition': 'capture of tra.go.tz/sw/page/skills-development-levy-sdl (SW) on 2026-11-23T21:46:12Z',
+        'edition_evidence': "fetched 2026-11-23T21:46:12Z (curl, HTTP 200). States 'ritani kila mwezi kupitia IDRAS kabla au ifikapo tarehe 7 ya mwezi unaofuata'; names no payment form. Raw sha256 differs from the 2026-11-22 record (bc3b3159...) because of the page's per-request csrf_token; substance unchanged.",
+    },
     'tra/tra_vat_page_2026_11_16.html': {
         'kind': 'portal',
         'edition': 'capture of tra.go.tz/page/value-added-tax-vat on 2026-11-16',

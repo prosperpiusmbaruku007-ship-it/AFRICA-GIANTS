@@ -1,0 +1,163 @@
+{
+ "proposal_only": true,
+ "edited": "NOTHING (datasets/ and eval/ untouched)",
+ "rows": [
+  {
+   "n": 1,
+   "question": "Mwajiri analazimika kuweka rekodi gani za PAYE?",
+   "old_answer": "Mwajiri lazima aweke: orodha ya wafanyakazi na TIN zao, hesabu za mishahara, hesabu za PAYE kwa kila mfanyakazi, stakabadhi za malipo ya TRA, na fomu za PAYE P9. Rekodi hizi zinahifadhiwa kwa miaka 5. Thibitisha na TRA.",
+   "action": "REPAIR",
+   "kind": "one clause",
+   "new_answer": "Mwajiri lazima aweke: orodha ya wafanyakazi na TIN zao, hesabu za mishahara, hesabu za PAYE kwa kila mfanyakazi, stakabadhi za malipo ya TRA, na nakala za cheti cha zuio cha mwaka (withholding certificate) alizotoa kwa wafanyakazi. Rekodi hizi zinahifadhiwa kwa miaka 5. Thibitisha na TRA.",
+   "reason_and_R37_check": "R37: does not reject P9 (it asserts it). Only 'fomu za PAYE P9' changes; the 5-year record rule is the locked record_keeping_period.",
+   "present_in": [
+    "cleaned_pairs\\batch_002_cleaned.jsonl:21",
+    "cleaned_pairs\\batch_002a_cleaned.jsonl:21",
+    "sft\\train_sft.jsonl:2350",
+    "sft\\train_sft.jsonl:531"
+   ]
+  },
+  {
+   "n": 2,
+   "question": "Wakati TRA inakagua PAYE ya kampuni yangu, wanakagua nini hasa?",
+   "old_answer": "Wakati wa ukaguzi wa PAYE, TRA wanakagua: orodha ya mishahara (payroll) kwa miaka yote inayopitiwa, rekodi za benki za malipo ya mshahara, mikataba ya ajira ya wafanyakazi, return za PAYE zilizowasilishwa, fomu za P9 zilizotolewa kwa wafanyakazi, vielelezo vya michango ya ziada kama posho za nyumba na usafiri, na malipo yoyote yanayosemekana kuwa ya 'mkopo' au 'kama ada'. Tofauti kati ya rekodi za benki na payroll ni dalili kuu ya udanganyifu.",
+   "action": "QUARANTINE",
+   "kind": "invented audit procedure",
+   "new_answer": null,
+   "reason_and_R37_check": "R37: no sentence rejects P9. The whole answer is an invented TRA audit list ('wanakagua: ... dalili kuu ya udanganyifu'): the same defect the SDL-audit hedge exists for; no source holds how TRA audits PAYE. Repairing P9 alone would leave an unsourced procedure trained as fact.",
+   "present_in": [
+    "cleaned_pairs\\batch_002_cleaned.jsonl:104",
+    "sft\\train_sft.jsonl:3238"
+   ]
+  },
+  {
+   "n": 3,
+   "question": "Fomu ya P45 inatumika Tanzania wakati mfanyakazi anaondoka kazini — je, hii ni kweli?",
+   "old_answer": "Hapana. Fomu ya P45 ni fomu ya Uingereza (UK) na HAIPO Tanzania. Tanzania inatumia Hati ya Kuondoka (Leaving Certificate) na fomu ya P9 (taarifa ya mwaka ya PAYE). Mwajiri hutoa Hati ya Kuondoka kwa mfanyakazi anayeacha kazi, si P45.",
+   "action": "REPAIR",
+   "kind": "rewrite, keeps the correct 'Hapana'",
+   "new_answer": "Hapana. Fomu ya P45 ni fomu ya Uingereza (UK) na HAIPO Tanzania. Kinacholingana nayo Tanzania ni cheti cha zuio cha mwaka (withholding certificate) (Sheria ya Kodi ya Mapato), kinachotolewa na mwajiri kwa mfanyakazi; hakuna fomu inayoitwa 'P9' Tanzania (hilo ni neno la Kenya) wala fomu maalum ya 'Hati ya Kuondoka' iliyothibitishwa. Thibitisha na TRA.",
+   "reason_and_R37_check": "R37: the opening 'Hapana, P45 is UK' is CORRECT and is kept. The wrong parts are 'fomu ya P9' and 'Hati ya Kuondoka (Leaving Certificate)': p45_not_tanzanian's correction_note removed the 'leaving certificate' language as unverified, so both are fixed.",
+   "present_in": [
+    "cleaned_pairs\\batch_004_cleaned.jsonl:90",
+    "sft\\train_sft.jsonl:360"
+   ]
+  },
+  {
+   "n": 4,
+   "question": "P9 inawasilishwa kwa TRA kupitia ujumbe wa simu (SMS) — je, hii ni sahihi?",
+   "old_answer": "Hapana. P9 (taarifa ya mwaka ya PAYE) inawasilishwa kupitia mfumo wa kielektroniki wa TRA (TRA Online/e-filing system) au ofisi ya TRA. Ujumbe wa simu peke yake haukubaliki kwa uwasilishaji rasmi wa P9. Wasilisha kupitia njia sahihi za TRA.",
+   "action": "REPAIR",
+   "kind": "rewrite, keeps the correct 'Hapana'",
+   "new_answer": "Hapana. 'P9' si neno la Tanzania (ni neno la Kenya, KRA) na TRA haina fomu yenye jina hilo. Hati ya mwaka ya mfanyakazi ni cheti cha zuio cha mwaka (withholding certificate), ambacho mwajiri anakitoa kwa mfanyakazi (si kupitia SMS). Thibitisha njia sahihi na TRA (tra.go.tz).",
+   "reason_and_R37_check": "R37: its 'Hapana' (SMS is not acceptable) is right in direction but it teaches P9 as a form submitted to TRA. The adversarial premise has coverage value, so it is rewritten, not removed.",
+   "present_in": [
+    "cleaned_pairs\\batch_004_cleaned.jsonl:114",
+    "sft\\train_sft.jsonl:339"
+   ]
+  },
+  {
+   "n": 5,
+   "question": "Je, mfanyakazi mgeni anaondoka Tanzania kabla ya mwisho wa mwaka — jinsi ya kushughulikia PAYE yake?",
+   "old_answer": "Wakati mfanyakazi mgeni anaondoka Tanzania kabla ya mwaka wa kodi kumalizika: (1) Hesabu PAYE ya mwaka nzima kulingana na muda wa kufanya kazi Tanzania; (2) Fanya marekebisho ya mwisho ya PAYE kwa mwezi wa mwisho; (3) Toa P9 form inayoonyesha kipindi kilichofaa; (4) Futa usajili wa mfanyakazi kwenye mfumo wa PAYE TRA. Thibitisha hatua za mwisho na TRA.",
+   "action": "REPAIR",
+   "kind": "one clause",
+   "new_answer": "Wakati mfanyakazi mgeni anaondoka Tanzania kabla ya mwaka wa kodi kumalizika: (1) Hesabu PAYE ya mwaka nzima kulingana na muda wa kufanya kazi Tanzania; (2) Fanya marekebisho ya mwisho ya PAYE kwa mwezi wa mwisho; (3) Mpe cheti cha zuio cha mwaka (withholding certificate) kinachoonyesha kipindi alichofanya kazi; (4) Futa usajili wa mfanyakazi kwenye mfumo wa PAYE TRA. Thibitisha hatua za mwisho na TRA.",
+   "reason_and_R37_check": "R37: asserts P9. Only item (3) changes. NOTE for the reviewer: items (1), (2) and (4) are unsourced procedure and are NOT changed by this proposal.",
+   "present_in": [
+    "cleaned_pairs\\batch_006_cleaned.jsonl:218",
+    "sft\\train_sft.jsonl:1752"
+   ]
+  },
+  {
+   "n": 6,
+   "question": "Mfanyakazi mgeni ambaye amesajiliwa NSSF, analipa PAYE, na ana TIN — ana hali nzuri?",
+   "old_answer": "Ndiyo — mfanyakazi mwenye TIN, PAYE inayokatwa kwa usahihi, na NSSF inayochangiwa — ana hali nzuri ya kodi Tanzania. Hii ni muundo sahihi wa kufuata. Mwajiri pia anahitaji SDL (kama wafanyakazi ≥10) na WCF (0.5%) zilizolipwa. Hifadhi kumbukumbu zote za P9 na malipo kwa ajili ya ukaguzi wowote wa TRA.",
+   "action": "REPAIR",
+   "kind": "one clause",
+   "new_answer": "Ndiyo — mfanyakazi mwenye TIN, PAYE inayokatwa kwa usahihi, na NSSF inayochangiwa — ana hali nzuri ya kodi Tanzania. Hii ni muundo sahihi wa kufuata. Mwajiri pia anahitaji SDL (kama wafanyakazi ≥10) na WCF (0.5%) zilizolipwa. Hifadhi kumbukumbu zote za vyeti vya zuio na malipo kwa ajili ya ukaguzi wowote wa TRA.",
+   "reason_and_R37_check": "R37: asserts P9 in the last sentence only; the rest (TIN, PAYE, NSSF, SDL >=10, WCF 0.5%) is consistent with locked facts.",
+   "present_in": [
+    "cleaned_pairs\\batch_006_cleaned.jsonl:235",
+    "sft\\train_sft.jsonl:2243"
+   ]
+  },
+  {
+   "n": 7,
+   "question": "Mfanyakazi mgeni aliyesha-resign — mwajiri anahitaji kulipa PAYE ya mwisho lini?",
+   "old_answer": "PAYE ya mshahara wa mwisho (terminal benefits — mshahara wa mwisho, posho ya kuachana, likizo iliyobaki inayolipwa) inapaswa kukokotolewa, kukatwa, na kuwasilishwa TRA ifikapo tarehe 7 ya mwezi unaofuata baada ya malipo ya mwisho. Toa P9 kwa mfanyakazi baada ya malipo ya mwisho.",
+   "action": "REPAIR",
+   "kind": "one clause",
+   "new_answer": "PAYE ya mshahara wa mwisho (terminal benefits — mshahara wa mwisho, posho ya kuachana, likizo iliyobaki inayolipwa) inapaswa kukokotolewa, kukatwa, na kuwasilishwa TRA ifikapo tarehe 7 ya mwezi unaofuata baada ya malipo ya mwisho. Mpe mfanyakazi cheti cha zuio cha mwaka (withholding certificate) baada ya malipo ya mwisho.",
+   "reason_and_R37_check": "R37: asserts P9 in the last sentence only; the 7th is the locked paye_remittance_deadline.",
+   "present_in": [
+    "cleaned_pairs\\batch_006_cleaned.jsonl:243",
+    "sft\\train_sft.jsonl:697"
+   ]
+  },
+  {
+   "n": 8,
+   "question": "SDL na NSSF — zote zinalipwa tarehe 7 — je, kwa akaunti moja au tofauti?",
+   "old_answer": "SDL na NSSF zinazalipwa tarehe 7 lakini kwa taasisi TOFAUTI. SDL inalipwa TRA (Tanzania Revenue Authority) kwa akaunti ya TRA. NSSF inalipwa NSSF (National Social Security Fund) kwa akaunti ya NSSF. Lipia kwa akaunti sahihi — kulipa SDL kwa akaunti ya NSSF au kinyume chake kutasababisha matatizo ya upatanisho.",
+   "action": "REPAIR",
+   "kind": "rewrite (the premise is the error)",
+   "new_answer": "Hapana, si tarehe moja. SDL inalipwa kufikia tarehe 7 ya mwezi unaofuata (kwa TRA), na NSSF inalipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara (kwa NSSF). Ni taasisi TOFAUTI, kwa hiyo lipa kila moja kwa taasisi yake — kulipa SDL kwa NSSF au kinyume chake kutasababisha matatizo ya upatanisho. Thibitisha na TRA na NSSF.",
+   "reason_and_R37_check": "R37: it ACCEPTS the premise 'zote zinalipwa tarehe 7' (the NSSF-7th error, D-FIDELITY-29's founding class). The 'different institutions' half is right and is kept. The new text follows locked sdl_payment_deadline and nssf_payment_deadline. The invented 'akaunti ya TRA / akaunti ya NSSF' detail is reduced to 'taasisi tofauti'.",
+   "present_in": [
+    "cleaned_pairs\\batch_006_cleaned.jsonl:278",
+    "sft\\train_sft.jsonl:2390"
+   ]
+  },
+  {
+   "n": 9,
+   "question": "Je, kuna adhabu nikishindwa kulipa PAYE P9 ifikapo Machi 31?",
+   "old_answer": "Ndio, huwa kuna adhabu kwa kuchelewesha malipo ya kodi, ikiwemo PAYE P9. Maelezo kamili ya adhabu na riba unapaswa kuangalia moja kwa moja na mamlaka za kodi (tra.go.tz).",
+   "action": "QUARANTINE",
+   "kind": "accepts a corrected-wrong premise",
+   "new_answer": null,
+   "reason_and_R37_check": "R37: it answers 'Ndio, kuna adhabu' to a premise that carries BOTH errors paye_p9_deadline corrected ('PAYE P9' and 'Machi 31': the certificate is due 30 January, monthly PAYE the 7th). It does not reject either, so it is not an over-removal. Rewriting would need a new answer to a malformed question; removal loses nothing.",
+   "present_in": [
+    "sft\\train_sft.jsonl:156",
+    "sft_shaped_pairs\\cleaned_pairs_batch_014.jsonl:798"
+   ]
+  },
+  {
+   "n": 10,
+   "question": "PAYE hukokotolewa kila mwezi au mara moja kwa mwaka?",
+   "old_answer": "PAYE hukatwa na kuwasilishwa kila mwezi kufikia tarehe 7 ya mwezi unaofuata, kisha husuluhishwa mara moja kwa mwaka kupitia fomu ya P9. Makato ya mwezi ni ya awali, na usuluhishi wa mwaka huhakikisha jumla ni sahihi. Thibitisha na TRA (tra.go.tz).",
+   "action": "QUARANTINE",
+   "kind": "unsourced annual-reconciliation claim",
+   "new_answer": null,
+   "reason_and_R37_check": "R37: no sentence rejects P9. Beyond P9 the answer teaches that PAYE is 'husuluhishwa mara moja kwa mwaka' (an annual reconciliation) as a general rule: unsourced, and the locked individual_income_tax_return fact says an employee whose only income is PAYE-withheld employment income need not file. Repairing P9 alone would keep that.",
+   "present_in": [
+    "sft\\train_sft.jsonl:3163",
+    "sft_shaped_pairs\\cleaned_pairs_batch_015.jsonl:92"
+   ]
+  },
+  {
+   "n": 11,
+   "question": "Nini maana ya PAYE P9 hasa kwa biashara ndogo kama yangu?",
+   "old_answer": "PAYE P9 ni fomu ya taarifa ya mwisho ya mwaka kwa ajili ya kodi ya mapato inayokatwa moja kwa moja kutoka kwenye mshahara wa mfanyakazi (Pay As You Earn). Inathibitisha jumla ya kodi iliyokatwa na kulipwa kwa ajili ya mfanyakazi husika kwa mwaka wa kodi. Thibitisha maelezo zaidi na mamlaka husika (tra.go.tz).",
+   "action": "REPAIR",
+   "kind": "rewrite (defines P9 as a Tanzanian form)",
+   "new_answer": "'P9' si neno la Tanzania: ni neno la Kenya (KRA), na TRA haina fomu yenye jina hilo. Tanzania ina cheti cha zuio cha mwaka (withholding certificate): hati inayoonyesha jumla ya kodi ya mapato ya ajira iliyokatwa kutoka kwenye mshahara wa mfanyakazi kwa mwaka, ambayo mwajiri anapaswa kuitoa kufikia tarehe 30 Januari ya mwaka unaofuata (Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz).",
+   "reason_and_R37_check": "R37: defines P9 as a Tanzanian form. The question ('what does PAYE P9 mean for my small business') is legitimate, so it is rewritten from locked paye_p9_deadline (30 January), not removed.",
+   "present_in": [
+    "sft\\train_sft.jsonl:3243",
+    "sft_shaped_pairs\\cleaned_pairs_batch_014.jsonl:799"
+   ]
+  }
+ ],
+ "gold": {
+  "id": "eval_203",
+  "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+  "old_key": "Hapana. Fomu ya P45 haipo katika mfumo wa kodi wa Tanzania — ni fomu ya Uingereza. Badala yake tumia fomu ya P9 au cheti cha kuondoka kazini. Thibitisha na TRA.",
+  "defect": "WRONG_GOLD (R12b outcome 4): the key recommends 'P9' (Kenyan) and a 'cheti cha kuondoka kazini' that p45_not_tanzanian's correction_note removed as unverified. A model that answers correctly is marked wrong.",
+  "proposed_correction": "SIDECAR (the frozen file is not edited; the sidecar pins its sha256, as for np_13 / s2_07): 'Hapana. Fomu ya P45 ni ya Uingereza. Kinacholingana nayo Tanzania ni cheti cha zuio cha mwaka (withholding certificate) (Sheria ya Kodi ya Mapato); 'P9' ni neno la Kenya. Thibitisha na TRA.'"
+ },
+ "reach": "R36: the authored batch files AND datasets/tier1a/sft/train_sft.jsonl (the export) must both be changed; the export is regenerated by generate_sft.py after the authored files are fixed, then re-audited with eval/controls/audit_quarantine_reach.py",
+ "counts": {
+  "REPAIR": 8,
+  "QUARANTINE": 3
+ }
+}

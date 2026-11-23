@@ -1310,3 +1310,18 @@ Total: 1 | Flagged: 1
 
 [2026-11-17T09:43:56.135564] Checked C:\Users\jhjh\AppData\Local\Temp\tmpqdvppc8l\lf_ok.jsonl
 Total: 1 | Flagged: 0
+
+[2026-11-24T00:51:24.953744] Checked datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl
+Total: 220 | Flagged: 1
+  FLAG [tier1a_sdl_ext_004_20260603] sdl_base_includes_allowances: allowances?[^.]{0,40}(?:not included|excluded|are not part)
+
+[2026-11-24T00:51:26.122943] Checked datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl
+Total: 292 | Flagged: 7
+  FLAG [tier1a_gn605a_008_20260609] wcf_threshold_no_minimum: wcf.*wafanyakazi 10(?! au zaidi.*si wcf| or more.*sdl)
+  FLAG [tier1a_gn605a_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_osha_001_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_002_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_osha_016_20260609] osha_registration_threshold_b004: 10 or more.*osha
+  FLAG [tier1a_paye_adv_049_20260609] sdl_base_includes_allowances: allowances?[^.]{0,40}(?:not included|excluded|are not part)
+  FLAG [tier1a_wcf_008_20260609] wcf_rate_0_5_percent_confirmed: wcf.*asilimia 1(?! kabla| before)
+  FLAG [tier1a_wcf_010_20260609] osha_registration_threshold_b004: osha.*threshold ya 10

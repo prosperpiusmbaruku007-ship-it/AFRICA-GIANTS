@@ -145,7 +145,8 @@ def test_plant_the_narrow_payer_ask_replaced_by_the_loose_first_draft_hijacks_th
         assert not _is_payer(_q(pid)), pid
     loose = re.compile(r"(?=.*(?:(?<![a-z])mfanyakazi|(?<![a-z])mshahara))", re.S)
     _with_topic_patterns(monkeypatch, lambda c, nd, v: (c, loose, v))
-    assert routing.fixed_statement_topic(_q("pp_16")) == TOPIC and routing.fixed_statement_topic(_q("pp_17")) == TOPIC, "the narrowing is what keeps these off the statement; if not, it is decoration"
+    # 2026-11-24: pp_17 (an allowance question) now ALSO matches sdl_base, so the topic LIST (not the single resolved topic) is what shows the plant works
+    assert TOPIC in routing.fixed_statement_topics(_q("pp_16")) and TOPIC in routing.fixed_statement_topics(_q("pp_17")), "the narrowing is what keeps these off the statement; if not, it is decoration"
 
 
 def test_plant_the_compute_stem_veto_removed_hijacks_the_two_part_question(monkeypatch):

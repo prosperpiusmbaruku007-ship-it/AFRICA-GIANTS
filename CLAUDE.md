@@ -463,10 +463,19 @@ All facts below are locked from verified primary sources. Encode these exactly.
 - Effective: 28 Jul 2025
 - Prohibited activities (15 categories): wholesale/retail trade, mobile money transfers,
   phone repair, salon business, and 11 others
-- Penalties for non-citizens: minimum TZS 10M fine + up to 6 months imprisonment + visa revocation
-- Penalties for Tanzanians facilitating: TZS 5M fine or 3 months imprisonment
+- Penalties for non-citizens (**CORRECTED 2026-11-24 to the gazetted Order's own wording**): a "fine of not less than ten
+  million shillings **or** imprisonment for a term not exceeding six months **and** revocation of visa and resident permit"
+  (Order para 3(3)(a)). **It is fine OR imprisonment, with revocation added — NOT "fine + imprisonment + revocation"** (this
+  line used to write "+", and the locked fact `gn487a_penalty_noncitizen` says "AND/OR"; both were practitioner paraphrase).
+  **The Order states a MINIMUM fine (TZS 10,000,000) and NO maximum.**
+- Penalties for Tanzanians facilitating: a citizen who "assists or aids a non-citizen" — "a fine of five million shillings
+  **or** imprisonment for a term not exceeding three months" (para 3(3)(b)); a fixed TZS 5,000,000, not a minimum
+- The Order uses the word "assists or aids", **not** "nominee" (that is the asker's word); 15 activities in the Schedule
+- Edition asserted: `data/source_documents/immigration/gn487a_official_gazette.pdf`, "GN No. 487A, published 28/7/2025",
+  sha256 `dd147c0d...`, read directly 2026-11-23 (`assert_edition`); the statement route `gn487a_penalties` follows it
 - Enforcement exercise: Immigration Services Dept, 11 Sep–8 Oct 2025
-- Source: Bowmans 30 Jul 2025; Dentons 29 Jul 2025; DLA Piper Africa; VELMA Law
+- Source: **the gazetted Order itself (tanzlii.org / gazette copy)**; practitioner alerts (Bowmans 30 Jul 2025; Dentons
+  29 Jul 2025; DLA Piper Africa; VELMA Law) are eval-family sources and are NOT authority for the penalty wording
 
 **NeST Procurement (PPRA.go.tz):**
 - TANePS DECOMMISSIONED 31 Dec 2023. Never reference it.

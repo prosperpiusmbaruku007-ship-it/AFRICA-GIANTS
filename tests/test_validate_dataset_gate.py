@@ -209,7 +209,7 @@ def test_the_real_corpus_currently_passes_and_its_exceptions_are_unchanged():
     # 1712 -> 1708 on 2026-11-17, re-derived: the licence "31 Machi" quarantine removed FOUR cleaned_pairs rows (batch_002:145, batch_005:146, :157, :193); the four train_sft rows are in sft/, not counted here.
     # 1708 -> 1706 on 2026-11-17, re-derived: the annual-PAYE-statement "31 Machi" quarantine removed TWO cleaned_pairs rows (batch_002_cleaned:8 and batch_002a_cleaned:8, the same pair in both batches); the train_sft and val_sft rows are in sft/, not counted here.
     # 1706 -> 1705 on 2026-11-17, re-derived: the approved GN 605A proposals quarantined ONE cleaned_pairs row (batch_004_cleaned:43, a mining premise-denial answered with the energy-sector rate; record datasets/tier1a/rejected/gn605a_mining_400k_pair_quarantine_2026_11_17.jsonl); 0 errors, unchanged cleanliness.
-    assert "schema-shaped: 1705 pairs, 0 errors" in r.stdout, (
+    assert "schema-shaped: 1702 pairs, 0 errors" in r.stdout, (
         f"the schema-shaped corpus changed size or cleanliness; re-derive before updating this "
         f"number:\n{r.stdout[-1500:]}")
 

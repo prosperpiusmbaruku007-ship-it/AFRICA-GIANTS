@@ -81,6 +81,12 @@ VAT_PROFESSIONAL_SERVICES = "vat_professional_services"   # gate row 025
 BRELA_LATE_ANNUAL_RETURN = "brela_late_annual_return"      # gate row 085, scoped to the penalty
 SDL_PAYE_DEADLINE = "sdl_paye_deadline"            # gate row 127
 SDL_AUDIT_HEDGE = "sdl_audit_hedge"                # the live reply invented an eight-point audit and "P9 forms": a hedge to TRA, no procedure
+# 2026-11-24 (founder, next batch): the SDL base (VETA Act s.14(3): allowances INCLUDED; benefits in kind not named, so asserted neither way), and the two THREE-LEVY statements whose live replies were wrong: the rate question ("PAYE ni asilimia 8 ... 14%")
+# and the deadline question ("... michango ya NSSF ... ifikapo tarehe 7").
+SDL_BASE = "sdl_base"
+LEVY_RATES_THREE = "levy_rates_three"
+LEVY_DEADLINES_THREE = "levy_deadlines_three"
+VAT_MEDICAL = "vat_medical_services"          # "Daktari ... kusajili VAT?" -> a live "Ndiyo": medical services are an EXEMPT supply on two conditions
 
 
 def _paye_bands_text() -> str:
@@ -346,19 +352,91 @@ STATEMENTS = {
         "A HEDGE, not a constant: no source held states how TRA audits SDL, so none is stated. Founding specimen: build b96e8a8 live, 'How does TRA conduct an SDL audit ...?' invented an eight-point audit asking to see 'P9 forms' (a Kenyan term; CLAUDE.md Section 11 / locked fact paye_p9_deadline). "
         "The three rules stated are the locked facts sdl_payer, sdl_rate (3.5%, FA2023) and sdl_payment_deadline. Founder-approved 2026-11-23 ('hedge to TRA, no invented procedure'). R44: the Act is named, no section number",
     ),
+    SDL_BASE: (
+        "sdl_base_includes_allowances",
+        "Msingi wa SDL ni JUMLA YA MISHAHARA GHAFI YA MWEZI ambayo mwajiri anawalipa wafanyakazi wake (asilimia 3.5 ya jumla hiyo). Jumla hiyo inajumuisha mshahara, malipo ya likizo, malipo ya ugonjwa, malipo badala ya likizo, ada (fee), kamisheni, bonasi, kiinua mgongo (gratuity) "
+        "na POSHO ZOTE za safari, malazi, burudani au nyinginezo anazolipa mwajiri kuhusiana na ajira (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa hiyo posho ZIMO kwenye msingi wa SDL. "
+        "Sheria haitaji wazi faida zisizo za fedha (kama makazi, chakula au gari): kama zinahesabiwa HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz).",
+        "Locked fact sdl_base_includes_allowances (VETA Act Cap.82 R.E.2023 s.14(2)-(3), direct read 2026-11-24, edition asserted; s.14 unamended by FA2024/25/26). 'includes' is the Act's word and its list names no benefit in kind, so the statement asserts neither that they count nor that they do not. "
+        "The 3.5% is locked fact sdl_rate (corrected 2026-11-24 from 'gross cash emoluments'). Founding specimen: live replies 'gross payroll (cash basis) ... si pamoja na posho za fedha' (build b96e8a8). Founder-approved 2026-11-24. R44: the Act is named, no section number",
+    ),
+    LEVY_RATES_THREE: (
+        "sdl_rate",
+        "SDL: asilimia 3.5 ya jumla ya mishahara ghafi ya mwezi, hulipwa na mwajiri pekee (mwajiri mwenye wafanyakazi 10 au zaidi). "
+        "NSSF: jumla ni asilimia 20 ya mshahara ghafi (mgao wa kawaida: asilimia 10 mwajiri + asilimia 10 mfanyakazi). "
+        "PAYE: HAINA kiwango kimoja -- ni mabano yanayopanda kulingana na mshahara wa mwezi wa mfanyakazi. " + _paye_bands_text() + " Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+        "SDL: locked fact sdl_rate (3.5%, FA2023). NSSF: NSSF_split_triggers (NSSF Act Cap.50 R.E.2023 s.12; 20% = 10% + 10% usual split). PAYE: the band table is GENERATED from rates.PAYE_BANDS (the paye_band_table statement's text), so it cannot drift from the engine. "
+        "NO summed 'employer share' percentage is stated: the live reply invented '14% (NSSF 10% + SDL 3.5% + PAYE 0.5%)'; PAYE is the EMPLOYEE's tax and has no employer rate. Founding specimen: build b96e8a8 live, 'SDL, NSSF na PAYE ni asilimia ngapi?' -> 'PAYE ni asilimia 8 (0%-270%: ...) ... 14%'. Founder-approved 2026-11-24. R44: Acts named, no section number",
+    ),
+    LEVY_DEADLINES_THREE: (
+        "sdl_payment_deadline",
+        "SDL na PAYE zinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara: SDL -- ritani na malipo yake vyote tarehe 7 (Sheria ya Elimu na Mafunzo ya Ufundi); PAYE -- mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa mwezi (Sheria ya Kodi ya Mapato). "
+        "NSSF ni TOFAUTI: michango inatakiwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara, si tarehe 7 (Sheria ya NSSF); ukichelewa, adhabu ni asilimia 5 ya kiasi ambacho hakijalipwa kwa kila mwezi au sehemu ya mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+        "Locked facts sdl_payment_deadline (VETA Act s.16), paye_remittance_deadline (ITA s.109(1) with s.104) and nssf_payment_deadline (NSSF Act Cap.50 s.14(1) one month; s.14(3) 5% per month or part). The three-levy version of sdl_paye_deadline. Founding specimens: build b96e8a8 live, "
+        "'SDL na NSSF na PAYE zinalipwa lini?' -> '... ikijumuisha malipo ya PAYE na michango ya NSSF, ifikapo tarehe 7' (NSSF by the 7th: wrong; D-FIDELITY-29 missed it, now widened). Founder-approved 2026-11-24. R44: Acts named, no section number",
+    ),
+    VAT_MEDICAL: (
+        "medical_services_vat_exempt",
+        "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). "
+        "Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. "
+        "Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+        "Locked fact medical_services_vat_exempt (VAT Act Cap.148 R.E.2023, Schedule made under s.6(1), Part I, item 'Health care' para 1, read directly 2026-11-24, edition asserted; both limbs joined by 'and'; FA2024/25/26 do not touch the item). The registration limb is a HEDGE by construction: s.29(1) carries no exempt-supply carve-out "
+        "in its words while s.28(6)(a) excludes non-taxable supplies from the registration turnover, so the Act text does not say whether an exempt-only practitioner must register. Founding specimen: build 84d8621 live, 'Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?' -> 'Ndiyo ... anatakiwa kusajili VAT'. Founder-approved 2026-11-24. R44: the Act is named, no section or item number",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
 TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY,
-                                   SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE})
+                                   SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE, SDL_BASE, LEVY_RATES_THREE, LEVY_DEADLINES_THREE, VAT_MEDICAL})
 
 
-def fixed_statement(topic) -> ComputationResult:
+# 2026-11-24 (founder, GN 487A premise answers; THIS STATEMENT ONLY): when the question states a figure that CONTRADICTS the Order, the answer opens with an explicit "Hapana" before the correct figures. The Order's figures: a non-citizen -- fine of NOT LESS THAN TZS 10,000,000
+# or up to 6 months; a citizen who assists -- fine of TZS 5,000,000 or up to 3 months. NARROW BY CONSTRUCTION (R17): only a figure is judged (never wording), only the amounts and month counts the question states, and an AMBIGUOUS question (the party cannot be told, or a stated figure
+# is one the Order contains for the OTHER party only when the party is named) opens with nothing. A question stating no figure, or only correct ones, gets the bare statement.
+import re as _re
+_G_CITIZEN = _re.compile(r"raia\s+wa\s+tanzania|mtanzania|watanzania|msaidizi|anayemsaidia|anayesaidia|kumsaidia|facilitat|tanzanian|citizen\s+who|helps?\s+a\s+(?:non|foreign)|assists?\s+a\s+(?:non|foreign)", _re.IGNORECASE)
+_G_ASSIST = _re.compile(r"anayemsaidia|anayesaidia|kumsaidia|msaidizi|facilitat|helps?\s+a|assists?\s+a|aids?\s+a", _re.IGNORECASE)
+_G_NONCITIZEN = _re.compile(r"asiye\s+raia|wasio\s+raia|raia\s+wa\s+kigeni|mgeni|wageni|non-?citizen|foreigner", _re.IGNORECASE)
+_G_UPTO = _re.compile(r"hadi|up\s+to|tu(?![a-z])|only|ya\s+juu|maximum", _re.IGNORECASE)
+
+
+def _g_amounts(text):
+    from .. import swahili_numbers as swn
+    return list(swn.parse_amounts(text))
+
+
+def gn487a_premise_opening(question: str) -> str:
+    """'Hapana. ' when the question states a figure that contradicts the Order (party-aware, figures only); '' otherwise. Pure."""
+    q = question or ""
+    cit, non = bool(_G_CITIZEN.search(q)), bool(_G_NONCITIZEN.search(q))
+    amounts = [a for a in _g_amounts(q) if a >= 100_000]
+    months = [int(m) for m in _re.findall(r"(\d+)\s*(?:months?|miezi)", q, _re.IGNORECASE)] + [12 * int(m) for m in _re.findall(r"(\d+)\s*(?:years?|miaka|mwaka)", q, _re.IGNORECASE)]
+    if not amounts and not months:
+        return ""
+    ok_amounts, ok_months = set(), set()
+    wrong = False
+    # an ASSIST cue makes the CITIZEN the subject of the penalty even when a foreigner is named (as the OBJECT of the assisting)
+    assist = bool(_G_ASSIST.search(q))
+    if (cit and not non) or assist:
+        ok_amounts, ok_months = {5_000_000}, {3}
+        wrong = any(a not in ok_amounts for a in amounts) or any(m not in ok_months for m in months)
+    elif non and not cit:
+        wrong = any(a < 10_000_000 for a in amounts) or any(m != 6 for m in months) or (any(a == 10_000_000 for a in amounts) and bool(_G_UPTO.search(q)))
+    else:
+        # both parties or neither named: a figure that is correct for NEITHER party is wrong whoever it is for
+        wrong = any(a not in {5_000_000} and a < 10_000_000 for a in amounts) or any(m not in {3, 6} for m in months)
+    return "Hapana -- kiwango ulichotaja hakipo kwenye Amri. " if wrong else ""
+
+
+def fixed_statement(topic, question=None) -> ComputationResult:
     """The whole statement for `topic`. An unknown topic raises: a statement route with no statement must never fall back to
-    generation or to a guess (R31: a branch with no extractor is a capability that does not exist)."""
+    generation or to a guess (R31: a branch with no extractor is a capability that does not exist). `question` is used by ONE topic only
+    (gn487a_penalties, see gn487a_premise_opening)."""
     if topic not in STATEMENTS:
         raise KeyError(f"no fixed statement for topic {topic!r}")
     key, text, note = STATEMENTS[topic]
+    if topic == GN487A_PENALTIES and question:
+        text = gn487a_premise_opening(question) + text
     return ComputationResult(
         computation="fixed_statement",
         applicable=True,
