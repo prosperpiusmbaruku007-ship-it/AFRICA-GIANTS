@@ -1,0 +1,442 @@
+{
+ "identity": {
+  "build": "84d8621",
+  "rag_rows_loaded": 218,
+  "rag_embeddings_shape": [
+   218,
+   768
+  ],
+  "rag_facts_text_sha256": "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50",
+  "config_rag_fact_count": 218,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795467948.692,
+   "enter_started_ts": 1795467948.7,
+   "enter_done_ts": 1795467989.318,
+   "import_to_enter_s": 0.0,
+   "load_s": 40.6,
+   "gpu": "NVIDIA L4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "PARTY3",
+   "q": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?",
+   "reply": "SDL, NSSF na PAYE hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake; mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. PAYE: ni kodi ya mapato ya ajira ya MFANYAKAZI; mwajiri ndiye anayeikata kwenye mshahara wake na kuipeleka TRA (Sheria ya Kodi ya Mapato). Kiasi cha PAYE kinategemea viwango vya kodi vya kila mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PARTY3",
+   "q": "Is SDL, NSSF and PAYE deducted from the employee?",
+   "reply": "SDL, NSSF na PAYE hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake; mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. PAYE: ni kodi ya mapato ya ajira ya MFANYAKAZI; mwajiri ndiye anayeikata kwenye mshahara wake na kuipeleka TRA (Sheria ya Kodi ya Mapato). Kiasi cha PAYE kinategemea viwango vya kodi vya kila mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF",
+   "q": "NSSF inakatwa kwa mfanyakazi?",
+   "reply": "NSSF: jumla ni asilimia 20 ya mshahara ghafi. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi: sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake, na mwajiri analipa sehemu yake ya asilimia 10 mwenyewe (haikatwi kwa mfanyakazi). Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF",
+   "q": "Nani analipa NSSF?",
+   "reply": "NSSF: jumla ni asilimia 20 ya mshahara ghafi. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi: sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake, na mwajiri analipa sehemu yake ya asilimia 10 mwenyewe (haikatwi kwa mfanyakazi). Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FORMS",
+   "q": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?",
+   "reply": "BRELA husajili biashara katika aina TATU kuu za kisheria: (1) mmiliki mmoja (sole proprietor) na (2) ubia (partnership, watu wawili au zaidi) -- zote mbili husajiliwa kama jina la biashara chini ya Sheria ya Majina ya Biashara; (3) kampuni yenye dhima ndogo, inayosajiliwa chini ya Sheria ya Makampuni. Uchaguzi kati ya jina la biashara na kampuni unategemea muundo wa kisheria na dhima unayotaka, SI idadi ya wafanyakazi wala kiasi cha mtaji: hakuna kizingiti cha wafanyakazi au mtaji kinachokulazimisha kusajili kampuni. BRELA pia husimamia alama za biashara, hataza na ubunifu wa viwanda (haki miliki), ambavyo si miundo ya biashara. Kama usajili ni lazima kwa shughuli yako, thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FORMS",
+   "q": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "reply": "BRELA husajili biashara katika aina TATU kuu za kisheria: (1) mmiliki mmoja (sole proprietor) na (2) ubia (partnership, watu wawili au zaidi) -- zote mbili husajiliwa kama jina la biashara chini ya Sheria ya Majina ya Biashara; (3) kampuni yenye dhima ndogo, inayosajiliwa chini ya Sheria ya Makampuni. Uchaguzi kati ya jina la biashara na kampuni unategemea muundo wa kisheria na dhima unayotaka, SI idadi ya wafanyakazi wala kiasi cha mtaji: hakuna kizingiti cha wafanyakazi au mtaji kinachokulazimisha kusajili kampuni. BRELA pia husimamia alama za biashara, hataza na ubunifu wa viwanda (haki miliki), ambavyo si miundo ya biashara. Kama usajili ni lazima kwa shughuli yako, thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FORMS",
+   "q": "Payroll yetu ni TZS 7,000,000 kwa mwezi, sasa je tunatakiwa kujisajili BRELA?",
+   "reply": "BRELA husajili biashara katika aina TATU kuu za kisheria: (1) mmiliki mmoja (sole proprietor) na (2) ubia (partnership, watu wawili au zaidi) -- zote mbili husajiliwa kama jina la biashara chini ya Sheria ya Majina ya Biashara; (3) kampuni yenye dhima ndogo, inayosajiliwa chini ya Sheria ya Makampuni. Uchaguzi kati ya jina la biashara na kampuni unategemea muundo wa kisheria na dhima unayotaka, SI idadi ya wafanyakazi wala kiasi cha mtaji: hakuna kizingiti cha wafanyakazi au mtaji kinachokulazimisha kusajili kampuni. BRELA pia husimamia alama za biashara, hataza na ubunifu wa viwanda (haki miliki), ambavyo si miundo ya biashara. Kama usajili ni lazima kwa shughuli yako, thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FEE",
+   "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?",
+   "reply": "Kwa ratiba ya ada ya BRELA iliyochapishwa kwenye tovuti yao (iliyosomwa 2026-10-06), ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 500,000. Tarehe ambayo ada hiyo ilianza kutumika HAIJULIKANI: ratiba ilibadilika kati ya 2026-06-30 na 2026-10-06, na hapo awali ilichapishwa TZS 300,000. Ada za BRELA hubadilika, kwa hiyo thibitisha kiasi cha sasa na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?",
+   "reply": "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "Adhabu ya raia wa Tanzania anayemsaidia mgeni chini ya GN 487A ni TZS 10,000,000, sivyo?",
+   "reply": "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VATWH",
+   "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?",
+   "reply": "VAT ya zuio (Sheria ya Fedha 2025, kuanzia 1 Julai 2025): kwa bidhaa ni asilimia 3 na kwa huduma ni asilimia 6, ya thamani ya mauzo isiyojumuisha VAT. Huduma za IT ni huduma, kwa hiyo kiwango chake ni asilimia 6, si 3. VAT ya kawaida ni asilimia 18: mnunuzi anayehitimu kuwa wakala wa zuio anazuia asilimia 3 (bidhaa) au 6 (huduma) na kuipeleka TRA moja kwa moja, na muuzaji anapokea iliyobaki (asilimia 15 kwa bidhaa, asilimia 12 kwa huduma). Kwa hiyo VAT ya zuio si VAT yote ya muuzaji. Muuzaji hupewa cheti cha zuio kama ushahidi wa kiasi kilichopelekwa. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VATWH",
+   "q": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?",
+   "reply": "VAT ya zuio (Sheria ya Fedha 2025, kuanzia 1 Julai 2025): kwa bidhaa ni asilimia 3 na kwa huduma ni asilimia 6, ya thamani ya mauzo isiyojumuisha VAT. Huduma za IT ni huduma, kwa hiyo kiwango chake ni asilimia 6, si 3. VAT ya kawaida ni asilimia 18: mnunuzi anayehitimu kuwa wakala wa zuio anazuia asilimia 3 (bidhaa) au 6 (huduma) na kuipeleka TRA moja kwa moja, na muuzaji anapokea iliyobaki (asilimia 15 kwa bidhaa, asilimia 12 kwa huduma). Kwa hiyo VAT ya zuio si VAT yote ya muuzaji. Muuzaji hupewa cheti cha zuio kama ushahidi wa kiasi kilichopelekwa. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VATPRO",
+   "q": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?",
+   "reply": "Watoa huduma za kitaalamu (wenye leseni au wanachama wa chama cha taaluma) lazima wajisajili VAT bila kujali kiasi cha mauzo yao (Sheria ya VAT): kiwango cha TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6 kinawahusu wafanyabiashara wengine, si wao. Taasisi za Serikali zinazofanya shughuli za kiuchumi pia zinasajiliwa, na Kamishna anaweza kumsajili anayetarajia kuanza biashara mwenye ushahidi. Sheria inaweka kanuni hii bila kutoa sababu katika maandishi tuliyosoma. Kama huduma yako ni ya kitaalamu kwa maana ya sheria, thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "LATERET",
+   "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?",
+   "reply": "Annual return ya kampuni inatakiwa ndani ya siku 28 baada ya tarehe ya kumbukumbu (maadhimisho ya kuanzishwa kwa kampuni au ya return iliyotangulia); ukichelewa zaidi, kampuni na kila afisa aliye na hatia wanaweza kutozwa faini, na faini ya ziada kwa kuendelea kuchelewa (Sheria ya Makampuni). Kwa ratiba ya ada ya BRELA iliyochapishwa kwenye tovuti yao (iliyosomwa 2026-10-06): kuchelewa kuwasilisha waraka kunagharimu TZS 2,500 kwa kila mwezi au sehemu ya mwezi kwa kampuni ya ndani, na ada ya kuwasilisha annual return ni TZS 22,000. Matokeo mengine ya kutowasilisha kwa miaka mingi hayajathibitishwa hapa: thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDLPAYE",
+   "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+   "reply": "SDL na PAYE zote mbili zinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara -- tarehe ni ileile. SDL: ritani na malipo yake vyote kufikia tarehe 7 (Sheria ya Elimu na Mafunzo ya Ufundi). PAYE: mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa mwezi, yaani ifikapo tarehe 7 (Sheria ya Kodi ya Mapato). Ni wajibu mbili tofauti; njia na fomu ya kulipa thibitisha na TRA (tra.go.tz). NSSF si tarehe 7: michango ya NSSF ni ndani ya mwezi mmoja baada ya mwisho wa mwezi (Sheria ya NSSF).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "AUDIT",
+   "q": "How does TRA conduct an SDL audit and what do they examine?",
+   "reply": "Sina utaratibu uliothibitishwa wa ukaguzi wa SDL wa TRA (hatua zake, nyaraka zinazoombwa au muda wake), kwa hiyo sitaorodhesha hatua nisizozithibitisha. Ninachoweza kuthibitisha ni kanuni zenyewe: SDL hulipwa na mwajiri pekee, ni asilimia 3.5 ya jumla ya mishahara ghafi ya mwezi kwa mwajiri mwenye wafanyakazi 10 au zaidi, na ritani na malipo ni kufikia tarehe 7 ya mwezi unaofuata (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa utaratibu wa ukaguzi, au kama umepokea notisi kutoka TRA, wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyesajiliwa.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Ada ya kusajili jina la biashara BRELA ni shilingi ngapi?",
+   "reply": "Ada ya kusajili jina la biashara BRELA ni TZS 15,000. Thibitisha na BRELA Official (brela.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "VAT withholding kwa mauzo ya bidhaa na huduma pamoja inakatwaje?",
+   "reply": "VAT ya zuio kwa mauzo yenye bidhaa na huduma pamoja: tangu 1 Julai 2026, thamani inayozuiwa inagawanywa kwa uwiano wa 3:2 kati ya bidhaa na huduma (Sheria ya Fedha 2026). Kiwango cha bidhaa ni 3% na cha huduma ni 6%.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?",
+   "reply": "Ndiyo, daktari anayefanya mazoezi ya udaktari ana sifa ya kutoa huduma za kitaalamu na hivyo anatakiwa kusajili VAT. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL, NSSF na PAYE ni asilimia ngapi?",
+   "reply": "Niambie kwa mpangilio.NSSF ni asilimia 20 (mwajiri 10% + mfanyakazi 10%). PAYE ni asilimia 8 (0%–270%: 0%, 8%, 20%, 25%, 30%, 35%, 40%, 50%). SDL ni asilimia 3.5. Sehemu ya mwajiri peke yake ni 14% (NSSF 10% + SDL 3.5% + PAYE 0.5%). Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "GN 487A inakataza shughuli zipi?",
+   "reply": "GN 487A inakataza shughuli 15 kwa wasio raia Tanzania. Shughuli namba 3 ni 'ukarabati wa simu na vifaa vya kielektroniki'. Thibitisha na TanzLII (tanzlii.org).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL na NSSF na PAYE zinalipwa lini?",
+   "reply": "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).NSSF inalipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara — thibitisha na NSSF (nssf.go.tz).PAYE inalipwa pamoja na PAYE, ikijumuisha malipo ya PAYE na michango ya NSSF, ifikapo tarehe 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D29",
+   "q": "Nina wafanyakazi 15 na mishahara jumla TZS 6,000,000 kwa mwezi. SDL na NSSF ni kiasi gani?",
+   "reply": "SDL = 3.5% × TZS 6,000,000 = TZS 210,000\n\nKwa NSSF: mwajiri 10% + mfanyakazi 10% = 20% ya jumla; kwa hiyo NSSF ni TZS 1,200,000 (TZS 600,000 kwa mwajiri + TZS 600,000 kwa mfanyakazi). Kwa SDL: mwajiri 3.5% ya jumla; kwa hiyo SDL ni TZS 210,000 (TZS 150,000 kwa mwajiri). Thibitisha na nssf.go.tz na tra.go.tz.\nNSSF = 20% × TZS 6,000,000 = TZS 1,200,000 (mwajiri TZS 600,000 + mfanyakazi TZS 600,000)",
+   "path": "engine:sdl+engine:nssf",
+   "model_calls": 4,
+   "guards": [
+    "blanked"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D30",
+   "q": "Mwajiri anaonyesha nyaraka gani kwa TRA wakati wa ukaguzi wa PAYE wa mishahara?",
+   "reply": "Mwajiri huonyesha: rekodi za mishahara (payroll register), fomu cheti cha zuio (withholding certificate) zilizojazwa, risiti za malipo za TRA, makadirio ya PAYE (PAYE estimates), nakala za mikataba ya ajira, na rekodi za benki za malipo ya mshahara. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "SDL na NSSF zinakatwa kwa mfanyakazi?",
+   "reply": "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": [
+  "blanked",
+  "repaired"
+ ]
+}
