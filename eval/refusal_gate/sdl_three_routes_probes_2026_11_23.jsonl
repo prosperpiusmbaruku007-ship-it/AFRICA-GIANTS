@@ -18,7 +18,7 @@
 {"id": "np_04", "question": "Is SDL and NSSF deducted from the employee?", "expect": "nssf_party", "guards_against": "English."}
 {"id": "np_05", "question": "SDL na NSSF zote zinakatwa kwenye mshahara wangu, sivyo?", "expect": "nssf_party", "guards_against": "A premise-check form (the statement is the whole rule)."}
 {"id": "n_01", "question": "Pesa za SDL zinakwenda wapi na zinatumika kwa nini?", "expect": "none", "guards_against": "Where the money GOES: the first sweep's hijack of the filing route."}
-{"id": "n_02", "question": "How does TRA conduct an SDL audit and what do they examine?", "expect": "none", "guards_against": "'how does' is not 'how do' (prefix-match hijack); an audit question."}
+{"id": "n_02", "question": "How does TRA conduct an SDL audit and what do they examine?", "expect": "audit_hedge", "guards_against": "'how does' is not 'how do' (prefix-match hijack); an audit question.", "expect_history": {"was": "none", "was_true_when": "written 2026-11-23 before the ten routes existed: no route took these questions", "disproved_by": "2026-11-23 (ten more statements): an SDL AUDIT question now reaches its own model-free hedge (sdl_audit_hedge: no audit procedure is held, none is invented). It must still NOT reach the three SDL routes, which is what the none-probes test asserts."}}
 {"id": "n_03", "question": "How does an employer calculate the SDL amount payable each month?", "expect": "none", "guards_against": "A calculation question."}
 {"id": "n_04", "question": "Where does SDL money go and what is it used for?", "expect": "none", "guards_against": "English where-the-money-goes."}
 {"id": "n_05", "question": "SDL na PAYE nalipa wapi?", "expect": "none", "guards_against": "Another levy named."}
@@ -30,9 +30,9 @@
 {"id": "n_11", "question": "Nasajili wapi kwa ajili ya SDL?", "expect": "none", "guards_against": "REGISTRATION where: not a filing question."}
 {"id": "n_12", "question": "SDL na NSSF ni asilimia ngapi?", "expect": "none", "guards_against": "Two levies, a rate ask: no payer cue."}
 {"id": "n_13", "question": "SDL na NSSF zinalipwa lini?", "expect": "none", "guards_against": "Two levies, a deadline ask."}
-{"id": "n_14", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?", "expect": "none", "guards_against": "A third levy named: the statement would drop PAYE."}
+{"id": "n_14", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?", "expect": "paye_party", "guards_against": "A third levy named: the statement would drop PAYE.", "expect_history": {"was": "none", "was_true_when": "written 2026-11-23 before the ten routes existed: no route took these questions", "disproved_by": "2026-11-23 (ten more statements): SDL + NSSF + PAYE now reaches its own composite (sdl_nssf_paye_party), which states all three. It must still NOT reach the two-levy sdl_nssf_party route (that route vetoes PAYE)."}}
 {"id": "n_15", "question": "SDL na NSSF zinakatwa kwa mshahara wa 800,000?", "expect": "none", "guards_against": "A figure: compute."}
-{"id": "n_16", "question": "NSSF inakatwa kwa mfanyakazi?", "expect": "none", "guards_against": "No SDL: the nssf route, not this one."}
+{"id": "n_16", "question": "NSSF inakatwa kwa mfanyakazi?", "expect": "nssf_only", "guards_against": "No SDL: the nssf route, not this one.", "expect_history": {"was": "none", "was_true_when": "written 2026-11-23 before the ten routes existed: no route took these questions", "disproved_by": "2026-11-23 (ten more statements): NSSF alone with a deduction ask now reaches its own party statement (nssf_party). It must still NOT reach sdl_nssf_party (no SDL named)."}}
 {"id": "n_17", "question": "SDL inakatwa kwa mfanyakazi?", "expect": "payer", "guards_against": "The plain deduction ask stays with the sdl_payer statement."}
 {"id": "n_18", "question": "SDL inahesabiwaje na nalipa wapi?", "expect": "none", "guards_against": "Two-part: how computed AND where."}
 {"id": "n_19", "question": "SDL na NSSF zinakatwa kwa mfanyakazi, na mgawanyo wa NSSF ni upi?", "expect": "none", "guards_against": "Two-part with the NSSF split ask: its own statement."}

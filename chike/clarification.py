@@ -672,6 +672,12 @@ CONSTANT_RESTATEMENTS["sdl_applies_at_threshold"] = (
     "Thibitisha na TRA (tra.go.tz).")
 
 
+# D-FIDELITY-29 (2026-11-23): replacement copy for NSSF stated as due by the 7th. Lifted from locked fact nssf_payment_deadline (NSSF Act Cap.50 R.E.2023, direct read) and sdl_payment_deadline / paye_remittance_deadline; R44: Acts named, no section number.
+CONSTANT_RESTATEMENTS["nssf_payment_deadline"] = (
+    "Michango ya NSSF inatakiwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara, si tarehe 7 (Sheria ya NSSF); ukichelewa, adhabu ni asilimia 5 ya kiasi ambacho hakijalipwa kwa kila mwezi au sehemu ya mwezi. "
+    "Tarehe 7 ni ya SDL na ya PAYE. Thibitisha na NSSF (nssf.go.tz).")
+
+
 # D-FIDELITY-27 / 28 (2026-11-22): replacement copy for two unsupported scope claims. These are the PROPOSED fact texts (founder to approve before the regen); R44: the Act is named, no section number (it lives in the fact's metadata).
 CONSTANT_RESTATEMENTS["sdl_scope_by_premises"] = (
     "SDL hutozwa kwa kila mwajiri mwenye wafanyakazi 10 au zaidi (Sheria ya Elimu na Mafunzo ya Ufundi); Sheria haisemi kwamba inahusu 'maeneo ya biashara' pekee. "

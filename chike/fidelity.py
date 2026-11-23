@@ -1449,7 +1449,8 @@ def fixed_figure_violations(question: str, body: str):
         if topic == "nssf_split":
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
-        if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party"):
+        if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party",
+                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
@@ -2118,6 +2119,100 @@ def nssf_contributions_tied_to_age_60(question: str, body: str):
     return out
 
 
+# ---- D-FIDELITY-29 (2026-11-23, founder): NSSF STATED AS DUE BY THE 7TH. A CONSTANT (R19), so no engine result is needed. Locked fact nssf_payment_deadline (NSSF Act Cap.50 R.E.2023 s.14(1), direct read): contributions are due WITHIN ONE MONTH after the
+# end of the month; the 7th is SDL's (VETA Act s.16) and PAYE's (Income Tax Act s.109). Founding specimen (live, build b96e8a8, eval/results/sdl_three_routes_live_2026_11_23.json, the compute reply to "SDL na NSSF ni kiasi gani?"): "... NSSF: 20% ya TZS
+# 6,000,000 = TZS 1,200,000 ... Zote mbili zinalipwa ndani ya siku 7 za kwanza za mwezi unaofuata." -- NSSF is named in the sentence BEFORE; the sentence that states the 7 days names no levy, so a same-clause rule is blind to it (R39: the anaphoric-transfer
+# blind spot) and an ANAPHOR limb is part of the rule.
+# R25. (1) Defect: the NSSF deadline stated as the 7th / 7 days (one live reply; the locked fact exists because the same error was found before). (2) What CORRECT output could it damage: a clause naming NSSF AND a one-month deadline ("NSSF ni ndani ya mwezi mmoja;
+#   SDL na PAYE tarehe 7"), a clause that DENIES the tie ("NSSF si tarehe 7"), a sentence that gives the 7th to SDL/PAYE with NSSF in a different clause (split on ; : lakini ila wakati), and a sentence whose levies are all explicit and exclude NSSF.
+#   The anaphor limb fires only on a sentence naming NO levy (zote / both / all) directly after a sentence naming NSSF.
+_D29_NSSF = re.compile(r"(?<![a-z])nssf(?![a-z]|\.go\.tz)", re.IGNORECASE)
+_D29_LEVY = re.compile(r"(?<![a-z])(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz)|tozo\s+la\s+mafunzo", re.IGNORECASE)
+_D29_SEVEN = re.compile(r"(?:siku|tarehe)\s+(?:ya\s+)?(?:7|saba)(?![0-9])|(?<![0-9])7(?:th)?\s+days?(?![a-z])|seven\s+days|(?:by|on)\s+the\s+7th|(?:ndani\s+ya|kufikia|ifikapo|kabla\s+ya)\s+(?:siku\s+)?(?:ya\s+)?7(?![0-9])", re.IGNORECASE)
+_D29_MONTH = re.compile(r"mwezi\s+mmoja|one\s+month|calendar\s+month|siku\s+30(?![0-9])|30\s+days", re.IGNORECASE)
+_D29_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|not|wala|tofauti)(?![a-z])", re.IGNORECASE)
+_D29_ANAPHOR = re.compile(r"zote\s+mbili|(?<![a-z])zote(?![a-z])|hizi\s+zote|(?<![a-z])both(?![a-z])|all\s+(?:three|of\s+them)", re.IGNORECASE)
+_D29_CLAUSE = re.compile(r"[;:|]|\s+(?:lakini|ila|wakati|while|but|whereas)\s+", re.IGNORECASE)
+# A LIST of levies ("SDL na NSSF", "PAYE, NSSF, WCF na kodi", "SDL + PAYE"): the unit a deadline attaches to. Priced over the corpus (eval/results/price_d29_d30_2026_11_23.json): the first draft asked only "is NSSF in the same clause as a 7th" and flagged four
+# CORRECT training rows (a `|`-separated table, the nssf.go.tz DOMAIN read as a levy, "PAYE kufikia tarehe 7" where the 7th belongs to PAYE, a sentence the splitter could not break at ".)"). The deadline belongs to the list directly BEFORE it (or, when none, directly after).
+_D29_LEVY_LIST = re.compile(r"(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz)(?:\s*(?:,|\+|&|na|and|au|pamoja\s+na|sambamba\s+na)\s*(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z]|\.go\.tz))*", re.IGNORECASE)
+
+
+def _d29_list_for_deadline(clause, m7):
+    """The levy list the 7th attaches to: the last list before it, else a list within 25 characters after it. '' when there is none."""
+    before = [m for m in _D29_LEVY_LIST.finditer(clause[:m7.start()])
+              if not re.search(r"(?<![a-z])(?:nssf|sdl|paye|wcf|vat|wht|osha|nhif)(?![a-z])", clause[m.end():m7.start()], re.IGNORECASE)]
+    if before:
+        return before[-1].group(0)
+    after = _D29_LEVY_LIST.search(clause[m7.end():m7.end() + 25])
+    return after.group(0) if after else ""
+
+
+def nssf_deadline_misstated(question: str, body: str):
+    """[clause] stating that NSSF is due by the 7th / within 7 days: NSSF is in the levy list the 7th attaches to, or the sentence says 'zote mbili' / 'both' (no levy named) directly after a sentence naming NSSF. A clause that also states a one-month
+    deadline, or denies the tie, is left alone. Pure."""
+    if not body or not _D29_NSSF.search(body):
+        return []
+    out, prev_named_nssf = [], False
+    for s in _SENTENCE_SPLIT.split(body):
+        if not s or not s.strip():
+            continue
+        for clause in _D29_CLAUSE.split(s):
+            m7 = _D29_SEVEN.search(clause) if clause else None
+            if not m7 or _D29_NEG.search(clause) or _D29_MONTH.search(clause):
+                continue
+            lst = _d29_list_for_deadline(clause, m7)
+            if lst and _D29_NSSF.search(lst):
+                out.append(clause.strip())
+            elif not _D29_LEVY.search(clause) and prev_named_nssf and _D29_ANAPHOR.search(clause):
+                out.append(clause.strip())
+        prev_named_nssf = bool(_D29_NSSF.search(s))
+    return out
+
+
+# ---- D-FIDELITY-30 (2026-11-23, founder): "P9" IN AN ANSWER IS KENYAN (KRA) TERMINOLOGY -- TANZANIA'S TRA HAS NO FORM BY THAT NAME. A REPAIR (one clause changes, nothing is blocked; the D-FIDELITY-14 posture). Locked fact paye_p9_deadline (Income Tax Act Cap.332
+# R.E.2023 s.110(3)(b); CLAUDE.md Section 11): the annual employment-income document is the WITHHOLDING CERTIFICATE, served by 30 January. Founding specimen (live, build b96e8a8): the SDL-audit reply "The auditor will ask to see: payslips, P9 forms, SDL returns ...".
+# R25. (1) Defect: a Kenyan form name asserted as a Tanzanian document (one live reply). (2) What CORRECT output could it damage: a sentence that SAYS P9 is Kenyan / not Tanzanian ("P9 ni neno la Kenya; TRA haina fomu hiyo"), which carries a negation or a Kenya / KRA / term cue and is left untouched. The replacement is
+#   the document the locked fact names, so a repaired sentence stays true.
+_D30_P9 = re.compile(r"(?<![A-Za-z0-9])((?:fomu|form|forms|vyeti)\s+(?:ya|za|of)\s+)?P\s?9(?![A-Za-z0-9])(\s+forms?|\s+fomu)?", re.IGNORECASE)
+_D30_SAYS_NOT_TZ = re.compile(r"kenya|(?<![a-z])kra(?![a-z])|haina|hakuna|haitumii|haipo|(?<![a-z])si(?![a-z])|siyo|(?<![a-z])not(?![a-z])|isn'?t|usitumie|(?<![a-z])neno|(?<![a-z])term|terminolog", re.IGNORECASE)
+
+
+def p9_asserted(body: str):
+    """[sentence] that uses 'P9' as if it were a Tanzanian document. A sentence that says it is Kenyan / not Tanzanian is left alone. Pure."""
+    if not body:
+        return []
+    return [s.strip() for s in _SENTENCE_SPLIT.split(body) if s and _D30_P9.search(s) and not _D30_SAYS_NOT_TZ.search(s)]
+
+
+# The replacement is the withholding certificate ONLY where the sentence is about PAYE / the employee's annual tax document (the context that locked fact paye_p9_deadline answers). Priced over the corpus: a gate reply listed "fomu ya NSSF P9" among NSSF
+# REGISTRATION documents, and substituting "cheti cha zuio" there would keep a false claim (registration needs no withholding certificate). Outside that context the Kenyan token is DROPPED instead, so no sentence is made false by the repair.
+_D30_PAYE_CONTEXT = re.compile(r"paye|payslip|ukaguzi|audit|zuio|withhold|kodi\s+ya\s+mapato|taarifa\s+ya\s+mwaka|annual|mshahara|payroll|(?<![a-z])tra(?![a-z])", re.IGNORECASE)
+_D30_OTHER_AUTHORITY = re.compile(r"(?<![a-z])(?:nssf|wcf|osha|brela)(?![a-z])", re.IGNORECASE)
+
+
+def repair_p9(body: str) -> str:
+    """The body with 'P9' / 'P9 forms' replaced by the withholding certificate (cheti / vyeti vya zuio) in a PAYE-context sentence that asserts it, and simply dropped in any other context; a sentence that says P9 is Kenyan / not Tanzanian is untouched. Idempotent."""
+    if not body or not _D30_P9.search(body):
+        return body
+    out = []
+    for part in re.split(r"(?<=[.!?\n])", body):
+        if _D30_P9.search(part) and not _D30_SAYS_NOT_TZ.search(part):
+            if _D30_PAYE_CONTEXT.search(part) and not _D30_OTHER_AUTHORITY.search(part):
+                part = _D30_P9.sub(_p9_replacement, part)
+            else:
+                part = re.sub(r"\s{2,}", " ", _D30_P9.sub("", part)).replace(" ,", ",").replace(" .", ".")
+        out.append(part)
+    return "".join(out)
+
+
+def _p9_replacement(m) -> str:
+    """Plural when the match is 'P9 forms', 'forms of P9', 'fomu za P9' or 'vyeti vya P9'; singular otherwise ('P9', 'form P9', 'fomu ya P9')."""
+    pre, post = (m.group(1) or "").strip().lower(), (m.group(2) or "").strip().lower()
+    plural = post == "forms" or pre.startswith("forms") or pre.endswith(("za", "vya"))
+    return "vyeti vya zuio (withholding certificates)" if plural else "cheti cha zuio (withholding certificate)"
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -2130,6 +2225,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("sdl_applies_at_threshold", s) for s in sdl_denied_above_threshold(question, body)]   # D-FIDELITY-25
     out += [("sdl_scope_by_premises", s) for s in sdl_scope_by_premises(question, body)]   # D-FIDELITY-27
     out += [("nssf_contributions_age_60", s) for s in nssf_contributions_tied_to_age_60(question, body)]   # D-FIDELITY-28
+    out += [("nssf_payment_deadline", s) for s in nssf_deadline_misstated(question, body)]   # D-FIDELITY-29
     return out
 
 

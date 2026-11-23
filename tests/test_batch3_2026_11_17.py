@@ -64,7 +64,8 @@ def test_a_question_naming_a_combined_sale_still_routes_to_the_statement(q):
 @pytest.mark.parametrize("q", DECLINED)
 def test_a_goods_vs_services_question_goes_back_to_its_previous_path(q):
     assert routing.fixed_statement_topic(q) != TOPIC, q
-    assert routing.detect_intent(q) != "fixed_statement", q
+    # 2026-11-23: a pure goods-vs-services RATE question is now owned by vat_withholding_rates; the invariant (it must not reach the MIXED-supply statement) is unchanged.
+    assert routing.detect_intent(q) != "fixed_statement" or routing.fixed_statement_topic(q) == "vat_withholding_rates", q
 
 
 def test_wired_eval_039_is_answered_by_the_model_path_not_the_mixed_supply_statement():

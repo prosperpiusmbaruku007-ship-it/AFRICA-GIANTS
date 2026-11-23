@@ -65,7 +65,8 @@ def test_the_deadline_question_routes_to_the_statement(q):
 
 @pytest.mark.parametrize("q", CLEAN)
 def test_every_neighbour_is_left_alone(q):
-    assert routing.fixed_statement_topic(q) != TOPIC and routing.detect_intent(q) != "fixed_statement", q
+    # 2026-11-23: a LATE-return PENALTY question is now owned by brela_late_annual_return; the invariant here (it must not reach the DEADLINE statement) is unchanged.
+    assert routing.fixed_statement_topic(q) != TOPIC and (routing.detect_intent(q) != "fixed_statement" or routing.fixed_statement_topic(q) == "brela_late_annual_return"), q
 
 
 def test_plant_the_own_ask_cue_disabled_is_caught(monkeypatch):

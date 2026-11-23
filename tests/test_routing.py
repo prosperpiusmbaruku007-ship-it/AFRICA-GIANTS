@@ -213,7 +213,8 @@ def test_explicit_guard_named_eight_route_to_fact():
         "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",                                   # eval_344
         "SDL inalipwa ifikapo tarehe 20 ya mwezi kama VAT withholding, sivyo?",                    # eval_345
     ]:
-        assert routing.detect_intent(q) == "none"
+        # 2026-11-23: eval_127 (SDL + PAYE deadline) is now answered by its own model-free statement (sdl_paye_deadline); every other row of the eight still routes to the fact path.
+        assert routing.detect_intent(q) == ("fixed_statement" if "wakati mmoja" in q else "none")
 
 
 # A2 — the four additional same-class questions surfaced by the 400 sweep also route to fact.

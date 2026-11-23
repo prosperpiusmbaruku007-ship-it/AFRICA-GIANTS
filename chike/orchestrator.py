@@ -1104,7 +1104,9 @@ class Orchestrator:
                 # comparison, so it needs no engine result; blanking is safe for the same reason as every rule above -- the working still renders and it has the right band.
                 or fidelity.body_misnames_paye_band(cleaned)
                 # D-FIDELITY-25b (2026-11-22, founder, three conditions at fidelity.sdl_body_contradicts_verdict): a model sentence whose SDL polarity contradicts the engine's boolean on an UNNEGATED applicability question. Body only; the working renders.
-                or fidelity.sdl_body_contradicts_verdict(sub.sub_question.text, cleaned, sub.computation)):
+                or fidelity.sdl_body_contradicts_verdict(sub.sub_question.text, cleaned, sub.computation)
+                # D-FIDELITY-29 (2026-11-23, founder): NSSF stated as due by the 7th ("Zote mbili zinalipwa ndani ya siku 7", the live SDL+NSSF compute reply). A constant (nssf_payment_deadline: within ONE MONTH), so no engine result is needed; body blanked, the working renders.
+                or fidelity.nssf_deadline_misstated(sub.sub_question.text, cleaned)):
             cleaned = ""
             guard = "blanked"
         elif sub.computation is None and fidelity.body_states_wrong_threshold(cleaned, sub.sub_question.text):
@@ -1233,6 +1235,8 @@ class Orchestrator:
         repaired, _removed_names = fidelity.strip_unsupported_names(repaired, sub.sub_question.text, " ".join(str(f) for f in (sub.facts or ())))
         # 2026-11-22 (D-FIDELITY-26, founder): a figure attached to NHIF is removed (no NHIF rate is held anywhere). R25 block at fidelity.repair_nhif_figures; the unit of removal is the CLAUSE, so the correct NSSF part survives.
         repaired, _nhif_removed = fidelity.repair_nhif_figures(repaired)
+        # 2026-11-23 (D-FIDELITY-30, founder): "P9" is Kenyan (KRA) terminology; Tanzania has the withholding certificate. A one-clause repair, nothing blocked. R25 block at fidelity.repair_p9.
+        repaired = fidelity.repair_p9(repaired)
         if repaired != cleaned:
             cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)

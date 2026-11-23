@@ -2664,6 +2664,15 @@ _SDL_PAY_OR_FILE_VERB = re.compile(
 _SDL_FILE_NEIGHBOURS = re.compile(
     r"zinakwenda|inakwenda|zinatumika|inatumika|matumizi|kwa\s+nini|(?<![a-z])why|used\s+for|(?<![a-z])go(?:es)?(?![a-z])|audit|ukaguzi|calculat|compute|hesab|kokot|(?<![a-z])tofauti")
 
+# 2026-11-23 (founder, ten more statement routes): shared vocabulary, defined ONCE so the routes' vetoes cannot drift apart. Raw strings (R39); each route's own patterns are introspected by tests/test_ten_more_statements.py.
+_NEW_SDL = r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"
+_NEW_MONEY = r"[0-9][0-9,.]{3,}|(?<![a-z])tzs(?![a-z])|shilingi|milioni|elfu|(?<![a-z])laki(?![a-z])|million|thousand"
+_NEW_EXEMPT_WORDS = (r"msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
+                     r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing")
+_NEW_PENALTY_WORDS = r"faini|adhabu|penalty|riba|kuchelewa"
+_NEW_SDL_PARTY_VETO = (r"[0-9]|" + _NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|lini|deadline|tarehe|muda|baada\s+ya|" + _NEW_PENALTY_WORDS
+                       + r"|kujisajili|usajili|vipi|kuomba|(?<![a-z])omba|ombi|mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split|" + _SDL_FILE_ASK.pattern)
+
 _FS_TOPICS = (
     ("notice",
      re.compile(r"(?<![a-z])(?:notisi|notice)(?![a-z])"),
@@ -2810,6 +2819,88 @@ _FS_TOPICS = (
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
                 r"(?=.*(?:pamoja|mchanganyiko|mixed|combined|zote\s+mbili|(?:ankara|invoice|mkataba|oda|order)\s+(?:moja|mmoja)|mauzo\s+yenye|mauzo\s+ya\s+(?:bidhaa|huduma)\s+na|(?:kuuza|nauza|natoa|kutoa|ninauza|ninatoa)\s+(?:bidhaa|huduma|vifaa|kazi)\s+na|inajumuisha|zinajumuisha|kwa\s+pamoja|(?:mkataba|ankara|invoice|oda|order|mradi|kazi|mauzo)\s+(?:wenye|yenye|una|lenye|unaojumuisha|uliojumuisha)))", re.S),   # 2026-11-17 (founder, gate-4 verification, eval_039): the question must NAME a COMBINED sale; "do the rates differ for goods vs services?" goes back to its previous path
      re.compile(r"cheti|certificate|tarehe|deadline|remit|ndani\s+ya\s+siku|lini|inalipwa|inapelekwa|kuwasilisha|kulipa|nssf|paye|sdl|wcf|makato|makadirio|sivyo|si\s+kweli|ni\s+kweli|ni\s+sawa|sawa\s+kwa|sawa\s+na|tofauti|differ|same\s+(?:rate|for)|linganish")),
+    # ---- 2026-11-23 (founder, "ten more statements"): every route below is a model-free CONSTANT (or, for the audit, a hedge), excluded from auto-send. Probes both ways: eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl (R17); every diversion over the
+    # held questions was READ (eval/results/sweep_ten_more_statements_2026_11_23.json). Mutual exclusion with the older routes is by construction (each vetoes the neighbour's cue words) and asserted over every probe file.
+    # #8 SDL + NSSF + PAYE: the live "Hapana ... zinakatwa kwa MWAJIRI pekee" (wrong for NSSF's 10% and PAYE). The older SDL+NSSF route vetoes `paye`, so the two are exclusive.
+    ("sdl_nssf_paye_party",
+     re.compile(_NEW_SDL),
+     re.compile(r"(?=.*(?<![a-z])nssf(?![a-z]))(?=.*(?<![a-z])paye(?![a-z]))(?=.*(?:" + _SDL_PAYER_ASK.pattern + r"))", re.S),
+     re.compile(_NEW_SDL_PARTY_VETO + r"|(?<![a-z])(?:wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])")),
+    # B1: "NSSF inakatwa kwa mfanyakazi?" (live: "10% sawa na 20%"). NSSF alone with a deduction/payer ask; every other levy, amount, rate, date, penalty and pension word vetoes, and the split route's cue words veto so the two are exclusive.
+    ("nssf_party",
+     re.compile(r"(?<![a-z])nssf(?![a-z])"),
+     # its OWN deduction / who-pays forms. The first draft reused _SDL_PAYER_ASK, whose `payslip` and `employee pay` alternatives sent NSSF-base, probation, unpaid-leave, multi-employer and government-employee questions here (found by reading the sweep).
+     re.compile(r"(?<![a-z])[a-z]*kat(?:wa|wi|we)(?![a-z])|(?<![a-z])(?:anakata|akikata|anayekata|wanakata|nikatie)(?![a-z])|deducted\s+from|nani\s+(?:analipa|anayelipa|anapaswa\s+kulipa|anatakiwa\s+kulipa|hulipa)|analipwa\s+nani|"
+                r"(?:inalipwa|hulipwa)\s+na\s+(?:mwajiri|mfanyakazi|mwajiriwa)|(?:mwajiri|mfanyakazi)\s+(?:au|ama)\s+(?:mwajiri|mfanyakazi)"),
+     re.compile(r"[0-9]|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|lini|deadline|tarehe|muda|baada\s+ya|" + _NEW_PENALTY_WORDS
+               + r"|kujisajili|usajili|vipi|kuomba|(?<![a-z])omba|ombi|mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split|" + _SDL_FILE_ASK.pattern
+               + r"|pensheni|pension|mafao|benefit|kustaafu|retire|mstaafu|uanachama|hiari|voluntar|kujiunga|msamaha|exempt|likizo|acha|achishwa|fukuzwa|tena|nyingine|mpya|mkataba|kodi|(?<![a-z])tax|tofauti|difference|payslip|gross|posho|allowance|kutumia|matumizi|haramu|illegal|kabla\s+ya\s+kuwasilisha|unpaid|probation|serikali|government|ppf|ofisi|office|branch|msingi|(?<![a-z])base|another\s+job|"+ _NEW_SDL + r"|(?<![a-z])(?:paye|wcf|vat|efd|osha|brela|nhif|wht|zuio|makadirio)(?![a-z])")),
+    # #1 BRELA's three forms (gate rows 071, 301, 304). Digits are ALLOWED (eval_301 carries a payroll figure, eval_304 a headcount and a capital); fees, dates, penalties, how-to, trademarks, foreign companies and other authorities veto.
+    ("brela_three_forms",
+     re.compile(r"brela|(?:kusajili|kusajiliwa|nasajili|nisajili|tusajili|tunasajili)\s+(?:kampuni|jina\s+la\s+biashara|biashara)|jina\s+la\s+biashara|business\s+name|miundo\s+ya\s+biashara|business\s+structures?"),
+     re.compile(r"(?:(?=.*(?:payroll|mshahara|wafanyakazi|waajiriwa|employees|mtaji|capital))(?=.*(?:kujisajili|sajili|usajili|register|registration))"
+                r"|(?=.*(?:aina\s+(?:kuu\s+)?ngapi|miundo\s+(?:kuu\s+)?ngapi|how\s+many\s+(?:main\s+)?(?:types|forms|structures|kinds)|kampuni\s+au\s+jina\s+la\s+biashara|jina\s+la\s+biashara\s+au\s+kampuni|company\s+or\s+(?:a\s+)?business\s+name|business\s+name\s+or\s+(?:a\s+)?company|sole\s+proprietor|partnership|ubia|mmiliki\s+mmoja)))", re.S),
+     re.compile(r"(?<![a-z])ada(?![a-z])|gharama|(?<![a-z])bei(?![a-z])|(?<![a-z])cost|(?<![a-z])fees?(?![a-z])|inagharimu|" + _NEW_PENALTY_WORDS + r"|annual|ritani|(?<![a-z])lini(?![a-z])|tarehe|deadline|jinsi|namna|hatua|mchakato|nyaraka|documents|online|mtandaoni|kufuta|kufutwa|kubadili|"
+               r"trademark|alama\s+ya\s+biashara|patent|hataza|kuhifadhi|foreign|kigeni|nje\s+ya\s+tanzania|(?<![a-z])(?:vat|paye|nssf|sdl|wcf|efd|tra|tin|nida|osha)(?![a-z])|leseni|licen[cs]e|msamaha|mtaji\s+wa\s+hisa|share\s+capital|kodi")),
+    # #2 the no-share-capital company fee (gate row 383): portal tier, effective date unknown.
+    ("brela_fee_no_share_capital",
+     re.compile(r"(?:haina|isiyo\s+na|isiyokuwa\s+na|bila|without|no)\s+(?:mtaji\s+wa\s+hisa|share\s+capital)|limited\s+by\s+guarantee"),
+     re.compile(r"(?<![a-z])ada(?![a-z])|gharama|(?<![a-z])bei(?![a-z])|ngapi|(?<![a-z])fees?(?![a-z])|(?<![a-z])cost|inagharimu|kiasi|(?<![a-z])tzs(?![a-z])"),
+     re.compile(r"jina\s+la\s+biashara|business\s+name|annual|ritani|kuchelewa|faini|adhabu|reserv|kuhifadhi|foreign|kigeni|nje\s+ya\s+tanzania|kufuta|kubadili|mabadiliko|nakala|certified|cheti|search|kutafuta|restor|ushuru|stamp|wakili|lawyer|notar|"
+               r"(?<![a-z])(?:vat|paye|nssf|sdl|wcf|tra)(?![a-z])")),
+    # #3 GN 487A penalties (gate row 163), read from the gazetted Order. Penalty / nominee vocabulary needed; asks about the LIST of activities, dates, transition, employing someone, or another authority veto.
+    ("gn487a_penalties",
+     re.compile(r"gn\s*-?\s*(?:no\.?\s*)?487|(?<![0-9])487\s*a(?![a-z])|non-?citizens?|raia\s+wa\s+kigeni|foreigners?|wasio\s+raia"),
+     re.compile(r"adhabu|faini|penalt|kifungo|jela|imprison|nominee|jina\s+la\s+mkopo|anayesaidia|anamsaidia|kumsaidia|kusaidia|assist|(?<![a-z])aid(?:s|ing)?(?![a-z])|kosa|offen[cs]e|convict|hukumu|kufungwa|kufukuzwa"),
+     re.compile(r"shughuli\s+(?:gani|zipi)|which\s+activit|activities\s+are|orodha|(?<![a-z])list|schedule|jedwali|aina\s+ngapi|(?<![a-z])lini(?![a-z])|tarehe|ilianza|effective|mpito|transition|zimepigwa|(?<![a-z])zipi(?![a-z])|nimewaajiri|"
+               r"(?<![a-z])ajira|employ|(?<![a-z])(?:vat|paye|nssf|sdl|wcf|efd|tin|osha)(?![a-z])|"
+               # 2026-11-23, FROM READING THE FIRST SWEEP (109 questions reached this route): the statement is the BASE penalty of both parties. These are different questions it does not answer (a wrong-topic statement is the eval_211 harm class):
+               # a repeat offence, mandatory-or-discretionary, annual-or-once / per business / per year, who counts as a facilitator or what a word means, which body enforces, a section, a different offence (a work permit), an employee or a liability
+               # analysis of a scenario, a comparison / summary, court or arrest procedure and timing, and hearsay premises ("rafiki yangu ... alipewa onyo", "nimesikia").
+               r"mara\s+ya\s+pili|second\s+time|recidiv|repeat|enhanced|kali\s+zaidi|mandatory|lazima|(?<![a-z])court|mahakama|korti|arrest|kukamatwa|alikamatwa|annual|kila\s+mwaka|(?<![a-z])once|mara\s+moja|kwa\s+kila|per\s+each|(?<![a-z])each|double|"
+               r"biashara\s+mbili|makosa\s+mawili|miaka\s+3|three\s+years|kibali|permit|who\s+exactly|nani\s+hasa|ni\s+nani|maana|mean(?:s|ing)?(?![a-z])|taasisi|institution|enforce|kifungu|(?<![a-z])section|mfanyakazi|employee|ajiri|summary|muhtasari|"
+               r"tofauti|difference|differ|(?<![a-z])tatu|(?<![a-z])three|(?<![a-z])mbili|quickly|keep\s+the\s+shop|ndogo|(?<![a-z])light|seems|dhima|limited|kampuni|company|brela|inalenga|inahitajika|ukiukaji|(?<![a-z])begin|ianze|inaanza|"
+               r"rafiki|friend|neighbour|jirani|nimeambiwa|nimesikia|heard|sikia|inaruhusu|warning|onyo|alipewa|was\s+fined|ilitolewa|nusuru|legal|halali|haramu|bado|(?<![a-z])still|inatumika|(?<![a-z])appl(?:y|ies)|inamhusu|inahusu|zinatumika|can\s+i\s+do|naweza\s+kufanya|ninaweza\s+kufanya")),
+    # #5 VAT withholding rates (gate rows 044, 048). The MIXED-supply route's need words, certificate / deadline / who-is-the-agent / start-date / amount asks and every other tax veto.
+    ("vat_withholding_rates",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiwa|inazuiwa))(?=.*(?:asilimia|kiwango|rate|%|huduma|bidhaa|goods|services|msambazaji|supplier|muuzaji|maana|inamaanisha|meaning|mean|ngapi|kiasi))", re.S),
+     re.compile(r"bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na|goods\s+and\s+services|mixed|mchanganyiko|pamoja|combined|cheti|certificate|tarehe|deadline|(?<![a-z])lini(?![a-z])|siku|remit|kuwasilisha|kulipa|inalipwa|inapelekwa|"
+               r"(?<![a-z])nani|(?<![a-z])who|wakala|agent|mnunuzi|buyer|anayehitimu|qualif|msamaha|exempt|refund|rejesho|kurejeshewa|ritani|(?<![a-z])efd|risiti|invoice|ankara|(?<![a-z])(?:nssf|paye|sdl|wcf|wht|brela)(?![a-z])|corporate|kodi\s+ya\s+mapato|makadirio|"
+               r"2026|2027|2028|ujao|kokotoa|hesab|kokot|" + _NEW_MONEY + r"|sivyo|si\s+kweli|ni\s+kweli|tofauti|differ|linganish|zamani|kabla\s+ya|before\s+1|"
+               # from reading the first sweep (52 reached this route): input VAT, imports / non-residents, WHO counts as a withholding agent (no fact holds it), what happens if the buyer fails to withhold, a minimum threshold, counts, "which firms or services only",
+               # a small-supplier or small-buyer scenario, the disputed-base fact key, and an open-ended "explain / advise" are different questions the rate statement does not answer
+               r"pembejeo|input|output|(?<![a-z])nje(?![a-z])|asiye\s+mkazi|non-?resident|import|foreign|shindwa|kushindwa|ndogo|(?<![a-z])small|mdogo|mfuko|thamani\s+ya\s+chini|(?<![a-z])chini|(?<![a-z])juu(?![a-z])|miamala|mingapi|idadi|disputed|(?<![a-z])base(?![a-z])|"
+               r"maalum|aina\s+za|makampuni|(?<![a-z])inatumika|inanihusu|inahusu|watanizuia|wanizuie|can\s+a(?![a-z])|unashauri|nieleze|shauri|advice|explain")),
+    # #4 professional services must register for VAT regardless of turnover (gate row 025). A profession word AND a registration word; digits / money, voluntary, can-I, penalties, how-to and other taxes veto.
+    ("vat_professional_services",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?:wakili|mawakili|wahandisi|mhandisi|mhasibu|wahasibu|(?<![a-z])cpa(?![a-z])|mwanasheria|wanasheria|mkaguzi|wakaguzi|architect|mbunifu|surveyor|mpima|wapima|mtaalamu|wataalamu|taaluma|kitaalamu|professional|lawyer|advocate|engineer|accountant|consultant|mshauri|washauri))"
+                r"(?=.*(?:sajili|register|usajili|registration))", re.S),
+     re.compile(r"hiari|voluntar|(?<![a-z])naweza|(?<![a-z])unaweza|can\s+i|(?<![a-z])faini|adhabu|penalty|kughairi|kufuta|kujiondoa|cancel|deregist|zuio|withhold|(?<![a-z])efd|risiti|(?<![a-z])(?:nssf|paye|sdl|wcf|brela|wht)(?![a-z])|kampuni|company|"
+               r"kodi\s+ya\s+mapato|makadirio|presumptive|" + _NEW_MONEY + r"|[0-9]|kokotoa|hesab|kokot|"
+               # from reading the sweep: MEDICAL services are an exempt supply (a doctor must not be told he must register regardless), so health words and the exempt-supply argument veto; a salaried second job, "can they START without registering" and a first-day timing question are different questions
+               r"afya|kliniki|clinic|hospitali|hospital|health|matibabu|daktari|doctor|msamaha|exempt|zimesamehewa|serikalini|salaried|mshahara|ajira|employ|kuanza|(?<![a-z])start|newly|mpya|kwanza|(?<![a-z])first|(?<![a-z])lini(?![a-z])|tarehe|deadline|fomu|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni")),
+    # #6 a late annual return (gate row 085), scoped to the penalty. Foreign companies, other taxes, how-to, strike-off / winding-up / officers' liability and the DEADLINE route's own asks veto (so the two are exclusive).
+    ("brela_late_annual_return",
+     re.compile(r"annual\s+returns?(?![a-z])|ritani\s+ya\s+mwaka|ripoti\s+ya\s+kila\s+mwaka|tamko\s+la\s+mwaka"),
+     re.compile(r"(?=.*(?:brela|kampuni|company|msajili|registrar))(?=.*(?:kuchelewa|kuchelewesha|ilishindwa|imeshindwa|alishindwa|hajawasilisha|haijawasilisha|hawajawasilisha|ukichelewa|nikichelewa|late(?![a-z])|fail|default|adhabu|faini|penalty|matokeo|consequence|madhara|hatari))", re.S),
+     re.compile(r"foreign|kigeni|nje\s+ya\s+tanzania|kodi|(?<![a-z])tax|(?<![a-z])tra(?![a-z])|paye|(?<![a-z])vat(?![a-z])|nssf|sdl|wcf|zuio|corporate|mapato|kizingiti|threshold|mauzo|turnover|fomu|form(?![a-z])|namba|nawezaje|naweza\s+kuwasilisha|jinsi|namna|hatua|mchakato|nyaraka|documents|online|mtandaoni|"
+               r"leseni|licen[cs]e|kufuta|kufutwa|kufungwa|kufilisika|winding|struck|striking|liquidat|deregist|restor|kurejesha|mkurugenzi|director|afisa|officer|jela|kifungo|imprison|kukamatwa|cancel|revok|remov|dissol|kuondolewa|kubatilishwa|kubatilisha|jumla|(?<![a-z])total|"
+               r"(?<![a-z])lini(?![a-z])|muda\s+gani|ndani\s+ya|mwisho|deadline|tarehe|siku\s+ngapi|when")),
+    # #7 SDL and PAYE both due by the 7th (gate row 127): two levies in one question. A time ask is needed; NSSF and every other levy, amounts, penalties, where/how and the payer ask veto.
+    ("sdl_paye_deadline",
+     re.compile(_NEW_SDL),
+     re.compile(r"(?=.*(?<![a-z])paye(?![a-z]))", re.S),
+     re.compile(_NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|" + _NEW_PENALTY_WORDS + r"|kujisajili|usajili|kuomba|(?<![a-z])omba|ombi|" + _NEW_MONEY + r"|[0-9]{2,}|"
+               r"(?<![a-z])(?:nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])|" + _SDL_FILE_ASK.pattern + r"|" + _SDL_PAYER_ASK.pattern
+               # from reading the first sweep: a PERMISSION ask, a past-payment / compliance scenario, WHEN a levy STARTS, closure, seasonal staff and a bonus are different questions the deadline statement does not answer
+               + r"|(?<![a-z])naweza|ninaweza|can\s+i|kawia|kukawia|nilikawia|inaonekana|tulilipa|nililipa|nimelipa|tumelipa|taratibu|inaanza|kuanza|nianze|inafungwa|kufunga|kufungwa|closing|msimu|seasonal|bonasi|bonus")),
+    # B4 SDL audit: no source holds how TRA audits SDL, so the statement is a hedge (the live reply invented an eight-point audit and "P9 forms"). Amounts, exemptions, rates and other levies veto.
+    ("sdl_audit_hedge",
+     re.compile(_NEW_SDL),
+     re.compile(r"audit|ukaguzi|kagua|kaguli|inspect"),
+     re.compile(r"[0-9]|" + _NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])")),
 )
 
 
@@ -2847,6 +2938,17 @@ _FS_TOPIC_ASK = {
     "sdl_employee_premise": _SDL_FILE_ASK,
     "sdl_how_to_file_pay": _SDL_FILE_ASK,
     "sdl_nssf_party": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|zinakatwa|inalipwa|zinalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
+    # 2026-11-23: ten more statements. Each ask is permissive on purpose (the topic gate is the cue + need + veto above); a topic with no ask cue would be a statement given to a non-question.
+    "sdl_nssf_paye_party": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|zinakatwa|inalipwa|zinalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
+    "nssf_party": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|zinakatwa|inalipwa|zinalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
+    "brela_three_forms": re.compile(r"\?|ngapi|gani|(?<![a-z])je(?![a-z])|nasajili|nisajili|tunatakiwa|how\s+many|which|what|kampuni\s+au|jina\s+la\s+biashara\s+au"),
+    "brela_fee_no_share_capital": re.compile(r"\?|ngapi|kiasi|ni\s+nini|gani|(?<![a-z])je(?![a-z])|how\s+much|what"),
+    "gn487a_penalties": re.compile(r"\?|nini|gani|ngapi|kiasi|(?<![a-z])je(?![a-z])|kwanini|kwa\s+nini|why|what|how\s+much"),
+    "vat_withholding_rates": re.compile(r"\?|asilimia|ngapi|kiasi|kiwango|ni\s+nini|maana|inamaanisha|(?<![a-z])je(?![a-z])|what|how\s+much|which|meaning|mean"),
+    "vat_professional_services": re.compile(r"\?|kwa\s+nini|kwanini|why|lazima|inahitajika|bila\s+kujali|regardless|(?<![a-z])je(?![a-z])|hata\s+kama"),
+    "brela_late_annual_return": re.compile(r"\?|nini|gani|ngapi|kiasi|(?<![a-z])je(?![a-z])|matokeo|what|consequence|how\s+much"),
+    "sdl_paye_deadline": re.compile(r"(?<![a-z])lini(?![a-z])|tarehe|siku|deadline|muda|wakati|mwisho|ifikapo|kabla|(?<![a-z])due(?![a-z])|(?<![a-z])date|when|by\s+the"),
+    "sdl_audit_hedge": re.compile(r"\?|vipi|jinsi|namna|how|what|nini|gani|(?<![a-z])je(?![a-z])"),
     "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
@@ -2855,8 +2957,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────

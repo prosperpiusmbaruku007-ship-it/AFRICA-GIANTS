@@ -88,6 +88,27 @@ LIVE = {
         'Mfanyakazi hakatiwi chochote katika SDL au NSSF.'),
     'sdl_how_to_file_pay': ('Nalipa SDL wapi?',
         'SDL inalipwa kwa fomu ITX 300.01.E kwenye benki yoyote.'),
+    # 2026-11-23 (ten more statements): the live wrong replies of build b96e8a8 (eval/results/sdl_three_routes_live_2026_11_23.json, VERBATIM where quoted) or the gate-row failure shape. The ROUTE is the control, not a guard.
+    'sdl_nssf_paye_party': ('SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?',
+        'Hapana -- si kwa mfanyakazi. SDL, NSSF na PAYE zinakatwa kwa MWAJIRI pekee.'),
+    'nssf_party': ('NSSF inakatwa kwa mfanyakazi?',
+        'Ndiyo -- mfanyakazi anakatwa asilimia 10 ya mshahara wake, sawa na asilimia 20 ya mshahara wake.'),
+    'brela_three_forms': ('Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?',
+        'Kwa wafanyakazi 20 na mtaji wa TZS 50,000,000 unapaswa kusajili kampuni.'),
+    'brela_fee_no_share_capital': ('Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?',
+        'Ada ni TZS 300,000.'),
+    'gn487a_penalties': ("GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) -- kwanini unazuiwa?",
+        'Mpango wa jina la mkopo unazuiwa kwa sababu unamruhusu mgeni kukwepa sheria; adhabu ni TZS 500,000.'),
+    'vat_withholding_rates': ('Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?',
+        'Ndiyo, asilimia 3 inatumika kwa huduma zote.'),
+    'vat_professional_services': ('Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?',
+        'Wakili na wahandisi wanasajili VAT tu wakifikia TZS 200,000,000.'),
+    'brela_late_annual_return': ('Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 -- matokeo yanayoweza kutokea ni yapi?',
+        'Kampuni itafutwa mara moja na wakurugenzi watafungwa jela.'),
+    'sdl_paye_deadline': ('Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja -- siku ya 7 ya mwezi unaofuata?',
+        'Hapana, SDL ni tarehe 7 na PAYE ni tarehe 20.'),
+    'sdl_audit_hedge': ('How does TRA conduct an SDL audit and what do they examine?',
+        'TRA conducts an SDL audit by examining: (1) whether you have 10+ employees ... The auditor will ask to see: payslips, P9 forms, SDL returns, bank statements, and relevant contracts.'),
 }
 
 
@@ -275,7 +296,7 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
 # 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
 # (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
-PAYE_NO_GUARD = frozenset({"sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+PAYE_NO_GUARD = frozenset({"sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

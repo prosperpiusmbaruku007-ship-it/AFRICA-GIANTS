@@ -70,6 +70,17 @@ _SDL_FILE_PAY_TEXT = ("Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tar
 # 2026-11-22 (founder, preliminary Gate 2 #20): a rate asked for a FUTURE year ("kiwango rasmi cha VAT kitakachotumika 2028/2029"). The honest answer is two limbs held together: the rate of a year whose Finance Act has not been passed is UNKNOWN,
 # and the CURRENT rates we hold, each with the instrument it rests on. Same discipline as the rest of this route: model-free, whole, excluded from auto-send. The figures are locked facts vat_standard_rate (18%) and sdl_rate (3.5%, FA2023).
 FUTURE_YEAR_RATE = "future_year_rate"
+# 2026-11-23 (founder, next window): ten more model-free statements. Same discipline as every topic above: a CONSTANT (or, for the audit, a HEDGE), whole, no model, excluded from auto-send (`engine:fixed_statement`), R44 (Acts named, no section number).
+SDL_NSSF_PAYE_PARTY = "sdl_nssf_paye_party"        # the live "Hapana ... zinakatwa kwa MWAJIRI pekee" wrong reply: SDL employer only; NSSF employee share deducted; PAYE deducted from the employee
+NSSF_PARTY = "nssf_party"                          # "NSSF inakatwa kwa mfanyakazi?" -> a garbled "10% sawa na 20%"
+BRELA_THREE_FORMS = "brela_three_forms"            # gate rows 071, 301, 304
+BRELA_FEE_NO_SHARE_CAPITAL = "brela_fee_no_share_capital"   # gate row 383; portal tier, effective date unknown
+GN487A_PENALTIES = "gn487a_penalties"              # gate row 163; read from the gazetted Order itself (edition asserted), not from practitioner alerts
+VAT_WITHHOLDING_RATES = "vat_withholding_rates"    # gate rows 044, 048
+VAT_PROFESSIONAL_SERVICES = "vat_professional_services"   # gate row 025
+BRELA_LATE_ANNUAL_RETURN = "brela_late_annual_return"      # gate row 085, scoped to the penalty
+SDL_PAYE_DEADLINE = "sdl_paye_deadline"            # gate row 127
+SDL_AUDIT_HEDGE = "sdl_audit_hedge"                # the live reply invented an eight-point audit and "P9 forms": a hedge to TRA, no procedure
 
 
 def _paye_bands_text() -> str:
@@ -253,10 +264,93 @@ STATEMENTS = {
         "SDL half: locked fact sdl_payer (VETA Act Cap.82 R.E.2023 s.14(2), employer only, nothing deductible). NSSF half: the existing nssf_split statement and locked fact NSSF_split_triggers / index row 9 (NSSF Act Cap.50 R.E.2023 s.12; total 20% of gross, usual split 10% + 10%, "
         "the employee's share deducted from wages; the employer may elect to bear more). Founding specimen: build a67462c live, 'SDL na NSSF zinakatwa kwa mfanyakazi?' -> 'Mfanyakazi hakatiwi chochote katika SDL au NSSF' (wrong for NSSF). Founder-approved 2026-11-23. R44: Acts named, no section number",
     ),
+    SDL_NSSF_PAYE_PARTY: (
+        "sdl_payer",
+        "SDL, NSSF na PAYE hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. "
+        "NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake; mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. "
+        "PAYE: ni kodi ya mapato ya ajira ya MFANYAKAZI; mwajiri ndiye anayeikata kwenye mshahara wake na kuipeleka TRA (Sheria ya Kodi ya Mapato). Kiasi cha PAYE kinategemea viwango vya kodi vya kila mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+        "SDL: locked fact sdl_payer (VETA Act Cap.82 R.E.2023 s.14(2), employer only, nothing deductible). NSSF: NSSF_split_triggers (NSSF Act Cap.50 R.E.2023 s.12; total 20%, usual split 10% + 10%, employee's share deducted; employer may elect to bear more). "
+        "PAYE: paye_remittance_deadline (Income Tax Act Cap.332 R.E.2023 s.104 the employer withholds from employment income, s.109(1) pays it to the Commissioner; direct read 2026-11-13, FA2024/25/26 checked). Founding specimen: build b96e8a8 live, "
+        "'SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?' -> 'Hapana ... zinakatwa kwa MWAJIRI pekee' (wrong for NSSF's 10% and PAYE). Founder-approved 2026-11-23. R44: Acts named, no section number",
+    ),
+    NSSF_PARTY: (
+        "NSSF_split_triggers",
+        "NSSF: jumla ni asilimia 20 ya mshahara ghafi. Mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi: sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake, na mwajiri analipa sehemu yake ya asilimia 10 mwenyewe (haikatwi kwa mfanyakazi). "
+        "Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi, kwa masharti ya Sheria ya NSSF. Thibitisha na NSSF (nssf.go.tz).",
+        "The NSSF half of sdl_nssf_party, whole: locked fact NSSF_split_triggers / index row 9 (NSSF Act Cap.50 R.E.2023 s.12; total 20% of gross, usual split 10% + 10%, the employee's share deducted from wages; the employer may elect to bear more). "
+        "Founding specimen: build b96e8a8 live, 'NSSF inakatwa kwa mfanyakazi?' -> 'Ndiyo ... asilimia 10 ya mshahara wake, sawa na asilimia 20 ya mshahara wake' (garbled). Founder-approved 2026-11-23. R44: the Act is named, no section number",
+    ),
+    BRELA_THREE_FORMS: (
+        "brela_business_structures",
+        "BRELA husajili biashara katika aina TATU kuu za kisheria: (1) mmiliki mmoja (sole proprietor) na (2) ubia (partnership, watu wawili au zaidi) -- zote mbili husajiliwa kama jina la biashara chini ya Sheria ya Majina ya Biashara; (3) kampuni yenye dhima ndogo, inayosajiliwa chini ya Sheria ya Makampuni. "
+        "Uchaguzi kati ya jina la biashara na kampuni unategemea muundo wa kisheria na dhima unayotaka, SI idadi ya wafanyakazi wala kiasi cha mtaji: hakuna kizingiti cha wafanyakazi au mtaji kinachokulazimisha kusajili kampuni. "
+        "BRELA pia husimamia alama za biashara, hataza na ubunifu wa viwanda (haki miliki), ambavyo si miundo ya biashara. Kama usajili ni lazima kwa shughuli yako, thibitisha na BRELA (brela.go.tz).",
+        "Locked fact brela_business_structures (Business Names (Registration) Act Cap.213 s.2: a 'business name' covers firms, individuals and corporations; Companies Act Cap.212; CONFIRMED 2026-07-25; index row 82). 'NOT on the number of employees or the amount of capital' is the fact's own wording. "
+        "PAYROLL is deliberately NOT mentioned: the fact says nothing about it, so 'payroll creates no BRELA duty' (the 4bk table's wording) is not claimed. Gate rows eval_071, eval_301, eval_304. Founder-approved 2026-11-23. R44: Acts named, no section number",
+    ),
+    BRELA_FEE_NO_SHARE_CAPITAL: (
+        "company_registration_fee_no_share_capital",
+        "Kwa ratiba ya ada ya BRELA iliyochapishwa kwenye tovuti yao (iliyosomwa 2026-10-06), ada ya kusajili kampuni isiyo na mtaji wa hisa ni TZS 500,000. Tarehe ambayo ada hiyo ilianza kutumika HAIJULIKANI: ratiba ilibadilika kati ya 2026-06-30 na 2026-10-06, na hapo awali ilichapishwa TZS 300,000. "
+        "Ada za BRELA hubadilika, kwa hiyo thibitisha kiasi cha sasa na BRELA (brela.go.tz).",
+        "Locked fact company_registration_fee_no_share_capital: BRELA fee schedule item 2, PORTAL tier (brela.go.tz/pages/tozo-za-kampuni), dated and sha256-pinned capture of 2026-10-06 (8d5543ac...); the 2026-06-30 capture read TZS 300,000. effective_date is EXPLICITLY UNKNOWN (our observation date is not an effective date, "
+        "CLAUDE.md Section 11). The Companies Act delegates every fee amount to Minister's regulations, so the statute tier is silent and the regulations are unlocated. Gate row eval_383. Founder-approved 2026-11-23 ('worded with effective date unknown')",
+    ),
+    GN487A_PENALTIES: (
+        "gn487a_penalty_noncitizen",
+        "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: "
+        "(1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; "
+        "(2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. "
+        "Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+        "READ FROM THE GAZETTED ORDER ITSELF, edition asserted (assert_edition: 'GN No. 487A, published 28/7/2025', sha256 dd147c0d..., data/source_documents/immigration/gn487a_official_gazette.pdf), not from the practitioner alerts the locked facts name. Order para 3(3)(a): a non-citizen 'shall be liable to a fine of not less "
+        "than ten million shillings or imprisonment for a term not exceeding six months and revocation of visa and resident permit'; para 3(3)(b): a citizen who 'assists or aids a non-citizen' 'shall be liable to a fine of five million shillings or imprisonment for a term not exceeding three months'; the Schedule lists 15 activities; the Order states a MINIMUM fine for the non-citizen and NO maximum (added after the sweep showed 'is there a maximum?' questions reaching the route). "
+        "WORDING POINT: the Order says fine OR imprisonment (not 'and') with revocation added; CLAUDE.md Section 11 writes 'fine + imprisonment + visa revocation' and the locked fact says 'AND/OR': the statement follows the gazette. 'Nominee' is the question's word, not the Order's. Gate row eval_163. Founder-approved 2026-11-23 on condition the Order confirmed the figures (it does)",
+    ),
+    VAT_WITHHOLDING_RATES: (
+        "vat_withholding_services",
+        "VAT ya zuio (Sheria ya Fedha 2025, kuanzia 1 Julai 2025): kwa bidhaa ni asilimia 3 na kwa huduma ni asilimia 6, ya thamani ya mauzo isiyojumuisha VAT. Huduma za IT ni huduma, kwa hiyo kiwango chake ni asilimia 6, si 3. "
+        "VAT ya kawaida ni asilimia 18: mnunuzi anayehitimu kuwa wakala wa zuio anazuia asilimia 3 (bidhaa) au 6 (huduma) na kuipeleka TRA moja kwa moja, na muuzaji anapokea iliyobaki (asilimia 15 kwa bidhaa, asilimia 12 kwa huduma). Kwa hiyo VAT ya zuio si VAT yote ya muuzaji. "
+        "Muuzaji hupewa cheti cha zuio kama ushahidi wa kiasi kilichopelekwa. Thibitisha na TRA (tra.go.tz).",
+        "Locked facts vat_withholding_goods / vat_withholding_services / vat_withholding_buyer_remits_directly (Finance Act 2025 (Act No. 11) s.124 amending VAT Act Cap.148 s.5(5), in force 1 Jul 2025; GN 352K of 30/6/2025 reg 31B; TRA VAT page, June 2026). The rates are unchanged by Finance Act 2026 "
+        "(s.91(b) adds only the 3:2 value apportionment for a MIXED supply, its own statement vat_withholding_mixed_supply, vetoed off this route). 'IT services are services' is the founder-approved 4bk wording. Who qualifies as a withholding agent is NOT stated (no fact holds it); the certificate's treatment in the supplier's return is not stated. "
+        "Gate rows eval_044, eval_048. Founder-approved 2026-11-23. R44: Acts named, no section number",
+    ),
+    VAT_PROFESSIONAL_SERVICES: (
+        "vat_registration_who_must",
+        "Watoa huduma za kitaalamu (wenye leseni au wanachama wa chama cha taaluma) lazima wajisajili VAT bila kujali kiasi cha mauzo yao (Sheria ya VAT): kiwango cha TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6 kinawahusu wafanyabiashara wengine, si wao. "
+        "Taasisi za Serikali zinazofanya shughuli za kiuchumi pia zinasajiliwa, na Kamishna anaweza kumsajili anayetarajia kuanza biashara mwenye ushahidi. Sheria inaweka kanuni hii bila kutoa sababu katika maandishi tuliyosoma. "
+        "Kama huduma yako ni ya kitaalamu kwa maana ya sheria, thibitisha na TRA (tra.go.tz).",
+        "Locked fact vat_registration_who_must (VAT Act Cap.148 R.E.2023 s.29(1)-(3); direct read 2026-11-13; FA2025 s.126 adds only extension-of-time subsections); threshold figures from vat_registration_threshold. The question asks WHY (eval_025): the statement states the rule and says the text gives no reason; "
+        "it does not invent one. Founder-approved 2026-11-23. R44: the Act is named, no section number",
+    ),
+    BRELA_LATE_ANNUAL_RETURN: (
+        "company_annual_return_deadline",
+        "Annual return ya kampuni inatakiwa ndani ya siku 28 baada ya tarehe ya kumbukumbu (maadhimisho ya kuanzishwa kwa kampuni au ya return iliyotangulia); ukichelewa zaidi, kampuni na kila afisa aliye na hatia wanaweza kutozwa faini, na faini ya ziada kwa kuendelea kuchelewa (Sheria ya Makampuni). "
+        "Kwa ratiba ya ada ya BRELA iliyochapishwa kwenye tovuti yao (iliyosomwa 2026-10-06): kuchelewa kuwasilisha waraka kunagharimu TZS 2,500 kwa kila mwezi au sehemu ya mwezi kwa kampuni ya ndani, na ada ya kuwasilisha annual return ni TZS 22,000. "
+        "Matokeo mengine ya kutowasilisha kwa miaka mingi hayajathibitishwa hapa: thibitisha na BRELA (brela.go.tz).",
+        "Locked facts company_annual_return_deadline (Companies Act Cap.212 R.E.2023, annual-return provisions, edition asserted, read 2026-11-17: 28 days from the return date; the company and every officer in default liable to a fine and, for continued failure, a default fine; the AMOUNT of that fine is not stated by the Act text read) "
+        "and late_filing_penalty_monthly_fee (BRELA fee schedule, TZS 2,500 per month or part month, local company, unchanged between the 2026-06-30 and 2026-10-06 captures; filing fee TZS 22,000 item 7). SCOPED TO THE PENALTY: the consequences of two years' default (strike-off, winding-up) are NOT constants and are hedged to BRELA. "
+        "Foreign companies (Part XII, TZS 70,000) are vetoed off this route. Gate row eval_085. Founder-approved 2026-11-23 (penalty only). R44: the Act is named, no section number",
+    ),
+    SDL_PAYE_DEADLINE: (
+        "sdl_payment_deadline",
+        "SDL na PAYE zote mbili zinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara -- tarehe ni ileile. SDL: ritani na malipo yake vyote kufikia tarehe 7 (Sheria ya Elimu na Mafunzo ya Ufundi). "
+        "PAYE: mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa mwezi, yaani ifikapo tarehe 7 (Sheria ya Kodi ya Mapato). Ni wajibu mbili tofauti; njia na fomu ya kulipa thibitisha na TRA (tra.go.tz). "
+        "NSSF si tarehe 7: michango ya NSSF ni ndani ya mwezi mmoja baada ya mwisho wa mwezi (Sheria ya NSSF).",
+        "Locked facts sdl_payment_deadline (VETA Act Cap.82 R.E.2023 s.16(1)-(2), read 2026-09-02, FA2024/25/26 do not touch s.16) and paye_remittance_deadline (Income Tax Act Cap.332 R.E.2023 s.109(1) read with s.104; direct read 2026-11-13, FA2024/25/26 checked: none changes them); the NSSF line is "
+        "nssf_payment_deadline (NSSF Act Cap.50 s.14(1)). Two levies, one question (eval_127): the filing statement vetoes another levy, so this is its own composite. The monthly PAYE statement (s.109(2)) is deliberately not stated: the fact records it as awkwardly worded. Founder-approved 2026-11-23. R44: Acts named, no section number",
+    ),
+    SDL_AUDIT_HEDGE: (
+        "sdl_payer",
+        "Sina utaratibu uliothibitishwa wa ukaguzi wa SDL wa TRA (hatua zake, nyaraka zinazoombwa au muda wake), kwa hiyo sitaorodhesha hatua nisizozithibitisha. Ninachoweza kuthibitisha ni kanuni zenyewe: SDL hulipwa na mwajiri pekee, ni asilimia 3.5 ya jumla ya mishahara ghafi ya mwezi kwa mwajiri mwenye wafanyakazi 10 au zaidi, "
+        "na ritani na malipo ni kufikia tarehe 7 ya mwezi unaofuata (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa utaratibu wa ukaguzi, au kama umepokea notisi kutoka TRA, wasiliana na TRA (tra.go.tz) au mshauri wa kodi aliyesajiliwa.",
+        "A HEDGE, not a constant: no source held states how TRA audits SDL, so none is stated. Founding specimen: build b96e8a8 live, 'How does TRA conduct an SDL audit ...?' invented an eight-point audit asking to see 'P9 forms' (a Kenyan term; CLAUDE.md Section 11 / locked fact paye_p9_deadline). "
+        "The three rules stated are the locked facts sdl_payer, sdl_rate (3.5%, FA2023) and sdl_payment_deadline. Founder-approved 2026-11-23 ('hedge to TRA, no invented procedure'). R44: the Act is named, no section number",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY,
+                                   SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE})
 
 
 def fixed_statement(topic) -> ComputationResult:

@@ -19,7 +19,9 @@ _GATE = os.path.join(_ROOT, "eval", "refusal_gate")
 _PROBES = os.path.join(_GATE, "sdl_three_routes_probes_2026_11_23.jsonl")
 NEW = ("sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party")
 SDL_TOPICS = ("sdl_payer", "sdl_exemptions") + NEW
-EXPECT = {"premise": "sdl_employee_premise", "filing": "sdl_how_to_file_pay", "nssf_party": "sdl_nssf_party", "payer": "sdl_payer", "none": None}
+EXPECT = {"premise": "sdl_employee_premise", "filing": "sdl_how_to_file_pay", "nssf_party": "sdl_nssf_party", "payer": "sdl_payer", "none": None,
+          # 2026-11-23 (ten more statements): three of the none-probes now reach their OWN new routes (see each probe's expect_history); they must still reach none of the three SDL routes above.
+          "audit_hedge": "sdl_audit_hedge", "paye_party": "sdl_nssf_paye_party", "nssf_only": "nssf_party"}
 
 
 def _load(path):
@@ -30,7 +32,7 @@ def _load(path):
 def _probes():
     rows = _load(_PROBES)
     assert len(rows) == 38, len(rows)                          # a loader returning nothing must fail, not pass vacuously (R20)
-    assert sum(1 for r in rows if r["expect"] == "none") >= 18 and sum(1 for r in rows if r["expect"] in ("premise", "filing", "nssf_party")) >= 19
+    assert sum(1 for r in rows if r["expect"] == "none") >= 15 and sum(1 for r in rows if r["expect"] in ("premise", "filing", "nssf_party")) >= 19   # 18 -> 15: three moved to their own routes (expect_history)
     return rows
 
 
@@ -150,7 +152,7 @@ def test_plant_the_pay_or_file_verb_requirement_removed_hijacks_where_the_money_
 
 def test_plant_the_neighbours_veto_removed_hijacks_audit_and_calculation(monkeypatch):
     for pid in ("n_02", "n_03"):
-        assert routing.fixed_statement_topic(_q(pid)) is None, pid
+        assert routing.fixed_statement_topic(_q(pid)) not in NEW, pid      # n_02 now reaches sdl_audit_hedge, a different route
     base = "|".join([routing._SDL_PAY_OR_FILE_VERB.pattern, routing._SDL_FILE_ASK.pattern])
     _with_topic(monkeypatch, "sdl_how_to_file_pay", lambda c, nd, v: (c, re.compile(r"(?=.*(?:" + routing._SDL_FILE_ASK.pattern + r"))"), re.compile(r"(?!x)x")))
     assert "sdl_how_to_file_pay" in routing.fixed_statement_topics("Where does SDL money go and what is it used for?"), "without the verb limb and vetoes a where-the-money-goes question reaches the filing statement"
@@ -167,7 +169,7 @@ def test_plant_the_vetoes_removed_hijack_figure_rate_penalty_household_and_other
 
 def test_plant_the_nssf_party_vetoes_removed_hijack_the_third_levy_and_the_figure(monkeypatch):
     for pid in ("n_12", "n_13", "n_14", "n_15", "n_19"):
-        assert routing.fixed_statement_topic(_q(pid)) is None, pid
+        assert routing.fixed_statement_topic(_q(pid)) not in NEW, pid      # n_14 now reaches sdl_nssf_paye_party, a different route
     _with_topic(monkeypatch, "sdl_nssf_party", lambda c, nd, v: (c, re.compile(r"(?=.*(?<![a-z])nssf(?![a-z]))(?=.*(?:kat|lipa))", re.S), re.compile(r"(?!x)x")))
     got = [pid for pid in ("n_14", "n_15", "n_19") if routing.fixed_statement_topic(_q(pid)) == "sdl_nssf_party"]
     assert len(got) >= 2, got

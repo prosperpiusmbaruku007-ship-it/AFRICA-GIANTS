@@ -1,0 +1,2025 @@
+{
+ "swept": 8866,
+ "changed": [
+  {
+   "q": "Je, mhasibu aliyeidhinishwa (CPA) lazima asajilishe VAT hata kama ana wateja wachache na mapato madogo sana?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Je, ushirikiano (partnership) wa watu wawili wanaomiliki duka pamoja unahitaji kusajiliwa BRELA?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?",
+   "src": "eval/accuracy_gate/eval_questions_001.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Mgeni akikutwa akifanya biashara iliyozuiliwa chini ya GN 487A, anapata adhabu gani?",
+   "src": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Payroll yetu ni TZS 7,000,000 kwa mwezi, sasa je tunatakiwa kujisajili BRELA?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Adhabu ya raia wa Tanzania anayemsaidia mgeni chini ya GN 487A ni TZS 10,000,000, sivyo?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Faini ya chini kabisa anayotozwa asiye raia kwa kukiuka GN 487A ni TZS ngapi hasa?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Raia wa Tanzania anayemsaidia mgeni kufanya biashara iliyozuiliwa chini ya GN 487A hupata faini ya TZS ngapi?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "How does TRA conduct an SDL audit and what do they examine?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_audit_hedge"
+   ]
+  },
+  {
+   "q": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_paye_party"
+   ]
+  },
+  {
+   "q": "NSSF inakatwa kwa mfanyakazi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Nani analipa SDL, NSSF na PAYE?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_paye_party"
+   ]
+  },
+  {
+   "q": "Mfanyakazi anakatwa PAYE, NSSF na SDL kwenye mshahara wake?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_paye_party"
+   ]
+  },
+  {
+   "q": "Is SDL, NSSF and PAYE deducted from the employee?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_paye_party"
+   ]
+  },
+  {
+   "q": "Nani analipa NSSF?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Mfanyakazi anakatwa NSSF kwenye mshahara wake?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Is NSSF deducted from the employee?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "NSSF inalipwa na mwajiri au mfanyakazi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Je, kampuni au jina la biashara linafaa kwa ubia wa watu wawili?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "How many types of business structure does BRELA register?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa BRELA ni TZS ngapi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "How much does it cost to register a company without share capital?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Kampuni isiyo na mtaji wa hisa inagharimu kiasi gani kusajili?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Ada ya kampuni isiyo na mtaji wa hisa ni TZS 300,000, sivyo?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Kampuni isiyo na mtaji wa hisa ikichelewa kuwasilisha annual return adhabu ni ngapi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Adhabu ya GN 487A kwa raia wa Tanzania anayemsaidia mgeni kufanya biashara ni nini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Mgeni akifanya biashara iliyokatazwa na GN 487A, faini ni kiasi gani?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What is the penalty under GN 487A for a non-citizen?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Raia wa kigeni akikutwa anaendesha saluni, adhabu ni nini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "VAT ya zuio ni asilimia ngapi kwa bidhaa na kwa huduma?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What is the VAT withholding rate on services?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Mhasibu lazima ajisajili VAT hata kama mauzo yake ni madogo?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Do lawyers have to register for VAT regardless of turnover?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Annual return ya kampuni yangu imechelewa, adhabu ni nini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Late annual return penalty BRELA is how much?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Nikichelewa kuwasilisha annual return BRELA nalipa faini ngapi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "SDL na PAYE zinalipwa lini?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "SDL and PAYE are due on what date?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Tarehe ya mwisho ya SDL na PAYE ni ipi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "TRA hukagua SDL vipi?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_audit_hedge"
+   ]
+  },
+  {
+   "q": "Ukaguzi wa SDL unafanyikaje?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_audit_hedge"
+   ]
+  },
+  {
+   "q": "Nitajiandaaje kwa SDL audit ya TRA?",
+   "src": "eval/refusal_gate/ten_more_statements_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_audit_hedge"
+   ]
+  },
+  {
+   "q": "Je nasajili BRELA kama mtaji ni TZS 250,000,000?",
+   "src": "eval/fidelity/vat_denial_probes_2026_11_16.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Niliuza bidhaa kwa shirika la serikali na wamenikatia kodi — ni kiwango gani cha VAT withholding kwenye bidhaa?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Ninatoa huduma za IT kwa taasisi ya serikali — wanakata VAT withholding kiasi gani kwenye huduma?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Adhabu kwa raia wa kigeni anayeendesha biashara iliyopigwa marufuku chini ya GN 487A ni nini?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_001_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Kiwango cha kodi ya zuio ya VAT kwa bidhaa ni asilimia ngapi Tanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Kiwango cha kodi ya zuio ya VAT kwa huduma ni asilimia ngapi Tanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "TRA inafanya ukaguzi wa SDL vipi na wanakagua nini?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_audit_hedge"
+   ]
+  },
+  {
+   "q": "Adhabu ya mgeni anayevunja GN 487A ni nini hasa?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Je, faini ya GN 487A kwa Mtanzania anayemsaidia mgeni ni kiasi gani?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "VAT withholding ni nini na kiwango chake ni kiasi gani Tanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Je, withholding ya VAT kwa bidhaa ni asilimia 3 au asilimia 6?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "BRELA inasajili ushirikiano (partnership) pia?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Adhabu ya chini kabisa kwa mgeni anayekiuka GN 487A ni ngapi — TZS 500,000 au zaidi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Adhabu ya mgeni (non-citizen) anayekutwa akifanya biashara iliyokatazwa chini ya GN 487A ni nini hasa?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Mimi ni CPA (Certified Public Accountant) aliyesajiliwa. Je, lazima nisajili VAT hata kama sina wateja wengi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Kwa nini fani kama wakili, CPA, mhandisi wanahitajika kusajili VAT bila kujali mauzo — mantiki yake ni nini?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "TRA inazuia VAT gani kwa malipo ya bidhaa na kwa malipo ya huduma?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Ninaununua huduma za IT (programming) kutoka kampuni nyingine — kiwango cha VAT withholding ni ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Ninanunua saruji (cement) na nondo (steel bars) kwa ujenzi — VAT withholding ni asilimia ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_009.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "SDL na PAYE zinawasilishwa TRA kwa wakati mmoja — au kuna tarehe tofauti mbili?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Nimesikia SDL na PAYE zinalipwa siku tofauti za mwezi — hii ni kweli?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "SDL inalipwa tarehe ngapi kila mwezi — na je, ni tofauti na PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_010.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "BRELA inasajili aina ngapi za biashara Tanzania?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Tofauti ya biashara ya jina, ubia, na kampuni ya hisa ni nini kwa BRELA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Mfanyabiashara mmoja asiye na wafanyakazi — bado anahitaji kusajili BRELA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Annual return ya BRELA imelipwa — faini ya kuchelewa ni ngapi kwa mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Kampuni yangu ilianza 2022 na haijawahi kuwasilisha annual return — hatari gani inanisubiri?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "SDL na PAYE — zote zinalipwa tarehe 7?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Mhasibu (CPA) aliyesajiliwa Tanzania anahitaji kusajili VAT hata kama ana wateja wachache?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "NSSF analipwa nani — mwajiri au mfanyakazi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_011.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Kampuni yangu haijalipi annual return kwa miaka miwili — adhabu ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_012.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Je, kampuni inayoshindwa kuwasilisha annual return BRELA kwa miaka 2 inaweza kukutana na matokeo gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Adhabu ya mgeni anayekiuka GN 487A ni nini hasa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Adhabu ya msaidizi (raia wa Tanzania) anayewezesha mgeni chini ya GN 487A ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Msaidizi wa GN 487A anaweza kupata faini ya TZS milioni 10 kama mgeni?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "SDL na PAYE zinawasilishwa TRA tarehe gani kila mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Je, kuna tofauti ya tarehe kati ya kulipa SDL na kulipa PAYE TRA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Katika mfumo wa VAT withholding wa Tanzania, msambazaji analipa VAT iliyokatwa TRA kupitia return yake ya kawaida?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Adhabu ya kutolipa ada ya annual return ya BRELA kwa wakati ni nini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_013.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Chike, mambo vipi? Hivi malipo ya PAYE na SDL huwa yanakamilishwa lini kila mwezi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Kama mtu ambaye si raia anafanya shughuli kama vile 'mining' (shughuli ya uchimbaji madini) bila ruhusa, ni adhabu gani zinazotolewa kwa mujibu wa GN487A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Mtu akiwasaidia wasio raia kufanya biashara walizopigwa marufuku kwa GN487A, msaada huo huo una adhabu gani kwa mzawa wa Tanzania?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Nani anapigwa faini kubwa zaidi kwa kukiuka GN487A kuhusu shughuli za saluni? Mtu anayeendesha biashara au Raia wa Tanzania anayempa nafasi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Nashangaa sana, je ni faini gani nikikamatwa nikiendesha saluni kama raia wa kigeni kinyume na GN487A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Nikiwa si raia na nimeonekana ninaendesha biashara ya clearing na forwarding hapa Tanzania, ninaweza kukabiliwa na adhabu gani kulingana na GN487A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Ndugu Chike, ni adhabu gani kwa raia wa kigeni kukutwa anaendesha biashara ya mashine za kamari nje ya kasino kama ilivyoainishwa kwenye GN487A?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Watu wasio raia wanapewa adhabu gani kwa kufanya biashara kama za kuuza simu na repair?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Unapokosea taratibu za GN487A kuhusu mobile money, adhabu yake ni ipi kwa msichana?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Nimeona kwenye GN487A shughuli za uchimbaji madini zipo, lakini nina wasiwasi kuhusu adhabu. Kama mtu asiye raia atapatikana akifanya uchimbaji madini, atapata adhabu gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Je, kiasi cha NSSF kinachokatwa kwa mfanyakazi ni sawasawa na kile kinachochangiwa na mwajiri?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "nssf_party"
+   ]
+  },
+  {
+   "q": "Nafikiri biashara yangu inaweza ikawa moja ya zile ambazo haziruhusiwi kwa wasio raia. Nikijikuta nimefanya biashara hiyo bila kujua, ninaweza kupata adhabu gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Kama raia wa kigeni nimekuwa nikiendesha shughuli za kuwa kiongozi wa watalii bila vibali. Nikisheheni, ninaweza kupata adhabu gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Habari Chike, kuhusu VAT withholding, kuna huduma ninazotoa zinazotozwa 6% -- hilo ni kodi ya thamani iliyoongezwa au ni kitu kingine?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Chike, kuhusu huu mfumo wa VAT withholding, unasemaje kuhusu kiwango cha ushuru kwa bidhaa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Habari Chike, niliona kwenye TRA kuwa kuna 'VAT Withholding Services' kwa 6% kwenye huduma. Hii maana yake nini hasa kwa biashara yangu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Chike, nikishasikia 'VAT withholding', nini maana yake hasa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Kama nitachelewa kulipa annual return kwa BRELA, kuna adhabu yoyote?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Huyu kwa BRELA, kama nitalipia annual return baadaye, hiyo ada ya TZS 2,500 kwa mwezi ni faini au ni ada ya ziada?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Je SDL na PAYE zina tarehe tofauti za kulipa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "VAT ya kuzuia (withholding) kwenye bidhaa ni asilimia ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Kiwango cha VAT withholding kwenye huduma ni kipi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Baada ya kuzuia VAT, nampa muuzaji nini kama uthibitisho?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Kampuni isiyo na mtaji wa hisa (no share capital) inasajiliwa kwa ada gani?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Naweza kusajili ushirikiano wa kibiashara (partnership) BRELA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "SDL na PAYE zina tarehe moja ya kulipa?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Mgeni akipatikana na hatia ya GN487A — ni faini au kifungo au vyote?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Nikiwa muuzaji, VAT withholding inapunguza pesa ninazopokea papo hapo?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Nimefanyiwa kazi ya ukarabati (huduma) — VAT ya kuzuia ni asilimia ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "SDL na PAYE zina tarehe za mwisho za kulipa zipi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Nikichelewa kuwasilisha annual return BRELA nitatozwa nini?",
+   "src": "results/annual_return_phrasings_live_2026_11_17.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Kampuni yangu haina mtaji wa hisa. Ada ya kusajili ni shilingi ngapi?",
+   "src": "results/brela_deploy_verification_2026_10_07.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "Kampuni yangu ya hapa Tanzania imechelewa kuwasilisha ritani ya mwaka. Faini ni shilingi ngapi kwa mwezi?",
+   "src": "results/brela_deploy_verification_2026_10_07.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "Mhasibu au wakili anahitaji kusajili VAT hata kama mauzo ni madogo?",
+   "src": "results/coverage_batch_draft1.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "VAT ya zuio kwa bidhaa ni asilimia ngapi?",
+   "src": "results/followup_deploy_live_2026_11_16.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?",
+   "src": "results/grounded_fact_reach_baseline.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "query: VAT withholding kwenye huduma ni asilimia ngapi?",
+   "src": "results/grounded_fact_reach_baseline.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "A company has failed to file its annual return for 2 years — what are the potential consequences?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_late_annual_return"
+   ]
+  },
+  {
+   "q": "A non-citizen caught using a Tanzanian's name to run a shop — does the penalty fall on the non-citizen or the Tanzanian?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Are SDL and PAYE both due to TRA on the same date — the 7th of the following month?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_paye_deadline"
+   ]
+  },
+  {
+   "q": "Do professional service providers qualify for VAT registration in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Does BRELA also register partnerships?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Does a partnership of two people co-owning a shop need to be registered with BRELA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "Does the 3% VAT withholding rate apply to purchases of IT services from a VAT-registered supplier?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "GN 487A inataja 'angalau TZS milioni 10' — je, kuna kiwango cha juu cha faini?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "How many main types of business structure does BRELA register in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "How many months of imprisonment can a non-citizen face for conducting a prohibited business?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "I am a registered CPA (Certified Public Accountant). Must I register for VAT even if I have few clients?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "I have 20 staff and TZS 50,000,000 capital, do I register a company or a business name at BRELA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "I provide IT services to a government institution — how much VAT withholding do they deduct on services?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "I sold goods to a government entity and they withheld tax — what is the VAT withholding rate on goods?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Is VAT withholding on goods 3% or 6%?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "Is telling a non-citizen 'use my name for the business' legal assistance?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Is the penalty for a Tanzanian who helps a non-citizen conduct a prohibited business the same as for the non-citizen?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Is visa revocation for a non-citizen issued TOGETHER with the fine and imprisonment, or is it an alternative penalty?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Must a certified public accountant (CPA) register for VAT even with very few clients and low revenue?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Our payroll is TZS 7,000,000 a month, so are we required to register with BRELA?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_three_forms"
+   ]
+  },
+  {
+   "q": "The penalty for a Tanzanian who assists a foreigner under GN 487A is TZS 10,000,000, right?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "VAT withholding on services is 18% like the standard rate, right?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What VAT withholding rate does TRA apply to goods payments and services payments?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What are the penalties for a non-citizen running a prohibited business under GN 487A?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What does GN 487A say about a 'nominee' arrangement — why is it prohibited?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What does it mean that 'VAT withholding is not the full VAT' for a supplier?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What exactly are the penalties for a foreigner violating GN 487A?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What exactly is the penalty for a non-citizen caught conducting a prohibited business under GN 487A?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What is VAT withholding and what is its rate in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What is the BRELA fee to register a company with no share capital?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "brela_fee_no_share_capital"
+   ]
+  },
+  {
+   "q": "What is the VAT withholding rate on goods in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What is the VAT withholding rate on services in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_withholding_rates"
+   ]
+  },
+  {
+   "q": "What is the full penalty for a non-citizen caught conducting retail trade?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What is the minimum penalty for a non-citizen violating GN 487A — TZS 500,000 or more?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What is the penalty for a Tanzanian who assists a foreigner under GN 487A?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What penalty does a Tanzanian face for facilitating a GN 487A violation?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What penalty does a Tanzanian face for helping a foreigner conduct a prohibited business?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "What penalty does a non-citizen face if found conducting a prohibited business under GN 487A?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "gn487a_penalties"
+   ]
+  },
+  {
+   "q": "Why are professions like lawyers and engineers required to register for VAT regardless of revenue?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  },
+  {
+   "q": "Why must professions like lawyers, CPAs, engineers register for VAT regardless of fees — what is the reasoning?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_professional_services"
+   ]
+  }
+ ],
+ "onto_new": 167,
+ "other": 0,
+ "newly_both": [],
+ "membership": {
+  "sdl_nssf_paye_party": 4,
+  "nssf_party": 7,
+  "brela_three_forms": 17,
+  "brela_fee_no_share_capital": 8,
+  "gn487a_penalties": 47,
+  "vat_withholding_rates": 35,
+  "vat_professional_services": 14,
+  "brela_late_annual_return": 15,
+  "sdl_paye_deadline": 15,
+  "sdl_audit_hedge": 5
+ },
+ "baseline": "git show HEAD:chike/routing.py"
+}

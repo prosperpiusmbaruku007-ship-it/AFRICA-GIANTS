@@ -1,0 +1,98 @@
+{"id": "tp_01", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?", "expect": "sdl_nssf_paye_party", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): 'Hapana ... MWAJIRI pekee', wrong for NSSF and PAYE."}
+{"id": "tp_02", "question": "Nani analipa SDL, NSSF na PAYE?", "expect": "sdl_nssf_paye_party", "guards_against": "who-pays form, three levies."}
+{"id": "tp_03", "question": "Mfanyakazi anakatwa PAYE, NSSF na SDL kwenye mshahara wake?", "expect": "sdl_nssf_paye_party", "guards_against": "employee-deduction form, three levies in another order."}
+{"id": "tp_04", "question": "Is SDL, NSSF and PAYE deducted from the employee?", "expect": "sdl_nssf_paye_party", "guards_against": "English form."}
+{"id": "tp_05", "question": "SDL na NSSF zinakatwa kwa mfanyakazi?", "expect": "sdl_nssf_party", "guards_against": "the TWO-levy question must stay on the older route (the composite needs PAYE)."}
+{"id": "tp_06", "question": "SDL, NSSF na PAYE ni asilimia ngapi?", "expect": "none", "guards_against": "a RATE question about three levies is not a party question."}
+{"id": "tp_07", "question": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi mwenye mshahara wa 800000?", "expect": "none", "guards_against": "a figure: the engine / model path, never a party statement."}
+{"id": "tp_08", "question": "SDL, NSSF, PAYE na WCF zinakatwa kwa mfanyakazi?", "expect": "none", "guards_against": "a FOURTH levy named: the composite does not cover WCF."}
+{"id": "tp_09", "question": "SDL, NSSF na PAYE zinalipwa lini?", "expect": "none", "guards_against": "a deadline question, not a party question (the PAYE+SDL deadline route needs no NSSF)."}
+{"id": "tp_10", "question": "SDL, NSSF na PAYE zinalipwa wapi?", "expect": "none", "guards_against": "where to pay: model."}
+{"id": "np_01", "question": "NSSF inakatwa kwa mfanyakazi?", "expect": "nssf_party", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): 'Ndiyo ... 10% sawa na 20%' (garbled)."}
+{"id": "np_02", "question": "Nani analipa NSSF?", "expect": "nssf_party", "guards_against": "who-pays form."}
+{"id": "np_03", "question": "Mfanyakazi anakatwa NSSF kwenye mshahara wake?", "expect": "nssf_party", "guards_against": "employee deduction form."}
+{"id": "np_04", "question": "Is NSSF deducted from the employee?", "expect": "nssf_party", "guards_against": "English form."}
+{"id": "np_05", "question": "NSSF inalipwa na mwajiri au mfanyakazi?", "expect": "nssf_party", "guards_against": "either-or payer form."}
+{"id": "np_06", "question": "Mgawanyo wa NSSF kati ya mwajiri na mfanyakazi unaweza kubadilishwa?", "expect": "nssf_split", "guards_against": "the split-route question stays on the split route."}
+{"id": "np_07", "question": "NSSF inakatwa kiasi gani kwa mshahara wa 600000?", "expect": "none", "guards_against": "an amount: the engine."}
+{"id": "np_08", "question": "NSSF inakatwa asilimia ngapi?", "expect": "none", "guards_against": "a rate question."}
+{"id": "np_09", "question": "Pensheni ya NSSF inakatwa kodi?", "expect": "none", "guards_against": "pension tax: not the party question."}
+{"id": "np_10", "question": "NSSF na PAYE zinakatwa kwa mfanyakazi?", "expect": "none", "guards_against": "another levy named: the NSSF route declines."}
+{"id": "np_11", "question": "Nani analipa NSSF ya hiari?", "expect": "none", "guards_against": "voluntary membership is a different question."}
+{"id": "np_12", "question": "Mfanyakazi akiacha kazi, NSSF yake inakatwa tena?", "expect": "none", "guards_against": "premise about leaving, a different question; flows to the model."}
+{"id": "bf_01", "question": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?", "expect": "brela_three_forms", "guards_against": "GATE ROW eval_071, verbatim."}
+{"id": "bf_02", "question": "Payroll yetu ni TZS 7,000,000 kwa mwezi, sasa je tunatakiwa kujisajili BRELA?", "expect": "brela_three_forms", "guards_against": "GATE ROW eval_301, verbatim (a figure: digits are allowed on this route)."}
+{"id": "bf_03", "question": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?", "expect": "brela_three_forms", "guards_against": "GATE ROW eval_304, verbatim."}
+{"id": "bf_04", "question": "Je, kampuni au jina la biashara linafaa kwa ubia wa watu wawili?", "expect": "brela_three_forms", "guards_against": "company-or-business-name choice."}
+{"id": "bf_05", "question": "How many types of business structure does BRELA register?", "expect": "brela_three_forms", "guards_against": "English form."}
+{"id": "bf_06", "question": "Ada ya kusajili jina la biashara BRELA ni shilingi ngapi?", "expect": "none", "guards_against": "a FEE question."}
+{"id": "bf_07", "question": "Naombaje kusajili kampuni BRELA mtandaoni?", "expect": "none", "guards_against": "how-to."}
+{"id": "bf_08", "question": "BRELA wanasajili alama ya biashara (trademark) vipi?", "expect": "none", "guards_against": "trademarks are IP, not a business form."}
+{"id": "bf_09", "question": "Annual return ya kampuni inatakiwa lini BRELA?", "expect": "brela_annual_return_deadline", "guards_against": "a deadline question: it must reach the annual-return DEADLINE route and not the forms route (first draft wrote none: a wrong expectation, the older route existed)."}
+{"id": "bf_10", "question": "Je, BRELA inanitoza kodi nikiwa na wafanyakazi 20?", "expect": "none", "guards_against": "a tax word: vetoed."}
+{"id": "bf_11", "question": "Ada ya kusajili kampuni isiyo na mtaji wa hisa BRELA ni TZS ngapi?", "expect": "brela_fee_no_share_capital", "guards_against": "must reach the fee route, not the forms route."}
+{"id": "fc_01", "question": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?", "expect": "brela_fee_no_share_capital", "guards_against": "GATE ROW eval_383, verbatim."}
+{"id": "fc_02", "question": "How much does it cost to register a company without share capital?", "expect": "brela_fee_no_share_capital", "guards_against": "English form."}
+{"id": "fc_03", "question": "Kampuni isiyo na mtaji wa hisa inagharimu kiasi gani kusajili?", "expect": "brela_fee_no_share_capital", "guards_against": "natural phrasing."}
+{"id": "fc_04", "question": "Ada ya kampuni isiyo na mtaji wa hisa ni TZS 300,000, sivyo?", "expect": "brela_fee_no_share_capital", "guards_against": "a premise with the SUPERSEDED figure: the statement must state both dates, so it is routed."}
+{"id": "fc_05", "question": "Ada ya kusajili kampuni yenye mtaji wa hisa wa TZS 50,000,000 ni ngapi?", "expect": "none", "guards_against": "a company WITH share capital: the engine / model, not this fee."}
+{"id": "fc_06", "question": "Ada ya kuhifadhi jina la kampuni isiyo na mtaji wa hisa ni ngapi?", "expect": "none", "guards_against": "name reservation fee, a different fee."}
+{"id": "fc_07", "question": "Kampuni isiyo na mtaji wa hisa ikichelewa kuwasilisha annual return adhabu ni ngapi?", "expect": "brela_late_annual_return", "guards_against": "a penalty, not the registration fee: it must NOT reach the fee route; the late-return statement is correct for any local company (first draft wrote none: a wrong expectation)."}
+{"id": "fc_08", "question": "Kampuni ya kigeni isiyo na mtaji wa hisa ada ni ngapi?", "expect": "none", "guards_against": "foreign company."}
+{"id": "gn_01", "question": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?", "expect": "gn487a_penalties", "guards_against": "GATE ROW eval_163, verbatim."}
+{"id": "gn_02", "question": "Adhabu ya GN 487A kwa raia wa Tanzania anayemsaidia mgeni kufanya biashara ni nini?", "expect": "gn487a_penalties", "guards_against": "citizen facilitator penalty."}
+{"id": "gn_03", "question": "Mgeni akifanya biashara iliyokatazwa na GN 487A, faini ni kiasi gani?", "expect": "gn487a_penalties", "guards_against": "non-citizen penalty."}
+{"id": "gn_04", "question": "What is the penalty under GN 487A for a non-citizen?", "expect": "gn487a_penalties", "guards_against": "English form."}
+{"id": "gn_05", "question": "Raia wa kigeni akikutwa anaendesha saluni, adhabu ni nini?", "expect": "gn487a_penalties", "guards_against": "non-citizen cue without the GN number."}
+{"id": "gn_06", "question": "GN 487A inakataza shughuli zipi?", "expect": "none", "guards_against": "the LIST of activities, not the penalties."}
+{"id": "gn_07", "question": "GN 487A ilianza kutumika lini?", "expect": "none", "guards_against": "a date question."}
+{"id": "gn_08", "question": "Raia wa kigeni anahitaji kibali gani kufanya kazi Tanzania?", "expect": "none", "guards_against": "work permit: not the penalty."}
+{"id": "gn_09", "question": "Nimeajiri raia wa kigeni, GN 487A inaniathiri vipi?", "expect": "none", "guards_against": "employing a foreigner: not the penalty statement."}
+{"id": "gn_10", "question": "Mgeni mwenye leseni halali kabla ya GN 487A anaendelea hadi lini?", "expect": "none", "guards_against": "the transition rule."}
+{"id": "vw_01", "question": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?", "expect": "vat_withholding_rates", "guards_against": "GATE ROW eval_044, verbatim."}
+{"id": "vw_02", "question": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?", "expect": "vat_withholding_rates", "guards_against": "GATE ROW eval_048, verbatim."}
+{"id": "vw_03", "question": "VAT ya zuio ni asilimia ngapi kwa bidhaa na kwa huduma?", "expect": "vat_withholding_rates", "guards_against": "rate, both limbs."}
+{"id": "vw_04", "question": "What is the VAT withholding rate on services?", "expect": "vat_withholding_rates", "guards_against": "English form."}
+{"id": "vw_05", "question": "VAT withholding kwa mauzo ya bidhaa na huduma pamoja inakatwaje?", "expect": "vat_withholding_mixed_supply", "guards_against": "the MIXED-supply question stays on its own route."}
+{"id": "vw_06", "question": "VAT withholding certificate inatolewa lini?", "expect": "none", "guards_against": "the certificate-timing question."}
+{"id": "vw_07", "question": "Nani ni wakala wa VAT withholding?", "expect": "none", "guards_against": "who is the agent: no fact holds it."}
+{"id": "vw_08", "question": "VAT withholding kwenye ankara ya TZS 5,000,000 ni kiasi gani?", "expect": "none", "guards_against": "an amount: the engine."}
+{"id": "vw_09", "question": "VAT withholding ilianza lini?", "expect": "none", "guards_against": "start date: D-FIDELITY-22's constant, not this statement."}
+{"id": "vw_10", "question": "VAT withholding na PAYE zinawasilishwa wapi?", "expect": "none", "guards_against": "another tax named."}
+{"id": "vp_01", "question": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?", "expect": "vat_professional_services", "guards_against": "GATE ROW eval_025, verbatim."}
+{"id": "vp_02", "question": "Mhasibu lazima ajisajili VAT hata kama mauzo yake ni madogo?", "expect": "vat_professional_services", "guards_against": "profession + registration + regardless."}
+{"id": "vp_03", "question": "Do lawyers have to register for VAT regardless of turnover?", "expect": "vat_professional_services", "guards_against": "English form."}
+{"id": "vp_04", "question": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_professional_services", "guards_against": "engineer, professional service."}
+{"id": "vp_10", "question": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "none", "guards_against": "A DOCTOR must NOT get the professional-services statement: medical services are an exempt supply (found by reading the sweep; the first draft of this probe expected the statement, which would have been a confident error)."}
+{"id": "vp_11", "question": "Wakili mpya aliyeidhinishwa leo — anaweza kuanza kufanya kazi bila kusajili VAT kwanza?", "expect": "none", "guards_against": "a timing / start-practising question the statement does not answer."}
+{"id": "vp_05", "question": "Wakili mwenye mauzo ya TZS 30,000,000 anatakiwa kusajili VAT?", "expect": "none", "guards_against": "a figure: the registration engine."}
+{"id": "vp_06", "question": "Naweza kusajili VAT kwa hiari kama mhasibu?", "expect": "vat_voluntary_registration", "guards_against": "voluntary registration: the OLDER voluntary route owns it, not the professional-services statement (first draft wrote none: a wrong expectation)."}
+{"id": "vp_07", "question": "Wakili akichelewa kusajili VAT adhabu ni nini?", "expect": "none", "guards_against": "a penalty."}
+{"id": "vp_08", "question": "Wahandisi wanasajili vipi VAT mtandaoni?", "expect": "none", "guards_against": "how-to."}
+{"id": "vp_09", "question": "Kizingiti cha kusajili VAT ni kiasi gani?", "expect": "none", "guards_against": "no profession word: the threshold fact path."}
+{"id": "lr_01", "question": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?", "expect": "brela_late_annual_return", "guards_against": "GATE ROW eval_085, verbatim."}
+{"id": "lr_02", "question": "Annual return ya kampuni yangu imechelewa, adhabu ni nini?", "expect": "brela_late_annual_return", "guards_against": "natural phrasing, penalty."}
+{"id": "lr_03", "question": "Late annual return penalty BRELA is how much?", "expect": "brela_late_annual_return", "guards_against": "English form."}
+{"id": "lr_04", "question": "Nikichelewa kuwasilisha annual return BRELA nalipa faini ngapi?", "expect": "brela_late_annual_return", "guards_against": "penalty amount ask."}
+{"id": "lr_05", "question": "Annual return ya kampuni inatakiwa kuwasilishwa lini BRELA?", "expect": "brela_annual_return_deadline", "guards_against": "the DEADLINE question stays on the deadline route (mutual exclusion)."}
+{"id": "lr_06", "question": "Kampuni ya kigeni ikichelewa annual return adhabu ni nini?", "expect": "none", "guards_against": "foreign company: Part XII, a different fee."}
+{"id": "lr_07", "question": "Annual return ikichelewa kwa miaka 2, kampuni inafutwa kwenye daftari?", "expect": "none", "guards_against": "strike-off is NOT a constant here: model."}
+{"id": "lr_08", "question": "Annual return ya kampuni inawasilishwaje mtandaoni?", "expect": "none", "guards_against": "how-to."}
+{"id": "lr_09", "question": "Wakurugenzi wanafungwa jela kwa kuchelewesha annual return?", "expect": "none", "guards_against": "officers' imprisonment: not stated here."}
+{"id": "sp_01", "question": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?", "expect": "sdl_paye_deadline", "guards_against": "GATE ROW eval_127, verbatim (carries a '7')."}
+{"id": "sp_02", "question": "SDL na PAYE zinalipwa lini?", "expect": "sdl_paye_deadline", "guards_against": "plain deadline form."}
+{"id": "sp_03", "question": "SDL and PAYE are due on what date?", "expect": "sdl_paye_deadline", "guards_against": "English form."}
+{"id": "sp_04", "question": "Tarehe ya mwisho ya SDL na PAYE ni ipi?", "expect": "sdl_paye_deadline", "guards_against": "last-date form."}
+{"id": "sp_05", "question": "SDL na NSSF na PAYE zinalipwa lini?", "expect": "none", "guards_against": "NSSF is a THIRD levy with a different deadline: the composite declines."}
+{"id": "sp_06", "question": "SDL na PAYE zinalipwa wapi?", "expect": "none", "guards_against": "where to pay: model."}
+{"id": "sp_07", "question": "SDL na PAYE nikichelewa adhabu ni nini?", "expect": "none", "guards_against": "a penalty."}
+{"id": "sp_08", "question": "SDL inalipwa lini?", "expect": "none", "guards_against": "SDL ALONE with a time word: it must NOT reach the SDL+PAYE composite (no PAYE named); it reaches no statement route and that is the contract (first draft wrote sdl_payer by mistake)."}
+{"id": "sp_09", "question": "SDL na PAYE kwa mshahara wa 1,500,000 zinalipwa lini?", "expect": "none", "guards_against": "a figure: the engine."}
+{"id": "au_01", "question": "How does TRA conduct an SDL audit and what do they examine?", "expect": "sdl_audit_hedge", "guards_against": "FOUNDING SPECIMEN (live, b96e8a8): an invented eight-point audit asking for 'P9 forms'."}
+{"id": "au_02", "question": "TRA hukagua SDL vipi?", "expect": "sdl_audit_hedge", "guards_against": "Swahili form."}
+{"id": "au_03", "question": "Ukaguzi wa SDL unafanyikaje?", "expect": "sdl_audit_hedge", "guards_against": "Swahili form 2."}
+{"id": "au_04", "question": "Nitajiandaaje kwa SDL audit ya TRA?", "expect": "sdl_audit_hedge", "guards_against": "preparation form."}
+{"id": "au_05", "question": "Ukaguzi wa SDL kwa mwajiri mwenye wafanyakazi 15 na mshahara wa 6,000,000 unafanyikaje?", "expect": "none", "guards_against": "digits: the engine / model."}
+{"id": "au_06", "question": "Ukaguzi wa PAYE unafanyikaje?", "expect": "none", "guards_against": "another levy's audit: no route."}
+{"id": "au_07", "question": "How does an employer calculate the SDL amount payable each month?", "expect": "none", "guards_against": "calculation, not audit."}
+{"id": "au_08", "question": "Pesa za SDL zinakwenda wapi?", "expect": "none", "guards_against": "where the money goes, not audit."}
