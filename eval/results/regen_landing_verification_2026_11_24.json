@@ -1,0 +1,76 @@
+{
+ "fetched_rows": 220,
+ "built_rows": 220,
+ "committed_rows": 218,
+ "texts_identical_to_builder": true,
+ "rows_differing_from_committed": [
+  4,
+  20,
+  21,
+  66,
+  89,
+  108
+ ],
+ "appended_keys": [
+  "sdl_base_includes_allowances",
+  "medical_services_vat_exempt"
+ ],
+ "emb_shape": [
+  220,
+  768
+ ],
+ "emb_unit_norm_max_dev": 1.1920928955078125e-07,
+ "unchanged_rows_max_abs_dev_vs_committed": 1.471489667892456e-07,
+ "unchanged_rows_count": 212,
+ "row_digest_sha256": "bd4a15a16662003703a3839287ca8d3abddfe34d072855829530b1524d96e8b8",
+ "payload_gate_module_functions": [
+  "run_payload_gates"
+ ],
+ "local_vs_kaggle_row_cosine_min": 0.9999998807907104,
+ "local_vs_kaggle_row_cosine_mean": 1.0,
+ "guards_parsed": 91,
+ "four_guards": [
+  {
+   "guard": "Phone repair activity",
+   "keywords": [
+    "phone",
+    "simu",
+    "activity 3"
+   ],
+   "passes_with_kaggle_embeddings": true,
+   "passes_with_local_embeddings": true
+  },
+  {
+   "guard": "GN487A marriage no exemption",
+   "keywords": [
+    "kuoa",
+    "kuolewa"
+   ],
+   "passes_with_kaggle_embeddings": true,
+   "passes_with_local_embeddings": true
+  },
+  {
+   "guard": "BRELA striking-off (Q13 verbatim)",
+   "keywords": [
+    "defunct",
+    "mahakama kuu",
+    "sura 212"
+   ],
+   "passes_with_kaggle_embeddings": true,
+   "passes_with_local_embeddings": true
+  },
+  {
+   "guard": "OSHA/WCF small-count (Q14 verbatim)",
+   "keywords": [
+    "osha husajili",
+    "wcf huanza",
+    "mfanyakazi wa kwanza"
+   ],
+   "passes_with_kaggle_embeddings": true,
+   "passes_with_local_embeddings": true
+  }
+ ],
+ "guards_failing_with_kaggle_embeddings": [],
+ "guards_failing_with_local_embeddings": [],
+ "verdict": "VERIFIED"
+}

@@ -23,6 +23,19 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 OUT = os.path.join(REPO, "eval", "results", "dryrun_regen_2026_11_24.json")
 
 
+def parse_committed_guards(src):
+    """[(name, query, [keywords])] for every critical query in the regen script, with the keyword list read by `ast.literal_eval`, i.e. EXACTLY the Python list the regen iterates (any keyword in the top 3 passes).
+
+    ⛔ THE FIRST FIVE DRY RUNS GOT THIS WRONG, which is the whole reason this is a function with a test. They split the list text on "','" (no space), so a list written `['kuoa', 'kuolewa']` (a space after the comma) became ONE keyword, "kuoa', 'kuolewa", that no row can contain. Exactly the four multi-keyword guards (phone repair, GN487A marriage, BRELA striking-off, OSHA/WCF small-count) were reported as 'pre-existing failures that fail on the deployed index too'; on Kaggle all four PASS (2026-11-23 run: 91 guards, 0 failing). The harness was wrong about the index, not the index about itself.
+    """
+    import ast as _ast
+    import re as _re
+    out = []
+    for name, query, kws in _re.findall(r"\(\s*'([^']+)'\s*,\s*'(query: [^']+)'\s*,\s*\[([^\]]*)\]\s*\)", src):
+        out.append((name, query, list(_ast.literal_eval("[" + kws + "]")) if kws.strip() else []))
+    return out
+
+
 def _load_module(relpath, name):
     path = os.path.join(REPO, *relpath.split("/"))
     assert os.path.exists(path), (
@@ -208,10 +221,8 @@ def main():
     # --- C. DISPLACEMENT: no committed guard may regress ------------------------------------
     # Parsed out of the regen script's own critical_queries list so this cannot drift from it.
     src = open(os.path.join(REPO, "kaggle", "regenerate_rag_e5.py"), encoding="utf-8").read()
-    import re as _re
-    committed = _re.findall(
-        r"\(\s*'([^']+)'\s*,\s*'(query: [^']+)'\s*,\s*\[([^\]]*)\]\s*\)", src)
-    assert committed, "parsed zero committed critical queries -- the regex no longer matches"
+    committed = parse_committed_guards(src)
+    assert len(committed) >= 91, f"parsed {len(committed)} committed critical queries; the regen runs at least 91"
     # ⛔ A BASELINE ARM IS MANDATORY HERE, NOT A REFINEMENT (R24, and this file's own precedent).
     # The first run of this script reported 4 "displacement regressions" and a DO-NOT-RUN
     # verdict. A guard failing on the PROSPECTIVE index is only displacement if it PASSES on the
@@ -234,9 +245,7 @@ def main():
     print(f"\ndisplacement check over {len(committed)} committed guards "
           f"(prospective vs DEPLOYED baseline):")
     regressions, preexisting = [], []
-    for name, query, anchors in committed:
-        want = [a.strip().strip("'\"") for a in anchors.split("','")] if anchors else []
-        want = [a.strip().strip("'\"") for a in want if a.strip()]
+    for name, query, want in committed:
         if not want:
             continue
         t3 = top(query)

@@ -205,9 +205,7 @@ PINNED = {
     # late_payment_penalty_rate ... the moment the next regen ships".
     "late_payment_penalty_rate": ("absent", None),
 
-    # 2026-11-24: written for the SDL-base item (VETA Act s.14(3): allowances included); its index row is APPENDED (precompute _BATCH_2026_11_24, row 219) so pending_r15 until the Kaggle regen runs. test_pending_r15_keys_are_still_pending removes this pin the moment the key resolves.
-    "sdl_base_includes_allowances": ("pending_r15", None),
-    "medical_services_vat_exempt": ("pending_r15", None),   # 2026-11-24: the medical-VAT row, APPENDED (220th) like the SDL base
+    # 2026-11-24: sdl_base_includes_allowances (index row 218) and medical_services_vat_exempt (row 219) were pinned pending_r15 while the 220-row regen was packaged; the Kaggle run landed the same day. They are concise rows with no `key:` prefix, so they CONVERT to present_elsewhere (below) rather than resolving by exact key.
 
     # Written 2026-08-16 for the presumptive-tax coverage item, pending_r15 until the R15
     # regen ran. It ran on 2026-08-17 (the natural48 entry, PROGRESS.md) and all four keys
@@ -488,6 +486,9 @@ PINNED = {
     # 2026-11-23: TWO NEW rows built (216, 217) and NOT yet served -- pending the Kaggle regen; flip to present_elsewhere with the anchors below when it lands.
     "sdl_domestic_workers_scope": ("present_elsewhere", "Haijathibitishwa. SDL hutozwa kila mwajiri"),   # shipped by the 2026-11-23 regen (Kaggle run of b3d43af): converted from pending_r15
     "nssf_contributions_age_60": ("present_elsewhere", "Sheria haisemi hivyo wala kinyume"),   # shipped by the 2026-11-23 regen: converted from pending_r15
+    "sdl_base_includes_allowances": ("present_elsewhere", "posho zote (safari, malazi, burudani)"),   # shipped by the 2026-11-24 regen (Kaggle run of 3b8cf2f): converted from pending_r15
+    "medical_services_vat_exempt": ("present_elsewhere", "Huduma za afya ni msamaha zikitolewa"),   # shipped by the 2026-11-24 regen: converted from pending_r15
+    "form_number_payment_credit_slip": ("present_elsewhere", "Jina la fomu halijathibitishwa"),   # REWRITTEN IN PLACE (row 108) by the 2026-11-24 regen as a short Swahili row with no `key:` prefix, so the exact-key match no longer finds it
 }
 
 

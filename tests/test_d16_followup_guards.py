@@ -194,7 +194,7 @@ def test_prospective_index_rows_carry_the_corrected_content_and_clear_their_own_
         assert "Kifungu" not in by[k] and "Vifungu" not in by[k], f"R44 {k}"
     # the four NEW rows trail the index: no existing row number moves
     assert keys[211:215] == ["corporate_income_tax_return", "business_licence_authority", "gn605a_issuer", "severance_pay_income_tax"]    # 2026-11-17 batch 3 appended row 215 after these four (company_annual_return_deadline), so "the last four" is now an explicit slice
-    assert keys[215:] == ["company_annual_return_deadline", "sdl_domestic_workers_scope", "nssf_contributions_age_60", "sdl_base_includes_allowances", "medical_services_vat_exempt"]   # 2026-11-23 appended rows 216 and 217; 2026-11-24 appended the SDL base and the medical-VAT row (219th and 220th): all PENDING the Kaggle regen
+    assert keys[215:] == ["company_annual_return_deadline", "sdl_domestic_workers_scope", "nssf_contributions_age_60", "sdl_base_includes_allowances", "medical_services_vat_exempt"]   # 2026-11-23 appended rows 216 and 217; 2026-11-24 appended the SDL base and the medical-VAT row (219th and 220th); all LANDED (Kaggle run of 3b8cf2f)
     assert keys.index("business_licence_expiry_30_june") == 168
 
 
