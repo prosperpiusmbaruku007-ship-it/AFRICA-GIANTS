@@ -1,0 +1,124 @@
+{
+ "identity": {
+  "build": "37cdf9d",
+  "rag_rows_loaded": 220,
+  "rag_embeddings_shape": [
+   220,
+   768
+  ],
+  "rag_facts_text_sha256": "bd4a15a16662003703a3839287ca8d3abddfe34d072855829530b1524d96e8b8",
+  "config_rag_fact_count": 220,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795476473.621,
+   "enter_started_ts": 1795476473.627,
+   "enter_done_ts": 1795476512.862,
+   "import_to_enter_s": 0.0,
+   "load_s": 39.2,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "MED",
+   "q": "Huduma za afya na dawa zinatozwa VAT?",
+   "reply": "Hapana, kwa ujumla. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "Huduma za afya ni msamaha zikitolewa",
+   "anchor_in_served_context": true,
+   "n_served_facts": 3,
+   "served_heads": [
+    "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa ",
+    "Nauza bidhaa na huduma pamoja (mfano mkandarasi anayetoa vifaa na kazi",
+    "Kiwango cha VAT unachoweka kwenye bei ya bidhaa au huduma zako ni asil"
+   ]
+  },
+  {
+   "arm": "MED",
+   "q": "Hospitali ya binafsi inauza dawa na pia inatoa huduma za afya, VAT inahusu mauzo gani?",
+   "reply": "Hospitali ya binafsi inayouza dawa (zero-rated) NA inatoa huduma za matibabu (msamaha) inapaswa kufanya hivi: (1) Kwa dawa (zero-rated): inatozwa VAT 0% = inaweza kudai input VAT; (2) Kwa huduma za matibabu (exempt): haikatwi VAT kabisa = haiwezi kudai input VAT. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "Huduma za afya ni msamaha zikitolewa",
+   "anchor_in_served_context": true,
+   "n_served_facts": 5,
+   "served_heads": [
+    "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa ",
+    "Kampuni ya kigeni (Companies Act Cap.212, Part XII, ss.437-447) ikiche",
+    "pensionable age: 60 years",
+    "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rate",
+    "Nimeuza kwa mkopo, VAT inalipwa lini? VAT inakuwa inadaiwa mapema zaid"
+   ]
+  },
+  {
+   "arm": "MED",
+   "q": "Kliniki yangu inatoa huduma za afya na inauza vifaa tiba, je VAT inatozwa?",
+   "reply": "Kwa huduma za afya zinazotolewa na taasisi iliyoidhinishwa na Serikali NA daktari/mtaalamu aliyesajiliwa, huenda zimesamehewa VAT. Lakini kama kliniki hiyo pia inauza vifaa tiba (zero-rated) na bidhaa nyingine zinazotozwa VAT, basi inatakiwa kusajiliwa VAT. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "Huduma za afya ni msamaha zikitolewa",
+   "anchor_in_served_context": true,
+   "n_served_facts": 3,
+   "served_heads": [
+    "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa ",
+    "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rate",
+    "Mtaalamu anayetoa huduma za kitaalamu zenye leseni au chama cha taalum"
+   ]
+  },
+  {
+   "arm": "BASE",
+   "q": "Posho za safari na malazi zinaingia kwenye SDL na pia kwenye NSSF?",
+   "reply": "Ndiyo — posho zinazotolewa mara kwa mara (recurring allowances) kama posho za safari na malazi zinajumuishwa katika msingi wa SDL na NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "posho zote (safari, malazi, burudani)",
+   "anchor_in_served_context": true,
+   "n_served_facts": 6,
+   "served_heads": [
+    "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata.",
+    "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara g",
+    "compliance license processing time old: 28 days",
+    "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). To",
+    "NSSF sehemu ya mwajiri: mwajiri analipa asilimia 10, ikihesabiwa kwa m",
+    "Ukichelewesha kulipa mchango wa NSSF, adhabu (penalty) ni ASILIMIA 5 y"
+   ]
+  },
+  {
+   "arm": "BASE",
+   "q": "Je, posho ya nyumba ni sehemu ya msingi wa SDL na wa NSSF?",
+   "reply": "Ndiyo, kwa ujumla. Posho ya nyumba (housing allowance) ni sehemu ya mapato yanayotozwa SDL (kama inalipwa mara kwa mara) na huongezwa kwenye msingi wa NSSF (asilimia 10). Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "posho zote (safari, malazi, burudani)",
+   "anchor_in_served_context": true,
+   "n_served_facts": 3,
+   "served_heads": [
+    "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara g",
+    "Nani hatozwi SDL? Walioorodheshwa kisheria: Serikali (ruzuku), balozi,",
+    "NSSF jumla: asilimia 20 ya mshahara (10% mwajiri + 10% mfanyakazi). To"
+   ]
+  },
+  {
+   "arm": "BASE",
+   "q": "Bonasi na kamisheni zinahesabiwa kwenye SDL, na PAYE inakokotolewa kwa msingi gani?",
+   "reply": "Bonasi na kamisheni zinahesabiwa kwenye SDL kama sehemu ya jumla ya mishahara. PAYE inakokotolewa kwa msingi wa mshahara mkubwa wa jumla (gross taxable employment income). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "anchor": "posho zote (safari, malazi, burudani)",
+   "anchor_in_served_context": true,
+   "n_served_facts": 3,
+   "served_heads": [
+    "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara g",
+    "SDL, ambayo huitwa pia \"mafunzo\": kiwango cha mafunzo ni asilimia tatu",
+    "Wafanyakazi wa nyumbani wanahesabiwa kwenye kizingiti cha SDL? Haijath"
+   ]
+  }
+ ]
+}
