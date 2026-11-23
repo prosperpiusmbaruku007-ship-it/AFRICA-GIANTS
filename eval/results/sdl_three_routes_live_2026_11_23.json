@@ -1,0 +1,434 @@
+{
+ "identity": {
+  "build": "b96e8a8",
+  "rag_rows_loaded": 218,
+  "rag_embeddings_shape": [
+   218,
+   768
+  ],
+  "rag_facts_text_sha256": "f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50",
+  "config_rag_fact_count": 218,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795401861.332,
+   "enter_started_ts": 1795401861.34,
+   "enter_done_ts": 1795401897.612,
+   "import_to_enter_s": 0.0,
+   "load_s": 36.3,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "PREMISE",
+   "q": "Mfanyakazi analipa SDL wapi?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PREMISE",
+   "q": "SDL inakatwa kwa mfanyakazi, nalipa wapi?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PREMISE",
+   "q": "Mimi ni mfanyakazi, SDL yangu nalipa wapi na kwa fomu gani?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PREMISE",
+   "q": "Does the employee pay SDL, and where is it paid?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF",
+   "q": "SDL na NSSF zinakatwa kwa mfanyakazi?",
+   "reply": "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF",
+   "q": "Nani analipa SDL na NSSF?",
+   "reply": "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF",
+   "q": "Is SDL and NSSF deducted from the employee?",
+   "reply": "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FILE",
+   "q": "Nalipa SDL wapi?",
+   "reply": "Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FILE",
+   "q": "Fomu gani ya SDL?",
+   "reply": "Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FILE",
+   "q": "SDL inalipwa kwa benki gani?",
+   "reply": "Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FILE",
+   "q": "Nawezaje kuwasilisha ritani ya SDL?",
+   "reply": "Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FILE",
+   "q": "Where do I pay SDL?",
+   "reply": "Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "Pesa za SDL zinakwenda wapi na zinatumika kwa nini?",
+   "reply": "Kodi ya SDL hupelekwa Hazina ya Serikali na hutumiwa kufadhili mafunzo ya taaluma mbalimbali nchini Tanzania kupitia VETA (Vocational Education and Training Authority). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "How does TRA conduct an SDL audit and what do they examine?",
+   "reply": "TRA conducts an SDL audit by examining: (1) whether you have 10+ employees, (2) if you're registered for SDL, (3) if you've filed monthly returns showing all employees, (4) if each employee's pay is correctly calculated, (5) if payments were made to TRA on time, (6) if receipts match payments, (7) if any exemptions apply, (8) if there are any discrepancies between records and TRA database. The auditor will ask to see: payslips, P9 forms, SDL returns, bank statements, and relevant contracts. If irregularities are found, penalties and interest may be applied.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "How does an employer calculate the SDL amount payable each month?",
+   "reply": "To calculate the SDL amount, use this formula:\n\nSDL = 3.5% × gross payroll (cash basis)\n\nGross payroll (cash basis): Jumla ya mishahara ghafi (si pamoja na posho za fedha) ya wafanyakazi wote.\n\nMfano: wafanyakazi 15, jumla ya mishahara TZS 8,000,000 → SDL = 3.5% × TZS 8,000,000 = TZS 280,000 kwa mwezi.\n\nHii inalipwa na mwajiri pekee — si kukatwa kwa mfanyakazi. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL na PAYE nalipa wapi?",
+   "reply": "SDL na PAYE zinawasilishwa kupitia mfumo wa malipo ya kodi (TRA Taxpayer Portal) na kulipwa kupitia benki husika. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL ni asilimia ngapi na nalipa wapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "VETO",
+   "q": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?",
+   "reply": "Hapana — si kwa mfanyakazi. SDL, NSSF na PAYE zinakatwa kwa MWAJIRI pekee. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYER",
+   "q": "SDL inakatwa kwa mfanyakazi?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EXEMPT",
+   "q": "Ni waajiri gani hawalipi SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "EXEMPT",
+   "q": "Je, kampuni ya madini lazima ilipe SDL?",
+   "reply": "SDL haitozwi kwa waajiri na taasisi zilizoorodheshwa kisheria (Sheria ya Elimu na Mafunzo ya Ufundi): taasisi au idara ya Serikali inayofadhiliwa kikamilifu kupitia ruzuku ya Serikali; balozi (misheni za kidiplomasia); Umoja wa Mataifa na mashirika yake; taasisi za kimataifa au za kigeni zinazojihusisha na misaada au msaada wa kiufundi; taasisi za dini, kwa wafanyakazi walioajiriwa tu kuendesha ibada, kutoa mafundisho ya dini au huduma ya afya ya jamii; mashirika ya hisani (kama yalivyofafanuliwa kisheria); taasisi za elimu zilizosajiliwa (shule za awali, msingi na sekondari, vyuo vya ufundi na elimu, vyuo vikuu na taasisi za elimu ya juu); halmashauri za serikali za mitaa; wanafunzi wa mafunzo kwa vitendo chini ya mpango wa TaESA; waajiri wa mashambani, kwa wafanyakazi wanaofanya kilimo moja kwa moja tu (si usimamizi wala usindikaji); na mamlaka ya maji na usafi wa mazingira, kwa vibarua wa miradi ya maji. Waziri wa Fedha pia anaweza kusamehe mtu yeyote kwa tangazo la Gazeti. Mwajiri asiye kwenye orodha hii wala asiyesamehewa kwa Gazeti, mwenye wafanyakazi 10 au zaidi, hutozwa SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDL-CMP",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MULTI-CMP",
+   "q": "Nina wafanyakazi 15 na mishahara jumla TZS 6,000,000 kwa mwezi. SDL na NSSF ni kiasi gani?",
+   "reply": "Kwa SDL: 3.5% ya TZS 6,000,000 = TZS 210,000. Kwa NSSF: 20% ya TZS 6,000,000 = TZS 1,200,000 (mwajiri 600,000 + mfanyakazi 600,000). Zote mbili zinalipwa ndani ya siku 7 za kwanza za mwezi unaofuata. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000\n\nKwa NSSF: mwajiri 10% + mfanyakazi 10% = 20% ya jumla; kwa hiyo NSSF ni TZS 1,200,000 (TZS 600,000 kwa mwajiri + TZS 600,000 kwa mfanyakazi). Kwa SDL: mwajiri 3.5% ya jumla; kwa hiyo SDL ni TZS 210,000 (TZS 150,000 kwa mwajiri). Thibitisha na nssf.go.tz na tra.go.tz.\nNSSF = 20% × TZS 6,000,000 = TZS 1,200,000 (mwajiri TZS 600,000 + mfanyakazi TZS 600,000)",
+   "path": "engine:sdl+engine:nssf",
+   "model_calls": 4,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RATE",
+   "q": "Kiwango cha SDL ni asilimia ngapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NSSF-ONLY",
+   "q": "NSSF inakatwa kwa mfanyakazi?",
+   "reply": "Ndiyo — mfanyakazi anakatwa asilimia 10 ya mshahara wake, sawa na asilimia 20 ya mshahara wake. Thibitisha na NSSF (nssf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "NHIF inakatwa asilimia ngapi pamoja na NSSF kwenye mshahara?",
+   "reply": "Sehemu ya mfanyakazi ni asilimia 10 ya mshahara wake ghafi, na ndiyo inayokatwa kwenye mshahara wake. Mwajiri huikata kabla ya kulipa mshahara. (Jumla ya NSSF ni asilimia 20: 10 mwajiri + 10 mfanyakazi.)\n\nNHIF haijafunikwa na Chike — thibitisha na NHIF.",
+   "path": "engine:nssf",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": []
+}
