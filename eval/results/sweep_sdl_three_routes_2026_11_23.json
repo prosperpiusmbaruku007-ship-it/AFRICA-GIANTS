@@ -1,0 +1,305 @@
+{
+ "swept": 8785,
+ "changed": [
+  {
+   "q": "Kampuni inalipa SDL wapi?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Kampuni inalipa SDL kwa fomu gani?",
+   "src": "eval/refusal_gate/sdl_exemptions_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "SDL na NSSF zinakatwa kwa mfanyakazi?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_party"
+   ]
+  },
+  {
+   "q": "Mfanyakazi analipa SDL wapi?",
+   "src": "eval/refusal_gate/sdl_payer_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "SDL inakatwa kwa mfanyakazi, nalipa wapi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Mimi ni mfanyakazi, SDL yangu nalipa wapi na kwa fomu gani?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Mwajiri akikata SDL kwenye mshahara wangu, anailipa wapi TRA?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Does the employee pay SDL, and where is it paid?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "fixed_statement",
+    "sdl_payer"
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Nani analipa SDL na wapi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Mfanyakazi analipa SDL kwa benki gani?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "fixed_statement",
+    "sdl_payer"
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_employee_premise"
+   ]
+  },
+  {
+   "q": "Nalipa SDL wapi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Fomu gani ya SDL?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "SDL inalipwa kwa benki gani?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Nawezaje kuwasilisha ritani ya SDL?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "SDL — mwajiri anawasilisha fomu gani na wapi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Where do I pay SDL?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Kampuni yangu inalipa SDL wapi?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Nani analipa SDL na NSSF?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_party"
+   ]
+  },
+  {
+   "q": "Je, SDL na NSSF ni tofauti gani katika suala la ni nani analipa?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_party"
+   ]
+  },
+  {
+   "q": "Is SDL and NSSF deducted from the employee?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_party"
+   ]
+  },
+  {
+   "q": "SDL na NSSF zote zinakatwa kwenye mshahara wangu, sivyo?",
+   "src": "eval/refusal_gate/sdl_three_routes_probes_2026_11_23.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_nssf_party"
+   ]
+  },
+  {
+   "q": "Ninalipaje SDL? Kuna fomu maalum au mfumo wa mtandaoni?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Je, kuna njia maalum ya kuripoti malipo ya SDL TRA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  },
+  {
+   "q": "Ninatumia fomu gani kuwasilisha SDL kwa TRA?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "sdl_how_to_file_pay"
+   ]
+  }
+ ],
+ "onto_new": 24,
+ "off_old": 2,
+ "other": 0,
+ "both": [],
+ "membership": {
+  "sdl_payer": 25,
+  "sdl_exemptions": 19,
+  "sdl_employee_premise": 7,
+  "sdl_how_to_file_pay": 12,
+  "sdl_nssf_party": 5
+ },
+ "baseline": "git show HEAD:chike/routing.py"
+}

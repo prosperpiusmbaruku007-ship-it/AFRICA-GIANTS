@@ -121,10 +121,10 @@ def test_plant_the_widening_vetoes_removed_hijack_the_payer_and_where_to_pay_ask
     new = []
     for n, c, nd, v in routing._FS_TOPICS:
         if n == TOPIC:
-            v = re.compile(v.pattern.replace(r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|", ""), v.flags)
+            v = re.compile(v.pattern.replace(r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|", "").replace(routing._SDL_FILE_ASK.pattern + "|", ""), v.flags)   # the shared file/pay veto (2026-11-23) is a second guard on the same asks
         new.append((n, c, nd, v))
     monkeypatch.setattr(routing, "_FS_TOPICS", tuple(new))
-    assert routing.fixed_statement_topic(_q("se_24")) == TOPIC and routing.fixed_statement_topic(_q("se_27")) == TOPIC   # se_23 (who pays) moved to the sdl_payer route on 2026-11-23; the shared payer-side veto still stops it here, so it is no longer a plant specimen
+    assert TOPIC in routing.fixed_statement_topics(_q("se_24")) and TOPIC in routing.fixed_statement_topics(_q("se_27"))   # membership: se_24 also matches the filing route since 2026-11-23, and the two then decline; the exemptions veto is what keeps them apart   # se_23 (who pays) moved to the sdl_payer route on 2026-11-23; the shared payer-side veto still stops it here, so it is no longer a plant specimen
 
 
 def test_new_patterns_contain_no_control_characters():

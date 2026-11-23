@@ -81,6 +81,13 @@ LIVE = {
     # 2026-11-23: the live reply of build a8a0274 to the payer question, VERBATIM; right on the payer, then an invented sentence. The route is the control, not a guard.
     'sdl_payer': ('Mwajiri au mfanyakazi analipa SDL?',
         'MWAJIRI (si mfanyakazi) ndiye anayelipa SDL. Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa. Mfanyakazi hapunguziwi kitu kwenye mshahara wake kwa sababu ya SDL.'),
+    # 2026-11-23: the two live replies of build a67462c, question VERBATIM; the body is the live wrong reply. The route, not a guard, is the control.
+    'sdl_employee_premise': ('Mfanyakazi analipa SDL wapi?',
+        'Mfanyakazi anachangia SDL kwa kiwango cha 3.5%. Ni jukumu la mwajiri kukata 3.5% ya mishahara ya mfanyakazi na kuwasilisha fedha hizo TRA ifikapo siku ya 7.'),
+    'sdl_nssf_party': ('SDL na NSSF zinakatwa kwa mfanyakazi?',
+        'Mfanyakazi hakatiwi chochote katika SDL au NSSF.'),
+    'sdl_how_to_file_pay': ('Nalipa SDL wapi?',
+        'SDL inalipwa kwa fomu ITX 300.01.E kwenye benki yoyote.'),
 }
 
 
@@ -268,7 +275,7 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
 # 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
 # (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
-PAYE_NO_GUARD = frozenset({"sdl_exemptions", "sdl_payer", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+PAYE_NO_GUARD = frozenset({"sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

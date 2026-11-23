@@ -2644,12 +2644,25 @@ _FS_OTHER_LEVY = re.compile(
 # 2026-11-23: the PAYER / DEDUCTION ask of SDL, defined ONCE. The sdl_payer route needs it and the sdl_exemptions route vetoes it, so the two can never both match. NARROW (the first draft, bare mfanyakazi / mshahara, hijacked
 # ~30 questions about the compute base, disability, benefits in kind and headcount): a DEDUCTION word, or an explicit WHO-PAYS form. Raw strings (R39).
 _SDL_PAYER_ASK = re.compile(
-    r"(?<![a-z])[a-z]*kat(?:wa|wi|we)(?![a-z])|makato|deducted\s+from|correct\s+to\s+deduct|kuikata|payslip|"
+    r"(?<![a-z])[a-z]*kat(?:wa|wi|we)(?![a-z])|(?<![a-z])(?:anakata|akikata|anayekata|ananikata|nikatie|wanakata|wakikata)(?![a-z])|makato|deducted\s+from|correct\s+to\s+deduct|kuikata|payslip|"
     r"nani\s+(?:analipa|anayelipa|anapaswa\s+kulipa|anatakiwa\s+kulipa|hulipa|anabeba|analipishwa)|anayelipa|mlipaji|mzigo\s+wa\s+kulipa|jukumu\s+la\s+kulipa|"
     r"(?:inalipwa|hulipwa|inatakiwa\s+kulipwa|inapaswa\s+kulipwa|hailipwi|halipwi|inabeba|inabebwa|hubeba|hubebwa)\s+na\s+(?:mwajiri|mfanyakazi|mwajiriwa|wote)|"
     r"(?:mwajiri|mfanyakazi)\s+(?:au|ama|na)\s+(?:mwajiri|mfanyakazi)|"
     r"mfanyakazi\s+(?:analipa|analipishwa|alipe|hulipa|anaweza\s+kulipa|anapaswa\s+kulipa|anatakiwa\s+kulipa)|"
     r"paid\s+by\s+the\s+(?:employee|employer)|employee\s+pay|employer\s+pay")
+# 2026-11-23 (founder): the HOW / WHERE / FORM ask of paying and filing SDL, defined ONCE. Used by the filing statement (need), the premise-correcting statement (need, with the payer ask) and the payer / exemptions / NSSF-party routes (veto), so the
+# four are mutually exclusive by construction. `vipi` is deliberately NOT here ("SDL inakatwa vipi?" is a deduction ask that stays with the payer route's veto and the model). Raw strings (R39).
+_SDL_FILE_ASK = re.compile(
+    r"(?<![a-z])wapi(?![a-z])|jinsi|namna|njia|nawezaje|(?<![a-z])naweza\s+kulipa|(?:ni)?nalipaje|(?<![a-z])kulipaje|fomu|akaunti|control\s+number|namba\s+ya\s+kumbukumbu|benki|idras|ritani|"
+    r"(?<![a-z])returns?(?![a-z])|(?<![a-z])where(?![a-z])|how\s+(?:do|can|to|should)(?![a-z])|(?<![a-z])forms?(?![a-z])")
+# The filing statement answers HOW / WHERE / WHICH FORM *to pay or file*. A bare `wapi` / `where` also asks where the money GOES ("Pesa za SDL zinakwenda wapi?", "Where does SDL money go") and `how` asks how an AUDIT or a CALCULATION works: found by the first
+# corpus sweep. So the filing route needs a PAY / FILE verb as well, and vetoes the neighbours' vocabulary. (The premise route needs the payer ask, which is itself a pay word.)
+_SDL_EMPLOYEE_SELF = re.compile(r"mimi\s+(?:ni\s+)?(?:mfanyakazi|mwajiriwa)|nikiwa\s+(?:mfanyakazi|mwajiriwa)|kama\s+(?:mfanyakazi|mwajiriwa)|i\s+am\s+an?\s+employee|as\s+an\s+employee")
+_SDL_PAY_OR_FILE_VERB = re.compile(
+    r"(?<![a-z])(?:n|ni|u|a|tu|wa|i|zi)?(?:na)?lipa(?:je)?(?![a-z])|kulipa|kulipia|nalipia|inalipwa|zinalipwa|hulipwa|walipe|nilipe|alipe|ulipe|kuwasilisha|wasilisha|inawasilishwa|kuripoti|ripoti|lipia|ritani|(?<![a-z])returns?(?![a-z])|fomu|"
+    r"(?<![a-z])(?:pay|paid|paying|file|filing|submit|submitting|remit)(?![a-z])|(?<![a-z])forms?(?![a-z])")
+_SDL_FILE_NEIGHBOURS = re.compile(
+    r"zinakwenda|inakwenda|zinatumika|inatumika|matumizi|kwa\s+nini|(?<![a-z])why|used\s+for|(?<![a-z])go(?:es)?(?![a-z])|audit|ukaguzi|calculat|compute|hesab|kokot|(?<![a-z])tofauti")
 
 _FS_TOPICS = (
     ("notice",
@@ -2752,6 +2765,7 @@ _FS_TOPICS = (
                 r"epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|vipi|kuomba|(?<![a-z])omba|ombi|"
                 r"wapi|namna|njia|akaunti|control|malipo\s+ya|muda|baada\s+ya|mfanyakazi|kukatwa|inakatwa|anakatwa|makato|"
                 + _SDL_PAYER_ASK.pattern + r"|"
+                + _SDL_FILE_ASK.pattern + r"|"
                 r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
     # ---- 2026-11-23 (founder): WHO PAYS SDL / IS IT DEDUCTED FROM THE EMPLOYEE. A CONSTANT (locked fact sdl_payer: the levy is payable BY THE EMPLOYER, nothing deductible from emoluments), so a model-free statement, not another guard
     # (the live reply to "Mwajiri au mfanyakazi analipa SDL?" invented "Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa"). NARROW BY CONSTRUCTION (R17): SDL named, a PAYER-SIDE cue (the employee, a deduction word, "nani analipa"),
@@ -2763,7 +2777,34 @@ _FS_TOPICS = (
      re.compile(r"[0-9]|msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
                 r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|lini|deadline|tarehe|muda|baada\s+ya|faini|adhabu|penalty|fomu|kujisajili|usajili|jinsi|nawezaje|vipi|"
                 r"wapi|namna|njia|akaunti|control|malipo\s+ya|kuomba|(?<![a-z])omba|ombi|epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|"
+                + _SDL_FILE_ASK.pattern + r"|"
                 r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
+    # ---- 2026-11-23 (founder, three more routes from the two defects the live check of a67462c found by READING). All three: a CONSTANT, model-free, excluded from auto-send, SDL named, vetoes for every neighbour, digits stay on the SDL engine.
+    # (1) sdl_employee_premise: the question presupposes the EMPLOYEE pays / is deducted AND asks where/how/which form ("Mfanyakazi analipa SDL wapi?"). The where/how veto sent it to the model, which AGREED with the false premise. The statement corrects first, then states the filing.
+    # (2) sdl_how_to_file_pay: where/how/which form with NO payer-side cue. The form NAME is not asserted (the live TRA pages do not name one). (3) sdl_nssf_party: SDL and NSSF named with a deduction/payer ask: the two levies differ in who bears them.
+    ("sdl_employee_premise",
+     re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
+     re.compile(r"(?=.*(?:" + _SDL_PAYER_ASK.pattern + r"|" + _SDL_EMPLOYEE_SELF.pattern + r"))(?=.*(?:" + _SDL_FILE_ASK.pattern + r"))(?=.*(?:" + _SDL_PAYER_ASK.pattern + r"|" + _SDL_PAY_OR_FILE_VERB.pattern + r"))", re.S),
+     re.compile(r"[0-9]|msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
+                r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|faini|adhabu|penalty|riba|kuchelewa|kujisajili|usajili|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|"
+                r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
+    ("sdl_how_to_file_pay",
+     re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
+     re.compile(r"(?=.*(?:" + _SDL_FILE_ASK.pattern + r"))(?=.*(?:" + _SDL_PAY_OR_FILE_VERB.pattern + r"))", re.S),
+     re.compile(_SDL_FILE_NEIGHBOURS.pattern + r"|" + _SDL_EMPLOYEE_SELF.pattern + r"|[0-9]|msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
+                r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|faini|adhabu|penalty|riba|kuchelewa|kujisajili|usajili|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|"
+                + _SDL_PAYER_ASK.pattern + r"|"
+                r"(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht)(?![a-z])")),
+    ("sdl_nssf_party",
+     re.compile(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy"),
+     re.compile(r"(?=.*(?<![a-z])nssf(?![a-z]))(?=.*(?:" + _SDL_PAYER_ASK.pattern + r"))", re.S),
+     re.compile(r"[0-9]|msamaha|samehe|exempt|hawalipi|hailipi|haitozwi|hatozwi|hawatozwi|wasiolipa|shule|chekechea|(?<![a-z])chuo|(?<![a-z])dini|kanisa|msikiti|kidini|ubalozi|balozi|halmashauri|hisani|charit|taesa|shamba|mkulima|kilimo|serikali|"
+                r"nyumbani|domestic|dada\s+wa\s+kazi|house\s?(?:girl|boy)|yaya|kizingiti|threshold|wangapi|ngapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|lini|deadline|tarehe|muda|baada\s+ya|faini|adhabu|penalty|riba|kuchelewa|kujisajili|usajili|vipi|kuomba|(?<![a-z])omba|ombi|"
+                r"mgawanyo|migawanyo|mgao|kugawana|kugawanywa|split|epz|(?<![a-z])sez(?![a-z])|special\s+economic|export\s+processing|"
+                + _SDL_FILE_ASK.pattern + r"|"
+                r"(?<![a-z])(?:paye|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])")),
     ("vat_withholding_mixed_supply",
      re.compile(r"(?<![a-z])vat(?![a-z])"),
      re.compile(r"(?=.*(?:zuio|withhold|zuia|kuzuia|zuiw|kuzuiwa))(?=.*(?:bidhaa\s+na\s+huduma|huduma\s+na\s+bidhaa|vifaa\s+na\s+(?:kazi|huduma)|kazi\s+na\s+vifaa|goods\s+and\s+services|mixed|mchanganyiko))"
@@ -2803,6 +2844,9 @@ _FS_TOPIC_ASK = {
     "sector_minimum_wage": _SECTOR_WAGE_ASK,
     "sdl_exemptions": re.compile(r"\?|(?<![a-z])(?:gani|zipi|nani|je|inalipa|analipa|wanalipa|hutozwa|inatozwa|anatozwa|msamaha|hawalipi|haitozwi)(?![a-z])"),
     "sdl_payer": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|inalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ninatozwa|natozwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
+    "sdl_employee_premise": _SDL_FILE_ASK,
+    "sdl_how_to_file_pay": _SDL_FILE_ASK,
+    "sdl_nssf_party": re.compile(r"\?|(?<![a-z])(?:nani|je|analipa|analipishwa|anakatwa|inakatwa|zinakatwa|inalipwa|zinalipwa|hulipwa|hukatwa|nakatwa|nimekatwa|ninakatwa|ni\s+kweli|sivyo|siyo)(?![a-z])"),
     "future_year_rate": re.compile(r"ngapi|gani|kipi|itakuwa|itakuwaje|kitakachotumika|kitatumika|kiwango\s+rasmi|rasmi|naomba|unipe|nipe|nijue|what|will|which"),
     "business_licence_validity": re.compile(r"lini|gani|muda|ngapi|(?<![a-z])je(?![a-z])|sivyo|siyo|ndiyo|si\s+kweli|ni\s+kweli|si\s+lazima|sihitaji|hahitaji|inaisha|huisha|haiishi|\?"),
     # 2026-11-18: a TIME ask, or a premise check that also carries a time limb (months / September / a day count / a calendar-year claim)
@@ -2811,8 +2855,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer"})
+_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party"})
+_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────

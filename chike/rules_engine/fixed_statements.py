@@ -58,6 +58,15 @@ SDL_EXEMPTIONS = "sdl_exemptions"
 # 2026-11-23 (founder): WHO PAYS SDL / IS IT DEDUCTED FROM THE EMPLOYEE. The live reply to "Mwajiri au mfanyakazi analipa SDL?" was right on the payer and then invented "Ni adhabu kwa mwajiri kuajiri wafanyakazi wengi bila kusajiliwa"
 # (SDL is a levy on payroll, not a penalty). The payer is a CONSTANT (locked fact sdl_payer), so it is stated, model-free, excluded from auto-send, rather than guarded (the standing lesson of PROGRESS 4bh).
 SDL_PAYER = "sdl_payer"
+# 2026-11-23 (founder): three more SDL statements. The filing statement asserts ONLY what a primary source states (VETA Act s.16 and the live TRA pages read 2026-11-22) and does NOT name a form: the live pages name none (the old cached guide's ITX 300.01.E is unconfirmed as current).
+SDL_HOW_TO_FILE_PAY = "sdl_how_to_file_pay"
+SDL_EMPLOYEE_PREMISE = "sdl_employee_premise"
+SDL_NSSF_PARTY = "sdl_nssf_party"
+_SDL_PAYER_TEXT = ("SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). "
+                   "Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL.")
+_SDL_FILE_PAY_TEXT = ("Ritani ya SDL na malipo yake vyote vinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara (Sheria ya Elimu na Mafunzo ya Ufundi). "
+                      "Ritani inawasilishwa kwa TRA kupitia IDRAS, na malipo yanafanywa kwa Kamishna wa TRA kwenye Mkoa wa Kodi ambako mwajiri amesajiliwa. "
+                      "Jina la fomu na njia ya malipo (benki au namba ya kumbukumbu) havijathibitishwa hapa: thibitisha fomu na njia ya kulipa kwa sasa na TRA (tra.go.tz).")
 # 2026-11-22 (founder, preliminary Gate 2 #20): a rate asked for a FUTURE year ("kiwango rasmi cha VAT kitakachotumika 2028/2029"). The honest answer is two limbs held together: the rate of a year whose Finance Act has not been passed is UNKNOWN,
 # and the CURRENT rates we hold, each with the instrument it rests on. Same discipline as the rest of this route: model-free, whole, excluded from auto-send. The figures are locked facts vat_standard_rate (18%) and sdl_rate (3.5%, FA2023).
 FUTURE_YEAR_RATE = "future_year_rate"
@@ -222,10 +231,32 @@ STATEMENTS = {
         "employee emoluments; direct read 2026-09-02, edition asserted). 'Si adhabu' is the Act's own word: it is a LEVY (s.14), which is what the live 'Ni adhabu kwa mwajiri ...' invention got wrong. No rate and no headcount threshold are stated here: those "
         "questions are vetoed off this route to the SDL engine / rate statement. R44: the Act is named, no section number. Founding specimen: build a8a0274 live, 'Mwajiri au mfanyakazi analipa SDL?'",
     ),
+    SDL_HOW_TO_FILE_PAY: (
+        "sdl_how_to_file_pay",
+        _SDL_FILE_PAY_TEXT,
+        "VETA Act Cap.82 R.E.2023 s.16(1) the employer files with the Commissioner, on or before the seventh day of each month, a return of the total gross monthly emoluments of the preceding month and the levy payable; s.16(2) the levy is paid to the Commissioner on that same date; "
+        "s.16 is unamended by Finance Acts 2024, 2025 and 2026 (FA2024 s.112 and FA2026 s.98 amend s.19 only; edition asserted in the manifest). Live TRA pages, fetched 2026-11-22T22:47:49Z (curl, 200): EN /page/skills-development-levy-sdl sha256 f9bad8ad485f4b9d1e788265c7771289a1e1f7c030cf60d1c76389a038222c64 and "
+        "SW /sw/page/skills-development-levy-sdl sha256 bc3b31592b49e428924c4fc2f58ccc5b14778193e65b88480d38d6096a888679: the return goes to TRA through IDRAS by the 7th; the EN page says the employer pays 'to the respective Tax Region in which such employer is registered'. "
+        "NEITHER page names a form, a control number or a bank, so none is stated here: the older undated cached guide's form ITX 300.01.E is UNCONFIRMED as current (R29 mode 3) and is deliberately omitted. Founder-approved 2026-11-23 (form name NOT asserted). R44: the Act is named, no section number",
+    ),
+    SDL_EMPLOYEE_PREMISE: (
+        "sdl_payer",
+        _SDL_PAYER_TEXT + " " + _SDL_FILE_PAY_TEXT,
+        "The correction first (locked fact sdl_payer: VETA Act Cap.82 R.E.2023 s.14(2), employer only, nothing deductible from emoluments), then the filing statement (sdl_how_to_file_pay, same sources). It answers a question that PRESUPPOSES the employee pays or is deducted "
+        "and asks where/how to pay ('Mfanyakazi analipa SDL wapi?'): build a67462c's live reply agreed with the premise ('Mfanyakazi anachangia SDL ... mwajiri kukata 3.5% ya mishahara') because the where/how veto sent the question to the model. Founder-approved 2026-11-23",
+    ),
+    SDL_NSSF_PARTY: (
+        "sdl_payer",
+        "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. "
+        "NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. "
+        "Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+        "SDL half: locked fact sdl_payer (VETA Act Cap.82 R.E.2023 s.14(2), employer only, nothing deductible). NSSF half: the existing nssf_split statement and locked fact NSSF_split_triggers / index row 9 (NSSF Act Cap.50 R.E.2023 s.12; total 20% of gross, usual split 10% + 10%, "
+        "the employee's share deducted from wages; the employer may elect to bear more). Founding specimen: build a67462c live, 'SDL na NSSF zinakatwa kwa mfanyakazi?' -> 'Mfanyakazi hakatiwi chochote katika SDL au NSSF' (wrong for NSSF). Founder-approved 2026-11-23. R44: Acts named, no section number",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER})
+TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY})
 
 
 def fixed_statement(topic) -> ComputationResult:

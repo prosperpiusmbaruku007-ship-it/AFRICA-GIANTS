@@ -1300,7 +1300,7 @@ class Orchestrator:
         list, so any question naming >=2 levies outright fans out exactly as before."""
         out = []
         for sq in routed:
-            if sq.kind == "compute":
+            if sq.kind == "compute" and sq.computation_type != "fixed_statement":   # a fixed statement answers its whole text (SDL+NSSF party, 2026-11-23); fanning it out per levy is what the live model-path did wrong
                 levies = routing.all_compute_levies(sq.text)
                 if len(levies) >= 2:
                     out.extend(dataclasses.replace(sq, computation_type=lv) for lv in levies)

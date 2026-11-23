@@ -136,7 +136,7 @@ def test_plant_the_vetoes_removed_hijack_digit_household_deadline_and_other_levy
     for pid in ("pp_09", "pp_10", "pp_12", "pp_13", "pp_15", "pp_20"):
         assert not _is_payer(_q(pid)), pid
     _with_topic_patterns(monkeypatch, lambda c, nd, v: (c, nd, re.compile(r"(?!x)x")))
-    hijacked = [pid for pid in ("pp_09", "pp_10", "pp_12", "pp_13", "pp_15", "pp_20") if routing.fixed_statement_topic(_q(pid)) == TOPIC]
+    hijacked = [pid for pid in ("pp_09", "pp_10", "pp_12", "pp_13", "pp_15", "pp_20") if TOPIC in routing.fixed_statement_topics(_q(pid))]   # membership: with every veto removed a neighbouring route can ALSO match, and the route then declines
     assert len(hijacked) >= 5, hijacked
 
 
