@@ -104,19 +104,28 @@
       ]
     },
     {
+      "key": "form_number_payment_credit_slip",
+      "expected_figure": "2026",
+      "rows": [
+        "form number payment credit slip: SDL payments are made using form ITX 300.01.E, the Employment Taxes Payment Credit Slip"
+      ]
+    },
+    {
       "key": "sdl_exemption_categories",
       "expected_figure": "82",
       "rows": [
-        "Waajiri/taasisi zisizolipa SDL (msamaha): idara za Serikali, mamlaka za Serikali za Mitaa, taasisi za kidiplomasia, Umoja wa Mataifa na taasisi zake, mashirika ya kimataifa ya misaada, taasisi za kidini (kwa shughuli za kiroho tu), taasisi za elimu zilizosajiliwa, mashirika ya misaada (charitable), wanafunzi wa TaESA, na waajiri wa mashambani kwa wafanyakazi wanaolima moja kwa moja."
+        "Nani hatozwi SDL? Walioorodheshwa kisheria: Serikali (ruzuku), balozi, UN, misaada ya kimataifa, taasisi za dini, hisani, elimu iliyosajiliwa, halmashauri, wanafunzi wa TaESA, mashamba (wafanyakazi wa kilimo), mamlaka ya maji (vibarua wa miradi); Waziri wa Fedha anaweza kusamehe kwa Gazeti."
       ]
     }
   ],
   "clean": [
     "paye_band_2_rate",
     "paye_p9_deadline",
+    "sdl_rate",
     "nssf_retirement_age",
     "vat_standard_rate",
     "vat_reduced_rates",
+    "gn487a_penalty_noncitizen",
     "gn605a_average_increase",
     "royalties_wht_rate",
     "minimum_turnover_tax",
@@ -164,7 +173,9 @@
   "unresolved": [
     "health_and_safety_act_citation",
     "legal_citation_tax_administration",
-    "legal_citation_amendment_act_sdl"
+    "legal_citation_amendment_act_sdl",
+    "sdl_base_includes_allowances",
+    "medical_services_vat_exempt"
   ],
   "no_check_possible": []
 }
