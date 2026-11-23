@@ -1,0 +1,423 @@
+{
+ "identity": {
+  "build": "37cdf9d",
+  "rag_rows_loaded": 220,
+  "rag_embeddings_shape": [
+   220,
+   768
+  ],
+  "rag_facts_text_sha256": "bd4a15a16662003703a3839287ca8d3abddfe34d072855829530b1524d96e8b8",
+  "config_rag_fact_count": 220,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795476473.621,
+   "enter_started_ts": 1795476473.627,
+   "enter_done_ts": 1795476512.862,
+   "import_to_enter_s": 0.0,
+   "load_s": 39.2,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "MEDICAL",
+   "q": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MEDICAL",
+   "q": "Huduma za meno zimesamehewa VAT?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MEDICAL",
+   "q": "Do doctors have to register for VAT?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDLBASE",
+   "q": "Msingi wa kukokotoa SDL ni nini — posho zinaingia?",
+   "reply": "Msingi wa SDL ni JUMLA YA MISHAHARA GHAFI YA MWEZI ambayo mwajiri anawalipa wafanyakazi wake (asilimia 3.5 ya jumla hiyo). Jumla hiyo inajumuisha mshahara, malipo ya likizo, malipo ya ugonjwa, malipo badala ya likizo, ada (fee), kamisheni, bonasi, kiinua mgongo (gratuity) na POSHO ZOTE za safari, malazi, burudani au nyinginezo anazolipa mwajiri kuhusiana na ajira (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa hiyo posho ZIMO kwenye msingi wa SDL. Sheria haitaji wazi faida zisizo za fedha (kama makazi, chakula au gari): kama zinahesabiwa HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDLBASE",
+   "q": "How does an employer calculate the SDL amount payable each month?",
+   "reply": "Msingi wa SDL ni JUMLA YA MISHAHARA GHAFI YA MWEZI ambayo mwajiri anawalipa wafanyakazi wake (asilimia 3.5 ya jumla hiyo). Jumla hiyo inajumuisha mshahara, malipo ya likizo, malipo ya ugonjwa, malipo badala ya likizo, ada (fee), kamisheni, bonasi, kiinua mgongo (gratuity) na POSHO ZOTE za safari, malazi, burudani au nyinginezo anazolipa mwajiri kuhusiana na ajira (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa hiyo posho ZIMO kwenye msingi wa SDL. Sheria haitaji wazi faida zisizo za fedha (kama makazi, chakula au gari): kama zinahesabiwa HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SDLBASE",
+   "q": "Is SDL calculated on net salaries or gross salaries (before tax)?",
+   "reply": "Msingi wa SDL ni JUMLA YA MISHAHARA GHAFI YA MWEZI ambayo mwajiri anawalipa wafanyakazi wake (asilimia 3.5 ya jumla hiyo). Jumla hiyo inajumuisha mshahara, malipo ya likizo, malipo ya ugonjwa, malipo badala ya likizo, ada (fee), kamisheni, bonasi, kiinua mgongo (gratuity) na POSHO ZOTE za safari, malazi, burudani au nyinginezo anazolipa mwajiri kuhusiana na ajira (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa hiyo posho ZIMO kwenye msingi wa SDL. Sheria haitaji wazi faida zisizo za fedha (kama makazi, chakula au gari): kama zinahesabiwa HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "RATE3",
+   "q": "SDL, NSSF na PAYE ni asilimia ngapi?",
+   "reply": "SDL: asilimia 3.5 ya jumla ya mishahara ghafi ya mwezi, hulipwa na mwajiri pekee (mwajiri mwenye wafanyakazi 10 au zaidi). NSSF: jumla ni asilimia 20 ya mshahara ghafi (mgao wa kawaida: asilimia 10 mwajiri + asilimia 10 mfanyakazi). PAYE: HAINA kiwango kimoja -- ni mabano yanayopanda kulingana na mshahara wa mwezi wa mfanyakazi. Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkazi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "DEADLINE3",
+   "q": "SDL na NSSF na PAYE zinalipwa lini?",
+   "reply": "SDL na PAYE zinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara: SDL -- ritani na malipo yake vyote tarehe 7 (Sheria ya Elimu na Mafunzo ya Ufundi); PAYE -- mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa mwezi (Sheria ya Kodi ya Mapato). NSSF ni TOFAUTI: michango inatakiwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara, si tarehe 7 (Sheria ya NSSF); ukichelewa, adhabu ni asilimia 5 ya kiasi ambacho hakijalipwa kwa kila mwezi au sehemu ya mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "DEADLINE3",
+   "q": "Je, SDL, NSSF na PAYE zote zinalipwa tarehe 7?",
+   "reply": "SDL na PAYE zinatakiwa kufikia tarehe 7 ya mwezi unaofuata mwezi wa mishahara: SDL -- ritani na malipo yake vyote tarehe 7 (Sheria ya Elimu na Mafunzo ya Ufundi); PAYE -- mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa mwezi (Sheria ya Kodi ya Mapato). NSSF ni TOFAUTI: michango inatakiwa ndani ya mwezi mmoja baada ya mwisho wa mwezi wa mishahara, si tarehe 7 (Sheria ya NSSF); ukichelewa, adhabu ni asilimia 5 ya kiasi ambacho hakijalipwa kwa kila mwezi au sehemu ya mwezi. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "Adhabu ya raia wa Tanzania anayemsaidia mgeni chini ya GN 487A ni TZS 10,000,000, sivyo?",
+   "reply": "Hapana -- kiwango ulichotaja hakipo kwenye Amri. Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "Faini ya chini kabisa anayotozwa asiye raia kwa kukiuka GN 487A ni TZS milioni 8, sivyo?",
+   "reply": "Hapana -- kiwango ulichotaja hakipo kwenye Amri. Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "Adhabu ya GN 487A kwa raia wa Tanzania anayemsaidia mgeni ni TZS 5,000,000, sivyo?",
+   "reply": "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GN487A",
+   "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?",
+   "reply": "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D31",
+   "q": "Nina wafanyakazi 15 na mishahara jumla TZS 6,000,000 kwa mwezi. SDL na NSSF ni kiasi gani?",
+   "reply": "SDL = 3.5% × TZS 6,000,000 = TZS 210,000\n\nNSSF = 20% × TZS 6,000,000 = TZS 1,200,000 (mwajiri TZS 600,000 + mfanyakazi TZS 600,000)",
+   "path": "engine:sdl+engine:nssf",
+   "model_calls": 4,
+   "guards": [
+    "blanked",
+    "blanked"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "D31",
+   "q": "SDL kwa mishahara ya TZS 6,000,000 kwa mwezi, wafanyakazi 15, ni kiasi gani?",
+   "reply": "Kwa hesabu sahihi: SDL = 3.5% × TZS 6,000,000 = TZS 210,000. Thibitisha na TRA (tra.go.tz).\nSDL = 3.5% × TZS 6,000,000 = TZS 210,000",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?",
+   "reply": "Watoa huduma za kitaalamu (wenye leseni au wanachama wa chama cha taaluma) lazima wajisajili VAT bila kujali kiasi cha mauzo yao (Sheria ya VAT): kiwango cha TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6 kinawahusu wafanyabiashara wengine, si wao. Taasisi za Serikali zinazofanya shughuli za kiuchumi pia zinasajiliwa, na Kamishna anaweza kumsajili anayetarajia kuanza biashara mwenye ushahidi. Sheria inaweka kanuni hii bila kutoa sababu katika maandishi tuliyosoma. Kama huduma yako ni ya kitaalamu kwa maana ya sheria, thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Dawa zinatozwa VAT?",
+   "reply": "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL ni asilimia ngapi?",
+   "reply": "Kiwango cha SDL ni asilimia 3.5 — hakitegemei mshahara wa mtu mmoja. SDL hutozwa kwa JUMLA ya mishahara ya wafanyakazi wote, na tu kwa mwajiri mwenye wafanyakazi 10 au zaidi. SDL inalipwa na mwajiri peke yake — haikatwi kwenye mshahara wa mfanyakazi. Hivyo hakuna SDL ya kila mtu; nipe jumla ya mishahara na idadi ya wafanyakazi ili nihesabu.",
+   "path": "engine:sdl",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL inalipwa lini?",
+   "reply": "SDL inalipwa ifikapo siku ya 7 ya mwezi unaofuata. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL na NSSF zinakatwa kwa mfanyakazi?",
+   "reply": "SDL na NSSF hazifanani. SDL hulipwa na MWAJIRI pekee: haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. NSSF: jumla ni asilimia 20 ya mshahara ghafi; mgao wa kawaida ni asilimia 10 mwajiri na asilimia 10 mfanyakazi, na sehemu ya mfanyakazi (asilimia 10) HUKATWA kwenye mshahara wake. Mwajiri anaweza kuchagua kubeba sehemu kubwa zaidi ya NSSF, kwa masharti ya Sheria ya NSSF. Thibitisha na TRA (tra.go.tz) na NSSF (nssf.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "SDL ya mwezi Januari inahesabiwa kwa mshahara wa Januari au Desemba?",
+   "reply": "SDL inahesabiwa kwa mishahara ya mwezi husika tu — si Desemba wala miezi mingine. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "Huduma za afya zinatozwa VAT? Na dawa je?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.\n\nKwa sababu sisi ni duka la dawa. Hatuna kipimo cha mauzo kinachotakiwa ili tuanze kutumia EFD. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement+fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": false
+   },
+   "ok": false
+  },
+  {
+   "arm": "INDEX",
+   "q": "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?",
+   "reply": "Posho ya nyumba inahesabiwa kwenye SDL na PAYE. Tofauti muhimu: SDL inakokotolewa kwa msingi wa mishahara ghafi (gross); PAYE inakokotolewa kwa msingi wa mshahara wa msingi pekee (basic salary). Posho ya nyumba inaweza kuwa sehemu ya msingi wa SDL lakini si PAYE (kulingana na sheria). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?",
+   "reply": "Amri ya GN 487A (Business Licensing (Prohibition of Business Activities for Non-Citizens) Order, 2025, iliyochapishwa 28 Julai 2025) inakataza wasio raia kufanya shughuli 15 zilizoorodheshwa kwenye Jedwali lake. Adhabu, mtu akihukumiwa: (1) asiye raia anayefanya shughuli iliyokatazwa: faini isiyopungua TZS 10,000,000 au kifungo kisichozidi miezi 6, pamoja na kufutwa kwa visa na kibali cha ukazi; (2) raia wa Tanzania anayemsaidia asiye raia kufanya shughuli hiyo: faini ya TZS 5,000,000 au kifungo kisichozidi miezi 3. Pande zote mbili zinaadhibiwa. Amri inataja kiwango cha CHINI cha faini kwa asiye raia tu; haitaji kiwango cha juu. Amri haitumii neno 'nominee' (jina la mkopo): inasema 'kusaidia' (assist or aid) asiye raia. Thibitisha na mwanasheria aliyesajiliwa au mamlaka husika kabla ya kutenda.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Mwajiri au mfanyakazi analipa SDL?",
+   "reply": "SDL hulipwa na MWAJIRI pekee. Ni tozo (si adhabu) inayotozwa kwa mwajiri kwenye jumla ya mishahara ghafi anayowalipa wafanyakazi wake kila mwezi (Sheria ya Elimu na Mafunzo ya Ufundi). Haikatwi kwenye mshahara wa mfanyakazi, na mfanyakazi halipi sehemu yoyote ya SDL. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Annual return ya BRELA inapaswa kuwasilishwa lini?",
+   "reply": "Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya return iliyotangulia). Ukichelewa zaidi ya siku 28 baada ya tarehe hiyo, kampuni na maafisa wake wanaweza kutozwa faini (Sheria ya Makampuni). Si miezi 12 tangu usajili, na si 30 Septemba. Thibitisha na BRELA (brela.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": [
+  "blanked"
+ ]
+}
