@@ -1,0 +1,28 @@
+{
+ "swept": 8911,
+ "decomposed_at_baseline": 176,
+ "changed": [
+  {
+   "q": "Nina wafanyakazi 9 tu — nalipa SDL? Na PAYE je?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "Nina wafanyakazi 9 tu — nalipa SDL?",
+    "Na PAYE je?"
+   ],
+   "after": [
+    "Nina wafanyakazi 9 tu — nalipa SDL? Na PAYE je?"
+   ]
+  },
+  {
+   "q": "Huduma za afya zinatozwa VAT? Na dawa je?",
+   "src": "results/followup_deploy_live_2026_11_24.json",
+   "before": [
+    "Huduma za afya zinatozwa VAT?",
+    "Na dawa je?"
+   ],
+   "after": [
+    "Huduma za afya zinatozwa VAT? Na dawa je?"
+   ]
+  }
+ ]
+}

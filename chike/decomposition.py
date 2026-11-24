@@ -239,6 +239,48 @@ def _split_ordinal_enumeration(message: str) -> list:
     return items if len(items) >= 2 else []
 
 
+# --- dependent fragments: a context-free follow-up must never be sent to the model alone -----------------------------
+#
+# THE DEFECT (live, build 37cdf9d, eval/results/followup_deploy_live_2026_11_24.json): "Huduma za afya zinatozwa VAT? Na dawa je?" has two '?', so the '?' path split it into
+# ["Huduma za afya zinatozwa VAT?", "Na dawa je?"]. The first part got the medical-VAT statement; the second, "Na dawa je?", reached the model WITH NO TOPIC and was answered "Kwa sababu sisi
+# ni duka la dawa. Hatuna kipimo cha mauzo ... EFD": invented context, wrong topic, delivered as the answer to half the question.
+#
+# THE RULE. A part is a DEPENDENT FRAGMENT when ALL hold: (1) 1-4 words; (2) it carries a FOLLOW-UP MARKER: it ends in "je" ("Na dawa je?", "Na SDL je?", "Na ada yake je?") or opens "vipi kuhusu" /
+# "na kuhusu" / "what about" / "how about"; (3) it asks NOTHING of its own (no ngapi / gani / lini / nini / kwa nini, no figure, no "ni" copula). Such a fragment has no frame of its own to retrieve on, so it
+# is MERGED into the part before it; if everything merges the message is returned WHOLE (one part), which lets the router and the orchestrator see the topic and the follow-up together.
+# WHY MERGE, NOT 'INHERIT A REWRITTEN QUESTION': rewriting "Na dawa je?" into "Dawa zinatozwa VAT?" would ASSERT a frame the user did not write (the follow-up might be about a different aspect: rate,
+# registration, deadline). The unmodified pair is the only text that cannot be wrong about what was asked.
+# WHAT IS DELIBERATELY NOT TOUCHED: "Na je, ninahitaji EFD?" (a real question; it does not END in "je"), "EFD ninahitaji?" (kept by the 8-char floor above), any part that asks (ngapi/gani/lini/nini/figure), and
+# the `na je` splitter below, whose admission tests are its own. Probes both ways: eval/decomposition_gate/fragment_merge_probes_2026_11_24.jsonl.
+_FOLLOWUP_TAIL = re.compile(r'\bje\s*\??\s*$', re.IGNORECASE)
+_FOLLOWUP_LEAD = re.compile(r'^(?:vipi\s+kuhusu|na\s+kuhusu|what\s+about|how\s+about)\b', re.IGNORECASE)
+_OWN_ASK = re.compile(
+    r'\bngapi\b|\bgani\b|\blini\b|\bnini\b|\bnani\b|\bwapi\b|\bkiasi\b|\bkwa\s+nini\b|\d|\bni\b|\bhow\s+(?:much|many)\b|\bwhen\b|\bwhere\b|\bwhy\b|\bwhich\b',
+    re.IGNORECASE)
+
+
+def _is_dependent_fragment(part: str) -> bool:
+    text = part.strip()
+    body = text.rstrip('?').strip()
+    words = body.split()
+    if not 1 <= len(words) <= 4:
+        return False
+    if not (_FOLLOWUP_TAIL.search(text) or _FOLLOWUP_LEAD.match(body)):
+        return False
+    return not _OWN_ASK.search(body)
+
+
+def _merge_dependent_fragments(parts: List[str]) -> List[str]:
+    """Each dependent fragment (never the first part) is appended to the part before it."""
+    out: List[str] = []
+    for part in parts:
+        if out and _is_dependent_fragment(part):
+            out[-1] = out[-1].rstrip() + ' ' + part.strip()
+        else:
+            out.append(part)
+    return out
+
+
 def decompose_query(message: str) -> List[str]:
     """Split a multi-part message into sub-queries for separate RAG retrieval.
 
@@ -287,6 +329,10 @@ def decompose_query(message: str) -> List[str]:
     # >=2 sequential ordinals); see _split_ordinal_enumeration.
     if (not parts or len(parts) == 1) and ordinal_parts:
         parts = ordinal_parts
+
+    # A context-free follow-up ("Na dawa je?") is merged into the part before it, never answered alone.
+    if parts and len(parts) > 1:
+        parts = _merge_dependent_fragments(parts)
 
     # Fallback: unusable fragments -> treat as single query.
     if not parts or len(parts) == 1:

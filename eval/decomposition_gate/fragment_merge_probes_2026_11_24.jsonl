@@ -1,0 +1,15 @@
+{"id": "fm_01", "message": "Huduma za afya zinatozwa VAT? Na dawa je?", "parts": 1, "guards_against": "FOUNDING SPECIMEN (live, 37cdf9d): 'Na dawa je?' alone was answered 'Kwa sababu sisi ni duka la dawa ... EFD'."}
+{"id": "fm_02", "message": "SDL inalipwa lini? Na PAYE je?", "parts": 1, "guards_against": "follow-up naming another levy: no frame of its own."}
+{"id": "fm_03", "message": "Leseni ya biashara inaisha lini? Na ada yake je?", "parts": 1, "guards_against": "four-word fragment ending in 'je'."}
+{"id": "fm_04", "message": "VAT ni asilimia ngapi? Vipi kuhusu EFD?", "parts": 1, "guards_against": "'vipi kuhusu' opener."}
+{"id": "fm_05", "message": "NSSF inalipwa lini? Na WCF je?", "parts": 1, "guards_against": "levy follow-up."}
+{"id": "fm_06", "message": "What is the SDL rate? What about PAYE?", "parts": 1, "guards_against": "English 'what about'."}
+{"id": "fm_10", "message": "Nina duka, nisajili VAT lini? Na je, ninahitaji EFD mashine ya risiti?", "parts": 2, "guards_against": "'na je, ninahitaji EFD' is a real question (does not END in 'je'); must keep its own retrieval."}
+{"id": "fm_11", "message": "Mshahara wangu ni TZS 800,000, PAYE ni kiasi gani? Pia nataka kujua NSSF ni asilimia ngapi?", "parts": 2, "guards_against": "two full questions with their own asks."}
+{"id": "fm_12", "message": "Ninataka kusajili kampuni BRELA. Ada ni ngapi? Na muda gani unachukua?", "parts": 2, "guards_against": "'Na muda gani unachukua?' asks (gani): self-contained, so it splits."}
+{"id": "fm_13", "message": "SDL ni asilimia ngapi? Na NSSF ni kiasi gani?", "parts": 2, "guards_against": "'Na NSSF ni kiasi gani?' asks (kiasi): self-contained."}
+{"id": "fm_14", "message": "VAT inalipwa lini? Na PAYE inalipwa lini?", "parts": 2, "guards_against": "a full parallel question ('inalipwa lini')."}
+{"id": "fm_15", "message": "Nataka kuanza biashara ya duka. Nisajili BRELA wapi? Na TIN je?", "parts": 1, "guards_against": "a fragment after a full question: 'Na TIN je?' merges."}
+{"id": "fm_16", "message": "Je, EFD ni lazima? Je, VAT ni lazima?", "parts": 2, "guards_against": "two full yes/no questions: neither is a fragment ('Je, VAT ni lazima' has the copula 'ni')."}
+{"id": "fm_20", "message": "Huduma za afya zinatozwa VAT?", "parts": 1, "guards_against": "a single question."}
+{"id": "fm_21", "message": "SDL na PAYE zinalipwa lini?", "parts": 1, "guards_against": "a single multi-levy question."}
