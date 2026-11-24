@@ -2285,6 +2285,31 @@ def _p9_replacement(m) -> str:
     return "vyeti vya zuio (withholding certificates)" if plural else "cheti cha zuio (withholding certificate)"
 
 
+# ---- D-FIDELITY-32 (2026-11-24, founder: APPROVED IN DESIGN; wire ONLY if pricing shows 0 gold flags and exports still pass -- eval/fidelity/price_d32_2026_11_24.py): MEDICINES / MEDICAL EQUIPMENT CALLED ZERO-RATED. A CONSTANT (R19), FACT PATH. DETECTOR ONLY: NOT in body_contradicts_d16, no replacement copy yet.
+# Specimen (live, build 37cdf9d, eval/results/followup_deploy_live_2026_11_24.json): "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%)"; "vifaa tiba (zero-rated)". VAT Act Cap.148 R.E.2023, Schedule Part I "SUPPLIES AND IMPORTS EXEMPT FROM VALUE ADDED TAX", item 7: essential human and
+#   veterinary medicine, drugs, medical equipment and packaging approved by the Minister are EXEMPT. s.5(3): a supply both exempt and zero-rated is zero-rated (so exported medicines ARE zero-rated: that sentence is lawful).
+# R25. (1) Defect: one live question, three live replies. (2) What CORRECT output could it damage: "dawa si zero-rated" (negation); "mauzo ya nje ni zero-rated; dawa ni msamaha" (the two words sit in DIFFERENT clauses); any sentence about exported/export medicines (zero-rated by s.5(3)+s.55). Vetoed by a negation cue in the clause, by clause scope, and by an export cue.
+_D32_MED = re.compile(r"(?<![a-z])(?:dawa|madawa|medicines?|drugs?|pharmaceuticals?|vifaa\s+tiba|medical\s+(?:equipment|supplies|devices))(?![a-z])", re.IGNORECASE)
+_D32_ZERO = re.compile(r"zero[\s-]*rat(?:ed|ing|e)|daraja\s+la\s+(?:zero|0)|tozo\s+(?:la\s+)?(?:0|sifuri)\s*%|(?<![\d.,])0\s*%|asilimia\s+(?:0|sifuri)(?![\d.,])", re.IGNORECASE)
+_D32_CLAUSE = re.compile(r"[;:]|\s+(?:wakati|ilhali|lakini|ila|while|but|whereas)\s+")   # NOT brackets: "vifaa tiba (zero-rated)" is the live form, an apposition inside one clause
+_D32_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haziko|haiko|hazina|haina|hakuna|not|no|never|isipokuwa)(?![a-z])|haziwi|hazitozwi\s+0|sivyo", re.IGNORECASE)
+_D32_EXPORT = re.compile(r"nje\s+ya\s+nchi|zinazouzwa\s+nje|zinazosafirishwa|usafirishaji|export|mauzo\s+ya\s+nje|kuuza\s+nje", re.IGNORECASE)
+
+
+def medicines_called_zero_rated(question: str, body: str):
+    """[sentence] in which a medicine/medical-equipment word and a zero-rate cue share one CLAUSE, with no negation and no export cue in that clause."""
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s:
+            continue
+        for clause in _D32_CLAUSE.split(s):
+            if clause and _D32_MED.search(clause) and _D32_ZERO.search(clause) and not _D32_NEG.search(clause) and not _D32_EXPORT.search(clause):
+                out.append(s.strip())
+                break
+    return out
+
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]

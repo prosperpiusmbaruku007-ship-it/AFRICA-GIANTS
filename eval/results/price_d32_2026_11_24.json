@@ -1,0 +1,96 @@
+{
+ "plants": {
+  "specimens": 4,
+  "controls": 9,
+  "failed": []
+ },
+ "populations": {
+  "stored": {
+   "texts": 11329,
+   "flags": 3,
+   "distinct_sentences": 3,
+   "rows": [
+    {
+     "src": "eval\\results\\followup_deploy_live_2026_11_24.json#reply",
+     "sentence": "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%)."
+    },
+    {
+     "src": "eval\\results\\followup_index_arms_live_2026_11_24.json#reply",
+     "sentence": "Hospitali ya binafsi inayouza dawa (zero-rated) NA inatoa huduma za matibabu (msamaha) inapaswa kufanya hivi: (1) Kwa dawa (zero-rated): inatozwa VAT 0% = inaweza kudai input VAT; (2) Kwa huduma za matibabu (exempt): haikatwi VAT kabisa = haiwezi kudai input VAT."
+    },
+    {
+     "src": "eval\\results\\followup_index_arms_live_2026_11_24.json#reply",
+     "sentence": "Lakini kama kliniki hiyo pia inauza vifaa tiba (zero-rated) na bidhaa nyingine zinazotozwa VAT, basi inatakiwa kusajiliwa VAT."
+    }
+   ]
+  },
+  "gold": {
+   "texts": 800,
+   "flags": 0,
+   "distinct_sentences": 0,
+   "rows": []
+  },
+  "training": {
+   "texts": 17614,
+   "flags": 35,
+   "distinct_sentences": 12,
+   "rows": [
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:136#answer_sw",
+     "sentence": "Dawa nyingi za binadamu Tanzania zimewekwa kwenye orodha ya zero-rated — yaani VAT ni asilimia 0."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:136#answer_sw",
+     "sentence": "Angalia orodha rasmi ya TRA kujua bidhaa gani za dawa ni zero-rated na zipi zinatozwa asilimia 18."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:136#answer_en",
+     "sentence": "Most human medicines in Tanzania are zero-rated — meaning the VAT rate is 0%."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:136#answer_en",
+     "sentence": "Check the official TRA list to determine which medicines are zero-rated and which attract 18%."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:140#answer_sw",
+     "sentence": "Bidhaa fulani za muhimu (kama nafaka, dawa, baadhi ya vifaa vya kilimo) zinaweza kuwa zero-rated (asilimia 0) au exempt, lakini asilimia 5 haipo."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:140#answer_en",
+     "sentence": "Some essential items (like certain grains, medicines, some agricultural inputs) may be zero-rated (0%) or exempt, but 5% does not exist."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:188#answer_sw",
+     "sentence": "Dawa nyingi za binadamu Tanzania — ikiwemo dawa za malaria — ziko kwenye orodha ya zero-rated ya VAT, yaani hazilipwi VAT (asilimia 0)."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:188#answer_sw",
+     "sentence": "Hata hivyo, kwa orodha kamili ya dawa zero-rated na dawa zinazotozwa VAT ya asilimia 18, angalia orodha rasmi ya TRA kwenye tra.go.tz au sheria ya VAT."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_003_cleaned.jsonl:188#answer_en",
+     "sentence": "However, for the complete list of zero-rated medicines versus those subject to 18% VAT, check the official TRA list at tra.go.tz or the VAT Act."
+    },
+    {
+     "src": "datasets\\tier1a\\cleaned_pairs\\batch_005_cleaned.jsonl:227#answer_en",
+     "sentence": "Certain pharmaceutical products may be VAT-exempt or zero-rated — the EFD must have software that can correctly categorise them."
+    },
+    {
+     "src": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_009.jsonl:56#output",
+     "sentence": "Hali ya VAT kwa dawa za binadamu — kama zimesamehewa, zero-rated, au zinaapply msamaha maalum — ni mada inayohusisha Jedwali la VAT Act la Tanzania ambapo baadhi ya dawa zimeorodheshwa tofauti."
+    },
+    {
+     "src": "datasets\\tier1a\\raw_sources\\raw_pairs_batch_011.jsonl:110#output",
+     "sentence": "Madawa mengi ya hospitali (dawa muhimu) yanaweza kuwa zero-rated (0% VAT — unaweza kudai input VAT) au exempt (huna wajibu wa VAT lakini pia huwezi kudai input VAT) — si 5%."
+    }
+   ]
+  },
+  "index": {
+   "texts": 220,
+   "flags": 0,
+   "distinct_sentences": 0,
+   "rows": []
+  }
+ },
+ "decision_rule": "wire ONLY if plants pass AND gold flags == 0 AND index flags == 0 AND every stored/training flag has been read"
+}
