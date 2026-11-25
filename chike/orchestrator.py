@@ -1208,7 +1208,7 @@ class Orchestrator:
             # locked statement. Model-path reply (model_calls > 0, guard 'replaced'): never auto-send eligible.
             topics = [t for t, _ in fidelity.body_contradicts_d16(sub.sub_question.text, cleaned)]
             return dataclasses.replace(
-                sub, text=clarification.constants_restated(topics),
+                sub, text=clarification.constants_restated_for(sub.sub_question.text, topics),   # 2026-11-25: the replacement covers every limb the question names
                 raw_text=sub.text, needs_clarification=False, guard="replaced")
         elif sub.computation is None and fidelity.body_states_derived_levy_amount(sub.sub_question.text, cleaned):
             # D-FIDELITY-13 (np_28, th_22): a shilling amount derived for a payroll levy from a wage nobody gave. D-FIDELITY-9's loose form restricted to the FACT path and to a sentence that DERIVES an amount.
@@ -1237,6 +1237,8 @@ class Orchestrator:
         repaired, _nhif_removed = fidelity.repair_nhif_figures(repaired)
         # 2026-11-23 (D-FIDELITY-30, founder): "P9" is Kenyan (KRA) terminology; Tanzania has the withholding certificate. A one-clause repair, nothing blocked. R25 block at fidelity.repair_p9.
         repaired = fidelity.repair_p9(repaired)
+        # 2026-11-25 (founder): an out-of-country question never names a foreign authority or URL; ONE sentence is replaced by "wasiliana na mamlaka ya kodi ya nchi husika". R25 block at fidelity.repair_foreign_authority.
+        repaired = fidelity.repair_foreign_authority(sub.sub_question.text, repaired)
         if repaired != cleaned:
             cleaned, guard = repaired, (guard or "repaired")
         return dataclasses.replace(sub, text=cleaned, raw_text=sub.text, guard=guard)

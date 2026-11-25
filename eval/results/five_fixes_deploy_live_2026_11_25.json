@@ -88,11 +88,11 @@
    "guards": [],
    "checks": {
     "must": true,
-    "must_not": false,
+    "must_not": true,
     "path": true,
     "model_calls": true
    },
-   "ok": false
+   "ok": true
   },
   {
    "arm": "MISS6_SEVERANCE",
@@ -177,10 +177,10 @@
    ],
    "checks": {
     "must": true,
-    "must_not": false,
+    "must_not": true,
     "path_not_engine:fixed_statement": true
    },
-   "ok": false
+   "ok": true
   },
   {
    "arm": "NEG_THRESHOLD",

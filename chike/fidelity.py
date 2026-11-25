@@ -2346,6 +2346,86 @@ def medicines_taxed_at_standard_rate(question: str, body: str):
 
 
 
+# ---- D-FIDELITY-34 (2026-11-25, founder: INTERIM, ship first): A FOREIGN / EXPATRIATE EMPLOYEE TIED TO THE 15% RATE. A CONSTANT (R19), FACT PATH. REPLACED by a short HOLDING LINE (the cohort is supervised).
+# Specimen (live, build 16f0a43, eval/results/five_fixes_deploy_live_2026_11_25.json): "A foreigner working as an employee pays a flat rate of 15% on their gross employment income. This is because they don't have residence status for progressive taxation."
+# Income Tax Act Cap.332 R.E.2023, read directly 2026-11-25 (assert_edition): residence of an individual (s.86(1), [s.66] in R.E.2015) is a test of a PERMANENT HOME, PRESENCE (183 days, or an average of more than 122 days over three years) or Government posting abroad: citizenship and being a foreigner appear NOWHERE in it;
+#   the 15% is the rate for a NON-RESIDENT withholdee (First Schedule para 4(a)(ii)). So foreign != non-resident, and a foreigner resident in Tanzania is taxed on the bands.
+# R25. (1) Defect: one live reply (the question is the model path's, because the paye_rate route correctly vetoes foreign/citizen questions: the statement cannot answer residency). (2) What CORRECT output could it damage: any sentence that names a residency word (mkazi, asiye mkazi, non-resident, resident, ukazi, 183 days) is a correct tie of 15% to RESIDENCY and is never flagged;
+#   a negated 15% ("hawalipi 15%") is a mention; a 15% sentence in a reply to a question that does not name a foreign status; a 15% sentence with no PAYE / employment word in a reply to a foreign question (e.g. a dividend rate).
+_D34_FOREIGN = re.compile(r"(?<![a-z])(?:foreign(?:er|ers)?|expat(?:riate)?s?|mgeni|wageni|kigeni|raia\s+wa\s+kigeni|non-?citizens?)(?![a-z])", re.IGNORECASE)
+_D34_RESIDENCY = re.compile(r"asiye\s+mkazi|wasio\s+wakazi|non-?resident|(?<![a-z])mkazi|wakazi|(?<![a-z])resident|ukazi|residen(?:ce|cy)|makazi|siku\s+183|183\s+days", re.IGNORECASE)
+_D34_FIFTEEN = re.compile(r"(?<![\d.,])15\s*%|asilimia\s+(?:ya\s+)?15(?![\d,]|\.\d)|fifteen\s+percent|(?<![a-z])flat(?:\s+rate)?(?![a-z])|tambarare", re.IGNORECASE)
+_D34_PAYE_Q = re.compile(r"(?<![a-z])paye(?![a-z])|kodi\s+ya\s+mapato|income\s+tax|mshahara|salary|employee|mfanyakazi|ajira|employment", re.IGNORECASE)
+
+
+_D34_NEG = re.compile(r"(?<![a-z])(?:hawalipi|halipi|hailipi|hawatozwi|hatozwi|hawana|hana|do(?:es)?\s+not|don't|doesn't|never)(?![a-z])(?:\s+[a-z']+){0,3}[\s,(\-]*(?:kiwango\s+cha\s+)?$", re.IGNORECASE)   # the Swahili / English negative VERB forms the shared adjacency cue (si, not, wala ...) does not carry
+
+
+# NARROWED 2026-11-25 BY THE PRICING (every flag was read): (a) a sentence about ANOTHER 15% withholding (director's fees, dividends, royalties, software, service fees: ITA First Schedule para 4) is not the employment rate; (b) a QUESTION that already carries a residency word ("mgeni (non-resident)") has framed residency itself;
+# (c) a sentence whose NEIGHBOUR (the one before it) carries the residency word is the continuation of a residency-tied answer ("Mfanyakazi asiye mkazi ... analipa PAYE tofauti: Kiwango: asilimia 15 ..."). The live specimen has none of the three.
+_D34_OTHER_WHT = re.compile(r"director|mkurugenzi|ada\s+ya|(?<![a-z])fees?(?![a-z])|gawio|dividend|royalt|software|service\s+fee|(?<![a-z])wht(?![a-z])|zuio|withholding|riba|interest|rent|kodi\s+ya\s+pango", re.IGNORECASE)
+
+
+def foreign_status_tied_to_15pct(question: str, body: str):
+    """[sentence] that ties a foreign / expatriate status to the 15% (or 'flat') rate without a residency word."""
+    if _D34_RESIDENCY.search(question or ""):
+        return []
+    q_foreign = bool(_D34_FOREIGN.search(question or "") and _D34_PAYE_Q.search(question or ""))
+    out, prev = [], ""
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s:
+            continue
+        before, prev = prev, s
+        if _D34_RESIDENCY.search(s) or _D34_RESIDENCY.search(before) or _D34_OTHER_WHT.search(s):
+            continue
+        neg = lambda m: bool(_D32_NEG_ADJ.search(s[max(0, m.start() - 28):m.start()]) or _D34_NEG.search(s[max(0, m.start() - 28):m.start()]))   # noqa: E731
+        allm = list(_D34_FIFTEEN.finditer(s))
+        figs = [m for m in allm if not re.match(r"(?i)flat|tambarare", m.group(0))]
+        toks = [m for m in (figs or allm) if not neg(m)]      # the FIGURE is judged when there is one; "flat" / "tambarare" are only its qualifiers
+        if not toks:
+            continue
+        if _D34_FOREIGN.search(s) or (q_foreign and _D34_PAYE_Q.search(s)):
+            out.append(s.strip())
+    return out
+
+
+# ---- OUT-OF-COUNTRY QUESTIONS NEVER NAME A FOREIGN AUTHORITY OR URL (2026-11-25, founder). A REPAIR: ONE SENTENCE is replaced, nothing else changes. R25.
+# Specimen (live, build 16f0a43): the right refusal about Kenya, then "Kwa taarifa za kodi za Kenya, thibitisha na TRA (tra.go.ke) au mshauri wa kodi wa Kenya." TRA is TANZANIA's authority and tra.go.ke does not exist; Kenya's is the KRA. (CLAUDE.md R25 already records the .go.ke lesson.)
+# Replaced sentence: any sentence that carries a FOREIGN DOMAIN (always), or, when the QUESTION names another country, a foreign authority NAME or a "confirm with TRA" tied to that country. The replacement names nobody: "wasiliana na mamlaka ya kodi ya nchi husika."
+# (2) What CORRECT output could it damage: Tanzanian questions (no foreign country in the question) keep naming TRA and every Tanzanian URL; "Kenyan (KRA)" in the P9 explanation (D-FIDELITY-30's own copy) has NO foreign country in the question and no foreign domain, so it stays; a sentence that names Tanzania / Bara is a comparison and is left alone.
+_FA_COUNTRY = re.compile(r"(?<![a-z])(?:kenya|uganda|rwanda|burundi|zambia|malawi|msumbiji|mozambique|nigeria|ghana|ethiopia|afrika\s+kusini|south\s+africa|uingereza|marekani)(?![a-z])", re.IGNORECASE)
+_FA_DOMAIN = re.compile(r"[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:go\.(?:ke|ug|rw|zm|mw|mz)|gov\.(?:za|rw|zm|ng|gh|uk|in|et))(?![a-z])", re.IGNORECASE)
+_FA_NAME = re.compile(r"(?<![a-z])(?:kra|ura|rra|sars|zra|hmrc|irs|kenya\s+revenue\s+authority|uganda\s+revenue\s+authority|rwanda\s+revenue\s+authority|south\s+african\s+revenue\s+service|zambia\s+revenue\s+authority)(?![a-z])", re.IGNORECASE)
+_FA_CONFIRM_TRA = re.compile(r"(?:thibitisha|wasiliana|angalia|uliza|confirm|contact|check)[^.?!]{0,60}(?<![a-z])tra(?![a-z])|(?<![a-z])tra(?![a-z])[^.?!]{0,30}\(?\s*tra\.go", re.IGNORECASE)
+_FA_TANZANIA = re.compile(r"tanzania|(?<![a-z])bara(?![a-z])|tra\.go\.tz", re.IGNORECASE)
+FOREIGN_AUTHORITY_LINE = "Kwa taarifa hizo, wasiliana na mamlaka ya kodi ya nchi husika."
+
+
+def foreign_authority_sentences(question: str, body: str):
+    q_country = bool(_FA_COUNTRY.search(question or ""))
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s:
+            continue
+        s_country = bool(_FA_COUNTRY.search(s))
+        # NARROWED 2026-11-25 BY THE PRICING: four GOLD answers ("Thibitisha na TRA.") answer questions that mention Kenya only incidentally (Kenyan shillings, a P9 comparison) about a TANZANIAN obligation. "Confirm with TRA" is wrong only when the SAME SENTENCE names the foreign country.
+        if _FA_DOMAIN.search(s) or (not _FA_TANZANIA.search(s) and ((_FA_NAME.search(s) and (q_country or s_country)) or (_FA_CONFIRM_TRA.search(s) and s_country))):
+            out.append(s)
+    return out
+
+
+def repair_foreign_authority(question: str, body: str) -> str:
+    """Each sentence that names a foreign authority / URL (see the R25 block above) is replaced by FOREIGN_AUTHORITY_LINE, once."""
+    bad = foreign_authority_sentences(question, body)
+    if not bad:
+        return body
+    out, seen = body, False
+    for s in bad:
+        out = out.replace(s, FOREIGN_AUTHORITY_LINE if not seen else "", 1)
+        seen = True
+    return re.sub(r"[ \t]{2,}", " ", out).strip()
+
+
 def body_contradicts_d16(question: str, body: str):
     """[(topic, sentence)] -- empty when none of the three rules applies."""
     out = [("dividend_nonresident_rate", s) for s in dividend_nonresident_15_asserted(question, body)]
@@ -2361,6 +2441,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("nssf_payment_deadline", s) for s in nssf_deadline_misstated(question, body)]   # D-FIDELITY-29
     out += [("medicines_zero_rated", s) for s in medicines_called_zero_rated(question, body)]   # D-FIDELITY-32 (WIRED 2026-11-24 after pricing: 0 gold flags, 0 index flags)
     out += [("medicines_taxed", s) for s in medicines_taxed_at_standard_rate(question, body)]   # D-FIDELITY-33 (2026-11-25): medicines at 18% / a VAT amount on a medicines amount
+    out += [("foreign_15pct", s) for s in foreign_status_tied_to_15pct(question, body)]   # D-FIDELITY-34 (2026-11-25, interim): a foreign / expatriate status tied to the 15% rate
     return out
 
 

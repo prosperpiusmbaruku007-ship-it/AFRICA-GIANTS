@@ -50,14 +50,16 @@ CASES = [
     ("MISS2_18PCT", "Dawa za TZS 5,000,000 nimeuza, VAT ni ngapi?", [], [EIGHTEEN], None, None, None),
     ("MISS3_FOLLOWUP", "Huduma za afya zinatozwa VAT? Na dawa je?", [r"YOTE MAWILI", r"MSAMAHA wa VAT, si zero-rated"], [ZR_MED], None, STMT, 0),
     ("MISS4_WCFBASE", "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?", [r"ZISIZOBADILIKA zinazolipwa kila mwezi pamoja na mshahara"], [r"(?i)gross\s+cash|cash\s+emoluments"], None, STMT, 0),
-    ("MISS5_PAYERATE", "PAYE ni asilimia ngapi?", [PAYE_STMT, r"asilimia\s+30|30%", r"0%"], [r"(?i)punguzo"], None, STMT, 0),
+    # PROBE ERROR FIXED 2026-11-25 (R38, found by reading the row): `must_not` was r"(?i)punguzo" to catch the live reply's claim "bendi ... zinazotoa punguzo", but the CORRECT statement itself says "Hakuna punguzo la kibinafsi tofauti". It now forbids the live reply's OPENING claim.
+    ("MISS5_PAYERATE", "PAYE ni asilimia ngapi?", [PAYE_STMT, r"asilimia\s+30|30%", r"0%"], [r"(?i)^Kiwango cha kawaida cha PAYE", r"(?i)zinazotoa\s+punguzo"], None, STMT, 0),
     ("MISS6_SEVERANCE", "Nimefanya kazi mwaka mmoja na nimeachishwa kazi, nina haki ya malipo gani ya kuachishwa?", [], [], None, None, None),
     # ---- NEGATIVES that must NOT hit the new routes
     ("NEG_COMPUTE", "Mshahara wangu ni TZS 800,000 kwa mwezi, PAYE ni kiasi gani?", [r"(?i)paye"], [PAYE_STMT], "engine:fixed_statement", "engine:paye", None),
     ("NEG_KENYA", "Kiwango cha PAYE Kenya ni asilimia ngapi?", [], [PAYE_STMT, r"270,000"], "engine:fixed_statement", None, None),
     ("NEG_FOREIGN", "Does a foreign employee pay PAYE at a different rate from a citizen?", [], [PAYE_STMT], "engine:fixed_statement", None, None),
     ("NEG_IMPORT", "Huduma za afya na dawa zinazoingizwa kutoka nje zinatozwa VAT?", [], [r"YOTE MAWILI"], "engine:fixed_statement", None, None),
-    ("NEG_IMPORT", "Dawa zinazoingizwa kutoka China zinatozwa VAT?", [], [NOT_MED_STMT], "engine:fixed_statement", None, None),
+    # PROBE ERROR FIXED 2026-11-25 (R38): `must_not` was NOT_MED_STMT, which conflated "the ROUTE did not fire" (true: path `fact`, forbidden prefix engine:fixed_statement) with "the statement must not appear" (the D-FIDELITY-32/33 GUARD legitimately served it after the model body failed). The route-vs-guard distinction is now carried by the path check alone.
+    ("NEG_IMPORT", "Dawa zinazoingizwa kutoka China zinatozwa VAT?", [], [], "engine:fixed_statement", None, None),
     ("NEG_THRESHOLD", "Duka la dawa linatakiwa kusajili VAT?", [], [NOT_MED_STMT], "engine:fixed_statement", None, None),
     ("NEG_ARITH", "Last week PAYE figure, just add ten percent on it - what is the new answer?", [], [PAYE_STMT], "engine:fixed_statement", None, None),
     # ---- CONTROLS: every route still owns its own question
