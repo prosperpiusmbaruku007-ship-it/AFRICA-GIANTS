@@ -36,8 +36,8 @@ def _package_source():
 
 def test_the_package_exists_and_names_the_production_index():
     src = _package_source()
-    assert "EXPECTED_FACT_COUNT = 220" in src, (
-        "the package no longer asserts the 220-fact production index — a gate measured against "
+    assert "EXPECTED_FACT_COUNT = 224" in src, (
+        "the package no longer asserts the 224-fact production index — a gate measured against "
         "a different index is not a gate against production")
     assert "BASELINE_COMMIT = '1476caa'" in src
 
@@ -86,14 +86,14 @@ def _index():
                              encoding="utf-8"))
 
 
-def test_the_committed_index_is_220_rows_and_matches_the_config_count():
+def test_the_committed_index_is_224_rows_and_matches_the_config_count():
     facts = _index()
-    assert len(facts) == 220
+    assert len(facts) == 224
     cfg = json.load(io.open(os.path.join(REPO, "kaggle", "chike_config.json"),
                             encoding="utf-8"))
-    assert cfg.get("rag_fact_count") == 220, (
+    assert cfg.get("rag_fact_count") == 224, (
         f"chike_config.json says rag_fact_count={cfg.get('rag_fact_count')} while the baked "
-        f"index has 220 rows — R14's own control, and the gate asserts the pair")
+        f"index has 224 rows — R14's own control, and the gate asserts the pair")
 
 
 def test_row_172_serves_the_current_brela_figure_not_the_superseded_one():

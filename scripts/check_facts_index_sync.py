@@ -490,10 +490,10 @@ PINNED = {
     "medical_services_vat_exempt": ("present_elsewhere", "Huduma za afya ni msamaha zikitolewa"),   # shipped by the 2026-11-24 regen: converted from pending_r15
     "form_number_payment_credit_slip": ("present_elsewhere", "Jina la fomu halijathibitishwa"),   # REWRITTEN IN PLACE (row 108) by the 2026-11-24 regen as a short Swahili row with no `key:` prefix, so the exact-key match no longer finds it
     # 2026-11-24b: four NEW facts built (rows 220-223) and NOT yet served -- pending the Kaggle regen (precompute _BATCH_2026_11_24B); convert each to present_elsewhere with its anchor when it lands. test_pending_r15_keys_are_still_pending removes a pin the moment its key resolves.
-    "medicines_vat_exempt": ("pending_r15", None),
-    "paye_base_employment_income": ("pending_r15", None),
-    "sdl_deemed_month_of_payment": ("pending_r15", None),
-    "wcf_contribution_base": ("pending_r15", None),
+    "medicines_vat_exempt": ("present_elsewhere", "MSAMAHA, si zero-rated"),   # shipped by the 2026-11-24b regen (Kaggle run of fd451db): converted from pending_r15
+    "paye_base_employment_income": ("present_elsewhere", "MAPATO YA AJIRA yote"),   # shipped by the 2026-11-24b regen (Kaggle run of fd451db): converted from pending_r15
+    "sdl_deemed_month_of_payment": ("present_elsewhere", "AMBAO yamelipwa"),   # shipped by the 2026-11-24b regen (Kaggle run of fd451db): converted from pending_r15
+    "wcf_contribution_base": ("present_elsewhere", "posho zisizobadilika zinazolipwa kila mwezi"),   # shipped by the 2026-11-24b regen (Kaggle run of fd451db): converted from pending_r15
 }
 
 

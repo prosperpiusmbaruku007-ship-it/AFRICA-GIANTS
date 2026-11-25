@@ -67,9 +67,12 @@ APP = os.path.join(REPO, "chike-inference", "modal_app.py")
 # BUMPED 2026-11-24: TWO rows appended (sdl_base_includes_allowances 218, medical_services_vat_exempt 219) and SIX rows revised in place (4, 20, 21, 66, 89, 108); 218 -> 220 rows. Previous value, kept for rollback:
 # f1e6e51396e10d9be7fa1b07e0fa7124e451427384c26f71c2d320cd64c16e50 -- the 218-row index of Kaggle run b3d43af. Computed from the fetched HF file (dataset commit ea67e42b, Kaggle run of 3b8cf2f, baseline ae0f09b), verified IDENTICAL (rows and order) to build_fact_texts(),
 # verified to differ from the served index at rows 4, 20, 21, 66, 89, 108 ONLY (212 unchanged embeddings identical within 1.5e-7), BEFORE it was committed (eval/results/regen_landing_verification_2026_11_24.json).
+# BUMPED 2026-11-24b: FOUR rows appended (medicines_vat_exempt 220, paye_base_employment_income 221, sdl_deemed_month_of_payment 222, wcf_contribution_base 223) and row 66 revised in place; 220 -> 224 rows. Previous value, kept for rollback:
+# bd4a15a16662003703a3839287ca8d3abddfe34d072855829530b1524d96e8b8 -- the 220-row index of Kaggle run 3b8cf2f. Computed from the fetched HF file (Kaggle run of fd451db, 224 facts, 95 guards PASS), verified IDENTICAL (rows and order) to build_fact_texts(), differing from the served index at row 66 ONLY
+# (219 unchanged embeddings identical within 2e-7), BEFORE it was committed (eval/results/regen_landing_verification_2026_11_24b.json).
 EXPECTED_SERVED_SHA256 = (
-    "bd4a15a16662003703a3839287ca8d3abddfe34d072855829530b1524d96e8b8")
-EXPECTED_ROWS = 220
+    "e97ed6019e2a90d96800204acc141f4e44408a46c5fa82ffe996db0b37928f6b")
+EXPECTED_ROWS = 224
 
 
 def _src():
