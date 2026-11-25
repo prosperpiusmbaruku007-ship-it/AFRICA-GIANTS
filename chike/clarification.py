@@ -377,9 +377,9 @@ def compute_clarification(computation_type, reasons, question=""):
 # the fabrication risk wearing a clarification costume.
 PAYE_RESIDENCY_UNCLEAR = (
     "Kabla sijahesabu PAYE, nahitaji kujua kitu kimoja: kwa kodi ya Tanzania, mfanyakazi ni "
-    "MKAZI au SI MKAZI, na hili haliamuliwi na uraia wala aina ya kibali — linaamuliwa na "
+    "MKAAZI WA KIKODI au SI MKAAZI WA KIKODI, na hili haliamuliwi na uraia wala aina ya kibali — linaamuliwa na "
     "muda anaokaa nchini. Mtu anayekaa Tanzania siku 183 au zaidi katika mwaka wa kodi "
-    "huhesabiwa kama mkazi, hata kama ni raia wa nchi nyingine. Tafadhali niambie mfanyakazi "
+    "huhesabiwa kama mkaazi wa kikodi, hata kama ni raia wa nchi nyingine. Tafadhali niambie mfanyakazi "
     "huyu anakaa Tanzania takriban siku ngapi kwa mwaka, kisha nitahesabu PAYE yake kwa "
     "usahihi. Kwa uhakika zaidi, thibitisha na TRA (tra.go.tz)."
 )
@@ -627,12 +627,12 @@ CONSTANT_RESTATEMENTS = {
                                     "(Sheria ya VAT). Thibitisha na TRA (tra.go.tz)."),
     # D-FIDELITY-16 (2026-11-17): a non-resident dividend at 15%, a company return deadline of 12 months / 30 September, a flat 15% on severance. Sentences lifted from dividend_withholding_rate / corporate_income_tax_return /
     # severance_pay_income_tax (tests/test_d16_followup_guards.py asserts the figures are in each fact's own text). R44: the Act is named, no section number.
-    "dividend_nonresident_rate": ("Gawio linakatwa kodi ya zuio ya 5% (kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam, au kampuni mkazi inayomiliki 25% au zaidi) au 10% (kampuni nyingine). "
-                                  "15% si kiwango cha gawio; viwango hivi ni vilevile kwa mpokeaji asiye mkazi. Mkataba wa kodi mara mbili unaweza kuweka kiwango tofauti (Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
+    "dividend_nonresident_rate": ("Gawio linakatwa kodi ya zuio ya 5% (kampuni iliyoorodheshwa Soko la Hisa la Dar es Salaam, au kampuni mkaazi wa kikodi inayomiliki 25% au zaidi) au 10% (kampuni nyingine). "
+                                  "15% si kiwango cha gawio; viwango hivi ni vilevile kwa mpokeaji asiye mkaazi wa kikodi. Mkataba wa kodi mara mbili unaweza kuweka kiwango tofauti (Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
     "corporate_return_deadline": ("Return ya kodi ya mapato ya kampuni iwasilishwe ndani ya miezi 6 baada ya mwisho wa mwaka wa mapato: kampuni ya kawaida (mwaka wa kalenda) kufikia 30 Juni ya mwaka unaofuata; "
                                   "mwaka tofauti ulioidhinishwa na Kamishna unahamisha tarehe, na anayekaguliwa na CAG ana miezi 9. Mapato jumla zaidi ya TZS 100,000,000: return ipitiwe au kuthibitishwa na CPA "
                                   "(Sheria ya Kodi ya Mapato). Thibitisha na TRA (tra.go.tz)."),
-    "severance_flat_15": ("Malipo ya kuachishwa kazi (severance) ni mapato ya ajira: yanajumuishwa kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkazi; hakuna kiwango maalum cha asilimia 15. "
+    "severance_flat_15": ("Malipo ya kuachishwa kazi (severance) ni mapato ya ajira: yanajumuishwa kwenye mapato yako na PAYE hukokotolewa kwa viwango vya kawaida vya mshahara kwa mkaazi wa kikodi; hakuna kiwango maalum cha asilimia 15. "
                           "Kuna kanuni za kugawa malipo ya miaka ya nyuma (Sheria ya Kodi ya Mapato). Thibitisha kiasi chako na TRA (tra.go.tz)."),
     # D-FIDELITY-20 (2026-11-17): the company annual-return deadline (Companies Act Cap.212 R.E.2023: each return is made up to the anniversary of incorporation; 28 days from that return date). R44: the Act is named, no section number.
     "brela_annual_return_deadline": ("Annual return ya kampuni hufanywa kila mwaka: kila return hutayarishwa hadi tarehe ya maadhimisho ya kuanzishwa kwa kampuni (au ya tarehe ya return iliyotangulia). "

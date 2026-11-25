@@ -51,7 +51,7 @@ RENT_WHT_RATE_BOTH_RESIDENCIES = 0.10
 _CITATION = "Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)"
 
 _RATE_SENTENCE = (
-    "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakazi NA wasio wakazi "
+    "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakaazi wa kikodi NA wasio wakaazi wa kikodi "
     f"({_CITATION}). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba."
 )
 

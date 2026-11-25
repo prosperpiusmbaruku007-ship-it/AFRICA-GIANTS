@@ -42,13 +42,15 @@ def test_internal_identifiers_are_unchanged():
     assert "paye_band_table" in fs.TOPICS and "paye_rate" in fs.TOPICS and "paye_residency" in fs.TOPICS
 
 
-def test_census_of_the_bare_uses_that_remain_in_other_served_text_is_shrink_only():
-    """Other topics' served strings that still say 'mkazi' / 'wakazi' (dividends, professional fees, severance, rent, the TIN statement, the residency CLARIFICATION). Out of this decision's scope (band / rate statements only); pinned so they stay visible and can only shrink."""
-    n = 0
+def test_census_of_bare_tax_residence_words_in_served_code_text_is_ZERO():
+    """2026-11-25 (founder): the remaining 12 bare 'mkazi' / 'wakazi' (the residency clarification, the dividend / severance restatements, the TIN statement, rent withholding) are widened to 'mkaazi / wakaazi wa kikodi' where they mean TAX residence; the one 'kibali cha ukazi' in the
+    GN 487A text is the IMMIGRATION permit and is respelled 'ukaazi'. The pin moved from 12 (shrink-only) to 0. The served RAG ROWS and locked_facts text carry the same phrases and are QUEUED with the NSSF base for the next regen (they need one)."""
+    n, hits = 0, []
     for rel in ("chike/clarification.py", "chike/rules_engine/fixed_statements.py", "chike/rules_engine/rent_wht.py", "chike/rules_engine/paye.py"):
-        for line in io.open(os.path.join(_ROOT, rel), encoding="utf-8"):
-            code = line.split("#", 1)[0] if line.lstrip().startswith("#") else line
+        for ln, line in enumerate(io.open(os.path.join(_ROOT, rel), encoding="utf-8"), 1):
             if line.lstrip().startswith("#"):
                 continue
-            n += len(_BARE.findall(code))
-    assert n <= 12, f"{n} bare uses (was 12 on 2026-11-25: clarification 6, fixed_statements 4 incl. two in the residency note that QUOTE the forbidden word, rent_wht 2); a NEW one means the terminology decision is being undone"
+            for m in _BARE.finditer(line):
+                n += 1
+                hits.append((rel, ln, line[max(0, m.start() - 30):m.end() + 20].strip()))
+    assert n == 0, hits

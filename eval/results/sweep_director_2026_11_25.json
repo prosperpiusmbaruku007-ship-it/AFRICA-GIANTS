@@ -1,0 +1,312 @@
+{
+ "swept": 9029,
+ "changed": [
+  {
+   "q": "WHT kwa ada ya mkurugenzi ni asilimia ngapi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Mkurugenzi mgeni anapokea ada ya mkurugenzi, WHT ni asilimia ngapi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Director's fees: is the withholding final for a non-resident?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada ya mkurugenzi inakatwa PAYE au WHT?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada ya mkurugenzi kwa mkaazi wa kikodi inakatwa zuio asilimia ngapi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada ya mkurugenzi kwa asiye mkaazi inakatwa zuio asilimia ngapi, na ni ya mwisho?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada ya mkurugenzi wa muda wote inakatwa vipi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "WHT on directors' fees for residents: is it final?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Kiwango cha zuio kwa ada za wakurugenzi ni kipi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Mkurugenzi mgeni analipa PAYE kwa bendi au 15%?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mkurugenzi mgeni asiye mkazi analipa PAYE asilimia ngapi?",
+   "src": "eval/refusal_gate/director_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mkurugenzi mgeni, ada ya mkurugenzi ni asilimia ngapi?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Malipo ya mkurugenzi (director's fee) yanastahili PAYE?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002a_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada ya mkurugenzi asiye wa wakati kamili inalipwa kodi ya zuio ya asilimia ngapi Tanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002b_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "WHT kwa ada za mkurugenzi (director fees) kwa wakazi ni asilimia ngapi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada za mkurugenzi wa Tanzania (mkazi) zinatoza asilimia 20 ya WHT — je, hii ni sahihi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "WHT kwa ada za mkurugenzi ni sawa kwa wakazi na wasio wakazi — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Chike, naomba nijiulize kuhusu Kodi ya Zuio kwa ada za wakurugenzi. Kiwango chake ni 15%?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Ada za wakurugenzi (director's fees) zinatozwa PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Tofauti kati ya ada za mkurugenzi na mshahara wa mkurugenzi kikodi ni ipi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Are director's fees subject to PAYE in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "Director fees for a Tanzanian (resident) director attract 20% WHT — is this correct?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "WHT on director fees is the same rate for residents and non-residents — is this true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "What is the WHT rate on director fees for residents?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  },
+  {
+   "q": "What withholding tax rate applies to non-full-time director fees in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ]
+  }
+ ],
+ "onto_new": 23,
+ "other": 2,
+ "newly_both": [],
+ "membership": {
+  "director_fees_wht": 23
+ },
+ "baseline": "git show b31a639:chike/routing.py"
+}

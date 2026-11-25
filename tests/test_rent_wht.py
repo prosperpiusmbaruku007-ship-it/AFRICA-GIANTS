@@ -46,7 +46,7 @@ def test_statement_is_a_rate_statement_not_a_computation():
 
 def test_statement_states_both_residencies_explicitly():
     w = rent_wht_statement().working
-    assert "wakazi" in w and "wasio wakazi" in w
+    assert "wakaazi wa kikodi" in w and "wasio wakaazi wa kikodi" in w      # 2026-11-25: the founder widened "ukaazi wa kikodi" to this statement's residency labels
     assert "asilimia 10" in w
 
 

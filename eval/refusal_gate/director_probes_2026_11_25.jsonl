@@ -1,0 +1,21 @@
+{"id": "df_01", "question": "WHT kwa ada ya mkurugenzi ni asilimia ngapi?", "expect": "director_fees_wht", "guards_against": "the plain rate question."}
+{"id": "df_02", "question": "Mkurugenzi mgeni anapokea ada ya mkurugenzi, WHT ni asilimia ngapi?", "expect": "director_fees_wht", "guards_against": "FOUNDING SPECIMEN (live, build c50345c): the model said 'kwa wasio-wakazi ni asilimia 15', omitting the resident case. It was a model-path NEGATIVE of the last window; the statement now owns it."}
+{"id": "df_03", "question": "Director's fees: is the withholding final for a non-resident?", "expect": "director_fees_wht", "guards_against": "English, NON-RESIDENT, final."}
+{"id": "df_04", "question": "Ada ya mkurugenzi inakatwa PAYE au WHT?", "expect": "director_fees_wht", "guards_against": "PAYE named in the question is allowed (the route is levy-exempt)."}
+{"id": "df_05", "question": "Ada ya mkurugenzi kwa mkaazi wa kikodi inakatwa zuio asilimia ngapi?", "expect": "director_fees_wht", "guards_against": "RESIDENT, in the founder's terminology."}
+{"id": "df_06", "question": "Ada ya mkurugenzi kwa asiye mkaazi inakatwa zuio asilimia ngapi, na ni ya mwisho?", "expect": "director_fees_wht", "guards_against": "NON-RESIDENT and 'final'."}
+{"id": "df_07", "question": "Ada ya mkurugenzi wa muda wote inakatwa vipi?", "expect": "director_fees_wht", "guards_against": "the FULL-TIME phrasing the founder named for the live check: the statement says the rate does not concern him as the Act defines him, and sends him to TRA. (A first draft vetoed 'muda' as a date word and sent it to the model: found by the probe run.)"}
+{"id": "df_08", "question": "WHT on directors' fees for residents: is it final?", "expect": "director_fees_wht", "guards_against": "English, RESIDENT, final."}
+{"id": "df_09", "question": "Kiwango cha zuio kwa ada za wakurugenzi ni kipi?", "expect": "director_fees_wht", "guards_against": "the plural 'ada za wakurugenzi'."}
+{"id": "df_10", "question": "Ada ya mkurugenzi ni TZS 5,000,000, WHT ni kiasi gani?", "expect": "none", "guards_against": "a FIGURE: a computation, never a statement."}
+{"id": "df_11", "question": "Gawio linakatwa zuio asilimia ngapi?", "expect": "not:director_fees_wht", "guards_against": "no director word: dividends are another withholding."}
+{"id": "df_12", "question": "Mkurugenzi analipa PAYE vipi?", "expect": "not:director_fees_wht", "guards_against": "no 'ada' phrase: a director's SALARY question is not the fee statement."}
+{"id": "df_13", "question": "Adhabu ya kutokata WHT kwenye ada ya mkurugenzi ni nini?", "expect": "not:director_fees_wht", "guards_against": "a PENALTY."}
+{"id": "df_14", "question": "Nawasilisha lini WHT ya ada ya mkurugenzi?", "expect": "not:director_fees_wht", "guards_against": "a DATE."}
+{"id": "df_15", "question": "Ada ya mkurugenzi nchini Kenya inakatwa asilimia ngapi?", "expect": "not:director_fees_wht", "guards_against": "ANOTHER COUNTRY."}
+{"id": "df_16", "question": "Ada ya mkurugenzi ya Januari inakatwa asilimia ngapi?", "expect": "not:director_fees_wht", "guards_against": "a named month."}
+{"id": "df_17", "question": "Mkurugenzi mgeni analipa PAYE kwa bendi au 15%?", "expect": "paye_residency", "guards_against": "no director-fee phrase: the residency route owns it (exclusive)."}
+{"id": "df_18", "question": "Ada ya mkurugenzi na NSSF zinakatwa kiasi gani?", "expect": "not:director_fees_wht", "guards_against": "another levy named."}
+{"id": "df_19", "question": "Ada ya mkurugenzi na gawio zinakatwa zuio asilimia ngapi?", "expect": "not:director_fees_wht", "guards_against": "two withholdings in one question: the statement answers only one."}
+{"id": "df_20", "question": "Mkurugenzi mgeni asiye mkazi analipa PAYE asilimia ngapi?", "expect": "paye_residency", "guards_against": "no 'ada': the residency route owns it (exclusive)."}
+{"id": "df_21", "question": "Mkurugenzi wa kampuni anateuliwa vipi?", "expect": "none", "guards_against": "appointment, no fee."}
