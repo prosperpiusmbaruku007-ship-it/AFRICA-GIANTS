@@ -1,0 +1,352 @@
+{
+ "identity": {
+  "build": "ff68073",
+  "rag_rows_loaded": 224,
+  "rag_embeddings_shape": [
+   224,
+   768
+  ],
+  "rag_facts_text_sha256": "e97ed6019e2a90d96800204acc141f4e44408a46c5fa82ffe996db0b37928f6b",
+  "config_rag_fact_count": 224,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795597042.333,
+   "enter_started_ts": 1795597042.341,
+   "enter_done_ts": 1795597078.257,
+   "import_to_enter_s": 0.0,
+   "load_s": 35.9,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "MEDICINES",
+   "q": "Dawa zinatozwa VAT?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MEDICINES",
+   "q": "Vifaa tiba vinatozwa VAT?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MEDICINES",
+   "q": "Are medicines VAT-exempt in Tanzania?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "MEDICINES",
+   "q": "Dawa zinazouzwa nje ya nchi zinatozwa VAT?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FOLLOWUP",
+   "q": "Huduma za afya zinatozwa VAT? Na dawa je?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYEBASE",
+   "q": "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?",
+   "reply": "PAYE hukatwa kwenye MAPATO YA AJIRA ya mfanyakazi, si mshahara wa msingi pekee (Sheria ya Kodi ya Mapato). Yanajumuisha mshahara, malipo badala ya likizo, ada, kamisheni, bonasi, kiinua mgongo (gratuity) na posho yoyote ya safari, malazi, burudani au nyingine, pamoja na faida zisizo za fedha (benefits in kind) zilizokokotolewa kisheria. Vichache vimeondolewa kisheria, kwa mfano posho inayorudisha tu gharama zilizotumika kikamilifu kuzalisha mapato, na faida ya matumizi ya gari ambapo mwajiri hadai makato wala nafuu kuhusu umiliki, matengenezo au uendeshaji wa gari hilo; orodha kamili iko kwenye Sheria. Thibitisha na TRA. Kwa SDL: msingi ni jumla ya mishahara ghafi ya mwezi, na posho zote zimo (Sheria ya Elimu na Mafunzo ya Ufundi); faida zisizo za fedha hazijatajwa kwenye Sheria. Kwa hiyo posho zinaingia kwenye PAYE na kwenye SDL; tofauti iko kwenye faida zisizo za fedha: PAYE inazihesabu (zilizokokotolewa kisheria), SDL Sheria haizitaji.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYEBASE",
+   "q": "PAYE inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?",
+   "reply": "PAYE hukatwa kwenye MAPATO YA AJIRA ya mfanyakazi, si mshahara wa msingi pekee (Sheria ya Kodi ya Mapato). Yanajumuisha mshahara, malipo badala ya likizo, ada, kamisheni, bonasi, kiinua mgongo (gratuity) na posho yoyote ya safari, malazi, burudani au nyingine, pamoja na faida zisizo za fedha (benefits in kind) zilizokokotolewa kisheria. Vichache vimeondolewa kisheria, kwa mfano posho inayorudisha tu gharama zilizotumika kikamilifu kuzalisha mapato, na faida ya matumizi ya gari ambapo mwajiri hadai makato wala nafuu kuhusu umiliki, matengenezo au uendeshaji wa gari hilo; orodha kamili iko kwenye Sheria. Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PAYEBASE",
+   "q": "Bonasi na kamisheni zinaingia kwenye PAYE?",
+   "reply": "PAYE hukatwa kwenye MAPATO YA AJIRA ya mfanyakazi, si mshahara wa msingi pekee (Sheria ya Kodi ya Mapato). Yanajumuisha mshahara, malipo badala ya likizo, ada, kamisheni, bonasi, kiinua mgongo (gratuity) na posho yoyote ya safari, malazi, burudani au nyingine, pamoja na faida zisizo za fedha (benefits in kind) zilizokokotolewa kisheria. Vichache vimeondolewa kisheria, kwa mfano posho inayorudisha tu gharama zilizotumika kikamilifu kuzalisha mapato, na faida ya matumizi ya gari ambapo mwajiri hadai makato wala nafuu kuhusu umiliki, matengenezo au uendeshaji wa gari hilo; orodha kamili iko kwenye Sheria. Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "PAYE ya mwezi Januari inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?",
+   "reply": "PAYE inakokotolewa kwa JUMLA ya mapato ya ajira — ikiwa ni pamoja na mshahara wa msingi, posho za kawaida, bonasi, na malipo mengine yanayohusiana na ajira. Thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "SDL ya mwezi Januari inahesabiwa kwa mshahara wa Januari au Desemba?",
+   "reply": "SDL inahesabiwa kwa msingi wa malipo halisi ya mishahara — si mwezi wa mwaka unaohusiana na malipo. Kwa hiyo: SDL ya Januari = jumla ya mishahara iliyolipwa ndani ya Januari (ikijumuisha posho). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?",
+   "reply": "Posho zinazolipwa kila mwezi huongezwa kwenye mshahara wa msingi kabla ya kukokotoa WCF. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "Mwajiri anaweza kumkata mfanyakazi mchango wa WCF kwenye mshahara wake?",
+   "reply": "Hapana. Mchango wa WCF unalipwa na mwajiri pekee, si kukatwa kwa mfanyakazi. Ni gharama ya mwajiri, si gharama ya mfanyakazi. Thibitisha na WCF (wcf.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "INDEX",
+   "q": "Duka la dawa linatakiwa kusajili VAT, na dawa zinatozwa VAT gani?",
+   "reply": "Duka la dawa lenye mauzo ya TZS 200M/miezi 12 au TZS 100M/miezi 6 linasajili VAT. Dawa zinaweza kuwa zero-rated (msamaha wa VAT) au exempt (si zero-rated). Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": false
+   },
+   "ok": false
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Mfanyakazi amefanya kazi miezi 12 mfululizo, nikimwachisha nimlipe severance kiasi gani?",
+   "reply": "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Nimefanya kazi mwaka mmoja na nimeachishwa kazi, nina haki ya malipo gani ya kuachishwa?",
+   "reply": "Kulingana na sheria, unapaswa kulipwa malipo ya kuachishwa kazi (severance pay). Thibitisha na Ofisi ya Kazi (Ministry of Labour).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": false,
+    "must_not": true
+   },
+   "ok": false
+  },
+  {
+   "arm": "SEVERANCE",
+   "q": "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+   "reply": "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa kuachishwa kihalali kwa utovu wa nidhamu, au anayekataa kazi mbadala bila sababu, au aliyestaafu au mkataba kuisha (ELRA).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Dawa za TZS 5,000,000 nimeuza, VAT ni ngapi?",
+   "reply": "Kwa dawa zenye thamani ya TZS 5,000,000, kiwango cha VAT ni 18%. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "PAYE ni asilimia ngapi?",
+   "reply": "Kiwango cha kawaida cha PAYE Tanzania ni asilimia 30, lakini kuna bendi za mapato zinazotoa punguzo. Thibitisha na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Mshahara wangu TZS 1,200,000 na posho TZS 200,000, PAYE ni kiasi gani?",
+   "reply": "Ili nihesabu PAYE, niambie kama kiasi ni kwa kila mfanyakazi au ni jumla ya wote, pamoja na idadi ya wafanyakazi.",
+   "path": "engine:paye:ask",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG",
+   "q": "Mhandisi anatakiwa kusajili VAT bila kujali mauzo?",
+   "reply": "Watoa huduma za kitaalamu (wenye leseni au wanachama wa chama cha taaluma) lazima wajisajili VAT bila kujali kiasi cha mauzo yao (Sheria ya VAT): kiwango cha TZS 200M kwa miezi 12 au TZS 100M kwa miezi 6 kinawahusu wafanyabiashara wengine, si wao. Taasisi za Serikali zinazofanya shughuli za kiuchumi pia zinasajiliwa, na Kamishna anaweza kumsajili anayetarajia kuanza biashara mwenye ushahidi. Sheria inaweka kanuni hii bila kutoa sababu katika maandishi tuliyosoma. Kama huduma yako ni ya kitaalamu kwa maana ya sheria, thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Msingi wa kukokotoa SDL ni nini — posho zinaingia?",
+   "reply": "Msingi wa SDL ni JUMLA YA MISHAHARA GHAFI YA MWEZI ambayo mwajiri anawalipa wafanyakazi wake (asilimia 3.5 ya jumla hiyo). Jumla hiyo inajumuisha mshahara, malipo ya likizo, malipo ya ugonjwa, malipo badala ya likizo, ada (fee), kamisheni, bonasi, kiinua mgongo (gratuity) na POSHO ZOTE za safari, malazi, burudani au nyinginezo anazolipa mwajiri kuhusiana na ajira (Sheria ya Elimu na Mafunzo ya Ufundi). Kwa hiyo posho ZIMO kwenye msingi wa SDL. Sheria haitaji wazi faida zisizo za fedha (kama makazi, chakula au gari): kama zinahesabiwa HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": [
+  "replaced"
+ ]
+}
