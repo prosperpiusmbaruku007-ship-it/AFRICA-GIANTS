@@ -21,7 +21,7 @@ add("pr_01", "PAYE ni asilimia ngapi?", PR, "FOUNDING SPECIMEN (live, build ff68
 add("pr_02", "Kiwango cha PAYE ni kipi?", PR, "the singular 'kiwango' form.")
 add("pr_03", "What is the PAYE rate in Tanzania?", PR, "English form.")
 add("pr_04", "Kodi ya PAYE ni asilimia ngapi kwa mfanyakazi?", PR, "a longer natural phrasing.")
-add("pr_05", "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?", PR, "a non-resident rate ask: the statement carries the 15% final-withholding line, so it answers.")
+add("pr_05", "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?", "paye_residency", "EXPECT CHANGED 2026-11-25 (was paye_rate: a non-resident rate ask). Every RESIDENCY word is now the paye_residency route's, which states the 15% (final) AND what makes a person non-resident; paye_rate vetoes residency words so the two stay exclusive.")
 add("pr_06", "PAYE ya mshahara wa TZS 800,000 ni asilimia ngapi?", "not:" + PR, "a FIGURE: the PAYE engine, never a statement.")
 add("pr_07", "Bendi za PAYE ni zipi?", "paye_band_table", "a BAND word stays on the band-table route (the two are exclusive).")
 add("pr_08", "Viwango vya PAYE ni vipi?", "paye_band_table", "the plural 'viwango' is the band route's word.")

@@ -111,7 +111,7 @@ def test_plant_paye_rate_veto_removed_is_caught(monkeypatch):
     patched = tuple((n, c, nd, (re.compile(r"(?!x)x") if n == "paye_rate" else v)) for n, c, nd, v in routing._FS_TOPICS)
     monkeypatch.setattr(routing, "_FS_TOPICS", patched)
     failed = {p["id"] for p in _probes() if not _verdict(p["question"], p["expect"])}
-    assert {"pr_15", "pr_16", "pr_17"} <= failed, failed
+    assert {"pr_15", "pr_17"} <= failed, failed      # pr_16 (foreign/citizen) is now owned by paye_residency, so emptying the rate veto no longer moves it (history: it was a plant-sensitive probe before 2026-11-25)
 
 
 def test_exclusivity_each_single_limb_route_still_owns_its_own_question():

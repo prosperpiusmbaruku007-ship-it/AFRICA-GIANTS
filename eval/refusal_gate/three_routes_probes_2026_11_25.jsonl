@@ -2,7 +2,7 @@
 {"id": "pr_02", "question": "Kiwango cha PAYE ni kipi?", "expect": "paye_rate", "guards_against": "the singular 'kiwango' form."}
 {"id": "pr_03", "question": "What is the PAYE rate in Tanzania?", "expect": "paye_rate", "guards_against": "English form."}
 {"id": "pr_04", "question": "Kodi ya PAYE ni asilimia ngapi kwa mfanyakazi?", "expect": "paye_rate", "guards_against": "a longer natural phrasing."}
-{"id": "pr_05", "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?", "expect": "paye_rate", "guards_against": "a non-resident rate ask: the statement carries the 15% final-withholding line, so it answers."}
+{"id": "pr_05", "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?", "expect": "paye_residency", "guards_against": "EXPECT CHANGED 2026-11-25 (was paye_rate: a non-resident rate ask). Every RESIDENCY word is now the paye_residency route's, which states the 15% (final) AND what makes a person non-resident; paye_rate vetoes residency words so the two stay exclusive."}
 {"id": "pr_06", "question": "PAYE ya mshahara wa TZS 800,000 ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "a FIGURE: the PAYE engine, never a statement."}
 {"id": "pr_07", "question": "Bendi za PAYE ni zipi?", "expect": "paye_band_table", "guards_against": "a BAND word stays on the band-table route (the two are exclusive)."}
 {"id": "pr_08", "question": "Viwango vya PAYE ni vipi?", "expect": "paye_band_table", "guards_against": "the plural 'viwango' is the band route's word."}

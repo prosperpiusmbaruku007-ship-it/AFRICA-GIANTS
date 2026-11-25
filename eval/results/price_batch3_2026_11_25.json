@@ -4,7 +4,7 @@
  },
  "populations": {
   "stored": {
-   "pairs": 9957,
+   "pairs": 9956,
    "distinct_flagged": 16,
    "foreign_15pct": 1,
    "foreign_authority": 15,
@@ -162,48 +162,12 @@
   },
   "training": {
    "pairs": 17604,
-   "distinct_flagged": 12,
+   "distinct_flagged": 2,
    "foreign_15pct": 0,
-   "foreign_authority": 12,
+   "foreign_authority": 2,
    "rows": [
     {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:168#answer_sw",
-     "q": "Niambie kuhusu kodi ya VAT nchini Kenya.",
-     "reply": "Samahani — ninasaidia tu na maswali ya biashara na kodi nchini Tanzania Bara. Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa kra.go.ke. Je, una swali kuhusu VAT Tanzania? Kiwango cha VAT Tanzania ni asilimia 18.",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Kwa maswali ya Kenya tafadhali wasiliana na Kenya Revenue Authority (KRA) kwa kra.go.ke."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:168#answer_en",
-     "q": "Niambie kuhusu kodi ya VAT nchini Kenya.",
-     "reply": "I am sorry — I only assist with business and tax questions for Mainland Tanzania. For Kenya tax questions please contact Kenya Revenue Authority (KRA) at kra.go.ke. Do you have a question about Tanzania VAT? The Tanzania VAT rate is 18%.",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "For Kenya tax questions please contact Kenya Revenue Authority (KRA) at kra.go.ke."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:169#answer_sw",
-     "q": "Kiwango cha PAYE Kenya ni asilimia ngapi?",
-     "reply": "Sijui kuhusu PAYE Kenya — ninashughulikia maswali ya Tanzania Bara tu. Kwa taarifa za PAYE Kenya, wasiliana na KRA (kra.go.ke) au mshauri wa kodi wa Kenya. Je, unataka kujua kuhusu PAYE Tanzania? Bendi ya kwanza ya PAYE Tanzania ni asilimia 0 hadi TZS 270,000 kwa mwezi.",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Kwa taarifa za PAYE Kenya, wasiliana na KRA (kra.go.ke) au mshauri wa kodi wa Kenya."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:169#answer_en",
-     "q": "Kiwango cha PAYE Kenya ni asilimia ngapi?",
-     "reply": "I do not cover Kenya PAYE — I handle Tanzania Mainland questions only. For Kenya PAYE information, contact KRA (kra.go.ke) or a Kenyan tax adviser. Would you like to know about Tanzania PAYE? The first Tanzania PAYE band is 0% up to TZS 270,000 per month.",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "For Kenya PAYE information, contact KRA (kra.go.ke) or a Kenyan tax adviser."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:170#answer_sw",
+     "src": "datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl:29#answer_sw",
      "q": "Uganda ina kizingiti gani cha usajili wa VAT?",
      "reply": "Samahani, sijui kuhusu mfumo wa VAT Uganda. Ninasaidia maswali ya Tanzania Bara tu. Kwa Uganda, wasiliana na Uganda Revenue Authority (URA) kwa ura.go.ug. Je, una swali kuhusu VAT Tanzania? Kizingiti cha VAT Tanzania ni TZS 200,000,000 kwa miezi 12 au TZS 100,000,000 kwa miezi 6.",
      "foreign_15pct": false,
@@ -212,66 +176,12 @@
      ]
     },
     {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:170#answer_en",
+     "src": "datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl:29#answer_en",
      "q": "Uganda ina kizingiti gani cha usajili wa VAT?",
      "reply": "I am sorry, I do not cover Uganda's VAT system. I assist with Mainland Tanzania questions only. For Uganda, contact the Uganda Revenue Authority (URA) at ura.go.ug. Do you have a question about Tanzania VAT? Tanzania's threshold is TZS 200,000,000 per 12 months or TZS 100,000,000 per 6 months.",
      "foreign_15pct": false,
      "foreign_authority": [
       "For Uganda, contact the Uganda Revenue Authority (URA) at ura.go.ug."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:193#answer_sw",
-     "q": "Niambie jinsi ya kulipa kodi nchini Uingereza (UK).",
-     "reply": "Sijui mfumo wa kodi wa Uingereza — ninasaidia na maswali ya kodi ya biashara ya Tanzania Bara peke yake. Kwa maswali ya kodi ya UK, wasiliana na HM Revenue and Customs (HMRC) kwa gov.uk/government/organisations/hm-revenue-customs. Je, kuna swali la kodi ya Tanzania naweza kukusaidia?",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Kwa maswali ya kodi ya UK, wasiliana na HM Revenue and Customs (HMRC) kwa gov.uk/government/organisations/hm-revenue-customs."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_003_cleaned.jsonl:193#answer_en",
-     "q": "Niambie jinsi ya kulipa kodi nchini Uingereza (UK).",
-     "reply": "I do not cover the UK tax system — I assist with Mainland Tanzania business tax questions only. For UK tax questions, contact HM Revenue and Customs (HMRC) at gov.uk/government/organisations/hm-revenue-customs. Is there a Tanzania tax question I can help with?",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "For UK tax questions, contact HM Revenue and Customs (HMRC) at gov.uk/government/organisations/hm-revenue-customs."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl:184#answer_sw",
-     "q": "Wafanyabiashara wa mpakani (cross-border traders) Tunduma wana mahitaji gani ya uzingatiaji Tanzania?",
-     "reply": "Mfanyabiashara wa mpakani Tunduma-Nakonde anahitaji kuzingatia: (1) TIN ya TRA kwa biashara yake Tanzania, (2) Hati za forodha (customs documentation) za TANZRA/TRA — ikiwa ni pamoja na invoice ya biashara, packing list, na hati ya asili ya bidhaa, (3) EAC STR (Simplified Trade Regime) inaweza kutum",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Angalia KRA/ZRA kwa biashara ya upande wa Kenya/Zambia."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl:184#answer_en",
-     "q": "Wafanyabiashara wa mpakani (cross-border traders) Tunduma wana mahitaji gani ya uzingatiaji Tanzania?",
-     "reply": "A Tunduma-Nakonde cross-border trader needs to comply with: (1) TRA TIN for their Tanzania business, (2) customs documentation for TANZRA/TRA — including commercial invoice, packing list, and certificate of origin, (3) EAC STR (Simplified Trade Regime) may apply if goods are on the common list and a",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Check KRA/ZRA for Kenya/Zambia side requirements."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:112#answer_sw",
-     "q": "Serikali ya Kenya inazuia nini kwa wafanyabiashara wa Tanzania wanaouza Kenya?",
-     "reply": "Sheria za biashara na kodi za Kenya ziko nje ya mipaka yangu kabisa — ninashughulikia Tanzania Bara tu. Mada hii iko nje ya mipaka yangu ya sasa. Thibitisha na TRA au mshauri wa kodi aliyehitimu. Kwa maswali ya biashara nchini Kenya: wasiliana na Kenya Revenue Authority (KRA) au biashara.go.ke. Nina",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "Kwa maswali ya biashara nchini Kenya: wasiliana na Kenya Revenue Authority (KRA) au biashara.go.ke."
-     ]
-    },
-    {
-     "src": "datasets/tier1a/cleaned_pairs/batch_008_cleaned.jsonl:112#answer_en",
-     "q": "Serikali ya Kenya inazuia nini kwa wafanyabiashara wa Tanzania wanaouza Kenya?",
-     "reply": "Kenyan trade laws and taxes are completely outside my scope — I cover Tanzania Mainland only. This topic is outside my current coverage. Please verify with TRA or a qualified tax adviser. For Kenya business questions: contact Kenya Revenue Authority (KRA) or biashara.go.ke. I can help you with Tanza",
-     "foreign_15pct": false,
-     "foreign_authority": [
-      "For Kenya business questions: contact Kenya Revenue Authority (KRA) or biashara.go.ke."
      ]
     }
    ]

@@ -699,17 +699,16 @@ CONSTANT_RESTATEMENTS["medicines_zero_rated"] = (
 CONSTANT_RESTATEMENTS["medicines_taxed"] = CONSTANT_RESTATEMENTS["medicines_zero_rated"]
 
 
-# D-FIDELITY-34 (2026-11-25, founder: INTERIM, supervised): a short HOLDING LINE for a foreign / expatriate employee tied to the 15% rate. It asserts only what the Income Tax Act's residence test (read 2026-11-25, edition asserted) supports: residency decides, a foreigner is not thereby non-resident.
+# D-FIDELITY-34 (2026-11-25, founder: INTERIM, supervised; wording amended the same day to "ukaazi wa kikodi", because "mkazi" alone reads as the immigration residence permit): a short HOLDING LINE for a foreign / expatriate employee tied to the 15% rate. It asserts only what the Income Tax Act's residence test (read 2026-11-25, edition asserted) supports: residency decides, a foreigner is not thereby non-resident.
 # The fuller resident / non-resident statement is PROPOSED for the founder's approval and is NOT built. R44: the Act is named, no section number.
 CONSTANT_RESTATEMENTS["foreign_15pct"] = (
-    "Kiwango cha PAYE kinategemea UKAZI (mkazi au asiye mkazi) kwa mujibu wa Sheria ya Kodi ya Mapato; uraia au kuwa mgeni peke yake si kigezo. "
-    "Thibitisha hali yako ya ukazi na kiwango stahiki na TRA (tra.go.tz).")
+    "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI (mkaazi au asiye mkaazi wa kikodi) kwa mujibu wa Sheria ya Kodi ya Mapato; uraia au kuwa mgeni peke yake si kigezo. Thibitisha ukaazi wako wa kikodi na kiwango stahiki na TRA (tra.go.tz).")
 
 # 2026-11-25 (founder): the replacement covers EVERY LIMB the question names. A medicines guard fired on a question that also names HEALTH SERVICES gets the combined statement (the medical-services statement, then the medicines one); a question that names VAT REGISTRATION and no health word gets the registration hedge.
 # The registration hedge is "thibitisha usajili na TRA" and NOTHING MORE: whether exempt-only sales can be registered is not settled by the Act (the pharmacy registration limb; the threshold sub-question IS sourced and is PROPOSED to the founder as a statement, not built).
 _HEALTH_Q = re.compile(r"daktari|madaktari|doctor|kliniki|clinic|hospitali|hospital|muuguzi|nurse|(?<![a-z])meno(?![a-z])|dental|dentist|matibabu|huduma\s+za\s+afya|health\s+(?:care|services?)|medical\s+services?|ukunga|midwi", re.IGNORECASE)
 _REGISTRATION_Q = re.compile(r"sajili|usajili|register|registration", re.IGNORECASE)
-REGISTRATION_LIMB_HEDGE = "Kuhusu usajili wa VAT: thibitisha usajili na TRA (tra.go.tz)."
+REGISTRATION_LIMB_HEDGE = "Kuhusu usajili wa VAT: thibitisha usajili na TRA (tra.go.tz)."   # SUPERSEDED 2026-11-25 by the threshold statement above; kept as the history of the interim, and used by nothing
 
 
 def constants_restated_for(question: str, topics) -> str:
@@ -721,7 +720,8 @@ def constants_restated_for(question: str, topics) -> str:
         if _HEALTH_Q.search(question or ""):
             text = _fs.STATEMENTS[_fs.VAT_MEDICAL][1] + "\n\n" + text
         elif _REGISTRATION_Q.search(question or ""):
-            text = text + "\n\n" + REGISTRATION_LIMB_HEDGE
+            # 2026-11-25 (founder): the registration limb uses the SOURCED threshold statement (VAT Act s.28(5)-(6) and the definition of taxable supply, quoted in fixed_statements.VAT_EXEMPT_SALES_THRESHOLD_SOURCE), no longer the bare hedge.
+            text = text + "\n\n" + _fs.VAT_EXEMPT_SALES_THRESHOLD_TEXT
     return text
 
 

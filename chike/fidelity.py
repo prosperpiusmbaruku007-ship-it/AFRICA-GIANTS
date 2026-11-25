@@ -1520,7 +1520,7 @@ def fixed_figure_violations(question: str, body: str):
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
         if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party",
-                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "vat_medicines", "paye_base", "paye_rate", "vat_health_and_medicines", "wcf_base", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
+                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "vat_medicines", "paye_base", "paye_rate", "vat_health_and_medicines", "wcf_base", "paye_residency", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
@@ -2353,7 +2353,7 @@ def medicines_taxed_at_standard_rate(question: str, body: str):
 # R25. (1) Defect: one live reply (the question is the model path's, because the paye_rate route correctly vetoes foreign/citizen questions: the statement cannot answer residency). (2) What CORRECT output could it damage: any sentence that names a residency word (mkazi, asiye mkazi, non-resident, resident, ukazi, 183 days) is a correct tie of 15% to RESIDENCY and is never flagged;
 #   a negated 15% ("hawalipi 15%") is a mention; a 15% sentence in a reply to a question that does not name a foreign status; a 15% sentence with no PAYE / employment word in a reply to a foreign question (e.g. a dividend rate).
 _D34_FOREIGN = re.compile(r"(?<![a-z])(?:foreign(?:er|ers)?|expat(?:riate)?s?|mgeni|wageni|kigeni|raia\s+wa\s+kigeni|non-?citizens?)(?![a-z])", re.IGNORECASE)
-_D34_RESIDENCY = re.compile(r"asiye\s+mkazi|wasio\s+wakazi|non-?resident|(?<![a-z])mkazi|wakazi|(?<![a-z])resident|ukazi|residen(?:ce|cy)|makazi|siku\s+183|183\s+days", re.IGNORECASE)
+_D34_RESIDENCY = re.compile(r"asiye\s+mkazi|asiye\s+mkaazi|wasio\s+wakazi|non-?resident|(?<![a-z])mkazi|(?<![a-z])mkaazi|wakazi|(?<![a-z])resident|ukazi|ukaazi|kikodi|residen(?:ce|cy)|makazi|siku\s+183|183\s+days", re.IGNORECASE)
 _D34_FIFTEEN = re.compile(r"(?<![\d.,])15\s*%|asilimia\s+(?:ya\s+)?15(?![\d,]|\.\d)|fifteen\s+percent|(?<![a-z])flat(?:\s+rate)?(?![a-z])|tambarare", re.IGNORECASE)
 _D34_PAYE_Q = re.compile(r"(?<![a-z])paye(?![a-z])|kodi\s+ya\s+mapato|income\s+tax|mshahara|salary|employee|mfanyakazi|ajira|employment", re.IGNORECASE)
 

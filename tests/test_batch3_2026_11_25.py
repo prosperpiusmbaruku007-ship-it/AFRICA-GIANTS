@@ -43,14 +43,18 @@ def _guards(r):
 
 
 # ---------------- (1) foreign employee tied to 15% ----------------
-def test_the_foreign_question_reaches_the_model_because_the_statement_routes_veto_it():
-    assert routing.fixed_statement_topic(QF) is None
+QF_BACKSTOP = "Mgeni anayefanya kazi Tanzania, kiwango chake cha PAYE ni nini mwezi Januari?"      # a named month vetoes the residency route, so the GUARD (the backstop) is the layer under test
+
+
+def test_the_foreign_question_is_owned_by_the_residency_route_and_the_backstop_question_reaches_the_model():
+    assert routing.fixed_statement_topic(QF) == "paye_residency"
+    assert routing.fixed_statement_topic(QF_BACKSTOP) is None
 
 
 def test_live_specimen_is_replaced_by_the_holding_line_end_to_end():
-    r = _ans(QF, LIVE_FOREIGN)
+    r = _ans(QF_BACKSTOP, LIVE_FOREIGN)
     assert "replaced" in _guards(r)
-    assert "15%" not in r.text and "UKAZI" in r.text and "uraia au kuwa mgeni peke yake si kigezo" in r.text, r.text
+    assert "15%" not in r.text and "UKAAZI WA KIKODI" in r.text and "ukazi" not in r.text.lower().replace("ukaazi", "") and "uraia au kuwa mgeni peke yake si kigezo" in r.text, r.text
 
 
 @pytest.mark.parametrize("q,body", [
@@ -76,7 +80,7 @@ def test_holding_line_never_flags_itself_and_carries_no_section_number():
 
 def test_planted_detector_disabled_lets_the_specimen_through(monkeypatch):
     monkeypatch.setattr(fidelity, "foreign_status_tied_to_15pct", lambda *a, **k: [])
-    assert "15%" in _ans(QF, LIVE_FOREIGN).text
+    assert "15%" in _ans(QF_BACKSTOP, LIVE_FOREIGN).text
 
 
 # ---------------- (2) replacement by limbs ----------------
@@ -89,14 +93,17 @@ def test_health_plus_medicines_guard_gets_the_combined_text_medical_first():
     assert t == med + "\n\n" + drugs, t[:200]
 
 
-def test_pharmacy_registration_limb_gets_the_hedge_and_nothing_more():
+def test_pharmacy_registration_limb_gets_the_sourced_threshold_statement():
+    """2026-11-25 (founder): the registration limb uses the SOURCED threshold statement, no longer the bare hedge."""
     assert routing.fixed_statement_topic(Q_PHARM) is None
     r = _ans(Q_PHARM, BAD_MED_BODY)
     assert "replaced" in _guards(r)
     drugs = fs.fixed_statement("vat_medicines").working
-    assert r.text == drugs + "\n\n" + clarification.REGISTRATION_LIMB_HEDGE
-    assert clarification.REGISTRATION_LIMB_HEDGE == "Kuhusu usajili wa VAT: thibitisha usajili na TRA (tra.go.tz)."
-    assert not re.search(r"kizingiti|threshold|200", clarification.REGISTRATION_LIMB_HEDGE)       # NO figure or rule: only the pointer (the threshold sub-limb is PROPOSED, not built)
+    assert r.text == drugs + "\n\n" + fs.VAT_EXEMPT_SALES_THRESHOLD_TEXT
+    t = fs.VAT_EXEMPT_SALES_THRESHOLD_TEXT
+    assert "HAYAHESABIWI" in t and "HUHESABIWA" in t                                   # exempt sales do NOT count, taxable sales DO (s.28(6)(a) and the definition of taxable supply)
+    assert t.endswith("Sheria haielezi wazi kama anayeuza bidhaa za msamaha pekee anaweza au lazima ajisajili; thibitisha na TRA.") and "HAIJATHIBITISHWA" not in t
+    assert not re.search(r"(?i)dawa|medicine|pharm", t) and "Kifungu" not in t         # generic wording, no product examples (founder); R44
 
 
 def test_a_plain_medicines_question_gets_the_medicines_text_only():

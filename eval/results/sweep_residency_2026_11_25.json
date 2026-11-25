@@ -1,0 +1,312 @@
+{
+ "swept": 9007,
+ "changed": [
+  {
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Je, mfanyakazi asiye mkazi HALIPI mabano ya kawaida ya PAYE?",
+   "src": "eval/accuracy_gate/eval_questions_003.jsonl",
+   "before": [
+    "fixed_statement",
+    "paye_band_table"
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Does a foreign employee pay PAYE at a different rate from a citizen?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mgeni anayefanya kazi Tanzania analipa PAYE vipi?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mgeni analipa PAYE kwa kiwango gani, tofauti na raia?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Nikikaa nchini siku 183, PAYE yangu ni ya mkazi au asiye mkazi?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "fixed_statement",
+    "paye_rate"
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Tofauti ya mkaazi wa kikodi na asiye mkaazi kwenye PAYE ni nini?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Is a resident foreigner taxed on the PAYE bands?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Expatriate employee: PAYE flat 15% or progressive?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mgeni mwenye makazi ya kudumu Tanzania analipa PAYE kwa bendi au 15%?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Bendi za PAYE kwa wageni ni zipi?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "fixed_statement",
+    "paye_band_table"
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Does a foreign (expatriate) employee in Tanzania pay PAYE like a Tanzanian?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "PAYE for a non-resident employee is 30%, right?",
+   "src": "eval/refusal_gate/residency_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mfanyakazi wa kigeni (expatriate) analipa PAYE Tanzania kwa njia gani?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mgeni (expatriate) Tanzania analipa PAYE kama Mtanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Je, mfanyakazi mgeni aliye Tanzania kwa mwezi mmoja tu analipa PAYE?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mgeni analipa kwa kiwango gani cha PAYE — kina tofauti na raia?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_006_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Huyu mfanyakazi ambaye si mkazi wa Tanzania, unatozwa PAYE ya 15% au kuna tofauti?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Je, lazima nilipie PAYE mfanyakazi asiye mkazi nchini?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Wafanyakazi wageni wasio raia wanakatwa PAYE kwa madaraja au flat?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Mfanyakazi mgeni asiye mkazi nampiga PAYE kwa madaraja kama Watanzania?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Does a foreign employee in Tanzania for just one month pay PAYE?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "Does a non-resident NOT pay the ordinary PAYE bands?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  },
+  {
+   "q": "How does a foreign (expatriate) employee pay PAYE in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ]
+  }
+ ],
+ "onto_new": 25,
+ "other": 0,
+ "newly_both": [],
+ "membership": {
+  "paye_residency": 25
+ },
+ "baseline": "git show 2235370:chike/routing.py"
+}
