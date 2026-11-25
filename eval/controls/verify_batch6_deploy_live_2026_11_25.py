@@ -51,11 +51,15 @@ CASES = [
     ("BAND", "Bendi za PAYE ni zipi?", [r"mkaazi wa kikodi, 2025/26", r"Asiye mkaazi wa kikodi analipa 15% tambarare"], [BARE], None, STMT, 0),
     ("RATE", "PAYE ni asilimia ngapi?", [r"PAYE HAINA kiwango kimoja", r"mkaazi wa kikodi, 2025/26", r"Asiye mkaazi wa kikodi analipa 15% tambarare"], [BARE], None, STMT, 0),
     ("RATE3", "SDL, NSSF na PAYE ni asilimia ngapi?", [r"HAINA kiwango kimoja", r"mkaazi wa kikodi"], [BARE], None, STMT, 0),
-    ("ENGINE", "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?", [r"asiye mkaazi wa kikodi", r"750,000"], [BARE], None, "engine:paye", None),
+    # PROBE ERROR FIXED 2026-11-25 (R38, found by reading): `must_not` BARE was applied to the WHOLE reply, but the model-written first sentence ECHOES THE USER'S OWN WORDS ("Kwa mfanyakazi asiye mkazi, ...", and the served index rows still say "mkazi" until the queued regen). The engine WORKING LINE is the served label under test: it is now required, with the new label.
+    ("ENGINE", "Mfanyakazi asiye mkazi analipwa TZS 5,000,000 kwa mwezi — PAYE yake ni ngapi?", [r"PAYE \(asiye mkaazi wa kikodi\) = 15%", r"750,000"], [], None, "engine:paye", None),
     # ---- THE RESIDENCY CLARIFICATION (a compute question whose residency is unclear)
-    ("CLARIFY", "Mfanyakazi mgeni analipwa TZS 2,000,000 kwa mwezi, PAYE yake ni ngapi?", [r"(?i)mkaazi wa kikodi"], [BARE], None, None, None),
+    # PROBE ERROR FIXED 2026-11-25 (R38, found by reading): the residency CLARIFICATION is DESIGNED to fire only on permit-adjacent AMBIGUITY ("hana kibali cha ukaazi", "hana makazi ya kudumu"), never on "mgeni" alone: a false NON-resident detection would apply a flat 15% to a resident (routing.py, the _PAYE_RESIDENCY_UNCLEAR_CUES block).
+    # The old question ("Mfanyakazi mgeni analipwa TZS 2,000,000 ...") therefore COMPUTED on the resident bands (TZS 428,000) as designed. The row below uses a question that is a REAL trigger.
+    ("CLARIFY", "Mhandisi analipwa TZS 4,000,000 kwa mwezi, hana kibali cha ukaazi — PAYE yake ni ngapi?", [r"MKAAZI WA KIKODI", r"siku 183"], [BARE], None, None, None),
     # ---- THE OTHER WIDENED TEXTS
-    ("RENT", "Kodi ya zuio kwenye pango ni asilimia ngapi?", [r"wakaazi wa kikodi", r"wasio wakaazi wa kikodi"], [BARE], None, STMT, 0),
+    # PROBE ERROR FIXED 2026-11-25 (R38): the rent statement is served by its OWN engine route (engine:rent_wht), not engine:fixed_statement; the required path was wrong, the reply (0 calls, the widened labels) was right.
+    ("RENT", "Kodi ya zuio kwenye pango ni asilimia ngapi?", [r"wakaazi wa kikodi", r"wasio wakaazi wa kikodi"], [BARE], None, "engine:rent_wht", 0),
     ("INDRETURN", "Mtu binafsi anawasilisha return ya kodi ya mapato lini?", [r"(?i)mkaazi wa kikodi"], [BARE], None, STMT, 0),
     ("GN487A", "Mgeni akikutwa akifanya biashara iliyozuiliwa chini ya GN 487A, anapata adhabu gani?", [r"kibali cha ukaazi"], [BARE], None, STMT, 0),
     # ---- THE DIRECTOR'S FEE STATEMENT (new, model-free): resident, non-resident, full-time phrasing, and the foreign-director question that was a model-path defect
