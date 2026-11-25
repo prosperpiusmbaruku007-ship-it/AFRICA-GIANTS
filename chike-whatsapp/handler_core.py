@@ -1245,6 +1245,16 @@ def answer_trace_record(path, model_calls, guards, fallback=False, error_class=N
         return {"cls": "unknown", "path": None, "routes": [], "model_calls": None, "guard_fired": None, "guards": None, "error_class": None}
 
 
+def count_holding_sent(items, include_test=False):
+    """HOLDING MESSAGES SENT (founder 2026-11-25): a SEPARATE EVENT from an answer path. The timeout sweep records `holding_notice_ts` / `holding_notice_ok` on the review item when it sends the one holding message;
+    this counts them (test items excluded unless asked, and the exclusion is visible). Pure."""
+    items = list(items)
+    live = items if include_test else [i for i in items if not _is_test_item(i)]
+    sent = [i for i in live if i.get("holding_notice_ts")]
+    return {"holding_sent": len(sent), "holding_failed": sum(1 for i in sent if i.get("holding_notice_ok") is False),
+            "excluded_test": 0 if include_test else len(items) - len(live)}
+
+
 def summarize_answer_paths(rows, include_test=False):
     """The split, from transcript rows (or review items) carrying `answer_trace`. Seeded / designated test senders are EXCLUDED and counted
     (an invisible exclusion is R39's shrinking count). Rows with no `answer_trace` (written before this existed) are counted as `untraced`, never as a class."""

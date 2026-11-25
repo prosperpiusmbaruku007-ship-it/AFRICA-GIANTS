@@ -102,3 +102,13 @@ def test_deliver_still_returns_the_same_row_shape_unsupervised_and_supervised():
     s = hc.Settings(model_timeout_s=5.0, slow_ack_after_s=0, cold_start_suspected_s=30.0, send_attempts=1, send_retry_delay_s=0.01, sender_salt="t", secrets=("x",))
     row = asyncio.run(hc.deliver("255700000000", "swali", ask, send_once, s, "t"))
     assert row["reply"] == "Jibu." and row["supervision"] == "sent" and sent == [("255700000000", "Jibu.")] and "answer_trace" not in row
+
+
+def test_holding_sent_is_a_separate_count_with_visible_test_exclusion():
+    items = [{"review_id": "r1", "holding_notice_ts": "2026-11-25T10:00:00+00:00", "holding_notice_ok": True},
+             {"review_id": "r2", "holding_notice_ts": "2026-11-25T10:01:00+00:00", "holding_notice_ok": False},
+             {"review_id": "r3"}, {"review_id": "TEST-1", "holding_notice_ts": "2026-11-25T10:02:00+00:00", "holding_notice_ok": True}]
+    h = hc.count_holding_sent(items)
+    assert h == {"holding_sent": 2, "holding_failed": 1, "excluded_test": 1}
+    assert hc.count_holding_sent(items, include_test=True)["holding_sent"] == 3
+    assert hc.count_holding_sent([]) == {"holding_sent": 0, "holding_failed": 0, "excluded_test": 0}

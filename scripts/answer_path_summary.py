@@ -35,6 +35,10 @@ def main(argv):
         d = modal.Dict.from_name("chike-transcripts-kv")
         rows = [v for _, v in d.items() if isinstance(v, dict) and v.get("kind") == "question"]
     print(render(core.summarize_answer_paths(rows, include_test="--include-test" in argv)))
+    if "--file" not in argv:
+        q = modal.Dict.from_name("chike-review-queue-kv")
+        h = core.count_holding_sent([v for _, v in q.items() if isinstance(v, dict)], include_test="--include-test" in argv)
+        print(f"holding messages sent (a separate event, not an answer path): {h['holding_sent']} ({h['holding_failed']} failed, {h['excluded_test']} test excluded)")
     return 0
 
 

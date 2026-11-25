@@ -1,0 +1,196 @@
+{
+ "swaps": [
+  [
+   3,
+   "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "Mgeni anayefanya kazi Tanzania analipa PAYE kwa kiwango gani?",
+   "original routes to NO fixed topic and no intent (model path); no figure and no residency cue, so the residency route does not fire"
+  ],
+  [
+   4,
+   "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?",
+   "WHT kwa ada ya mkurugenzi ni asilimia ngapi?",
+   "original has no director need-word (rate/asilimia/WHT), so the director route does not fire; model path"
+  ],
+  [
+   14,
+   "Nichangie NHIF kiasi gani kwa mfanyakazi?",
+   "Kodi ya faida ya mtaji (capital gains tax) ni kiasi gani?",
+   "original is IN SCOPE for the classifier (no OOC phrase): model path. NHIF is not in the OOC list"
+  ],
+  [
+   15,
+   "Kodi ya PAYE Kenya ni asilimia ngapi?",
+   "Ushuru wa forodha (import duty) wa gari ni kiasi gani?",
+   "original is IN SCOPE for the classifier: model path (the foreign-authority repair handles the REPLY, not the route)"
+  ],
+  [
+   16,
+   "Mechi ya Simba na Yanga ni lini?",
+   "Stamp duty ya kuuza nyumba ni kiasi gani?",
+   "original is IN SCOPE for the classifier (no phrase for football): model path. Bar B: an off-topic question reaches the model"
+  ]
+ ],
+ "rows": [
+  {
+   "n": 1,
+   "q": "Dawa zinatozwa VAT?",
+   "founder_class": "fixed_statement",
+   "classifier": "True",
+   "fixed_topic": "vat_medicines",
+   "intent": "fixed_statement",
+   "predicted": "fixed_statement",
+   "matches_founder_class": true
+  },
+  {
+   "n": 2,
+   "q": "PAYE ni asilimia ngapi?",
+   "founder_class": "fixed_statement",
+   "classifier": "True",
+   "fixed_topic": "paye_rate",
+   "intent": "fixed_statement",
+   "predicted": "fixed_statement",
+   "matches_founder_class": true
+  },
+  {
+   "n": 3,
+   "q": "Mgeni anayefanya kazi Tanzania analipa PAYE kwa kiwango gani?",
+   "founder_class": "fixed_statement",
+   "classifier": "True",
+   "fixed_topic": "paye_residency",
+   "intent": "fixed_statement",
+   "predicted": "fixed_statement",
+   "matches_founder_class": true
+  },
+  {
+   "n": 4,
+   "q": "WHT kwa ada ya mkurugenzi ni asilimia ngapi?",
+   "founder_class": "fixed_statement",
+   "classifier": "True",
+   "fixed_topic": "director_fees_wht",
+   "intent": "fixed_statement",
+   "predicted": "fixed_statement",
+   "matches_founder_class": true
+  },
+  {
+   "n": 5,
+   "q": "Mshahara wa TZS 800,000, PAYE ni kiasi gani?",
+   "founder_class": "engine",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "paye",
+   "predicted": "engine",
+   "matches_founder_class": true
+  },
+  {
+   "n": 6,
+   "q": "Nina wafanyakazi 12 kila mmoja analipwa TZS 500,000, SDL ni kiasi gani kwa mwezi?",
+   "founder_class": "engine",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "sdl",
+   "predicted": "engine",
+   "matches_founder_class": true
+  },
+  {
+   "n": 7,
+   "q": "Mfanyakazi analipwa TZS 1,200,000, mchango wa NSSF ni kiasi gani?",
+   "founder_class": "engine",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "nssf",
+   "predicted": "engine",
+   "matches_founder_class": true
+  },
+  {
+   "n": 8,
+   "q": "Nalipa kodi ya pango TZS 2,000,000 kwa mwezi, nikate withholding kiasi gani?",
+   "founder_class": "engine",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "rent_wht",
+   "predicted": "engine",
+   "matches_founder_class": true
+  },
+  {
+   "n": 9,
+   "q": "Mfanyakazi aliyefanya kazi mwaka mmoja akiachishwa kazi, anastahili malipo gani?",
+   "founder_class": "fact_model",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "fact_model",
+   "matches_founder_class": true
+  },
+  {
+   "n": 10,
+   "q": "Ada ya mkurugenzi ni TZS 5,000,000, WHT ni kiasi gani?",
+   "founder_class": "fact_model",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "fact_model",
+   "matches_founder_class": true
+  },
+  {
+   "n": 11,
+   "q": "Nikichelewa kuwasilisha ritani ya kodi ya mwaka, adhabu ni nini?",
+   "founder_class": "fact_model",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "fact_model",
+   "matches_founder_class": true
+  },
+  {
+   "n": 12,
+   "q": "Je, nahitaji leseni ya biashara kufungua duka la nguo?",
+   "founder_class": "fact_model",
+   "classifier": "True",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "fact_model",
+   "matches_founder_class": true
+  },
+  {
+   "n": 13,
+   "q": "Ushuru wa bidhaa (excise duty) kwenye vinywaji baridi ni kiasi gani?",
+   "founder_class": "ooc",
+   "classifier": "False",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "ooc",
+   "matches_founder_class": true
+  },
+  {
+   "n": 14,
+   "q": "Kodi ya faida ya mtaji (capital gains tax) ni kiasi gani?",
+   "founder_class": "ooc",
+   "classifier": "False",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "ooc",
+   "matches_founder_class": true
+  },
+  {
+   "n": 15,
+   "q": "Ushuru wa forodha (import duty) wa gari ni kiasi gani?",
+   "founder_class": "ooc",
+   "classifier": "False",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "ooc",
+   "matches_founder_class": true
+  },
+  {
+   "n": 16,
+   "q": "Stamp duty ya kuuza nyumba ni kiasi gani?",
+   "founder_class": "ooc",
+   "classifier": "False",
+   "fixed_topic": null,
+   "intent": "none",
+   "predicted": "ooc",
+   "matches_founder_class": true
+  }
+ ]
+}
