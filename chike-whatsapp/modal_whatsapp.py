@@ -417,6 +417,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         item["retry_of"] = retry_of
         item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
         item["answer_path"] = captured.get("path")                         # engine vs model, on the card
+        item["answer_trace"] = core.answer_trace_record(captured.get("path"), captured.get("model_calls"), captured.get("guards"), row.get("fallback"), row.get("error_class"))
         try:    # ANOTHER pending draft from this sender with the same / near-identical question (in the PUSH)
             item["duplicates_pending"] = core.pending_duplicates(item, _queue_items())
         except Exception:                                            # noqa: BLE001
@@ -455,13 +456,14 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
     if settings.disclosure_enabled and not retry_of:
         disclosure = await _ensure_disclosure(sender, settings, alias=sender_lid)
     row = await core.deliver(
-        sender, text, ask_capturing if settings.supervised else ask,
+        sender, text, ask_capturing,      # ALWAYS capturing (2026-11-25): the answer-path log needs path / model_calls / guards in every mode
         _send_once, settings, BUILD,
         hold_reply=_hold_for_review if settings.supervised else None)
     if retry_of:
         row["retry_of"] = retry_of
     row.update(disclosure)
     row["answer_path"] = captured.get("path")
+    row["answer_trace"] = core.answer_trace_record(captured.get("path"), captured.get("model_calls"), captured.get("guards"), row.get("fallback"), row.get("error_class"))
     _record_model_outcome(row)
     _write_row(row)
     _clear_inflight(sender, settings)

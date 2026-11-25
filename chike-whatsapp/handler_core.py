@@ -1201,6 +1201,78 @@ def needs_renotify(item, *, now=None, renotify_after_s=1800.0, max_renotifies=3)
         return True
 
 
+def answer_trace_record(path, model_calls, guards, fallback=False, error_class=None):
+    """ANSWER-PATH LOG (2026-11-25, founder): one compact, text-free record per real inbound message, so the pilot's split
+    (model-free statements vs engines vs the model) is MEASURED from traffic rather than guessed. PURE; never raises; stores NO message text
+    (the route NAME, the model-call count and whether a guard fired are all it carries). `cls` is one of:
+        fixed_statement  model-free fixed statement (engine:fixed_statement)
+        engine           a rules engine (route = its name, e.g. paye, sdl, rent_wht), incl. its ':ask' never-guess clarification
+        fact_model       the model answered from retrieved facts
+        clarification    a clarification not tied to an engine
+        ooc              out-of-scope refusal            coverage_refusal   the corpus holds nothing on it
+        multi            a multi-part question (routes lists each part)
+        fallback         the model did not answer and the participant got the FALLBACK line (error_class says why)
+        unknown          no path was captured (never guessed)
+    """
+    try:
+        if fallback:
+            cls, routes = "fallback", []
+        elif not isinstance(path, str) or not path:
+            cls, routes = "unknown", []
+        else:
+            routes = [p for p in path.split("+") if p]
+            if len(routes) > 1:
+                cls = "multi"
+            else:
+                p = routes[0]
+                if p.startswith("engine:fixed_statement"):
+                    cls = "fixed_statement"
+                elif p.startswith("engine:"):
+                    cls = "engine"
+                elif p == "fact":
+                    cls = "fact_model"
+                elif p == "refusal":
+                    cls = "ooc"
+                elif p in ("clarification", "coverage_refusal"):
+                    cls = p
+                else:
+                    cls = "unknown"
+        calls = model_calls if (isinstance(model_calls, int) and not isinstance(model_calls, bool)) else None
+        gl = list(guards) if isinstance(guards, (list, tuple)) else None
+        return {"cls": cls, "path": path if isinstance(path, str) else None, "routes": routes, "model_calls": calls,
+                "guard_fired": (None if gl is None else bool(gl)), "guards": gl, "error_class": error_class}
+    except Exception:                                                                    # noqa: BLE001  -- a log line must never break an answer
+        return {"cls": "unknown", "path": None, "routes": [], "model_calls": None, "guard_fired": None, "guards": None, "error_class": None}
+
+
+def summarize_answer_paths(rows, include_test=False):
+    """The split, from transcript rows (or review items) carrying `answer_trace`. Seeded / designated test senders are EXCLUDED and counted
+    (an invisible exclusion is R39's shrinking count). Rows with no `answer_trace` (written before this existed) are counted as `untraced`, never as a class."""
+    rows = list(rows)
+    test = [r for r in rows if _is_test_item(r)]          # the ONE definition of a test item (the structural guard forbids a second reader of test_sender)
+    live = rows if include_test else [r for r in rows if not _is_test_item(r)]
+    out = {"n": len(live), "excluded_test": 0 if include_test else len(test), "untraced": 0, "by_class": {}, "by_route": {},
+           "model_free": 0, "model_called": 0, "model_calls_unknown": 0, "guard_fired": 0}
+    for r in live:
+        t = r.get("answer_trace")
+        if not isinstance(t, dict):
+            out["untraced"] += 1
+            continue
+        out["by_class"][t.get("cls")] = out["by_class"].get(t.get("cls"), 0) + 1
+        for ro in (t.get("routes") or ()):
+            out["by_route"][ro] = out["by_route"].get(ro, 0) + 1
+        mc = t.get("model_calls")
+        if mc is None:
+            out["model_calls_unknown"] += 1
+        elif mc == 0:
+            out["model_free"] += 1
+        else:
+            out["model_called"] += 1
+        if t.get("guard_fired"):
+            out["guard_fired"] += 1
+    return out
+
+
 def review_item(row, sender, draft, engine_working=None, facts=(), review_id=None, model_calls=None, guards=None):
     """A queue entry. `sender` is the REAL number, which the transcript deliberately does not
     store — so this lives in its own store, behind its own token, and is purged on decision.
