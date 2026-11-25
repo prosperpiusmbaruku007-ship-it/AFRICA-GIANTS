@@ -8,7 +8,7 @@ from .results import ComputationResult, to_shillings, tzs
 
 
 def compute_wcf(gross_monthly_payroll) -> ComputationResult:
-    """WCF = 0.5% of gross cash emoluments. Applies from the first employee (no threshold)."""
+    """WCF = 0.5% of earnings (basic salary and fixed monthly allowances), paid monthly (GN 185/2016 reg 3 and 13; corrected 2026-11-24 from "gross cash emoluments"). Applies from the first employee (no threshold)."""
     gross = Decimal(gross_monthly_payroll)
     amount = to_shillings(gross * WCF_RATE)
     return ComputationResult(

@@ -4,8 +4,8 @@
   "_contract": "Any check that reads a cached source MUST call assert_edition(path, expected) first. A file whose edition is UNDECLARED may not be used to settle a figure.",
   "_generated_by": "scripts/check_source_editions.py --build",
   "counts": {
-    "files": 92,
-    "declared": 40,
+    "files": 93,
+    "declared": 41,
     "undeclared": 52,
     "superseded": 3
   },
@@ -849,6 +849,15 @@
       "kind": "portal",
       "edition": "UNDECLARED",
       "edition_evidence": "A portal/press capture with no edition or date marker in the document. The honest edition is 'whenever this was fetched', and that is NOT recorded anywhere -- so it may not be used to settle a figure on its own. Capture provenance was not kept when these were saved; re-fetch with a dated record if one of them needs to carry a claim.",
+      "superseded": false
+    },
+    "wcf/wcf_contribution_2026_11_24.html": {
+      "sha256": "d8d51e1ec7b3301b5b6f674964bb236e0721c27ec4ce5b30ee96ec1ffaee1c76",
+      "bytes": 98436,
+      "captured_local_mtime_utc": "2026-11-24T08:31:54Z",
+      "kind": "portal",
+      "edition": "captured 2026-11-24T08:31:54Z (live page https://www.wcf.go.tz/pages/contribution; the site gives no edition or date)",
+      "edition_evidence": "Fetched by curl, HTTP 200, 98,436 bytes. wcf.go.tz is the Workers Compensation Fund's own portal (whitelisted; ownership verified 2026-10-05). Reads: 'michango katika sekta binafsi ni asilimia 0.5% na sekta ya umma asilimia 0.5% ya mapato ya mfanyakazi kila mwezi'. DATED, UNLIKE wcf/wcf_michango.html (capture date unrecorded, edition UNDECLARED), which carries the same text.",
       "superseded": false
     }
   }

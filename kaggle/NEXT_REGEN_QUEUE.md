@@ -27,8 +27,13 @@ Queued 2026-11-17. The served index is 215 rows. The next regen batch applies ev
 
 ---
 
-## 3. QUEUED 2026-11-24 (founder: "don't do now"): WCF's contribution BASE — the remaining "cash" half
+## 3. RESOLVED 2026-11-24b (packaged, PENDING the Kaggle run): WCF's contribution BASE. See `kaggle/RUN_REGEN_2026_11_24b.md`. Original entry kept below.
 
 `scripts/locked_facts.json` `wcf_threshold_no_minimum` still says "WCF: 0.5% of gross cash emoluments, from employee 1", and so do `wcf_rate_0_5_percent_confirmed` (rates.py comment) and the WCF rate statement's base wording. The SDL half of the same sentence was corrected on 2026-11-24 against VETA Act s.14(3) ("gross monthly emoluments" INCLUDES allowances; the word "cash" is not in that Act). **The WCF base is defined by a DIFFERENT Act — the Workers Compensation Act Cap.263 — that was NOT read for this.**
 
 **To do:** cache the Workers Compensation Act Cap.263 R.E.2023 (edition asserted in `scripts/check_source_editions.py`), read the contribution provision and its definition of earnings / emoluments / wages verbatim, check Finance Acts 2024/2025/2026 and the WCF Regulations (GN 185/2016) for amendment (R29), and then EITHER confirm "cash" with the quoted text OR correct the wording in `wcf_threshold_no_minimum` (the SDL-correct half is already done), the WCF rate fact and its statement, and fix the corresponding index row (66) in the next regen. **Do not assume the SDL answer carries over: the two Acts define their bases separately.** Owner: the next regen window. Expiry: before the next WCF-touching change (R35: a queue item with no date lapses).
+
+
+## 4. HELD BY THE FOUNDER 2026-11-24b: the NSSF contribution base (`nssf_contribution_base_wages`), NOT packaged
+
+The page image of Cap.50 R.E.2023 (p.587, `data/source_documents/nssf/nssf_act_cap50_re2023.pdf` page 9) reads "and includes any allowance paid by the employer to the employee either directly or by implication in respect of **living** and any payment of wages in lieu of notice of termination of employment". So the proposed "posho yoyote" was WRONG: the Act names allowances "in respect of living" only. Awaiting the founder's read of the corrected wording; it rides the NEXT regen.

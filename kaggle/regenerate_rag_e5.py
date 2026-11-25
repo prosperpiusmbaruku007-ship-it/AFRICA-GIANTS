@@ -428,6 +428,12 @@ critical_queries = [
     ('GN487A non-citizen: fine OR imprisonment', 'query: Faini kwa raia wa kigeni anayevunja GN487A ni kiasi gani hasa?', ['AU kifungo kisichozidi miezi 6']),
     ('GN487A citizen facilitator: fixed fine', 'query: Adhabu kwa raia wa Tanzania anayemsaidia mgeni kukiuka GN487A ni nini?', ['anayemsaidia mgeni kukiuka GN487A: faini ya']),
     ('SDL payment form not asserted', 'query: Nalipa SDL kwa fomu gani?', ['Jina la fomu halijathibitishwa']),
+    # 2026-11-24b: FOUR NEW rows (medicines VAT-exempt, the PAYE base, the SDL deemed month of payment, the WCF base; the NSSF base is HELD by the founder) and row 66 revised in place (the WCF half: earnings, not 'gross cash emoluments'; row 66 has no guard of its own, its self-retrieval is checked by the dry run). The PAYE guard's first question (the live two-levy specimen) ranked 6: it is a two-topic question the decomposer splits, and the SDL-base row is its natural top hit, so the single-topic PAYE form is the guard.
+    # Questions are the LIVE specimens of build 37cdf9d verbatim where one exists; anchors are the PHRASE that carries the claim (never a figure) and match exactly ONE row.
+    ('Medicines VAT-exempt, not zero-rated', 'query: Dawa zinatozwa VAT?', ['MSAMAHA, si zero-rated']),
+    ('PAYE base is employment income', 'query: PAYE inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?', ['MAPATO YA AJIRA yote']),
+    ('SDL deemed month of payment', 'query: SDL ya mwezi Januari inahesabiwa kwa mshahara wa Januari au Desemba?', ['AMBAO yamelipwa']),
+    ('WCF base: earnings, not cash only', 'query: WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?', ['posho zisizobadilika zinazolipwa kila mwezi']),
     # ⛔ RE-ANCHORED 2026-10-05, BY THE ANCHOR-UNIQUENESS GATE DOING ITS JOB ON A KAGGLE RUN.
     # The anchor was bare 'asilimia 10'. The 2026-10-05 regen added rent_wht_rate, whose text
     # states a 10% withholding rate -- so a correct NEW fact made an OLD guard ambiguous:

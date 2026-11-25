@@ -2285,7 +2285,7 @@ def _p9_replacement(m) -> str:
     return "vyeti vya zuio (withholding certificates)" if plural else "cheti cha zuio (withholding certificate)"
 
 
-# ---- D-FIDELITY-32 (2026-11-24, founder: APPROVED IN DESIGN; wire ONLY if pricing shows 0 gold flags and exports still pass -- eval/fidelity/price_d32_2026_11_24.py): MEDICINES / MEDICAL EQUIPMENT CALLED ZERO-RATED. A CONSTANT (R19), FACT PATH. DETECTOR ONLY: NOT in body_contradicts_d16, no replacement copy yet.
+# ---- D-FIDELITY-32 (2026-11-24, founder: APPROVED IN DESIGN; wire ONLY if pricing shows 0 gold flags and exports still pass -- eval/fidelity/price_d32_2026_11_24.py): MEDICINES / MEDICAL EQUIPMENT CALLED ZERO-RATED. A CONSTANT (R19), FACT PATH. WIRED 2026-11-24 (founder approved the replacement copy, CONSTANT_RESTATEMENTS["medicines_zero_rated"] = the locked fact medicines_vat_exempt).
 # Specimen (live, build 37cdf9d, eval/results/followup_deploy_live_2026_11_24.json): "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%)"; "vifaa tiba (zero-rated)". VAT Act Cap.148 R.E.2023, Schedule Part I "SUPPLIES AND IMPORTS EXEMPT FROM VALUE ADDED TAX", item 7: essential human and
 #   veterinary medicine, drugs, medical equipment and packaging approved by the Minister are EXEMPT. s.5(3): a supply both exempt and zero-rated is zero-rated (so exported medicines ARE zero-rated: that sentence is lawful).
 # R25. (1) Defect: one live question, three live replies. (2) What CORRECT output could it damage: "dawa si zero-rated" (negation); "mauzo ya nje ni zero-rated; dawa ni msamaha" (the two words sit in DIFFERENT clauses); any sentence about exported/export medicines (zero-rated by s.5(3)+s.55). Vetoed by a negation cue in the clause, by clause scope, and by an export cue.
@@ -2323,6 +2323,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("sdl_scope_by_premises", s) for s in sdl_scope_by_premises(question, body)]   # D-FIDELITY-27
     out += [("nssf_contributions_age_60", s) for s in nssf_contributions_tied_to_age_60(question, body)]   # D-FIDELITY-28
     out += [("nssf_payment_deadline", s) for s in nssf_deadline_misstated(question, body)]   # D-FIDELITY-29
+    out += [("medicines_zero_rated", s) for s in medicines_called_zero_rated(question, body)]   # D-FIDELITY-32 (WIRED 2026-11-24 after pricing: 0 gold flags, 0 index flags)
     return out
 
 

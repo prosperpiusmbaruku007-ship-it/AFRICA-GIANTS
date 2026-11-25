@@ -72,8 +72,8 @@ def test_medical_fact_and_the_two_new_index_rows():
     f = _facts()["medical_services_vat_exempt"]
     assert f["status"] == "CONFIRMED" and "HAIJATHIBITISHWA" in f["fact"] and "Part I" in f["primary_source"] and "R.E. 2023" in f["verified_by"]
     texts, keys, _ = p.build_fact_texts()
-    assert len(texts) == 220 and keys[-2:] == ["sdl_base_includes_allowances", "medical_services_vat_exempt"]
-    assert "msamaha" in texts[-1].lower() and len(texts[-1]) < 260
+    assert len(texts) == 224 and keys[218:220] == ["sdl_base_includes_allowances", "medical_services_vat_exempt"]   # 220 -> 224 on 2026-11-24b (four rows appended after these two)
+    assert "msamaha" in texts[219].lower() and len(texts[219]) < 260
 
 
 def test_the_professional_route_still_vetoes_doctors_and_the_two_routes_are_exclusive():

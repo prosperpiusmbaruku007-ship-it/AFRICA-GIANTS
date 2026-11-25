@@ -18,7 +18,7 @@
         "P45.*P9"
       ],
       "rows": [
-        "p45 not tanzanian: Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act Cap.332 s.85(3)(b)) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact."
+        "p45 not tanzanian: Form P45 does not exist in Tanzania -- it is a UK payroll form. Tanzania's actual equivalent, on employment termination, is the annual employment-income withholding certificate (Income Tax Act) -- there is no 'P9' form name in Tanzanian law either; 'P9' is Kenyan (KRA) terminology, the same defect already found and corrected in this project's paye_p9_deadline fact."
       ]
     },
     {
@@ -55,6 +55,15 @@
       ],
       "rows": [
         "permit class d does not exist: Tanzania has NO Class D permit — only Class A (investor), Class B (employed expatriate), Class C (researcher/voluntary)"
+      ]
+    },
+    {
+      "key": "wcf_threshold_no_minimum",
+      "matched_patterns": [
+        "wcf threshold.*10"
+      ],
+      "rows": [
+        "wcf threshold no minimum: WCF (Workers Compensation Fund) applies to ALL employers in Mainland Tanzania from the first employee. There is NO minimum employee count threshold. Contrast with SDL which requires 10+ employees. WCF: 0.5% of gross cash emoluments, from employee 1. SDL: 3.5% of total gross monthly emoluments (allowances included), from employee 10."
       ]
     },
     {
@@ -107,7 +116,7 @@
       "key": "form_number_payment_credit_slip",
       "expected_figure": "2026",
       "rows": [
-        "form number payment credit slip: SDL payments are made using form ITX 300.01.E, the Employment Taxes Payment Credit Slip"
+        "Nalipa SDL kwa fomu gani? Jina la fomu halijathibitishwa: ritani ya SDL inawasilishwa TRA kupitia IDRAS na malipo kwa Kamishna kufikia tarehe 7. ITX 300.01.E ni ya mwongozo wa zamani, si uhakika. Thibitisha na TRA."
       ]
     },
     {
@@ -115,6 +124,13 @@
       "expected_figure": "82",
       "rows": [
         "Nani hatozwi SDL? Walioorodheshwa kisheria: Serikali (ruzuku), balozi, UN, misaada ya kimataifa, taasisi za dini, hisani, elimu iliyosajiliwa, halmashauri, wanafunzi wa TaESA, mashamba (wafanyakazi wa kilimo), mamlaka ya maji (vibarua wa miradi); Waziri wa Fedha anaweza kusamehe kwa Gazeti."
+      ]
+    },
+    {
+      "key": "sdl_base_includes_allowances",
+      "expected_figure": "82",
+      "rows": [
+        "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara ghafi ya mwezi, ikijumuisha posho zote (safari, malazi, burudani), bonasi na kamisheni. Faida zisizo za fedha hazijatajwa: thibitisha na TRA."
       ]
     }
   ],
@@ -173,9 +189,9 @@
   "unresolved": [
     "health_and_safety_act_citation",
     "legal_citation_tax_administration",
-    "legal_citation_amendment_act_sdl",
-    "sdl_base_includes_allowances",
-    "medical_services_vat_exempt"
+    "legal_citation_amendment_act_sdl"
   ],
-  "no_check_possible": []
+  "no_check_possible": [
+    "medical_services_vat_exempt"
+  ]
 }

@@ -152,6 +152,12 @@ ADJUDICATED_KEEPS = {
     ],
     "datasets/tier1a/sft/val_sft.jsonl": [
         {
+            "needle": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri",
+            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
+            "why": ("2026-11-24b: MOVED from train_sft.jsonl to val_sft.jsonl by the export regeneration after the medicines corpus repairs (generate_sft.py splits train/val over the WHOLE set, so removing rows reshuffles which file a kept row lands in; the row is unchanged). "
+                    "Exported copy of the b008_paye_adv_005 restoration above: restored upstream, then regenerated (R36's converse). Pinned by CONTENT, never by line -- this file is reshuffled on every rebuild."),
+        },
+        {
             "needle": "Bendi tano za PAYE Tanzania 2025/2026: (1) TZS 0 hadi 270,000: kiwango 0%",
             "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
             "why": (
@@ -165,13 +171,6 @@ ADJUDICATED_KEEPS = {
         },
     ],
     "datasets/tier1a/sft/train_sft.jsonl": [
-        {
-            "needle": "Mfumo wa PAYE Tanzania una bendi ya kiwango cha sifuri",
-            "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",
-            "why": ("Exported copy of the b008_paye_adv_005 restoration above: restored "
-                    "upstream, then regenerated (R36's converse). Pinned by CONTENT, never "
-                    "by line -- this file is reshuffled on every rebuild."),
-        },
         {
             "needle": "Ndiyo — mshahara wa TZS 270,001 unaathiriwa na bendi ya pili",
             "quarantined_by": "paye_defect_quarantine_2026_08_25.jsonl",

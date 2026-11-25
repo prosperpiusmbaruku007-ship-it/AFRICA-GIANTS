@@ -1166,6 +1166,21 @@ _BATCH_2026_11_24 = {
 _COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('sdl_base_includes_allowances', 'medical_services_vat_exempt')
 CONCISE_BILINGUAL_FACTS.update(_BATCH_2026_11_24)
 
+# --- 2026-11-24b: FOUR NEW rows (founder-approved facts: medicines VAT-exempt, the PAYE base, the SDL deemed month of payment, the WCF base), appended after row 219 so no existing row number moves; plus the in-place WCF 'cash' correction of row 66 (built from the fact text, no entry here). ---
+# Ask-aligned lead (R15), short (R15 length lesson), no section number in the Swahili text (R44). The NSSF base is HELD by the founder (the Act's 'wages' definition reads 'in respect of living').
+_BATCH_2026_11_24B = {
+    'medicines_vat_exempt':
+        "Dawa zinatozwa VAT: zero-rated au msamaha? MSAMAHA, si zero-rated: dawa muhimu za binadamu na mifugo, vifaa tiba na vifungashio VILIVYOIDHINISHWA na Waziri. Zero-rated ni mauzo ya nje; bidhaa yenye msamaha na zero-rating huwa zero-rated. Thibitisha na TRA.",
+    'paye_base_employment_income':
+        "PAYE inakatwa kwenye nini, posho zinaingia? Kwenye MAPATO YA AJIRA yote: mshahara, bonasi, kamisheni, posho za safari/malazi/burudani na faida zisizo za fedha zilizokokotolewa kisheria; si mshahara wa msingi pekee. Posho ya kurudisha gharama tu haihesabiwi. Thibitisha na TRA.",
+    'sdl_deemed_month_of_payment':
+        "SDL ya Januari ni ya mshahara wa Januari au Desemba? Malipo yanahesabiwa kwa mwezi AMBAO yamelipwa, hata kama ni ya kazi ya mwezi mwingine: SDL ya Januari ni ya malipo yaliyolipwa Januari. Thibitisha na TRA.",
+    'wcf_contribution_base':
+        "WCF inakatwa kwenye nini? Kwenye mapato ya wafanyakazi: mshahara wa msingi NA posho zisizobadilika zinazolipwa kila mwezi pamoja nao, si 'fedha taslimu' tu; kiwango asilimia 0.5 kwa mujibu wa WCF, hulipwa kila mwezi. Mwajiri haruhusiwi kumkata mfanyakazi. Thibitisha na WCF.",
+}
+_COVERAGE_NEW_KEYS = _COVERAGE_NEW_KEYS + ('medicines_vat_exempt', 'paye_base_employment_income', 'sdl_deemed_month_of_payment', 'wcf_contribution_base')
+CONCISE_BILINGUAL_FACTS.update(_BATCH_2026_11_24B)
+
 
 def build_fact_text(key: str, value: str) -> str:
     # Concise Swahili-dominant text for high-stakes facts (short — no long English tail).

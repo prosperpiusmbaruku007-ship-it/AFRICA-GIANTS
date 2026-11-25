@@ -690,6 +690,11 @@ CONSTANT_RESTATEMENTS["nssf_contributions_age_60"] = (
     "Kwa mfanyakazi aliyefika 60 au anayepokea pensheni na bado ameajiriwa, thibitisha na NSSF (nssf.go.tz).")
 
 
+# D-FIDELITY-32 (2026-11-24, founder-approved text): replacement copy for medicines / medical equipment called zero-rated. It IS the locked fact medicines_vat_exempt (VAT Act Cap.148 R.E.2023, Schedule Part I item 7; s.74 apportionment quoted in the fact); R44: the Act is named, no section number.
+CONSTANT_RESTATEMENTS["medicines_zero_rated"] = (
+    "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.")
+
+
 def constants_restated(topics) -> str:
     """The whole statement for every violated constant topic, in the order given, each once."""
     seen, out = set(), []

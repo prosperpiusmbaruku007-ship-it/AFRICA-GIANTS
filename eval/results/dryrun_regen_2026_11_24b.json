@@ -1,0 +1,182 @@
+{
+  "_what": "Local offline dry-run of the 2026-11-24 R15 regen package (220 -> 224: medicines, PAYE base, SDL deemed month, WCF base; row 66 revised in place), before Kaggle.",
+  "_model": "intfloat/multilingual-e5-base",
+  "_offline": "HF_HUB_OFFLINE=1; weights already cached locally. The regen header's 'weights do not download locally' is true of DOWNLOADING, not of loading.",
+  "prospective_row_count": 224,
+  "deployed_row_count": 220,
+  "⚠️_rag_fact_count_must_be_bumped": {
+    "from": 220,
+    "to": 224,
+    "where": "kaggle/chike_config.json rag_fact_count",
+    "⛔_WHEN": "IN THE SAME COMMIT AS THE FETCHED .npy/.json ARTIFACTS, NEVER BEFORE. modal_app.py asserts this count against the loaded index and REFUSES TO SERVE on a mismatch (verified live 2026-08-24: HTTP 500). The config is fetched from GitHub at runtime, so bumping it while production still holds the old index takes production DOWN."
+  },
+  "anchor_uniqueness_new_guards": [
+    {
+      "guard": "Medicines are VAT-exempt, not zero-rated (the live 'Dawa zinatozwa VAT?' -> 'zero-rated (tozo 0%)')",
+      "anchor": "MSAMAHA, si zero-rated",
+      "matches": 1,
+      "rows": [
+        220
+      ]
+    },
+    {
+      "guard": "PAYE base is employment income (the live 'PAYE ... basic salary only')",
+      "anchor": "MAPATO YA AJIRA yote",
+      "matches": 1,
+      "rows": [
+        221
+      ]
+    },
+    {
+      "guard": "SDL deemed month of payment (the live 'si Desemba wala miezi mingine')",
+      "anchor": "AMBAO yamelipwa",
+      "matches": 1,
+      "rows": [
+        222
+      ]
+    },
+    {
+      "guard": "WCF base: earnings incl. fixed allowances, not cash only",
+      "anchor": "posho zisizobadilika zinazolipwa kila mwezi",
+      "matches": 1,
+      "rows": [
+        223
+      ]
+    }
+  ],
+  "anchor_faults_ALL_committed_guards": [
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "osha husajili",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "wcf huanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    },
+    {
+      "guard": "OSHA/WCF small-count (Q14 verbatim)",
+      "anchor": "mfanyakazi wa kwanza",
+      "kind": "AMBIGUOUS",
+      "matches": [
+        {
+          "row": 69,
+          "key": "osha_vs_wcf_roles"
+        },
+        {
+          "row": 70,
+          "key": "small_headcount_still_register"
+        }
+      ],
+      "accepted_benign": true
+    }
+  ],
+  "anchor_faults_blocking": [],
+  "new_guards": [
+    {
+      "name": "Medicines are VAT-exempt, not zero-rated (the live 'Dawa zinatozwa VAT?' -> 'zero-rated (tozo 0%)')",
+      "anchor": "MSAMAHA, si zero-rated",
+      "from": "eval/results/followup_deploy_live_2026_11_24.json, the live question of build 37cdf9d VERBATIM",
+      "why_this_anchor": "the phrase that carries the claim, in no other row",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "Dawa zinatozwa VAT: zero-rated au msamaha? MSAMAHA, si zero-rated: dawa muhimu za binadamu na mifugo, vifaa ti",
+        "Daktari au kliniki inatozwa VAT? Huduma za afya ni msamaha zikitolewa na taasisi iliyoidhinishwa na Serikali N",
+        "Naweza kudai VAT ya manunuzi (input VAT)? Anayeuza bidhaa za zero-rated (kiwango 0%) ANAWEZA kudai input VAT y"
+      ]
+    },
+    {
+      "name": "PAYE base is employment income (the live 'PAYE ... basic salary only')",
+      "anchor": "MAPATO YA AJIRA yote",
+      "from": "AUTHORED single-topic form (the live two-levy specimen ranked 6: a two-topic question the decomposer splits, and the SDL-base row is its natural top hit)",
+      "why_this_anchor": "the base clause exists only in the new row",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "PAYE inakatwa kwenye nini, posho zinaingia? Kwenye MAPATO YA AJIRA yote: mshahara, bonasi, kamisheni, posho za",
+        "PAYE inalipwa lini? Mwajiri analipa PAYE aliyokata kwa TRA ndani ya siku 7 baada ya mwisho wa kila mwezi, yaan",
+        "Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni mapato ya ajira: yanaingia kwenye mapato ya"
+      ]
+    },
+    {
+      "name": "SDL deemed month of payment (the live 'si Desemba wala miezi mingine')",
+      "anchor": "AMBAO yamelipwa",
+      "from": "the live question of build 37cdf9d, verbatim in the live artifact",
+      "why_this_anchor": "the deeming clause exists only in the new row",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "SDL ya Januari ni ya mshahara wa Januari au Desemba? Malipo yanahesabiwa kwa mwezi AMBAO yamelipwa, hata kama ",
+        "Msingi wa SDL ni nini, posho zinaingia? Ndiyo: ni jumla ya mishahara ghafi ya mwezi, ikijumuisha posho zote (s",
+        "Mfano wa hesabu ya SDL: mfanyakazi mmoja mwenye mshahara TZS 600,000, SDL ni asilimia 3.5 = TZS 21,000. Kwa wa"
+      ]
+    },
+    {
+      "name": "WCF base: earnings incl. fixed allowances, not cash only",
+      "anchor": "posho zisizobadilika zinazolipwa kila mwezi",
+      "from": "AUTHORED (no committed fixture asks the WCF base)",
+      "why_this_anchor": "the base clause exists only in the new row",
+      "in_top3": true,
+      "rank": 1,
+      "top3": [
+        "WCF inakatwa kwenye nini? Kwenye mapato ya wafanyakazi: mshahara wa msingi NA posho zisizobadilika zinazolipwa",
+        "WCF (Workers Compensation Fund): mwajiri analipa asilimia 0.5 ya jumla ya mishahara yote kila mwezi. Si kiasi ",
+        "OSHA na WCF ni taasisi mbili tofauti. OSHA husajili mahali pa kazi (Sheria ya OSHA Na.5 ya 2003), hukagua, na "
+      ]
+    }
+  ],
+  "displacement_regressions_caused_by_this_package": [],
+  "pre_existing_failures_not_caused_by_this_package": [],
+  "changed_rows_self_retrieve": [
+    {
+      "key": "wcf_threshold_no_minimum",
+      "row": 66,
+      "self_retrieves": true
+    },
+    {
+      "key": "medicines_vat_exempt",
+      "row": 220,
+      "self_retrieves": true
+    },
+    {
+      "key": "paye_base_employment_income",
+      "row": 221,
+      "self_retrieves": true
+    },
+    {
+      "key": "sdl_deemed_month_of_payment",
+      "row": 222,
+      "self_retrieves": true
+    },
+    {
+      "key": "wcf_contribution_base",
+      "row": 223,
+      "self_retrieves": true
+    }
+  ],
+  "verdict": "SAFE TO RUN"
+}

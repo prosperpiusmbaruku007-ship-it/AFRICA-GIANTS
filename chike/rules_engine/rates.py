@@ -117,7 +117,7 @@ NSSF_EMPLOYEE_RATE = Decimal("0.10")  # nssf_total_rate : standard 10% employee
 # NSSF_split_triggers documents non-standard splits (15/5, 20/0); total is ALWAYS 20%.
 
 # WCF — Workers Compensation Fund
-WCF_RATE = Decimal("0.005")           # wcf_rate_0_5_percent_confirmed : 0.5% of gross cash emoluments
+WCF_RATE = Decimal("0.005")           # wcf_rate_0_5_percent_confirmed : 0.5% of earnings (basic salary and fixed monthly allowances), paid monthly (corrected 2026-11-24 from "gross cash emoluments")
 WCF_MIN_EMPLOYEES = 1                 # wcf_threshold_no_minimum : from the first employee, no threshold
 
 # PAYE — Pay As You Earn (employment income tax)
