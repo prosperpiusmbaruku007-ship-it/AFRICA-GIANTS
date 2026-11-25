@@ -1,0 +1,301 @@
+{
+ "identity": {
+  "build": "c50345c",
+  "rag_rows_loaded": 224,
+  "rag_embeddings_shape": [
+   224,
+   768
+  ],
+  "rag_facts_text_sha256": "e97ed6019e2a90d96800204acc141f4e44408a46c5fa82ffe996db0b37928f6b",
+  "config_rag_fact_count": 224,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795606188.853,
+   "enter_started_ts": 1795606189.173,
+   "enter_done_ts": 1795606255.488,
+   "import_to_enter_s": 0.3,
+   "load_s": 66.3,
+   "gpu": "Tesla T4"
+  }
+ },
+ "rows": [
+  {
+   "arm": "FOREIGN",
+   "q": "Does a foreign employee pay PAYE at a different rate from a citizen?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RESIDENT_FOREIGNER",
+   "q": "Is a resident foreigner taxed on the PAYE bands?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "RESIDENT_FOREIGNER",
+   "q": "Mgeni mwenye makazi ya kudumu Tanzania analipa PAYE kwa bendi au 15%?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "BACKSTOP",
+   "q": "Mgeni anayefanya kazi Tanzania, kiwango chake cha PAYE ni nini mwezi Januari?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI (mkaazi au asiye mkaazi wa kikodi) kwa mujibu wa Sheria ya Kodi ya Mapato; uraia au kuwa mgeni peke yake si kigezo. Thibitisha ukaazi wako wa kikodi na kiwango stahiki na TRA (tra.go.tz).",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "KENYA",
+   "q": "Kiwango cha PAYE Kenya ni asilimia ngapi?",
+   "reply": "Sina uhakika wa viwango vya kodi vya Kenya -- ninasaidia tu na maswali ya Tanzania Bara. Kwa taarifa hizo, wasiliana na mamlaka ya kodi ya nchi husika.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "repaired"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "IMPORT_HM",
+   "q": "Huduma za afya na dawa zinazoingizwa kutoka nje zinatozwa VAT?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.\n\nDawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "PHARMACY",
+   "q": "Duka la dawa linatakiwa kusajili VAT, na dawa zinatozwa VAT gani?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.\n\nMauzo ya bidhaa au huduma zilizosamehewa VAT HAYAHESABIWI kwenye mauzo (turnover) yanayolinganishwa na kizingiti cha usajili wa VAT; mauzo ya bidhaa au huduma zinazotozwa VAT (zisizosamehewa) HUHESABIWA (Sheria ya VAT). Kwa hiyo mfanyabiashara anayeuza bidhaa zilizosamehewa na zinazotozwa VAT huhesabu mauzo ya zile zinazotozwa tu; kizingiti ni TZS 200,000,000 kwa miezi 12 au TZS 100,000,000 kwa miezi 6. Kama shughuli ni huduma za kitaalamu kwa maana ya Sheria, kanuni ya usajili wa huduma za kitaalamu inaweza kutumika bila kujali kizingiti: thibitisha na TRA. Sheria haielezi wazi kama anayeuza bidhaa za msamaha pekee anaweza au lazima ajisajili; thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CHINA",
+   "q": "Dawa zinazoingizwa kutoka China zinatozwa VAT?",
+   "reply": "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.\n\nDawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [
+    "replaced"
+   ],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG_DIRECTOR",
+   "q": "Mkurugenzi mgeni anapokea ada ya mkurugenzi, WHT ni asilimia ngapi?",
+   "reply": "Kiwango cha withholding tax kwa ada ya mkurugenzi (director fees) kwa wasio-wakazi ni asilimia 15. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG_NONRESIDENT",
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "NEG_COMPUTE",
+   "q": "Mshahara wangu ni TZS 800,000 kwa mwezi, PAYE ni kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 800,000 kwa mwezi, PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_engine:fixed_statement": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GATE",
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "GATE",
+   "q": "Je, mfanyakazi asiye mkazi HALIPI mabano ya kawaida ya PAYE?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "PAYE ni asilimia ngapi?",
+   "reply": "PAYE HAINA kiwango kimoja: ni mabano yanayopanda kulingana na mshahara wa mwezi wa mfanyakazi. Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkazi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Bendi za PAYE ni zipi?",
+   "reply": "Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkazi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Huduma za afya zinatozwa VAT? Na dawa je?",
+   "reply": "Huduma za afya (tiba, meno, uuguzi, ukunga, kupona, urekebishaji, macho au zinazofanana) ni MSAMAHA wa VAT, yaani hazitozwi VAT, zinapotolewa (a) na au ndani ya taasisi iliyoidhinishwa na Serikali kwa huduma hizo, NA (b) na, au chini ya usimamizi na udhibiti wa, mtu aliyesajiliwa kuwa na sifa chini ya sheria za Tanzania (au anayetambuliwa kuwa na sifa) (Sheria ya VAT). Masharti YOTE MAWILI lazima yatimie: huduma inayotolewa nje ya taasisi iliyoidhinishwa, au bila mtaalamu aliyesajiliwa, haipo kwenye msamaha huu. Sheria ya usajili wa huduma za kitaalamu haisemi wazi kama mtoa huduma wa afya anayetoa huduma zilizosamehewa tu anatakiwa kujisajili VAT: HAIJATHIBITISHWA hapa, kwa hiyo thibitisha na TRA (tra.go.tz) kabla ya kuamua.\n\nDawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?",
+   "reply": "Msingi wa michango ya WCF ni MAPATO YA KILA MWAKA (annual earnings) ya wafanyakazi: kiasi anacholipa mwajiri kwa wafanyakazi wake, kinachojumuisha mshahara wa msingi NA posho nyingine ZISIZOBADILIKA zinazolipwa kila mwezi pamoja na mshahara (Kanuni za Fidia kwa Wafanyakazi, 2016); si 'fedha taslimu' tu. Ritani ya mwaka inaonyesha mapato hadi kiwango cha juu ambacho Waziri anaweza kukitangaza kwenye Gazeti (Sheria ya Fidia kwa Wafanyakazi). Kiwango (tariff) cha asilimia kinatolewa na Mkurugenzi Mkuu kwa kuzingatia mapato na kiwango cha hatari; kiwango cha sasa ni asilimia 0.5 kwa mujibu wa WCF. Michango ya mwezi hulipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi huo. Mwajiri haruhusiwi kukata mchango huu kutoka kwenye mshahara wa mfanyakazi (Sheria ya Fidia kwa Wafanyakazi). Thibitisha na WCF.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "CTRL",
+   "q": "Nina wafanyakazi 15, je natakiwa kulipa SDL?",
+   "reply": "Ndiyo, una wafanyakazi 15, hivyo unalazimika kulipa SDL. Kiwango chake ni asilimia 3.5 ya jumla ya mishahara yao. Thibitisha na tra.go.tz.\nNdiyo. Una wafanyakazi 15 (10 au zaidi), hivyo SDL inatozwa — asilimia 3.5 ya jumla ya mishahara.",
+   "path": "engine:sdl",
+   "model_calls": 2,
+   "guards": [],
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true,
+ "guards_seen": [
+  "repaired",
+  "replaced"
+ ]
+}

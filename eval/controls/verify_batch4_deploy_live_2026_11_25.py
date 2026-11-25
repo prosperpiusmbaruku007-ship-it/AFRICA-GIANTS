@@ -49,7 +49,8 @@ CASES = [
     # (arm, question, must, must_not, path_forbidden_prefix, path_required_prefix, model_calls_expected)
     # ---- THE FOREIGN EMPLOYEE (the live defect of build 16f0a43), now a model-free statement
     ("FOREIGN", "Does a foreign employee pay PAYE at a different rate from a citizen?", [r"UKAAZI WA KIKODI", r"kodi ya mwisho \(final\)", r"siku 183", r"si 15%"], [BARE_UKAZI, FOREIGN_15], None, STMT, 0),
-    ("RESIDENT_FOREIGNER", "Is a resident foreigner taxed on the PAYE bands?", [r"UKAAZI WA KIKODI", r"mkaazi wa kikodi analipa PAYE kwa mabano"], [BARE_UKAZI], None, STMT, 0),
+    # PROBE ERROR FIXED 2026-11-25 (R38, found by reading): the `must` wanted lowercase "mkaazi" but the statement begins that sentence "Mkaazi wa kikodi ...": case, not content. (?i) now.
+    ("RESIDENT_FOREIGNER", "Is a resident foreigner taxed on the PAYE bands?", [r"UKAAZI WA KIKODI", r"(?i)mkaazi wa kikodi analipa PAYE kwa mabano"], [BARE_UKAZI], None, STMT, 0),
     ("RESIDENT_FOREIGNER", "Mgeni mwenye makazi ya kudumu Tanzania analipa PAYE kwa bendi au 15%?", [r"UKAAZI WA KIKODI", r"makazi ya kudumu"], [BARE_UKAZI], None, STMT, 0),
     # ---- THE BACKSTOP: a phrasing the route declines (a named month), so D-FIDELITY-34 and its holding line are the layer under test
     ("BACKSTOP", "Mgeni anayefanya kazi Tanzania, kiwango chake cha PAYE ni nini mwezi Januari?", [], [FOREIGN_15], "engine:fixed_statement", None, None),

@@ -86,3 +86,14 @@ def test_the_old_negation_rule_would_have_missed_the_live_reply():
 def test_new_patterns_contain_no_control_characters():
     for n in ("_D32_NEG_ADJ", "_D32_CLAUSE_VETO", "_D33_STD", "_D33_VAT_AMOUNT", "_D33_SAFE", "_D33_VAT"):
         assert not any(ord(c) < 32 for c in getattr(fidelity, n).pattern), n
+
+
+def test_two_topics_carrying_one_string_print_it_once():
+    """FOUND LIVE 2026-11-25 (build c50345c, 'Dawa zinazoingizwa kutoka China zinatozwa VAT?'): D-FIDELITY-32 and D-FIDELITY-33 both fired, and the replacement printed the medicines statement TWICE."""
+    both = clarification.constants_restated(["medicines_zero_rated", "medicines_taxed"])
+    one = clarification.CONSTANT_RESTATEMENTS["medicines_zero_rated"]
+    assert both == one and both.count("MSAMAHA wa VAT, si zero-rated") == 1
+    body = "Dawa zinaweza kuwa zero-rated (msamaha wa VAT) au exempt (si zero-rated). VAT ni asilimia 18."
+    q = "Dawa zinazoingizwa kutoka China zinatozwa VAT?"
+    assert {t for t, _ in fidelity.body_contradicts_d16(q, body)} == {"medicines_zero_rated", "medicines_taxed"}, "the specimen must trigger BOTH guards"
+    assert _ans(q, body).text.count("MSAMAHA wa VAT, si zero-rated") == 1

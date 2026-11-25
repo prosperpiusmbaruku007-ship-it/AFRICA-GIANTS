@@ -727,11 +727,14 @@ def constants_restated_for(question: str, topics) -> str:
 
 def constants_restated(topics) -> str:
     """The whole statement for every violated constant topic, in the order given, each once."""
-    seen, out = set(), []
+    seen, seen_text, out = set(), set(), []
     for t in topics:
         if t not in seen:
             seen.add(t)
-            out.append(CONSTANT_RESTATEMENTS[t])
+            text = CONSTANT_RESTATEMENTS[t]
+            if text not in seen_text:     # 2026-11-25: two TOPICS can carry ONE string (medicines_zero_rated and medicines_taxed); the live China-medicines reply printed it twice when both guards fired
+                seen_text.add(text)
+                out.append(text)
     return "\n\n".join(out)
 
 
