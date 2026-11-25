@@ -1520,7 +1520,7 @@ def fixed_figure_violations(question: str, body: str):
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
         if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party",
-                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
+                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "vat_medicines", "paye_base", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here

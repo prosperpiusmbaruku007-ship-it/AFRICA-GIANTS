@@ -34,12 +34,16 @@ class _S(ModelBackend):
         return self.t
 
 
+# 2026-11-25: "Dawa zinatozwa VAT?" now routes to the model-free vat_medicines STATEMENT (no model body, nothing for the guard to judge), so the guard is exercised on a question the route DECLINES (a registration limb vetoes it) and therefore reaches the model on the fact path.
+Q_FACT = "Duka la dawa linatakiwa kusajili VAT, na dawa zinatozwa VAT gani?"
+
+
 def _ans(q, body):
     return Orchestrator(backend=_S(body), retriever=lambda *a, **k: ["x"], system_prompt="x").answer(q)
 
 
 def test_wired_specimen_is_replaced_by_the_locked_statement():
-    r = _ans("Dawa zinatozwa VAT?", "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%).")
+    r = _ans(Q_FACT, "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%).")
     assert "replaced" in [getattr(x, "guard", "") for x in r.sub_answers]
     assert "MSAMAHA wa VAT, si zero-rated" in r.text and "tozo 0%" not in r.text, r.text
 
@@ -48,18 +52,23 @@ def test_replacement_copy_is_the_locked_fact_and_does_not_flag_itself():
     import json
     fact = json.load(open("scripts/locked_facts.json", encoding="utf-8"))["medicines_vat_exempt"]["fact"]
     copy = clarification.CONSTANT_RESTATEMENTS["medicines_zero_rated"]
-    assert fact.startswith(copy) and not fidelity.body_contradicts_d16("Dawa zinatozwa VAT?", copy)
+    assert fact.startswith(copy) and not fidelity.body_contradicts_d16(Q_FACT, copy)
     assert "Kifungu" not in copy and "s.74" not in copy          # R44
 
 
 @pytest.mark.parametrize("body", ["Dawa zinazouzwa nje ya nchi ni zero-rated.", "Dawa si zero-rated; ni msamaha wa VAT.", "Mauzo ya nje ni zero-rated; dawa ni msamaha."])
 def test_correct_bodies_pass_through_untouched(body):
-    r = _ans("Dawa zinatozwa VAT?", body)
+    r = _ans(Q_FACT, body)
     assert not any(getattr(x, "guard", "") in ("replaced", "repaired") for x in r.sub_answers), r.text
 
 
 def test_planted_trigger_disabled_lets_the_specimen_through(monkeypatch):
     """R26: with the detector disabled the specimen must reach the user, or the wiring test above proves nothing."""
     monkeypatch.setattr(fidelity, "medicines_called_zero_rated", lambda q, b: [])
-    r = _ans("Dawa zinatozwa VAT?", "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%).")
+    r = _ans(Q_FACT, "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%).")
     assert "tozo 0%" in r.text
+
+
+def test_the_question_for_the_guard_tests_really_is_declined_by_the_route():
+    from chike import routing
+    assert routing.fixed_statement_topic(Q_FACT) is None and routing.fixed_statement_topic("Dawa zinatozwa VAT?") == "vat_medicines"

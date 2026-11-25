@@ -1,0 +1,38 @@
+{"id": "mp_01", "question": "Dawa zinatozwa VAT?", "expect": "vat_medicines", "guards_against": "FOUNDING SPECIMEN (live, build 37cdf9d): the model answered 'zero-rated (tozo 0%)'."}
+{"id": "mp_02", "question": "Dawa nyingi za binadamu zinatozwa VAT au ni zero-rated?", "expect": "vat_medicines", "guards_against": "the zero-rated-or-exempt alternative, in the asker's words."}
+{"id": "mp_03", "question": "Are medicines VAT-exempt in Tanzania?", "expect": "vat_medicines", "guards_against": "English form."}
+{"id": "mp_04", "question": "Vifaa tiba vinatozwa VAT?", "expect": "vat_medicines", "guards_against": "medical equipment, the other half of the Schedule item."}
+{"id": "mp_05", "question": "Dawa za mifugo zimesamehewa VAT?", "expect": "vat_medicines", "guards_against": "veterinary medicine is named by the item."}
+{"id": "mp_06", "question": "Dawa ni zero-rated kwa VAT, sivyo?", "expect": "vat_medicines", "guards_against": "a PREMISE check: the statement is the whole rule, so it answers a wrong premise too."}
+{"id": "mp_07", "question": "Dawa zinazouzwa nje ya nchi zinatozwa VAT?", "expect": "vat_medicines", "guards_against": "exports: the statement says an exempt-and-zero-rated supply is zero-rated, which is the right answer here."}
+{"id": "mp_08", "question": "Nikinunua dawa naweza kudai input VAT?", "expect": "vat_medicines", "guards_against": "input credit: the statement says credit is for taxable supplies only."}
+{"id": "mp_09", "question": "What is the VAT rate on medicines for a pharmacy?", "expect": "vat_medicines", "guards_against": "a rate ask in English."}
+{"id": "mp_10", "question": "Dawa za TZS 5,000,000 nimeuza, VAT ni ngapi?", "expect": "none", "guards_against": "a FIGURE: a computation question, not a statement."}
+{"id": "mp_11", "question": "Duka la dawa linatakiwa kusajili VAT?", "expect": "none", "guards_against": "REGISTRATION of a pharmacy is an exempt-only registration question the Act does not settle: the medicines statement does not answer it."}
+{"id": "mp_12", "question": "Daktari anatozwa VAT kwenye dawa anazoagiza?", "expect": "none", "guards_against": "a health word: the medical-services route owns doctors, and the two routes must be exclusive."}
+{"id": "mp_13", "question": "Bima ya afya na dawa zinatozwa VAT?", "expect": "none", "guards_against": "health INSURANCE is another exempt item."}
+{"id": "mp_14", "question": "Dawa zinazoingizwa kutoka China zinatozwa VAT na ushuru wa forodha?", "expect": "none", "guards_against": "IMPORTS and customs duty: the statement does not cover them."}
+{"id": "mp_15", "question": "Faini ya kuchelewa kulipa VAT kwa duka la dawa ni nini?", "expect": "none", "guards_against": "a penalty."}
+{"id": "mp_16", "question": "Duka la dawa linahitaji leseni ya TMDA na VAT?", "expect": "none", "guards_against": "licensing (TMDA) is a different question."}
+{"id": "mp_17", "question": "Huduma za afya zinatozwa VAT? Na dawa je?", "expect": "none", "guards_against": "the live two-part follow-up, now merged whole: health words veto the medicines route and medicine words veto the medical route, so neither answers half of it (it falls to the fact path with both rows retrievable)."}
+{"id": "mp_18", "question": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?", "expect": "vat_medical_services", "guards_against": "a DOCTOR stays on the medical-services route (mutual exclusion)."}
+{"id": "mp_19", "question": "Mhandisi anatakiwa kusajili VAT bila kujali mauzo?", "expect": "vat_professional_services", "guards_against": "an engineer stays on the professional-services route."}
+{"id": "mp_20", "question": "VAT ni asilimia ngapi kwa bidhaa za kawaida?", "expect": "not:vat_medicines", "guards_against": "no medicine word: the standard-rate question must never reach the medicines statement."}
+{"id": "pp_01", "question": "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?", "expect": "paye_base", "guards_against": "FOUNDING SPECIMEN, the live TWO-LEVY question (build 37cdf9d): 'PAYE ... basic salary only'. Answered by ONE composite statement."}
+{"id": "pp_02", "question": "PAYE inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?", "expect": "paye_base", "guards_against": "the single-topic form of the same question."}
+{"id": "pp_03", "question": "Is PAYE calculated on basic salary only or on allowances too?", "expect": "paye_base", "guards_against": "English form."}
+{"id": "pp_04", "question": "Bonasi na kamisheni zinaingia kwenye PAYE?", "expect": "paye_base", "guards_against": "bonus and commission are named by the Act."}
+{"id": "pp_05", "question": "Faida zisizo za fedha (benefits in kind) zinahesabiwa kwenye PAYE?", "expect": "paye_base", "guards_against": "benefits in kind: the Act includes them when quantified."}
+{"id": "pp_06", "question": "Posho ya safari inakatwa PAYE?", "expect": "paye_base", "guards_against": "travel allowance: included unless it solely reimburses expenses."}
+{"id": "pp_07", "question": "Mshahara wangu TZS 1,200,000 na posho TZS 200,000, PAYE ni kiasi gani?", "expect": "none", "guards_against": "FIGURES: the PAYE engine answers this, never a statement."}
+{"id": "pp_08", "question": "PAYE ni asilimia ngapi?", "expect": "not:paye_base", "guards_against": "a RATE/BAND question: the band-table statement or the engine, never the base statement."}
+{"id": "pp_09", "question": "PAYE inalipwa lini?", "expect": "not:paye_base", "guards_against": "a DEADLINE."}
+{"id": "pp_10", "question": "Posho ya nyumba inakatwa NSSF na PAYE?", "expect": "not:paye_base", "guards_against": "another levy (NSSF) is named: a different question."}
+{"id": "pp_11", "question": "Severance inakatwa PAYE?", "expect": "not:paye_base", "guards_against": "severance has its own fact (severance_pay_income_tax)."}
+{"id": "pp_12", "question": "SDL inakokotolewa kwenye nini, posho zinaingia?", "expect": "sdl_base", "guards_against": "an SDL-only base question stays on the SDL-base route (mutual exclusion)."}
+{"id": "pp_13", "question": "Mfanyakazi asiye mkazi PAYE ni ngapi kwenye posho?", "expect": "not:paye_base", "guards_against": "non-residents are taxed differently."}
+{"id": "pp_14", "question": "Fomu ya PAYE inajazwa wapi na posho zinaingia?", "expect": "not:paye_base", "guards_against": "a how-to / where question."}
+{"id": "pp_15", "question": "PAYE ya mfanyakazi inakokotolewa vipi hatua kwa hatua?", "expect": "not:paye_base", "guards_against": "a METHOD question (the bands), which the base statement does not answer."}
+{"id": "pp_16", "question": "Cheti cha PAYE na posho kinatolewa lini?", "expect": "not:paye_base", "guards_against": "a certificate and a date."}
+{"id": "pp_17", "question": "Mshahara wa msingi ni nini?", "expect": "none", "guards_against": "no levy named: a definition question."}
+{"id": "pp_18", "question": "Kodi ya mapato ya kampuni inakokotolewa kwa msingi gani?", "expect": "not:paye_base", "guards_against": "corporate tax, not PAYE (no PAYE word)."}

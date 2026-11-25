@@ -1,0 +1,189 @@
+{
+ "self_retrieval": {
+  "old_220": {
+   "rank_of_row_188_for_its_own_text": 1,
+   "top3": [
+    [
+     188,
+     1.0,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyet"
+    ],
+    [
+     195,
+     0.918,
+     "Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sah"
+    ],
+    [
+     186,
+     0.903,
+     "Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unato"
+    ]
+   ]
+  },
+  "new_224": {
+   "rank_of_row_188_for_its_own_text": 1,
+   "top3": [
+    [
+     188,
+     1.0,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyet"
+    ],
+    [
+     195,
+     0.918,
+     "Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sah"
+    ],
+    [
+     186,
+     0.903,
+     "Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unato"
+    ]
+   ]
+  }
+ },
+ "phrasings": [
+  {
+   "label": "verbatim: eval corpus",
+   "question": "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+   "rank_old_220": 5,
+   "rank_new_224": 5,
+   "new_top3": [
+    [
+     156,
+     0.822,
+     "employer notification deadline before retirement: 6 months"
+    ],
+    [
+     154,
+     0.818,
+     "duration of maternity cash benefit: 12 weeks"
+    ],
+    [
+     157,
+     0.815,
+     "fund payment deadline after retirement notification: 60 days"
+    ]
+   ]
+  },
+  {
+   "label": "verbatim: eval corpus (miezi 8)",
+   "question": "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?",
+   "rank_old_220": 1,
+   "rank_new_224": 1,
+   "new_top3": [
+    [
+     188,
+     0.885,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miez"
+    ],
+    [
+     214,
+     0.874,
+     "Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni map"
+    ],
+    [
+     186,
+     0.858,
+     "Maelezo ya maandishi ya ajira: mkataba wenye yote hayo unatosha, hakun"
+    ]
+   ]
+  },
+  {
+   "label": "verbatim: eval corpus (premise)",
+   "question": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+   "rank_old_220": 4,
+   "rank_new_224": 4,
+   "new_top3": [
+    [
+     156,
+     0.841,
+     "employer notification deadline before retirement: 6 months"
+    ],
+    [
+     124,
+     0.837,
+     "compliance license processing time old: 28 days"
+    ],
+    [
+     161,
+     0.834,
+     "penalty imprisonment non citizen: six months null"
+    ]
+   ]
+  },
+  {
+   "label": "authored: miezi 12",
+   "question": "Mfanyakazi amefanya kazi miezi 12 mfululizo, nikimwachisha nimlipe severance kiasi gani?",
+   "rank_old_220": 1,
+   "rank_new_224": 1,
+   "new_top3": [
+    [
+     188,
+     0.863,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miez"
+    ],
+    [
+     154,
+     0.853,
+     "duration of maternity cash benefit: 12 weeks"
+    ],
+    [
+     156,
+     0.843,
+     "employer notification deadline before retirement: 6 months"
+    ]
+   ]
+  },
+  {
+   "label": "authored: mwaka mmoja",
+   "question": "Nimefanya kazi mwaka mmoja na nimeachishwa kazi, nina haki ya malipo gani ya kuachishwa?",
+   "rank_old_220": 1,
+   "rank_new_224": 1,
+   "new_top3": [
+    [
+     188,
+     0.848,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miez"
+    ],
+    [
+     195,
+     0.842,
+     "Fidia ya kuachishwa kazi isivyo haki: kwa utaratibu usio sahihi, malip"
+    ],
+    [
+     214,
+     0.829,
+     "Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni map"
+    ]
+   ]
+  },
+  {
+   "label": "authored: the day count",
+   "question": "Severance pay ni siku ngapi za mshahara kwa kila mwaka wa kazi?",
+   "rank_old_220": 2,
+   "rank_new_224": 2,
+   "new_top3": [
+    [
+     214,
+     0.88,
+     "Severance (malipo ya kuachishwa kazi) inakatwa kodi kiasi gani? Ni map"
+    ],
+    [
+     188,
+     0.876,
+     "Malipo ya kuachishwa kazi (severance pay): mfanyakazi aliyetimiza miez"
+    ],
+    [
+     189,
+     0.841,
+     "Likizo ya mwaka ni siku ngapi? Angalau siku 28 mfululizo kwa kila mzun"
+    ]
+   ]
+  }
+ ],
+ "any_outside_top3_new": [
+  "verbatim: eval corpus",
+  "verbatim: eval corpus (premise)"
+ ],
+ "verdict": "FIX NEEDED"
+}

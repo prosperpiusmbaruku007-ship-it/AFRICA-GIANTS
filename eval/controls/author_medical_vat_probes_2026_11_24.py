@@ -16,7 +16,7 @@ add("mv_04", "Daktari binafsi aliyefungua kliniki ndogo anahitaji kusajili VAT?"
 add("mv_05", "Huduma za meno zimesamehewa VAT?", T, "dental, exempt?")
 add("mv_06", "Muuguzi anayetoa huduma nyumbani anatakiwa kusajili VAT?", T, "nurse, registration (a service outside an approved institution: the statement says both limbs are required).")
 add("mv_07", "Daktari mwenye mauzo ya TZS 30,000,000 anatakiwa kusajili VAT?", "none", "a figure: the registration engine.")
-add("mv_08", "Dawa zinatozwa VAT?", "none", "medicines are a DIFFERENT exempt item.")
+add("mv_08", "Dawa zinatozwa VAT?", "vat_medicines", "EXPECT INVERTED 2026-11-25 (was none: medicines are a DIFFERENT exempt item from health services, and no route owned them). The vat_medicines route now owns this question; the medical-services route still must NOT (it vetoes medicine words), which is what this probe now checks by asserting the OTHER route's topic.")
 add("mv_09", "Bima ya afya inatozwa VAT?", "none", "health INSURANCE is another exempt item.")
 add("mv_10", "Daktari akichelewa kusajili VAT adhabu ni nini?", "none", "a penalty.")
 add("mv_11", "Daktari anasajili VAT hiari?", "none", "voluntary registration.")

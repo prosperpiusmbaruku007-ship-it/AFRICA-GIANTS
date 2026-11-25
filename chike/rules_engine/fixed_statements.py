@@ -87,6 +87,9 @@ SDL_BASE = "sdl_base"
 LEVY_RATES_THREE = "levy_rates_three"
 LEVY_DEADLINES_THREE = "levy_deadlines_three"
 VAT_MEDICAL = "vat_medical_services"          # "Daktari ... kusajili VAT?" -> a live "Ndiyo": medical services are an EXEMPT supply on two conditions
+# 2026-11-25 (founder, from the live check of build 37cdf9d): MEDICINES / approved medical equipment are VAT-EXEMPT (live: "zero-rated (tozo 0%)"), and the PAYE BASE is employment income (live: "basic salary only"). Both from approved locked facts.
+VAT_MEDICINES = "vat_medicines"
+PAYE_BASE = "paye_base"
 
 
 def _paye_bands_text() -> str:
@@ -383,11 +386,22 @@ STATEMENTS = {
         "Locked fact medical_services_vat_exempt (VAT Act Cap.148 R.E.2023, Schedule made under s.6(1), Part I, item 'Health care' para 1, read directly 2026-11-24, edition asserted; both limbs joined by 'and'; FA2024/25/26 do not touch the item). The registration limb is a HEDGE by construction: s.29(1) carries no exempt-supply carve-out "
         "in its words while s.28(6)(a) excludes non-taxable supplies from the registration turnover, so the Act text does not say whether an exempt-only practitioner must register. Founding specimen: build 84d8621 live, 'Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?' -> 'Ndiyo ... anatakiwa kusajili VAT'. Founder-approved 2026-11-24. R44: the Act is named, no section or item number",
     ),
+    VAT_MEDICINES: (
+        "medicines_vat_exempt",
+        "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.",
+        "Locked fact medicines_vat_exempt (VAT Act Cap.148 R.E.2023, Schedule Part I item 7 'Medicine or pharmaceutical products', s.5(3), s.74(1)-(2); read directly 2026-11-24 with the edition asserted; Finance Acts 2024/25/26 do not name the item). The statement IS the fact text and the D-FIDELITY-32 replacement copy (CONSTANT_RESTATEMENTS['medicines_zero_rated']); a test pins that they are one string. Founding specimen: build 37cdf9d live, 'Dawa zinatozwa VAT?' -> 'zero-rated (tozo 0%)'. Founder-approved 2026-11-24b. R44: the Act is named, no section number.",
+    ),
+    PAYE_BASE: (
+        "paye_base_employment_income",
+        "PAYE hukatwa kwenye MAPATO YA AJIRA ya mfanyakazi, si mshahara wa msingi pekee (Sheria ya Kodi ya Mapato). Yanajumuisha mshahara, malipo badala ya likizo, ada, kamisheni, bonasi, kiinua mgongo (gratuity) na posho yoyote ya safari, malazi, burudani au nyingine, pamoja na faida zisizo za fedha (benefits in kind) zilizokokotolewa kisheria. Vichache vimeondolewa kisheria, kwa mfano posho inayorudisha tu gharama zilizotumika kikamilifu kuzalisha mapato, na faida ya matumizi ya gari ambapo mwajiri hadai makato wala nafuu kuhusu umiliki, matengenezo au uendeshaji wa gari hilo; orodha kamili iko kwenye Sheria. Thibitisha na TRA.",
+        "Locked fact paye_base_employment_income (Income Tax Act Cap.332 R.E.2023 s.7(2)-(3) and s.104(1); read directly 2026-11-24, edition asserted; unamended by Finance Acts 2024/25/26). When the question ALSO names SDL, fixed_statement() appends the SDL limb (locked fact sdl_base_includes_allowances, VETA Act s.14(3)): allowances are in BOTH bases, benefits in kind are quantified and in PAYE and not named for SDL. Founding specimen: build 37cdf9d live, 'Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?' -> 'PAYE inakokotolewa kwa msingi wa mshahara wa msingi pekee'. Founder-approved 2026-11-24b. R44: Acts named, no section number.",
+    ),
 }
 
 TOPICS = tuple(STATEMENTS)
 TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY,
-                                   SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE, SDL_BASE, LEVY_RATES_THREE, LEVY_DEADLINES_THREE, VAT_MEDICAL})
+                                   SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE, SDL_BASE, LEVY_RATES_THREE, LEVY_DEADLINES_THREE, VAT_MEDICAL,
+                                   VAT_MEDICINES})   # VAT_MEDICINES: the statement states the 0% of zero-rating, the served row (written for retrieval) does not, so the digit check is skipped; the fact text is pinned to the statement by tests/test_two_statements_2026_11_25.py
 
 
 # 2026-11-24 (founder, GN 487A premise answers; THIS STATEMENT ONLY): when the question states a figure that CONTRADICTS the Order, the answer opens with an explicit "Hapana" before the correct figures. The Order's figures: a non-citizen -- fine of NOT LESS THAN TZS 10,000,000
@@ -437,6 +451,9 @@ def fixed_statement(topic, question=None) -> ComputationResult:
     key, text, note = STATEMENTS[topic]
     if topic == GN487A_PENALTIES and question:
         text = gn487a_premise_opening(question) + text
+    if topic == PAYE_BASE and question and _re.search(r"(?<![a-z])sdl(?![a-z])|tozo\s+la\s+mafunzo|skills\s+development\s+levy", question, _re.IGNORECASE):
+        text += (" Kwa SDL: msingi ni jumla ya mishahara ghafi ya mwezi, na posho zote zimo (Sheria ya Elimu na Mafunzo ya Ufundi); faida zisizo za fedha hazijatajwa kwenye Sheria. "
+                 "Kwa hiyo posho zinaingia kwenye PAYE na kwenye SDL; tofauti iko kwenye faida zisizo za fedha: PAYE inazihesabu (zilizokokotolewa kisheria), SDL Sheria haizitaji.")
     return ComputationResult(
         computation="fixed_statement",
         applicable=True,

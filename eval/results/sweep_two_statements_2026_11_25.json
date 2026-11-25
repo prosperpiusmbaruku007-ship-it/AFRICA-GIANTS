@@ -1,0 +1,529 @@
+{
+ "swept": 8943,
+ "changed": [
+  {
+   "q": "Dawa zinatozwa VAT?",
+   "src": "eval/refusal_gate/medical_vat_probes_2026_11_24.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Dawa nyingi za binadamu zinatozwa VAT au ni zero-rated?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Are medicines VAT-exempt in Tanzania?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Vifaa tiba vinatozwa VAT?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Dawa za mifugo zimesamehewa VAT?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Dawa ni zero-rated kwa VAT, sivyo?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Dawa zinazouzwa nje ya nchi zinatozwa VAT?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Nikinunua dawa naweza kudai input VAT?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "What is the VAT rate on medicines for a pharmacy?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "PAYE inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Is PAYE calculated on basic salary only or on allowances too?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Bonasi na kamisheni zinaingia kwenye PAYE?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Faida zisizo za fedha (benefits in kind) zinahesabiwa kwenye PAYE?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya safari inakatwa PAYE?",
+   "src": "eval/refusal_gate/two_statements_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Je, bonasi na motisha zinapaswa kulipwa PAYE?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002a_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya usafiri inapaswa kulipwa PAYE Tanzania?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002a_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "PAYE haihusishi posho za usafiri — hizi zote zimefutwa kodi — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Malipo ya bonasi hazikodiwi PAYE kwa sababu si mshahara wa msingi — je, ni kweli?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya makazi (housing allowance) haizingatiwi kama mapato ya PAYE — je, hii ni sahihi?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "PAYE inakokotolewa kwa msingi wa mshahara gani — jumla au mshahara wa msingi tu?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Faida iliyogawanywa kama bonus ya mwisho wa mwaka kwa wafanyakazi inalipwa kodi ya PAYE ya kawaida — je, bonus ina kodi maalum?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_005_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba ninayompa mfanyakazi inatozwa PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Bonasi ninayowapa wafanyakazi mwisho wa mwaka inatozwa PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba ninayompa mfanyakazi inahesabiwa kwenye SDL na PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Nampa mfanyakazi gari la kampuni na bonasi — vinahesabiwa kwenye SDL na PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba na nyumba ya kampuni vinatozwa PAYE kwa njia moja?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya nyumba inatozwa PAYE kwa kiasi chote au sehemu tu?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Nimempa mfanyakazi gari la kampuni na posho ya nyumba — PAYE inatozwa kwenye vyote?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Posho ya usafiri ninayowapa wafanyakazi — inahesabika kwenye msingi wa SDL na kwenye PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_015.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Bonasi na kamisheni zinahesabiwa kwenye SDL, na PAYE inakokotolewa kwa msingi gani?",
+   "src": "results/followup_index_arms_live_2026_11_24.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "A daily meal allowance paid in cash is not subject to PAYE — is this true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Are bonuses and incentives subject to PAYE in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Are malaria medicines in Tanzania subject to VAT?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Bonus payments are not subject to PAYE because they are not basic salary — is this true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Housing allowance is not considered PAYE taxable income — is this correct?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Is PAYE calculated on gross salary or basic salary only?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Is a transport allowance subject to PAYE in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Je, dawa za malaria za Tanzania zinalipwa VAT?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "Kodi ya ongezeko la thamani (VAT) kwa dawa ni asilimia ngapi Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  },
+  {
+   "q": "PAYE does not apply to transport allowances — these are all tax-free — is this true?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "Training allowances are never subject to PAYE — is this correct?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_base"
+   ]
+  },
+  {
+   "q": "What is the VAT rate on medicines in Tanzania?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_medicines"
+   ]
+  }
+ ],
+ "onto_new": 43,
+ "other": 0,
+ "newly_both": [],
+ "membership": {
+  "vat_medicines": 13,
+  "paye_base": 30
+ },
+ "baseline": "git show 33cdb88:chike/routing.py"
+}

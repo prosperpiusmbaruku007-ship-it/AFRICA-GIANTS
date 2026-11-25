@@ -1,0 +1,69 @@
+{
+ "phrasings": [
+  "Naomba maelezo ya severance pay kwa mfanyakazi aliyeachishwa.",
+  "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?",
+  "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?",
+  "Mfanyakazi amefanya kazi miezi 12 mfululizo, nikimwachisha nimlipe severance kiasi gani?",
+  "Nimefanya kazi mwaka mmoja na nimeachishwa kazi, nina haki ya malipo gani ya kuachishwa?",
+  "Severance pay ni siku ngapi za mshahara kwa kila mwaka wa kazi?"
+ ],
+ "candidates": {
+  "current (served)": {
+   "chars": 319,
+   "ranks": [
+    5,
+    1,
+    4,
+    1,
+    1,
+    2
+   ],
+   "worst": 5,
+   "outside_top3": 2
+  },
+  "A ask-led, same claims": {
+   "chars": 297,
+   "ranks": [
+    5,
+    1,
+    8,
+    1,
+    2,
+    1
+   ],
+   "worst": 8,
+   "outside_top3": 2
+  },
+  "B shorter": {
+   "chars": 224,
+   "ranks": [
+    5,
+    1,
+    8,
+    1,
+    4,
+    1
+   ],
+   "worst": 8,
+   "outside_top3": 3
+  },
+  "C shortest": {
+   "chars": 229,
+   "ranks": [
+    4,
+    1,
+    7,
+    1,
+    2,
+    1
+   ],
+   "worst": 7,
+   "outside_top3": 2
+  }
+ },
+ "text": {
+  "A ask-led, same claims": "Severance pay (malipo ya kuachishwa kazi) ni kiasi gani? Mfanyakazi aliyetimiza miezi 12 mfululizo na akaachishwa anapata angalau mshahara wa msingi wa siku 7 kwa kila mwaka kamili, hadi miaka 10. Hayalipwi kwa utovu wa nidhamu, kukataa kazi mbadala bila sababu, kustaafu au mkataba kuisha (ELRA).",
+  "B shorter": "Severance pay ni kiasi gani? Aliyetimiza miezi 12 mfululizo na akaachishwa: siku 7 za mshahara wa msingi kwa kila mwaka kamili, hadi miaka 10. Si kwa utovu wa nidhamu, kukataa kazi mbadala, kustaafu au mkataba kuisha (ELRA).",
+  "C shortest": "Severance pay ni nini? Mfanyakazi aliyeachishwa baada ya miezi 12 mfululizo: siku 7 za mshahara wa msingi kwa kila mwaka kamili (hadi miaka 10), isipokuwa utovu wa nidhamu, kukataa kazi mbadala, kustaafu au mkataba kuisha (ELRA)."
+ }
+}

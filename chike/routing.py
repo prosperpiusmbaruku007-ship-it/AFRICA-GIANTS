@@ -2929,6 +2929,28 @@ _FS_TOPICS = (
      re.compile(_NEW_SDL),
      re.compile(r"audit|ukaguzi|kagua|kaguli|inspect"),
      re.compile(r"[0-9]|" + _NEW_EXEMPT_WORDS + r"|kizingiti|threshold|wangapi|kiasi\s+gani|asilimia|kiwango|(?<![a-z])rate|kokotoa|hesab|kokot|(?<![a-z])(?:paye|nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])")),
+    # 2026-11-25 (founder): MEDICINES and approved medical equipment are VAT-EXEMPT, not zero-rated (live: "zero-rated (tozo 0%)"). A medicine word AND a VAT ask; figures, registration, thresholds, penalties, refunds, how-to, dates, other taxes, imports, insurance and every HEALTH-SERVICE word veto
+    # (the medical-services route owns those and vetoes medicine words, so the two are exclusive). Probes both ways: eval/refusal_gate/two_statements_probes_2026_11_25.jsonl; every diversion over the held questions READ.
+    ("vat_medicines",
+     re.compile(r"(?<![a-z])vat(?![a-z])"),
+     re.compile(r"(?=.*(?<![a-z])(?:dawa|madawa|medicines?|drugs?|pharmaceuticals?|vifaa\s+tiba|medical\s+(?:equipment|supplies|devices))(?![a-z]))", re.S),
+     re.compile(r"[0-9]|" + _NEW_MONEY + r"|hiari|voluntar|" + _NEW_PENALTY_WORDS + r"|refund|rejesho|kughairi|kufuta|kujiondoa|cancel|deregist|zuio|withhold|(?<![a-z])efd|risiti|sajili|usajili|register|registration|kizingiti|threshold|turnover|bima|insurance|"
+               r"import|inaingizwa|kuingiza|kuagiza|forodha|customs|ushuru|leseni|licen[cs]e|tmda|(?<![a-z])(?:nssf|paye|sdl|wcf|brela|wht)(?![a-z])|kodi\s+ya\s+mapato|fomu|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni|(?<![a-z])lini(?![a-z])|tarehe|deadline|kuanza|(?<![a-z])start|newly|mpya|"
+               # the MEDICAL-SERVICES route owns health words (and vetoes medicine words), so the two are exclusive by construction
+               r"daktari|doctor|kliniki|clinic|hospitali|hospital|muuguzi|nurse|meno|dental|huduma\s+za\s+afya|health\s+(?:care|services?)|matibabu|maabara|laborator")),
+    # 2026-11-25 (founder): the PAYE BASE is employment income, not basic salary only (live: "PAYE inakokotolewa kwa msingi wa mshahara wa msingi pekee"). A PAYE word AND a base cue; figures, rates / bands, penalties, exemptions, dates, forms, how-to, other levies (SDL is ALLOWED: the two-levy question
+    # "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?" is answered by ONE composite statement; the SDL-base route vetoes PAYE, so they are exclusive), severance, certificates and non-residents veto.
+    ("paye_base",
+     re.compile(r"(?<![a-z])paye(?![a-z])"),
+     re.compile(r"msingi|(?<![a-z])base(?![a-z])|inakokotolewa|inahesabiwa|zinahesabiwa|kinahesabiwa|inakatwa\s+kwenye|hukatwa\s+kwenye|zinaingia|inaingia|zimo|inajumuisha|zinajumuisha|posho|allowances?|bonasi|bonus|kamisheni|commission|faida\s+zisizo|benefits?\s+in\s+kind|basic\s+salary|ghafi|gross|calculated\s+on"),
+     re.compile(r"[0-9]|" + _NEW_MONEY + r"|kiwango|asilimia|(?<![a-z])rates?(?![a-z])|bendi|(?<![a-z])bands?(?![a-z])|mabano|percent|%|" + _NEW_PENALTY_WORDS + r"|msamaha|exempt|(?<![a-z])lini(?![a-z])|tarehe|deadline|muda|siku|fomu|(?<![a-z])forms?(?![a-z])|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni|"
+               r"kokotoa|(?<![a-z])hesabu|(?<![a-z])(?:nssf|wcf|vat|efd|osha|brela|nhif|wht|zuio)(?![a-z])|severance|kuachishwa|redundan|kustaafu|pension|kiinua|gratuity|(?<![a-z])p9|cheti|certificate|return|ritani|non-?resident|asiye\s+mkazi|wasio\s+wakazi|mgeni|wageni|kodi\s+ya\s+kampuni|corporate|"
+               # from reading the first sweep (59 diversions, 2026-11-25): a METHOD / gross-up / worked-example ask, apprentices and interns (a separate exempt category), sales agents and directors (employment status or a different withholding), foreign employees, a band change or proration, a named month (the deemed-month rule),
+               # a "from what amount" threshold ask and medical items (the Act excludes some medical benefits) are different questions the base statement does not answer
+               r"inakokotolewaje|inahesabiwaje|kinakokotolewa\s+vipi|inakokotolewa\s+vipi|inahesabiwa\s+vipi|how\s+to\s+calculate|how\s+is|step|hatua\s+kwa\s+hatua|mfano|example|gross-?up|net-?to-?gross|"
+               r"apprentice|mwanafunzi|intern|mafunzo|wakala|agent|contractor|mkandarasi|consultant|mshauri|mkurugenzi|director|foreign|expat|kigeni|"
+               r"daraja|upya|katikati|prorat|anaondoka|kuondoka|januari|februari|machi|aprili|mei(?![a-z])|juni|julai|agosti|septemba|oktoba|novemba|desemba|january|february|march|april|june|july|august|september|october|november|december|"
+               r"kuanzia|kiasi\s+gani|kikomo|(?<![a-z])limit|matibabu|medical|afya|health")),
 )
 
 
@@ -2977,6 +2999,8 @@ _FS_TOPIC_ASK = {
     "brela_late_annual_return": re.compile(r"\?|nini|gani|ngapi|kiasi|(?<![a-z])je(?![a-z])|matokeo|what|consequence|how\s+much"),
     "sdl_paye_deadline": re.compile(r"(?<![a-z])lini(?![a-z])|tarehe|siku|deadline|muda|wakati|mwisho|ifikapo|kabla|(?<![a-z])due(?![a-z])|(?<![a-z])date|when|by\s+the"),
     "sdl_audit_hedge": re.compile(r"\?|vipi|jinsi|namna|how|what|nini|gani|(?<![a-z])je(?![a-z])"),
+    "vat_medicines": re.compile(r"\?|(?<![a-z])je(?![a-z])|inatozwa|zinatozwa|hutozwa|tozwa|zero|msamaha|exempt|zimesamehewa|charge|kodi|asilimia|kiwango|(?<![a-z])rate|ngapi|kiasi\s+gani"),
+    "paye_base": re.compile(r"\?|(?<![a-z])je(?![a-z])|ipi|gani|nini|vipi|inaingia|zinaingia|zimo|inajumuisha|zinajumuisha|inahesabiwa|inakokotolewa|inakatwa|hukatwa|tofauti|what|which|how|include"),
     "vat_medical_services": re.compile(r"\?|(?<![a-z])je(?![a-z])|anatakiwa|inatozwa|hutozwa|lazima|msamaha|exempt|zimesamehewa|sajili|register|charge|tozwa|kodi"),
     "sdl_base": re.compile(r"\?|nini|gani|vipi|(?<![a-z])je(?![a-z])|inajumuisha|zinajumuisha|(?<![a-z])includes?(?![a-z])|calculat|inahesabiwa|inakokotolewa|kinahesabiwa|kinakokotolewa"),
     "levy_rates_three": re.compile(r"asilimia|[kv]iwango|(?<![a-z])rates?(?![a-z])|percent|%|ngapi"),
@@ -2989,8 +3013,8 @@ _FS_TOPIC_ASK = {
 }
 # The question is ABOUT a levy by name (WCF, "zuio") for these two: the global veto "another levy is named" would swallow them, and each carries its own veto above.
 # 2026-11-18: topics routed ONLY on their own ask, never on the global _FS_ASK (the annual-return deadline: its global-ask diversions were definitions, late-payment amounts and strike-off questions)
-_FS_OWN_ASK_ONLY = frozenset({"brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
-_FS_LEVY_EXEMPT = frozenset({"wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
+_FS_OWN_ASK_ONLY = frozenset({"vat_medicines", "paye_base", "brela_annual_return_deadline", "future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
+_FS_LEVY_EXEMPT = frozenset({"paye_base", "wcf_accident_reporting", "vat_withholding_mixed_supply", "wcf_disease_reporting", "nssf_split", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity", "future_year_rate", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"})
 
 
 # ── THE NO-FIGURE SECTOR-WAGE ASK (2026-11-22, preliminary Gate 2) ───────────────────────────────────────────────────────────────────────────────────────────────
