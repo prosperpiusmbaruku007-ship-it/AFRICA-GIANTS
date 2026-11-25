@@ -90,6 +90,10 @@ VAT_MEDICAL = "vat_medical_services"          # "Daktari ... kusajili VAT?" -> a
 # 2026-11-25 (founder, from the live check of build 37cdf9d): MEDICINES / approved medical equipment are VAT-EXEMPT (live: "zero-rated (tozo 0%)"), and the PAYE BASE is employment income (live: "basic salary only"). Both from approved locked facts.
 VAT_MEDICINES = "vat_medicines"
 PAYE_BASE = "paye_base"
+# 2026-11-25 (founder, from the live check of build ff68073): the PAYE RATE question ("PAYE ni asilimia ngapi?" -> "asilimia 30 ... punguzo"), the COMBINED medical-services + medicines question (the merged follow-up answered the medicines limb only) and the WCF BASE (the reply said "posho zinazolipwa kila mwezi", the fact says FIXED).
+PAYE_RATE = "paye_rate"
+VAT_HEALTH_MEDICINES = "vat_health_and_medicines"
+WCF_BASE = "wcf_base"
 
 
 def _paye_bands_text() -> str:
@@ -398,8 +402,28 @@ STATEMENTS = {
     ),
 }
 
+# 2026-11-25: three statements built AFTER the dict, because two of them are made OF existing statements (one string, never a second copy that can drift).
+STATEMENTS[PAYE_RATE] = (
+    STATEMENTS[PAYE_BANDS_TOPIC][0],
+    "PAYE HAINA kiwango kimoja: ni mabano yanayopanda kulingana na mshahara wa mwezi wa mfanyakazi. " + _paye_bands_text() + " Thibitisha na TRA (tra.go.tz).",
+    "The PAYE band table is GENERATED from rates.PAYE_BANDS (the paye_band_table statement's own text, locked fact paye_bands_monthly_2025_26; Finance Act 2025/26 bands per PWC Tanzania, reviewed Jan 2026) so it cannot drift from the engine; the non-resident 15% final-withholding line is the locked fact's. "
+    "Founding specimen: build ff68073 live, 'PAYE ni asilimia ngapi?' -> 'Kiwango cha kawaida cha PAYE Tanzania ni asilimia 30, lakini kuna bendi ... zinazotoa punguzo' (a vague, partly misleading frame). Founder-approved 2026-11-25. Only the rate-ask phrasings: the band-table route owns the band-word phrasings and the two are exclusive by construction.",
+)
+STATEMENTS[VAT_HEALTH_MEDICINES] = (
+    STATEMENTS[VAT_MEDICAL][0],
+    STATEMENTS[VAT_MEDICAL][1] + "\n\n" + STATEMENTS[VAT_MEDICINES][1],
+    "Locked facts medical_services_vat_exempt AND medicines_vat_exempt, each statement UNCHANGED and in that order (VAT Act Cap.148 R.E.2023, Schedule Part I: the health-care item and item 7). Founding specimen: build ff68073 live, the merged follow-up 'Huduma za afya zinatozwa VAT? Na dawa je?', "
+    "which answered the medicines limb ONLY (D-FIDELITY-32 replaced the whole model body). Founder-approved 2026-11-25 as the next code-only fix. Each single-limb route vetoes the other limb's words, so a question naming BOTH reaches only this one.",
+)
+STATEMENTS[WCF_BASE] = (
+    "wcf_contribution_base",
+    "Msingi wa michango ya WCF ni MAPATO YA KILA MWAKA (annual earnings) ya wafanyakazi: kiasi anacholipa mwajiri kwa wafanyakazi wake, kinachojumuisha mshahara wa msingi NA posho nyingine ZISIZOBADILIKA zinazolipwa kila mwezi pamoja na mshahara (Kanuni za Fidia kwa Wafanyakazi, 2016); si 'fedha taslimu' tu. Ritani ya mwaka inaonyesha mapato hadi kiwango cha juu ambacho Waziri anaweza kukitangaza kwenye Gazeti (Sheria ya Fidia kwa Wafanyakazi). Kiwango (tariff) cha asilimia kinatolewa na Mkurugenzi Mkuu kwa kuzingatia mapato na kiwango cha hatari; kiwango cha sasa ni asilimia 0.5 kwa mujibu wa WCF. Michango ya mwezi hulipwa ndani ya mwezi mmoja baada ya mwisho wa mwezi huo. Mwajiri haruhusiwi kukata mchango huu kutoka kwenye mshahara wa mfanyakazi (Sheria ya Fidia kwa Wafanyakazi). Thibitisha na WCF.",
+    "Locked fact wcf_contribution_base (Workers Compensation Act Cap.263 R.E.2023 ss.60(1), 73-74; GN 185/2016 regs 3 and 13; the wcf.go.tz contribution page, dated capture 2026-11-24T08:31:54Z). The statement IS the fact text: it quotes the fact's own wording, 'posho nyingine ZISIZOBADILIKA zinazolipwa kila mwezi pamoja na mshahara' (GN 185/2016 reg 3: 'other fixed allowances which are paid on monthly basis along with basic salaries'), "
+    "where the live model reply said only 'posho zinazolipwa kila mwezi'. Founder-approved 2026-11-25 (item 5). R44: Acts named, no section number.",
+)
+
 TOPICS = tuple(STATEMENTS)
-TOPICS_NO_CONCISE_ROW = frozenset({WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY,
+TOPICS_NO_CONCISE_ROW = frozenset({PAYE_RATE, VAT_HEALTH_MEDICINES, WCF_BASE, WCF_DISEASE, NSSF_SPLIT, PAYE_BANDS_TOPIC, LICENCE_VALIDITY, LICENCE_FEE_VALIDITY, FUTURE_YEAR_RATE, SDL_EXEMPTIONS, SDL_PAYER, SDL_HOW_TO_FILE_PAY, SDL_EMPLOYEE_PREMISE, SDL_NSSF_PARTY,
                                    SDL_NSSF_PAYE_PARTY, NSSF_PARTY, BRELA_THREE_FORMS, BRELA_FEE_NO_SHARE_CAPITAL, GN487A_PENALTIES, VAT_WITHHOLDING_RATES, VAT_PROFESSIONAL_SERVICES, BRELA_LATE_ANNUAL_RETURN, SDL_PAYE_DEADLINE, SDL_AUDIT_HEDGE, SDL_BASE, LEVY_RATES_THREE, LEVY_DEADLINES_THREE, VAT_MEDICAL,
                                    VAT_MEDICINES})   # VAT_MEDICINES: the statement states the 0% of zero-rating, the served row (written for retrieval) does not, so the digit check is skipped; the fact text is pinned to the statement by tests/test_two_statements_2026_11_25.py
 

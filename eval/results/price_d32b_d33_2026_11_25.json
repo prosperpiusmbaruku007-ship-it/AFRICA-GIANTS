@@ -1,0 +1,154 @@
+{
+ "plants": {
+  "failed": []
+ },
+ "populations": {
+  "stored": {
+   "pairs": 9906,
+   "distinct_flagged": 9,
+   "d32_gained_vs_live": 1,
+   "d32_lost_vs_live": 0,
+   "d33_flags": 1,
+   "rows": [
+    {
+     "src": "eval/results/followup_deploy_live_2026_11_24.json",
+     "q": "Dawa zinatozwa VAT?",
+     "reply": "Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%). Thibitisha na TRA (tra.go.tz).",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/followup_index_arms_live_2026_11_24.json",
+     "q": "Hospitali ya binafsi inauza dawa na pia inatoa huduma za afya, VAT inahusu mauzo gani?",
+     "reply": "Hospitali ya binafsi inayouza dawa (zero-rated) NA inatoa huduma za matibabu (msamaha) inapaswa kufanya hivi: (1) Kwa dawa (zero-rated): inatozwa VAT 0% = inaweza kudai input VAT; (2) Kwa huduma za matibabu (exempt): haikatwi VAT kabisa = haiwezi kudai input V",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/followup_index_arms_live_2026_11_24.json",
+     "q": "Kliniki yangu inatoa huduma za afya na inauza vifaa tiba, je VAT inatozwa?",
+     "reply": "Kwa huduma za afya zinazotolewa na taasisi iliyoidhinishwa na Serikali NA daktari/mtaalamu aliyesajiliwa, huenda zimesamehewa VAT. Lakini kama kliniki hiyo pia inauza vifaa tiba (zero-rated) na bidhaa nyingine zinazotozwa VAT, basi inatakiwa kusajiliwa VAT. Th",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Duka la dawa linatakiwa kusajili VAT, na dawa zinatozwa VAT gani?",
+     "reply": "Duka la dawa lenye mauzo ya TZS 200M/miezi 12 au TZS 100M/miezi 6 linasajili VAT. Dawa zinaweza kuwa zero-rated (msamaha wa VAT) au exempt (si zero-rated). Thibitisha na TRA (tra.go.tz).",
+     "old_d32": false,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Dawa za TZS 5,000,000 nimeuza, VAT ni ngapi?",
+     "reply": "Kwa dawa zenye thamani ya TZS 5,000,000, kiwango cha VAT ni 18%. Thibitisha na tra.go.tz.",
+     "old_d32": false,
+     "new_d32": false,
+     "new_d33": true
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Je, Tanzania ina VAT ya asilimia 5 kwa bidhaa zilizo 'essential'?",
+     "reply": "Hapana. Tanzania haina kiwango cha VAT cha asilimia 5 cha aina yoyote — including 'essential goods'. Bidhaa fulani za muhimu (kama nafaka, dawa, baadhi ya vifaa vya kilimo) zinaweza kuwa zero-rated (asilimia 0) au exempt, lakini asilimia 5 haipo. Kiwango cha k",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Je, Tanzania ina VAT ya asilimia 5 kwa bidhaa zilizo 'essential'?",
+     "reply": "No. Tanzania does not have a 5% VAT rate of any kind — including for 'essential goods'. Some essential items (like certain grains, medicines, some agricultural inputs) may be zero-rated (0%) or exempt, but 5% does not exist. The standard VAT rate is 18% only.",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Biashara inayofanya rejareja ya dawa (pharmacy) Tanzania inahitaji aina maalum ya EFD?",
+     "reply": "Pharmacies in Tanzania making medicine sales must use an EFD like other mandatory businesses. Certain pharmaceutical products may be VAT-exempt or zero-rated — the EFD must have software that can correctly categorise them. Also, a pharmacy may need a specific ",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "eval/results/price_d32b_d33_2026_11_25.json",
+     "q": "Dawa za binadamu zinaingizwa Tanzania — je, zina VAT au exemption?",
+     "reply": "Swali hili liko nje ya maarifa yangu ya sasa. Hali ya VAT kwa dawa za binadamu — kama zimesamehewa, zero-rated, au zinaapply msamaha maalum — ni mada inayohusisha Jedwali la VAT Act la Tanzania ambapo baadhi ya dawa zimeorodheshwa tofauti. Hii inahitaji uchamb",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    }
+   ]
+  },
+  "gold": {
+   "pairs": 800,
+   "distinct_flagged": 0,
+   "d32_gained_vs_live": 0,
+   "d32_lost_vs_live": 0,
+   "d33_flags": 0,
+   "rows": []
+  },
+  "training": {
+   "pairs": 17604,
+   "distinct_flagged": 5,
+   "d32_gained_vs_live": 1,
+   "d32_lost_vs_live": 0,
+   "d33_flags": 0,
+   "rows": [
+    {
+     "src": "datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl:3#answer_sw",
+     "q": "Je, Tanzania ina VAT ya asilimia 5 kwa bidhaa zilizo 'essential'?",
+     "reply": "Hapana. Tanzania haina kiwango cha VAT cha asilimia 5 cha aina yoyote — including 'essential goods'. Bidhaa fulani za muhimu (kama nafaka, dawa, baadhi ya vifaa vya kilimo) zinaweza kuwa zero-rated (asilimia 0) au exempt, lakini asilimia 5 haipo. Kiwango cha k",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "datasets/tier1a/flagged/needs_human_review/batch_003_founder_sample.jsonl:3#answer_en",
+     "q": "Je, Tanzania ina VAT ya asilimia 5 kwa bidhaa zilizo 'essential'?",
+     "reply": "No. Tanzania does not have a 5% VAT rate of any kind — including for 'essential goods'. Some essential items (like certain grains, medicines, some agricultural inputs) may be zero-rated (0%) or exempt, but 5% does not exist. The standard VAT rate is 18% only.",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "datasets/tier1a/flagged/needs_human_review/batch_005_founder_sample.jsonl:21#answer_en",
+     "q": "Biashara inayofanya rejareja ya dawa (pharmacy) Tanzania inahitaji aina maalum ya EFD?",
+     "reply": "Pharmacies in Tanzania making medicine sales must use an EFD like other mandatory businesses. Certain pharmaceutical products may be VAT-exempt or zero-rated — the EFD must have software that can correctly categorise them. Also, a pharmacy may need a specific ",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "datasets/tier1a/raw_sources/raw_pairs_batch_009.jsonl:56#output",
+     "q": "Dawa za binadamu zinaingizwa Tanzania — je, zina VAT au exemption?",
+     "reply": "Swali hili liko nje ya maarifa yangu ya sasa. Hali ya VAT kwa dawa za binadamu — kama zimesamehewa, zero-rated, au zinaapply msamaha maalum — ni mada inayohusisha Jedwali la VAT Act la Tanzania ambapo baadhi ya dawa zimeorodheshwa tofauti. Hii inahitaji uchamb",
+     "old_d32": true,
+     "new_d32": true,
+     "new_d33": false
+    },
+    {
+     "src": "datasets/tier1a/raw_sources/batch_011_checkpoints/ckpt_165.jsonl:102#output",
+     "q": "Madawa ya hospitali yana VAT ya asilimia 5 au asilimia 0?",
+     "reply": "Tanzania ina viwango VITATU vya VAT peke yake: (1) Asilimia 18 — kiwango cha kawaida (2) Asilimia 16 — B2C malipo ya kidijitali (kuanzia 1 Septemba 2025) (3) Asilimia 0 — mauzo ya nje (zero-rated) HAKUNA kiwango cha asilimia 5 Tanzania. Madawa mengi ya hospita",
+     "old_d32": false,
+     "new_d32": true,
+     "new_d33": false
+    }
+   ]
+  },
+  "index": {
+   "pairs": 224,
+   "distinct_flagged": 0,
+   "d32_gained_vs_live": 0,
+   "d32_lost_vs_live": 0,
+   "d33_flags": 0,
+   "rows": []
+  }
+ },
+ "decision_rule": "wire ONLY if plants pass AND gold flags == 0 for BOTH detectors AND index flags == 0 AND every stored/training gain and D33 flag has been READ and is a genuine defect"
+}

@@ -1520,7 +1520,7 @@ def fixed_figure_violations(question: str, body: str):
             out += [(topic, r) for r in _fd10_nssf_split(body)]
             continue
         if topic in ("future_year_rate", "sector_minimum_wage", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party",
-                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "vat_medicines", "paye_base", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
+                     "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "vat_medicines", "paye_base", "paye_rate", "vat_health_and_medicines", "wcf_base", "sdl_base", "levy_rates_three", "levy_deadlines_three", "vat_medical_services"):
             continue                # a model-free statement route with no figure-scope rule (the model answers this question only when the route is missed); without this the loop falls to the VAT scope rule below
         if topic == "brela_annual_return_deadline":
             continue                # guarded by D-FIDELITY-20 (body_contradicts_d16); this route is model-free, and no figure-scope rule applies here
@@ -2296,16 +2296,52 @@ _D32_NEG = re.compile(r"(?<![a-z])(?:si|siyo|sio|haziko|haiko|hazina|haina|hakun
 _D32_EXPORT = re.compile(r"nje\s+ya\s+nchi|zinazouzwa\s+nje|zinazosafirishwa|usafirishaji|export|mauzo\s+ya\s+nje|kuuza\s+nje", re.IGNORECASE)
 
 
+# 2026-11-25 (founder, queued from the live miss of build ff68073): THE NEGATION MUST GOVERN THE ZERO-RATED TOKEN, NOT THE WHOLE CLAUSE. The live reply "Dawa zinaweza kuwa zero-rated (msamaha wa VAT) au exempt (si zero-rated)." carries a NEGATED zero-rated ("(si zero-rated)") AND an ASSERTED one
+# ("kuwa zero-rated"); the old rule vetoed the clause on any negation cue and let the wrong half through (eval/results/two_routes_deploy_live_2026_11_25.json). Now: every zero-rate token in the clause is judged on its OWN preceding 28 characters, and the clause is flagged if ANY token lacks an adjacent negation.
+# R25 (2): what correct output could it damage: "dawa si zero-rated", "dawa si za zero-rated", "Medicine is exempt, not zero-rated", "dawa hazitozwi 0%" (each token negated ADJACENTLY), the contrast and export sentences (unchanged vetoes). "sivyo" / "isipokuwa" still veto the clause (a premise or an exception, not an assertion).
+_D32_NEG_ADJ = re.compile(r"(?<![a-z])(?:si|siyo|sio|not|no|never|wala|nor|haiko|haziko|hazina|haina|hakuna|haziwi|hazitozwi|haitozwi)(?![a-z])(?:\s+(?:ni|za|kwa|kuwa|katika|a|an|the|daraja|la))*[\s,(\-]*$", re.IGNORECASE)
+_D32_CLAUSE_VETO = re.compile(r"sivyo|isipokuwa", re.IGNORECASE)
+
+
+def _d32_asserted_zero(clause: str):
+    return [m for m in _D32_ZERO.finditer(clause) if not _D32_NEG_ADJ.search(clause[max(0, m.start() - 28):m.start()])]
+
+
 def medicines_called_zero_rated(question: str, body: str):
-    """[sentence] in which a medicine/medical-equipment word and a zero-rate cue share one CLAUSE, with no negation and no export cue in that clause."""
+    """[sentence] in which a medicine/medical-equipment word and an UNNEGATED zero-rate token share one CLAUSE (negation is judged per token, adjacent), with no export cue in that clause."""
     out = []
     for s in _SENTENCE_SPLIT.split(body or ""):
         if not s:
             continue
         for clause in _D32_CLAUSE.split(s):
-            if clause and _D32_MED.search(clause) and _D32_ZERO.search(clause) and not _D32_NEG.search(clause) and not _D32_EXPORT.search(clause):
+            if clause and _D32_MED.search(clause) and not _D32_CLAUSE_VETO.search(clause) and not _D32_EXPORT.search(clause) and _d32_asserted_zero(clause):
                 out.append(s.strip())
                 break
+    return out
+
+
+# ---- D-FIDELITY-33 (2026-11-25, founder, queued from the live reply "Dawa za TZS 5,000,000 nimeuza, VAT ni ngapi?" -> "kiwango cha VAT ni 18%"): MEDICINES TAXED AT THE STANDARD RATE, OR A VAT AMOUNT COMPUTED ON A MEDICINES AMOUNT. A CONSTANT (R19), FACT PATH.
+# VAT Act Cap.148 R.E.2023 Schedule Part I item 7: approved medicine, drugs and medical equipment are EXEMPT: no VAT is charged, so neither "18%" nor a shillings VAT amount is ever the answer. REPLACED by the medicines statement (the D-FIDELITY-32 copy).
+# A sentence is flagged when it states the STANDARD RATE (18% / "asilimia 18" / "kiwango cha kawaida") or, where the QUESTION names a medicine and VAT, a shillings figure attached to VAT, AND the medicines are the subject (a medicine word in the sentence, or in the question), AND the sentence carries no exemption / contrast / negation / export cue.
+# R25 (2): what correct output could it damage: "VAT ya kawaida ni 18%, lakini dawa ni msamaha" (contrast), "dawa hazitozwi VAT" (exempt), "dawa si 18%", an export sentence, and an 18% sentence in a reply to a question that is NOT about medicines (the question context is required).
+_D33_STD = re.compile(r"(?<![\d.,])18\s*%|asilimia\s+(?:ya\s+)?18(?![\d,]|\.\d)|(?<![\d.,])18\s+percent|standard\s+rate|kiwango\s+cha\s+kawaida", re.IGNORECASE)
+_D33_VAT_AMOUNT = re.compile(r"(?<![a-z])vat(?![a-z])\s*(?:yote|yake|yako|ya\s+dawa|hiyo)?\s*(?:itakuwa|inakuwa|inayolipwa|inatozwa|ni|ya|=|:)\s*(?:tzs|shilingi)\s*\d[\d,.]*", re.IGNORECASE)   # a VAT figure STATED AS CHARGED; a registration threshold ("mauzo ya TZS 200M ... linasajili VAT", the live pharmacy reply's first sentence) is NOT an amount of VAT (the plant that found this overbreadth: tests/test_medicines_guards_2026_11_25.py)
+_D33_SAFE = re.compile(r"msamaha|exempt|zimesamehewa|isipokuwa|lakini|ila(?![a-z])|but(?![a-z])|sajili|usajili|register|kizingiti|threshold|(?<![a-z])(?:si|siyo|sio|not|no|never|hakuna|hazitozwi|haitozwi|haziwi)(?![a-z])|wala|bila", re.IGNORECASE)
+_D33_VAT = re.compile(r"(?<![a-z])vat(?![a-z])|ongezeko\s+la\s+thamani", re.IGNORECASE)
+
+
+def medicines_taxed_at_standard_rate(question: str, body: str):
+    """[sentence] that taxes medicines at the standard rate or computes a VAT amount on them. Needs the QUESTION (an 18% sentence about another good is correct)."""
+    q_meds = bool(_D32_MED.search(question or "") and _D33_VAT.search(question or ""))
+    out = []
+    for s in _SENTENCE_SPLIT.split(body or ""):
+        if not s or _D33_SAFE.search(s) or _D32_EXPORT.search(s):
+            continue
+        subject = bool(_D32_MED.search(s)) or q_meds
+        if not subject or not (_D33_VAT.search(s) or q_meds):
+            continue
+        if _D33_STD.search(s) or (q_meds and _D33_VAT_AMOUNT.search(s)):
+            out.append(s.strip())
     return out
 
 
@@ -2324,6 +2360,7 @@ def body_contradicts_d16(question: str, body: str):
     out += [("nssf_contributions_age_60", s) for s in nssf_contributions_tied_to_age_60(question, body)]   # D-FIDELITY-28
     out += [("nssf_payment_deadline", s) for s in nssf_deadline_misstated(question, body)]   # D-FIDELITY-29
     out += [("medicines_zero_rated", s) for s in medicines_called_zero_rated(question, body)]   # D-FIDELITY-32 (WIRED 2026-11-24 after pricing: 0 gold flags, 0 index flags)
+    out += [("medicines_taxed", s) for s in medicines_taxed_at_standard_rate(question, body)]   # D-FIDELITY-33 (2026-11-25): medicines at 18% / a VAT amount on a medicines amount
     return out
 
 

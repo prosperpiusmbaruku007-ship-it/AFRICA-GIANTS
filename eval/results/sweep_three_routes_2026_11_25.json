@@ -1,0 +1,326 @@
+{
+ "swept": 8981,
+ "changed": [
+  {
+   "q": "Kiwango cha juu kabisa cha PAYE ni asilimia thelathini, kweli?",
+   "src": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Kiwango cha juu kabisa cha PAYE ni asilimia ngapi?",
+   "src": "eval/accuracy_gate/quantity_instruction_heldout_024.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "PAYE ni asilimia ngapi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Kiwango cha PAYE ni kipi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "What is the PAYE rate in Tanzania?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Kodi ya PAYE ni asilimia ngapi kwa mfanyakazi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Daraja la pili la PAYE linatoza asilimia ngapi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia ngapi?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Huduma za afya zinatozwa VAT? Na dawa je?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Are health services and medicines VAT-exempt?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Kliniki inatozwa VAT kwa huduma na dawa?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Daktari anatozwa VAT kwenye dawa anazoagiza?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "wcf_base"
+   ]
+  },
+  {
+   "q": "Msingi wa michango ya WCF ni nini?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "wcf_base"
+   ]
+  },
+  {
+   "q": "Is WCF calculated on basic salary only or on allowances too?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "wcf_base"
+   ]
+  },
+  {
+   "q": "Posho zinaingia kwenye WCF?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "wcf_base"
+   ]
+  },
+  {
+   "q": "WCF inakokotolewa kwa fedha taslimu tu?",
+   "src": "eval/refusal_gate/three_routes_probes_2026_11_25.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "wcf_base"
+   ]
+  },
+  {
+   "q": "Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia ngapi na kinaanza kutumika kwenye mshahara gani?",
+   "src": "datasets/tier1a/cleaned_pairs/batch_002_cleaned.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Chike, kwa wafanyakazi wanaopata mishahara ya kati, PAYE inakatwa kwa asilimia ngapi?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Je, kuna tofauti kati ya kiwango cha kodi cha kwanza na cha pili kwa PAYE?",
+   "src": "datasets/tier1a/sft_shaped_pairs/cleaned_pairs_batch_014.jsonl",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "Huduma za afya na dawa zinatozwa VAT?",
+   "src": "results/followup_index_arms_live_2026_11_24.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Hospitali ya binafsi inauza dawa na pia inatoa huduma za afya, VAT inahusu mauzo gani?",
+   "src": "results/followup_index_arms_live_2026_11_24.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Kliniki yangu inatoa huduma za afya na inauza vifaa tiba, je VAT inatozwa?",
+   "src": "results/followup_index_arms_live_2026_11_24.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "vat_health_and_medicines"
+   ]
+  },
+  {
+   "q": "Jedwali la PAYE Tanzania kwa mwezi lina makundi mangapi ya kodi na kiwango chake ni gani?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  },
+  {
+   "q": "What is the maximum PAYE rate in Tanzania and at what salary does it start?",
+   "src": "results/sweep_vat_cues_2026_11_12.json",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_rate"
+   ]
+  }
+ ],
+ "onto_new": 26,
+ "other": 0,
+ "newly_both": [],
+ "membership": {
+  "paye_rate": 14,
+  "vat_health_and_medicines": 7,
+  "wcf_base": 5
+ },
+ "baseline": "git show 1d7614e:chike/routing.py"
+}

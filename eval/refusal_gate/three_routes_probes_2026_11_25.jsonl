@@ -1,0 +1,42 @@
+{"id": "pr_01", "question": "PAYE ni asilimia ngapi?", "expect": "paye_rate", "guards_against": "FOUNDING SPECIMEN (live, build ff68073): 'asilimia 30 ... punguzo'."}
+{"id": "pr_02", "question": "Kiwango cha PAYE ni kipi?", "expect": "paye_rate", "guards_against": "the singular 'kiwango' form."}
+{"id": "pr_03", "question": "What is the PAYE rate in Tanzania?", "expect": "paye_rate", "guards_against": "English form."}
+{"id": "pr_04", "question": "Kodi ya PAYE ni asilimia ngapi kwa mfanyakazi?", "expect": "paye_rate", "guards_against": "a longer natural phrasing."}
+{"id": "pr_05", "question": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?", "expect": "paye_rate", "guards_against": "a non-resident rate ask: the statement carries the 15% final-withholding line, so it answers."}
+{"id": "pr_06", "question": "PAYE ya mshahara wa TZS 800,000 ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "a FIGURE: the PAYE engine, never a statement."}
+{"id": "pr_07", "question": "Bendi za PAYE ni zipi?", "expect": "paye_band_table", "guards_against": "a BAND word stays on the band-table route (the two are exclusive)."}
+{"id": "pr_08", "question": "Viwango vya PAYE ni vipi?", "expect": "paye_band_table", "guards_against": "the plural 'viwango' is the band route's word."}
+{"id": "pr_09", "question": "PAYE na SDL ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "another levy named: a two-levy rate question the rate statement does not answer."}
+{"id": "pr_10", "question": "PAYE inalipwa lini na ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "a DATE limb."}
+{"id": "pr_11", "question": "PAYE inakokotolewa kwa mshahara wa msingi tu?", "expect": "paye_base", "guards_against": "the BASE question stays on the base route."}
+{"id": "pr_12", "question": "Adhabu ya kuchelewa kulipa PAYE ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "a PENALTY rate."}
+{"id": "pr_13", "question": "Kodi ya kampuni ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "corporate tax, no PAYE word."}
+{"id": "pr_14", "question": "Cheti cha PAYE ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "a certificate word."}
+{"id": "pr_15", "question": "Kiwango cha PAYE Kenya ni asilimia ngapi?", "expect": "not:paye_rate", "guards_against": "ANOTHER COUNTRY: found by the sweep (two held questions); the Tanzanian bands must never answer it."}
+{"id": "pr_16", "question": "Does a foreign employee pay PAYE at a different rate from a citizen?", "expect": "not:paye_rate", "guards_against": "FOREIGN is not non-resident: found by the sweep."}
+{"id": "pr_17", "question": "Last week PAYE figure, just add ten percent on it - what is the new answer?", "expect": "not:paye_rate", "guards_against": "an ARITHMETIC TRAP: found by the sweep (a rate statement answers nothing here)."}
+{"id": "pr_18", "question": "Daraja la pili la PAYE linatoza asilimia ngapi?", "expect": "paye_rate", "guards_against": "a band-2 rate ask in the asker's words: the table answers it (kept by the sweep's reading)."}
+{"id": "pr_19", "question": "Kiwango cha juu kabisa cha PAYE Tanzania ni asilimia ngapi?", "expect": "paye_rate", "guards_against": "the top rate: the table answers it."}
+{"id": "hm_01", "question": "Huduma za afya zinatozwa VAT? Na dawa je?", "expect": "vat_health_and_medicines", "guards_against": "FOUNDING SPECIMEN (live, build ff68073): the merged follow-up answered the medicines limb only."}
+{"id": "hm_02", "question": "Are health services and medicines VAT-exempt?", "expect": "vat_health_and_medicines", "guards_against": "English form."}
+{"id": "hm_03", "question": "Kliniki inatozwa VAT kwa huduma na dawa?", "expect": "vat_health_and_medicines", "guards_against": "a clinic: both limbs in one clause."}
+{"id": "hm_04", "question": "Daktari anatozwa VAT kwenye dawa anazoagiza?", "expect": "vat_health_and_medicines", "guards_against": "EXPECT INVERTED 2026-11-25 (was none in two_statements_probes mp_12: with no combined route a doctor-and-medicines question had no owner); the combined statement answers both limbs."}
+{"id": "hm_05", "question": "Huduma za afya zinatozwa VAT?", "expect": "vat_medical_services", "guards_against": "health ALONE stays on the medical-services route (exclusive)."}
+{"id": "hm_06", "question": "Dawa zinatozwa VAT?", "expect": "vat_medicines", "guards_against": "medicines ALONE stays on the medicines route (exclusive)."}
+{"id": "hm_07", "question": "Hospitali inatakiwa kusajili VAT na dawa zinatozwa VAT?", "expect": "none", "guards_against": "REGISTRATION: not settled by the Act, neither statement answers it."}
+{"id": "hm_08", "question": "Huduma za afya na dawa za TZS 5,000,000, VAT ni ngapi?", "expect": "none", "guards_against": "a FIGURE."}
+{"id": "hm_09", "question": "Bima ya afya na dawa zinatozwa VAT?", "expect": "none", "guards_against": "health INSURANCE is another exempt item."}
+{"id": "hm_10", "question": "Huduma za afya na dawa zinazoingizwa kutoka nje zinatozwa VAT?", "expect": "none", "guards_against": "IMPORTS: the statements do not cover them."}
+{"id": "hm_11", "question": "Mhandisi na dawa, VAT inatozwa?", "expect": "not:vat_health_and_medicines", "guards_against": "no health word."}
+{"id": "wb_01", "question": "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?", "expect": "wcf_base", "guards_against": "FOUNDING SPECIMEN (live, build ff68073): 'posho zinazolipwa kila mwezi' where the fact says FIXED."}
+{"id": "wb_02", "question": "Msingi wa michango ya WCF ni nini?", "expect": "wcf_base", "guards_against": "the base, plainly."}
+{"id": "wb_03", "question": "Is WCF calculated on basic salary only or on allowances too?", "expect": "wcf_base", "guards_against": "English form."}
+{"id": "wb_04", "question": "Posho zinaingia kwenye WCF?", "expect": "wcf_base", "guards_against": "allowances, the asker's word."}
+{"id": "wb_05", "question": "WCF inakokotolewa kwa fedha taslimu tu?", "expect": "wcf_base", "guards_against": "the old 'cash' framing the fact corrected."}
+{"id": "wb_06", "question": "WCF ni asilimia 0.5 ya mshahara wa TZS 2,000,000, ni kiasi gani?", "expect": "not:wcf_base", "guards_against": "a FIGURE."}
+{"id": "wb_07", "question": "Ajali ya kazini WCF inalipa nini?", "expect": "not:wcf_base", "guards_against": "an ACCIDENT / claim question."}
+{"id": "wb_08", "question": "Nasajili WCF wapi, na posho zinaingia?", "expect": "not:wcf_base", "guards_against": "a where / registration ask."}
+{"id": "wb_09", "question": "WCF inalipwa lini?", "expect": "not:wcf_base", "guards_against": "a DEADLINE."}
+{"id": "wb_10", "question": "NSSF na WCF zinakatwa kwenye nini?", "expect": "not:wcf_base", "guards_against": "another levy named."}
+{"id": "wb_11", "question": "Sekta binafsi WCF inakatwa kwenye nini?", "expect": "not:wcf_base", "guards_against": "a sector word: the sector rate question is not the base question."}
+{"id": "wb_12", "question": "PAYE inakatwa kwenye nini, posho zinaingia?", "expect": "paye_base", "guards_against": "the PAYE base stays on the PAYE-base route (exclusive)."}

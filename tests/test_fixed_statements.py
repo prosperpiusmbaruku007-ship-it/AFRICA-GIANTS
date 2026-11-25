@@ -115,6 +115,12 @@ LIVE = {
         'PAYE ni asilimia 8 (0%-270%: 0%, 8%, 20%, 25%, 30%). Sehemu ya mwajiri peke yake ni 14% (NSSF 10% + SDL 3.5% + PAYE 0.5%).'),
     'levy_deadlines_three': ('SDL na NSSF na PAYE zinalipwa lini?',
         'PAYE inalipwa pamoja na PAYE, ikijumuisha malipo ya PAYE na michango ya NSSF, ifikapo tarehe 7 ya mwezi unaofuata.'),
+    'paye_rate': ('PAYE ni asilimia ngapi?',
+        'Kiwango cha kawaida cha PAYE Tanzania ni asilimia 30, lakini kuna bendi za mapato zinazotoa punguzo.'),
+    'vat_health_and_medicines': ('Huduma za afya zinatozwa VAT? Na dawa je?',
+        'Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%), kwa hiyo hazitozwi VAT.'),
+    'wcf_base': ('WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?',
+        'Posho zinazolipwa kila mwezi huongezwa kwenye mshahara wa msingi kabla ya kukokotoa WCF.'),
     'vat_medicines': ('Dawa zinatozwa VAT?',
         'Dawa nyingi za binadamu ziko katika daraja la zero-rated (tozo 0%), kwa hiyo hazitozwi VAT.'),
     'paye_base': ('Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?',
@@ -308,7 +314,7 @@ def test_the_real_trace_of_a_fixed_statement_reply_is_refused_and_carries_the_ba
 # chike.fidelity.constant_violations; the individual-return specimen is a wrong-TOPIC answer (a tax RATE) with no figure of the statement's to contradict -- the statement route is the control.
 # 2026-11-17 (next small batch): tin_apply_deadline is guarded by the D-FIDELITY-13 TIN rule (chike.fidelity.constant_violations) and business_licence_fee_and_validity by the licence-expiry / validity-period rules
 # (a fee-only reply to a two-part question has no figure of the statement's to contradict: the statement ROUTE is the control).
-PAYE_NO_GUARD = frozenset({"vat_medicines", "paye_base", "vat_medical_services", "sdl_base", "levy_rates_three", "levy_deadlines_three", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
+PAYE_NO_GUARD = frozenset({"paye_rate", "vat_health_and_medicines", "wcf_base", "vat_medicines", "paye_base", "vat_medical_services", "sdl_base", "levy_rates_three", "levy_deadlines_three", "sdl_nssf_paye_party", "nssf_party", "brela_three_forms", "brela_fee_no_share_capital", "gn487a_penalties", "vat_withholding_rates", "vat_professional_services", "brela_late_annual_return", "sdl_paye_deadline", "sdl_audit_hedge", "sdl_exemptions", "sdl_payer", "sdl_employee_premise", "sdl_how_to_file_pay", "sdl_nssf_party", "future_year_rate", "brela_annual_return_deadline", "paye_band_table", "individual_income_tax_return", "business_licence_validity", "tin_apply_deadline", "business_licence_fee_and_validity"})
 
 
 @pytest.mark.parametrize("topic", [t for t in fs.TOPICS if t not in PAYE_NO_GUARD])

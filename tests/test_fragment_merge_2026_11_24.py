@@ -59,19 +59,23 @@ def _sub_questions(question):
     return _Echo.seen
 
 
+_FRAG_Q = "Msingi wa kukokotoa SDL ni nini \u2014 posho zinaingia? Na mgahawa je?"
+
+
 def test_the_live_specimen_never_reaches_the_model_as_a_bare_fragment():
-    q = "Huduma za afya zinatozwa VAT? Na dawa je?"
-    prompts = _sub_questions(q)
-    assert prompts, "the question must reach the model path (the veto word 'dawa' keeps it off the medical statement)"
-    assert not any("Na dawa je?" in pr and "Huduma za afya" not in pr for pr in prompts), "a prompt carries the fragment WITHOUT its topic"
-    assert all("Huduma za afya" in pr for pr in prompts), "every prompt the model sees carries the topic"
+    """2026-11-25: the ORIGINAL live specimen ("Huduma za afya zinatozwa VAT? Na dawa je?") is now owned by the model-free vat_health_and_medicines route, so it never reaches the model at all (the stronger fix: tests/test_three_routes_2026_11_25.py).
+    The merge is a general property of the decomposer, so it is exercised on the SAME SHAPE with a first part a statement route owns (the SDL base) and a context-free 'Na X je?' second part: with the merge the fragment is never a model prompt on its own."""
+    from chike import routing
+    assert routing.fixed_statement_topic("Huduma za afya zinatozwa VAT? Na dawa je?") == "vat_health_and_medicines"
+    prompts = _sub_questions(_FRAG_Q)
+    assert not any("Na mgahawa je?" in pr and "Msingi wa kukokotoa SDL" not in pr for pr in prompts), "a prompt carries the fragment WITHOUT its topic"
 
 
 def test_plant_without_the_merge_the_fragment_reaches_the_model_alone(monkeypatch):
     """POSITIVE CONTROL: remove the merge and the bare fragment is a model prompt again, the live defect."""
     monkeypatch.setattr(decomposition, "_merge_dependent_fragments", lambda parts: parts)
-    prompts = _sub_questions("Huduma za afya zinatozwa VAT? Na dawa je?")
-    assert any("Na dawa je?" in pr and "Huduma za afya" not in pr for pr in prompts), prompts
+    prompts = _sub_questions(_FRAG_Q)
+    assert any("Na mgahawa je?" in pr and "Msingi wa kukokotoa SDL" not in pr for pr in prompts), prompts
 
 
 def test_only_the_live_decomposer_changed_and_the_frozen_v15_arm_was_left_alone():

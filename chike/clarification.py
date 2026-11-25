@@ -695,6 +695,10 @@ CONSTANT_RESTATEMENTS["medicines_zero_rated"] = (
     "Dawa muhimu za binadamu na za mifugo, dawa (drugs), vifaa tiba na vifungashio vyake VILIVYOIDHINISHWA na Waziri husika ni MSAMAHA wa VAT, si zero-rated (Sheria ya VAT). Si kila dawa au kifaa: kinahitaji idhini ya Waziri; vifungashio vinahusika tu vikiwa vimeundwa mahsusi kufungia bidhaa za dawa. Msamaha maana yake VAT haitozwi kwenye mauzo hayo; mkopo wa input VAT unatolewa kwa manunuzi yaliyofanywa kwa ajili ya kutoa bidhaa au huduma zinazotozwa VAT (taxable supplies), na kwa matumizi ya sehemu hugawanywa kwa fomula. Zero-rated (0%) ni aina nyingine, kama mauzo ya nje; bidhaa ikiwa na msamaha na zero-rating kwa pamoja inakuwa zero-rated (kwa mfano dawa zinazouzwa nje ya nchi). Thibitisha na TRA.")
 
 
+# D-FIDELITY-33 (2026-11-25): medicines taxed at 18% / a VAT amount computed on a medicines amount -> the SAME approved statement as D-FIDELITY-32 (one string, never a second copy that can drift).
+CONSTANT_RESTATEMENTS["medicines_taxed"] = CONSTANT_RESTATEMENTS["medicines_zero_rated"]
+
+
 def constants_restated(topics) -> str:
     """The whole statement for every violated constant topic, in the order given, each once."""
     seen, out = set(), []
