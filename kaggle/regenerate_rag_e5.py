@@ -202,7 +202,7 @@ SOURCE_FILES = [
 # 2026-11-23: b0ef5e9 -> bd4bf61 (the 216 -> 218 packaging commit: the SDL household-employer and NSSF age-60 rows, the revised SDL exemption row, and the three new critical queries). A clone older than bd4bf61 lacks them and would
 # build a 216-row index that fails its own guards, or worse passes them without the new rows.
 # 2026-11-24: bd4bf61 -> ae0f09b (the 218 -> 220 packaging commit: the SDL base and medical-VAT rows appended, six rows revised in place, and the five new critical queries). A clone older than ae0f09b lacks them and would build a 218-row index that fails its own guards, or worse passes them without the new rows.
-EXPECTED_HEAD = 'ae0f09b'
+EXPECTED_HEAD = 'fd451db'
 
 
 def _assert_expected_head_present(local_head, live_sha):
