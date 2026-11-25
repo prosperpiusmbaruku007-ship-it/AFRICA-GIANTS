@@ -16,7 +16,7 @@ def test_nonresident_is_flat_fifteen_percent():
     r = compute_paye(Decimal("5000000"), resident=False)
     assert r.amount == Decimal("750000")           # 15% of 5,000,000, eval_367 gold
     assert "15%" in r.working
-    assert "asiye mkazi" in r.working
+    assert "asiye mkaazi wa kikodi" in r.working          # 2026-11-25: the founder widened "ukaazi wa kikodi" to the engine label (user-facing); the identifiers are unchanged
     assert "si mabano" in r.working                # explicitly NOT the progressive bands
 
 

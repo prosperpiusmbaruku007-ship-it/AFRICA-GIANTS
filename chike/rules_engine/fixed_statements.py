@@ -112,8 +112,8 @@ def _paye_bands_text() -> str:
         else:
             lead = f"{tzs(base)} + " if base else ""
             parts.append(f"kiwango cha {i + 1}: {tzs(lower + 1)} hadi {tzs(top)} = {lead}{pct} ya kinachozidi {tzs(lower)}")
-    return ("Viwango vya PAYE vya kila mwezi (mkazi, 2025/26): " + "; ".join(parts) + ". "
-            f"Asiye mkazi analipa {PAYE_NONRESIDENT_RATE * 100:.0f}% tambarare (kodi ya mwisho, si mabano). "
+    return ("Viwango vya PAYE vya kila mwezi (mkaazi wa kikodi, 2025/26): " + "; ".join(parts) + ". "
+            f"Asiye mkaazi wa kikodi analipa {PAYE_NONRESIDENT_RATE * 100:.0f}% tambarare (kodi ya mwisho, si mabano). "
             "Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi.")
 
 # topic -> (locked-fact key, the statement, citation note). Statement text is lifted from the served concise row with

@@ -51,7 +51,7 @@ def compute_paye(monthly_salary, resident: bool = True) -> ComputationResult:
             applicable=True,
             amount=amount,
             working=(
-                f"PAYE (asiye mkazi) = 15% × {tzs(salary)} = {tzs(amount)} "
+                f"PAYE (asiye mkaazi wa kikodi) = 15% × {tzs(salary)} = {tzs(amount)} "
                 f"(kodi ya mwisho, si mabano ya kupanda)"
             ),
             inputs=inputs,

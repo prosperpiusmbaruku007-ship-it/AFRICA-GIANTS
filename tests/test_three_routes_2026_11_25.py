@@ -48,7 +48,7 @@ def _facts():
 
 def test_paye_rate_statement_is_the_generated_band_table_and_says_there_is_no_single_rate():
     t = fs.fixed_statement("paye_rate").working
-    assert t.startswith("PAYE HAINA kiwango kimoja") and fs._paye_bands_text() in t and "Asiye mkazi analipa 15%" in t and "Kifungu" not in t
+    assert t.startswith("PAYE HAINA kiwango kimoja") and fs._paye_bands_text() in t and "Asiye mkaazi wa kikodi analipa 15%" in t and "Kifungu" not in t
     assert "asilimia 30" not in t.split("HAINA kiwango kimoja")[0]            # the live reply's opening claim must not be this statement's opening
 
 
