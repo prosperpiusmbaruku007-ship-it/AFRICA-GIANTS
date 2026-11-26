@@ -50,3 +50,52 @@ def test_the_script_has_no_write_path():
     names = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)} | {n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
     assert not (names & {"pop", "put", "update", "clear", "delete", "remove", "write", "batch_upload", "from_name_create"}), names & {"pop", "put", "update", "clear", "delete", "remove", "write"}
     assert "create_if_missing" not in open(os.path.join(_ROOT, "scripts", "futa_check.py"), encoding="utf-8").read().split('"""', 2)[2]
+
+
+# ── --baseline: totals before the test, no digits (2026-11-27) ───────────────────────────────────────────────────
+def test_the_baseline_needs_no_digits_and_prints_the_totals_the_later_check_compares_against():
+    rows = [{"sender_tail": "1111"}, {"sender_tail": "2222"}]
+    items = [{"sender_tail": "1111"}]
+    s = fc.summarize(None, rows, items, {"review": ["1111", "2222"], "transcript": ["2222"]}, 4, [])
+    out = fc.render_baseline(s)
+    assert "TOTAL RECORDS (everyone): 6" in out and "tombstones 4" in out
+    assert s["residue_total"] == 0, "with no number there is nothing to be a residue"
+    assert "1111" not in out and "2222" not in out, "no tail appears in the baseline output"
+
+
+def test_the_second_check_compares_against_the_baseline_exactly_when_only_the_new_number_was_added():
+    base = fc.summarize(None, [{"sender_tail": "1111"}], [], {"review": [], "transcript": []}, 0, [])
+    total = 1
+    after_seed = fc.summarize("5555", [{"sender_tail": "1111"}, {"sender_tail": "5555"}, {"sender_tail": "5555"}], [{"sender_tail": "5555"}],
+                              {"review": [], "transcript": []}, 0, [])
+    assert after_seed["others_total"] == total and base["transcripts_total"] == total, "everyone else equals the baseline total after the number's own records are removed"
+    changed = fc.summarize("5555", [{"sender_tail": "1111"}, {"sender_tail": "9999"}], [], {"review": [], "transcript": []}, 0, [])
+    assert changed["others_total"] != total, "plant: if someone ELSE's record appeared or vanished, the comparison catches it"
+
+
+def test_baseline_mode_runs_end_to_end_against_fake_stores_and_prints_no_tail(monkeypatch, capsys):
+    import types
+
+    class _D:
+        def __init__(self, items):
+            self._i = items
+
+        def items(self):
+            return list(self._i)
+
+    stores = {"chike-transcripts-kv": [("a", {"sender_tail": "1111"}), ("b", {"sender_tail": "2222"})], "chike-review-queue-kv": [("r", {"sender_tail": "1111"})],
+              "chike-archive-state-kv": []}
+
+    class _Vol:
+        @staticmethod
+        def listdir(path):
+            raise RuntimeError("not present")
+    fake = types.SimpleNamespace(Dict=types.SimpleNamespace(from_name=lambda n: _D(stores[n])), Volume=types.SimpleNamespace(from_name=lambda n: _Vol))
+    monkeypatch.setitem(sys.modules, "modal", fake)
+    assert fc.main(["--baseline"]) == 0
+    out = capsys.readouterr().out
+    assert "TOTAL RECORDS (everyone): 3" in out and "1111" not in out and "2222" not in out
+
+
+def test_without_baseline_or_a_valid_tail_nothing_runs(capsys):
+    assert fc.main([]) == 2 and "--baseline" in capsys.readouterr().out

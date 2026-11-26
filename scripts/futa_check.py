@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """READ-ONLY residue check for a FUTA end-to-end test with a throwaway number. Prints COUNTS only: no number, no hash, no text.
 
+    python scripts/futa_check.py --baseline            # BEFORE the test: whole-system totals, NO digits needed (the throwaway number has no records yet)
     python scripts/futa_check.py --last4 1234          # the last four digits of the throwaway number (you supply them; they are not stored anywhere)
 
 It finds a person's records WITHOUT the salt, by the 4-digit tail every transcript row, review item and archive record carries, so it is a second opinion
@@ -45,6 +46,18 @@ def render(s):
     return "\n".join(lines)
 
 
+def render_baseline(s):
+    """The totals the later checks are compared against. No number, no tail: nothing here can identify anyone."""
+    everyone = s["transcripts_total"] + s["review_total"] + s["archive_review_total"] + s["archive_transcript_total"]
+    ld = s["last_deletion"]
+    return "\n".join([
+        f"BASELINE (whole system, no number): transcripts {s['transcripts_total']}, review items {s['review_total']}, archive review {s['archive_review_total']}, "
+        f"archive transcripts {s['archive_transcript_total']}, tombstones {s['tombstones']}",
+        f"TOTAL RECORDS (everyone): {everyone}   <- after the test, 'everyone else's records' must equal this number exactly",
+        "last logged deletion: " + ("none" if not ld else f"verified={ld['verified']}"),
+        "not read: the bridge delivery ledger (accepted limit, rows age out within 24 h)"])
+
+
 def _volume_read():
     """({'review': [tails], 'transcript': [tails]}, tombstone_count). A Volume or path that does not exist yet reads as empty, and says so."""
     import modal
@@ -72,10 +85,11 @@ def _volume_read():
 
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")      # in main(), never at import (R40)
-    if "--last4" not in argv or not argv[argv.index("--last4") + 1].isdigit() or len(argv[argv.index("--last4") + 1]) != 4:
-        print("give --last4 NNNN (the last four digits of the throwaway number)")
+    baseline = "--baseline" in argv
+    if not baseline and ("--last4" not in argv or not argv[argv.index("--last4") + 1].isdigit() or len(argv[argv.index("--last4") + 1]) != 4):
+        print("give --last4 NNNN (the last four digits of the throwaway number), or --baseline for the totals before the test")
         return 2
-    last4 = argv[argv.index("--last4") + 1]
+    last4 = None if baseline else argv[argv.index("--last4") + 1]
     import modal
     rows = [v for _, v in modal.Dict.from_name("chike-transcripts-kv").items() if isinstance(v, dict)]
     items = [v for _, v in modal.Dict.from_name("chike-review-queue-kv").items() if isinstance(v, dict)]
@@ -84,7 +98,8 @@ def main(argv):
     except Exception:                                                # noqa: BLE001
         logs = []
     tails, tomb = _volume_read()
-    print(render(summarize(last4, rows, items, tails, tomb, logs)))
+    summary = summarize(last4, rows, items, tails, tomb, logs)
+    print(render_baseline(summary) if baseline else render(summary))
     return 0
 
 
