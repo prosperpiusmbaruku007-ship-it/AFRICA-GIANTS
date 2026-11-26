@@ -1629,6 +1629,66 @@ Not defects, recorded: the registration-threshold control ("Duka la dawa linatak
 - The old "Habari, hi,  hellow" draft was withheld by the founder.
 - PROGRESS.md had no entry between 2026-10-09 and 2026-11-11; the October-to-November arc lives in the commit log and CLAUDE.md.
 
+### 4bx. 2026-11-26 — **THE REMINDER STORM: 4,284 PUSHES TO ONE REVIEWER NUMBER IN ~16 H FROM 20 UNREVIEWED TEST ITEMS. THE CAP THAT WAS OFF, THE STAMP THAT CAME AFTER THE SEND, AND NOTHING THAT COUNTED SENDS.** FIXED AND DEPLOYED (`chike-whatsapp` `ea0a73b`); CONTROLLED TEST RUNNING
+
+> **Provenance.** Counts are from `eval/results/reminder_storm_counts_2026_11_26.json` (read-only, app already stopped; no numbers or sender hashes). The *phone* showed "1000+" — the store figure is an **upper bound of attempts recorded by `_mark_notified`**, not receipts. The bridge log kept ~20 minutes only, so overnight send counts cannot be taken from it, and no disconnect/rate-limit/ban line was in that window.
+
+**What happened.** 20 test items were held unreviewed from 2026-11-25 ~12:00Z. Window of notifications: first 2026-11-25T13:51:55Z, last 2026-11-26T05:54:40Z. **20 first cards + 4,264 reminders = 4,284** to one recipient. One-per-420 s over ~16 h would allow ~137 reminders per item; the observed per-item counts ran **2 to 345** (mean 213, 1.56× that).
+
+**Cause (two designed-in settings + one ordering bug).**
+1. `MAX_RENOTIFIES=0` — "0 = no cap", the founder's 2026-11-13 decision, runbook line *"Re-notify every 7 minutes, no cap … pings the roster every 7 minutes for ever"*. The runbook described this outcome as the chosen consequence; what it did not price was the rate.
+2. `RENOTIFY_AFTER_S=420` with a sweep every minute.
+3. **`last_notified_at` was stamped AFTER the send** (`_mark_notified`). A send takes seconds to tens of seconds (bridge timeout 35 s), so a sweep starting while another awaited saw the item as still due. **This is inferred, not observed:** counts above 137 are consistent with overlap but the per-item active windows are lost with the cleared items, so the size of the overlap term is not separable from the no-cap term.
+4. **Nothing counted outbound sends**, so nothing could say "stop".
+
+**Response.** `chike-whatsapp` stopped 2026-11-26 05:55Z (08:55 UTC+3) and kept stopped until the approved deploy; the 20 items were cleared to 0 pending.
+
+**Per-item reminder counts (the 20-row table; time order of first notification).** *Reading: only counts survive — items were cleared, so per-item route, held time and question are not recoverable and are NOT in this table.*
+
+| # | reminders | notifications incl. card | × the 137 expected |
+|---|---|---|---|
+| 1 | 123 | 124 | 0.9× |
+| 2 | 173 | 174 | 1.3× |
+| 3 | 123 | 124 | 0.9× |
+| 4 | 164 | 165 | 1.2× |
+| 5 | 172 | 173 | 1.3× |
+| 6 | 190 | 191 | 1.4× |
+| 7 | 204 | 205 | 1.5× |
+| 8 | 2 | 3 | 0.0× |
+| 9 | 188 | 189 | 1.4× |
+| 10 | 200 | 201 | 1.5× |
+| 11 | 173 | 174 | 1.3× |
+| 12 | 204 | 205 | 1.5× |
+| 13 | 251 | 252 | 1.8× |
+| 14 | 275 | 276 | 2.0× |
+| 15 | 265 | 266 | 1.9× |
+| 16 | 265 | 266 | 1.9× |
+| 17 | 288 | 289 | 2.1× |
+| 18 | 327 | 328 | 2.4× |
+| 19 | 345 | 346 | 2.5× |
+| 20 | 332 | 333 | 2.4× |
+| **Σ** | **4264** | **4284** | mean **213** (1.56×) |
+
+**Fix — five local commits, pushed 2026-11-26 (`6ad0a6b..ea0a73b`), full suite 4,897 passed:**
+| commit | change |
+|---|---|
+| `6ad0a6b` | `MAX_RENOTIFIES=1`; no uncapped mode (any value < 1 reads as 1); hourly digest while ≥ 1 pending, none at 0, atomic per-hour claim |
+| `bfdd032` | send ceilings in `_send_once`: 20/recipient/h, 60 global/h, fail-closed, reserve-then-count, healthchecks.io warning at 50% and alert at cap; tunables-gated; `/health` `send_ceiling` |
+| `b26549a` | overlap guard: sweep lock (fail-closed, stale-steal), atomic claim per (item, reminder number), **stamp before send**; the AST no-send tests now cover the locked body |
+| `5e9b863` | holding message names no authority for football / foreign-country questions (generic "mamlaka husika") |
+| `ea0a73b` | runbook corrected in place |
+
+**Plants (each fails with the control removed):** 12 simulated hours × 20 unreviewed items on the real sweep = **20 cards, 20 reminders, 12 digests**; the old uncapped setting in the same simulation = **2,040 reminders** (a clean, non-overlapping run — the overlap term comes on top). Three overlapping sweeps: one reminder each (lock alone suffices; claim alone also suffices); with both removed they double-send. Caps trip at 21 and 61, with passing controls at 20 and 60. 0 pending for 12 h = nothing sent.
+
+**Deploy (R16).** Pre-flight GATE 1 provenance OK, GATE 2 chain lint OK, GATE 3 real build OK. **GATE 3b could not read the live `/health` (app stopped, HTTP 404) and refuses by design; overridden with a written `CHIKE_TUNABLES_OVERRIDE` naming the three intended differences (MAX_RENOTIFIES 0→1 and the two new caps).** App was already stopped, so there was no outage window to open. Live `/health` afterwards: `build ea0a73b` = HEAD, `max_renotifies 1`, `send_ceiling 20/60 (3600 s)`, `renotify_after_s 420`, supervised true, auto-send on 900 s, 0 pending, bridge connected 1 lease holder, alerting configured. (`chike-whatsapp` `/health` has no `build_matches`; that field is `chike-inference`'s.)
+
+**`answer_path_summary --include-test` (2026-11-26 ~07:19Z, over the transcript store):** 42 messages, 0 excluded, **18 untraced** (rows before the answer-path log); fact_model 9 (37.5%), engine 5, fixed_statement 5, ooc 4, clarification 1; model-free 11, model called 13, guard fired 1; **3 holding messages sent, 0 failed.** The 37.5%/20.8% shares are over the 24 traced rows, not 42.
+
+**Not done / open.** (a) The 60/h global ceiling also counts participant acks and answers, so it can bind before the reviewer ceiling once the cohort grows. (b) 20 drafts held at once fill the reviewer's 20/h with first cards; reminders and digests then wait for the window. (c) The foreign-country holding rule also gives the generic line to cross-border questions that name a country (conservative direction). (d) The sweep lock TTL is 300 s while the sweep function timeout is 600 s; the per-reminder claim is the defence if a long sweep's lock is stolen.
+
+**CONTROLLED TEST (pre-registered 2026-11-26 07:00Z, before the first message): 4 questions held 07:13:10Z–07:14:30Z (store `ts_held`); the clock runs from 07:14:30Z to 09:14:30Z.** Predicted: 4 cards; ≤ 4 reminders (one per item); hourly digests only while pending; ≤ 1 holding message per item on the test phone. Q1 (`engine:fixed_statement`, 0 model calls) is excluded from auto-send; Q2 (`engine:paye`) made 2 model calls so it is model-path and will not auto-send either. **RESULT: _to be appended at 09:15Z._**
+
+
 ---
 
 ## 📋 2026-10-09 (fifth pass) — **THE STATEMENT ROUTE IS LIVE AND VERIFIED. AND THE PRE-REGISTRATION SAYS THE REGEX HEADLINE *CANNOT* MOVE — BECAUSE IT WAS ALREADY CREDITING EVERY ROW THIS CHANGE FIXES.**

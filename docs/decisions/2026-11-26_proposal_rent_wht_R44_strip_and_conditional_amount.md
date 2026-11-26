@@ -1,0 +1,18 @@
+# PROPOSAL (not built, not deployed) — rent-WHT statement: R44 strip + a conditional computed line
+2026-11-26. Queued for the next `chike-inference` window with the other index/renderer work. `chike-whatsapp` is untouched.
+
+## 1. R44 strip (Swahili answer text names a consolidated Act without a section/paragraph number)
+`chike/rules_engine/rent_wht.py` `_CITATION = "Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)"` is placed in the **served** rate sentence. R44 rule 1 says served Swahili text names the Act ("(Sheria ya Kodi ya Mapato)") with no `Kifungu`/paragraph number of a consolidated Act; the chapter number is also a renumbering risk (Cap.208 → Cap.101 for the Business Licensing Act, Section 11 / R29 mode 3).
+- **Change:** `_CITATION = "Sheria ya Kodi ya Mapato (ITA), Jedwali la Kwanza"` (the schedule's name, no paragraph, no Cap).
+- **Where the number goes instead (R44 rule 3):** it is already in `ComputationResult.note` ("Cap.332 First Schedule para 4(b)(ii)"), which is metadata, not served text; re-check that `note` is not rendered into the reply before relying on this (R41: open one stored reply and quote the field).
+- **To verify:** the served index row for rent WHT, `locked_facts` text, and the five fixed statements already stripped on 2026-11-16 are separate; this is the **renderer** instance the census listed. `tests/test_no_section_numbers_in_answer_text.py` walks every renderer string and should go from flagging this one to clean (plant: put the old string back, it must flag).
+
+## 2. Conditional computed line (only when the question carries ONE rent amount)
+Today the engine is a pure statement: `amount=None` (R19: multiplying by 10% is the Guard B shape when the payer is not a withholding agent). A user who writes "Pango ni TZS 800,000" gets the rate and the precondition but not the sum they asked for.
+- **Proposed sentence, appended only when `routing.sole_plausible_amount(question)` returns exactly one amount:**
+  > "Ikiwa wewe ni wakala wa kuzuia: 10% × TZS 800,000 = TZS 80,000."
+- **Why this is not Guard B:** the figure is derived from the user's own number by one stated rate, and it is explicitly conditional, so it cannot be read as "you owe this". The unconditional `amount` field stays `None`; the line lives in `working`.
+- **Not built if the question has 0 or ≥ 2 amounts** (the engine keeps stating the rate only), the same restraint `levy_rate_statement` shows.
+- **⚠️ POLICY CONFLICT TO DECIDE FIRST:** `rent_wht` is on `AUTOSEND_ELIGIBLE_ENGINE_ROUTES` as a model-free *statement*. PROGRESS 4q records the founder's rule that **amount-bearing answers (NSSF / SDL / PAYE) wait for review**. A rent reply that now carries a sum would be an amount-bearing answer auto-sending after 15 minutes unreviewed. Options: (a) exclude the amount-bearing variant from auto-send (the eligibility check would need to see the conditional line), (b) leave rent auto-send as is because the line is conditional and model-free, (c) skip part 2. **My recommendation: (a)**, since it keeps the 2c reading you wrote ("model_calls == 0 says no model wrote a word; it does not say a route's content has earned an unreviewed send").
+- **Blast radius to enumerate mechanically (R12c):** the sweep recorded 3 matches over 1,231 questions for the rent route (`eval/routing/sweep_rent_wht_routing.py`); only rows that also carry exactly one amount change. Controls on unchanged routes; a fixed-statement-style test with a positive control, and one with 800,000 and 8,000,000 so a hard-coded sum fails.
+- **Interaction with D-FIDELITY rules:** a body figure now has a working figure beside it, so the compute-path fidelity rules apply; probe both ways (R17 step 2): a correct "10% × X = Y" body must stay clean.
