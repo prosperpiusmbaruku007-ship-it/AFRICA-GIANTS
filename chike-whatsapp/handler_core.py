@@ -42,6 +42,9 @@ GREETINGS = {
     "habari", "hujambo", "mambo", "hello", "hi", "hey",
     "salaam", "salam", "start", "help", "msaada",
     "chike", "karibu",
+    # The pre-filled text of the onboarding wa.me link (scripts/make_onboarding_link.py). It MUST classify as a greeting: a question
+    # would cost a GPU call and a reviewer card for a message that asks nothing. tests/test_onboarding_link.py pins the two together.
+    "habari chike",
 }
 
 WELCOME = (
