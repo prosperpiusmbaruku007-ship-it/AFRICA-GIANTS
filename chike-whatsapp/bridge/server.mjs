@@ -7,6 +7,7 @@
 import http from "node:http";
 import QRCode from "qrcode";
 import { makeKv, useKvAuthState } from "./authstate.mjs";
+import { createPacer, pacerConfig } from "./pacer.mjs";
 import pino from "pino";
 import makeWASocket, {
   DisconnectReason, fetchLatestBaileysVersion, Browsers,
@@ -28,6 +29,8 @@ const RECEIPT_WAIT_MS = Number(process.env.RECEIPT_WAIT_MS || 20000);
 // observed maximum; /state reports the live lag distribution (median, max, count) so this is a
 // number to revisit against data, not to guess.
 const PENDING_FLAG_S = Number(process.env.PENDING_FLAG_S || 3600);
+// Outbound pacing (item G): minimum gap + random jitter between sends, bounded wait. The ceilings in modal_whatsapp.py stay the hard brake.
+const pacer = createPacer(pacerConfig(process.env));
 // Baileys 7.0.0-rc14 is a RELEASE CANDIDATE, pinned exactly in package.json. WhatsApp changes its
 // protocol without notice, so the library can break underneath us; /state shows the library's own
 // disconnect reasons so that shows up as an alert rather than as silence.
@@ -153,6 +156,9 @@ async function send({ to, text }) {
   if (S.connection !== "open" || !sock) return { code: 503, body: { ok: false, error: "not_connected", connection: S.connection } };
   const jid = toJid(String(to || ""));
   if (!jid || !text) return { code: 400, body: { ok: false, error: "bad_request" } };
+  // Paced BEFORE sending, so a refusal means nothing was sent (429 is a clean, retryable failure, never a phantom pending).
+  const slot = await pacer.acquire();
+  if (!slot.ok) return { code: 429, body: { ok: false, error: "pacing_backlog", retry_after_s: Math.ceil(slot.retry_after_ms / 1000) } };
   let sent;
   try { sent = await sock.sendMessage(jid, { text: String(text) }); }
   catch (e) { return { code: 502, body: { ok: false, error: "send_threw:" + (e?.message || e).toString().slice(0, 120) } }; }
@@ -191,7 +197,7 @@ function state() {
     reconnect_attempts: S.reconnect_attempts, connected_for_s: ago(S.connected_since_ts),
     since_inbound_s: ago(S.last_inbound_ts), since_outbound_s: ago(S.last_outbound_ts),
     since_receipt_s: ago(S.last_receipt_ts), uptime_s: t - S.started_ts,
-    has_qr: !!S.qr, paired: !!S.me, outbound: ledgerSummary(),
+    has_qr: !!S.qr, paired: !!S.me, outbound: ledgerSummary(), pacing: pacer.stats(),
   };
 }
 
