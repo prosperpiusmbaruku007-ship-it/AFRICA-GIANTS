@@ -1692,6 +1692,20 @@ Not defects, recorded: the registration-threshold control ("Duka la dawa linatak
 
 
 ---
+### 4by. 2026-11-26 — WINDOWS 1 AND 2 LIVE: `chike-whatsapp` AND `chike-inference` BOTH `066a995`; LIVE CHECK 14/15 AUTOMATED OK, ONE REAL MISS (FABRICATED SALARY, FACT PATH); SCALEDOWN 600 s PROVEN WARM
+
+**Push.** `f768422..066a995` (4 commits incl. the PROGRESS 4bx commit), pre-push hook in full, 4,939 passed, no bypass.
+**Window 1 (`chike-whatsapp`, digest rule).** `pending 0`, `supervised True` rechecked immediately before the stop. Pre-flight gate 3b refused once: `digest_min_wait_s live=None image=3600` (new field; already committed in `deploy_tunables.json`); re-run with `CHIKE_TUNABLES_OVERRIDE` carrying the written reason, 3/3. Stop, deploy 67 s. `/health`: build `066a995`, `digest_min_wait_s 3600`, `max_renotifies 1`, ceiling 20/60, auto-send 900 s, supervised, bridge connected, no secrets missing.
+**Window 2 (`chike-inference`, R1/R2 + rent R44 + conditional line + scaledown 600).** Pre-flight 3/3, stop, deploy 27 s.
+**Served identity, read from the GPU class (`served_index_identity`, no token):** BEFORE build `89db024`, 224 rows, digest `e97ed601...`; AFTER build `066a995`, 224 rows, digest `e97ed601...`, `config_rag_fact_count` 224; web tier build `066a995`.
+**Live check** (`eval/controls/verify_r1r2_rent_scaledown_deploy_live_2026_11_26.py` -> `eval/results/r1r2_rent_scaledown_deploy_live_2026_11_26.json`, harness committed before its run in `04e4ff8`, every reply read): R1/R2 5/5 fixed statements, 0 model calls, residency line / 15% + tax-credit wording present; rs_04 keeps its statement; first-person foreign PAYE gets the clarification + residency line; rent plain: no multiplication line, R44 strip confirmed (no `Cap.332`, no `4(b)(ii)`); rent TZS 800,000 -> "Ikiwa wewe ni wakala wa kuzuia: 10% x TZS 800,000 = TZS 80,000", TZS 8,000,000 -> 800,000; turnover figure not multiplied; PAYE controls correct (78,000; 428,000); Kenya question hedges.
+**`identity_ok=False` in that artifact is a HARNESS LIMITATION, not an identity failure:** its conjunct `build_matches is True` is only reported by the token-gated deep `/health`; the other conjuncts (build, 224, digest == local) hold. Recorded here so the artifact's flag is not read as a failed deploy.
+**ONE REAL MISS, READ NOT SCORED:** `"Nikatwe PAYE kiasi gani mimi?"` (no figure, no foreign cue) -> `path fact, model_calls 1`: *"Kwa mshahara wa TZS 800,000, PAYE ni TZS 78,000."* **The salary was never given — a fabricated figure** (the harness expected the clarification). Not shown to be a regression (that path was not touched; no baseline taken). In the cohort a reviewer reads it before it sends. **Queued, not fixed:** a no-amount first-person PAYE question should clarify; routing/guard work needed, needs its own enumeration (R12c).
+**Scaledown (`WARM=1`, `eval/results/scaledown_warm_check_2026_11_26.json`):** first call 14.0 s at 10:06:21Z, second 7 minutes later 6.2 s at 10:13:28Z, both `engine:rent_wht`. Warm, not cold (cold is 60-216 s): the 600 s window is live; the 300 s window would have been cold.
+**Next (founder):** resend the two rent questions from the test phone. Plain one should auto-send at ~15 min; the TZS 1,500,000 one should be held with a holding message and NOT auto-send.
+**Queued:** Labour Office holding-message line (see 4bx).
+
+
 
 ## 📋 2026-10-09 (fifth pass) — **THE STATEMENT ROUTE IS LIVE AND VERIFIED. AND THE PRE-REGISTRATION SAYS THE REGEX HEADLINE *CANNOT* MOVE — BECAUSE IT WAS ALREADY CREDITING EVERY ROW THIS CHANGE FIXES.**
 
