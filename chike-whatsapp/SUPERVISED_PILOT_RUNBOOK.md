@@ -447,7 +447,7 @@ does not send them, and nothing else will.
 about twice the 137 each that one-per-420 s allows, because overlapping sweeps stamped `last_notified_at` only after a slow send. Now:
 
 - **First card + at most ONE reminder per draft** (`MAX_RENOTIFIES=1`, `RENOTIFY_AFTER_S=420`). **There is no uncapped mode:** any value below 1 is read as 1.
-- **An hourly digest while at least one draft is pending** (count, oldest age, links); **none when 0 are pending.** Reviewer pings stay 24 h, bounded by the two lines above and the ceilings below.
+- **A digest only once a draft has waited ≥ 60 min since its card** (`DIGEST_MIN_WAIT_S=3600`; count, oldest age, links; at most once an hour; **none when 0 are pending**). *(Amended 2026-11-26 after the controlled test: the first rule, "a digest while ≥ 1 draft is pending", sent one 10 seconds after the last first-card, a summary of messages just received.)* Reviewer pings stay 24 h, bounded by the two lines above and the ceilings below.
 - **Send ceilings in `_send_once` (every outbound passes it), fail-closed:** 20 per recipient per rolling hour AND 60 global (`SEND_CAP_PER_RECIPIENT_PER_HOUR`,
   `SEND_CAP_GLOBAL_PER_HOUR`, both in `deploy_tunables.json`). A healthchecks.io warning at 50% of either; **at the cap sending STOPS and an alert is raised.**
   Note the consequence: 20 drafts held at once fill the reviewer's 20/hour with their first cards — the later reminders and digest wait for the window.

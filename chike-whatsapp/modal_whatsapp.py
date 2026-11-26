@@ -98,7 +98,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
-                    "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR")
+                    "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S")
 
 def _committed_tunables():
     """The deploy-time tunables from the COMMITTED, secret-free `deploy_tunables.json` (2026-11-16), applied whatever the deploying shell holds.
@@ -243,6 +243,7 @@ def _settings():
         model_timeout_s=float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         supervised_model_timeout_s=float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
         max_renotifies=int(os.environ.get("MAX_RENOTIFIES", "1") or 1),
+        digest_min_wait_s=_core().parse_digest_min_wait(os.environ.get("DIGEST_MIN_WAIT_S")),
         slow_ack_after_s=float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         second_ack_after_s=float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
@@ -671,6 +672,15 @@ def _health_max_renotifies():
         return max(1, int(os.environ.get("MAX_RENOTIFIES", "1")))
     except Exception:                                                # noqa: BLE001
         return 1
+
+
+def _health_digest_min_wait():
+    """Same rule as core.parse_digest_min_wait, local so /health never depends on the package import."""
+    try:
+        n = float(str(os.environ.get("DIGEST_MIN_WAIT_S", "3600")).strip())
+        return n if n >= 60 else 3600.0
+    except Exception:                                                # noqa: BLE001
+        return 3600.0
 
 
 def _health_send_ceiling():
@@ -2148,7 +2158,7 @@ async def _sweep_review_queue_locked():
         last = BRIDGE_WATCH.get("digest_ts")
         now_t = _t.time()
         # ATOMIC per hour: put(skip_if_exists) on an hour-bucket key, never a read-then-write (R43), so two overlapping sweeps send one digest.
-        if waiting and core.digest_due(last, now_t) and BRIDGE_WATCH.put(f"digest_claim_{int(now_t // core.DIGEST_EVERY_S)}", now_t,
+        if waiting and core.digest_trigger(waiting, min_wait_s=settings.digest_min_wait_s) and core.digest_due(last, now_t) and BRIDGE_WATCH.put(f"digest_claim_{int(now_t // core.DIGEST_EVERY_S)}", now_t,
                                                                           skip_if_exists=True):
             digest_sent = await _send_digest(waiting)
             if digest_sent:
@@ -2548,6 +2558,7 @@ def health():
         "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
         "max_renotifies": _health_max_renotifies(),
         "send_ceiling": _health_send_ceiling(),
+        "digest_min_wait_s": _health_digest_min_wait(),
         "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a

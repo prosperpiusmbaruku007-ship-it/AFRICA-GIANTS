@@ -20,7 +20,7 @@ FILE = os.path.join(HERE, "deploy_tunables.json")
 
 REQUIRED = ("COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "MAX_RENOTIFIES", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "SUPERVISED",
             "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S", "SECOND_ACK_AFTER_S",
-            "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR")
+            "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S")
 _SECRET_LIKE = re.compile(r"token|secret|password|salt|signing|roster|api_?key", re.IGNORECASE)
 _TRUE = ("1", "true", "yes", "on")
 
@@ -81,6 +81,7 @@ def expected_view(committed):
         "can_issue_links": True,
         "send_cap_per_recipient": int(committed["SEND_CAP_PER_RECIPIENT_PER_HOUR"]),
         "send_cap_global": int(committed["SEND_CAP_GLOBAL_PER_HOUR"]),
+        "digest_min_wait_s": _num(committed["DIGEST_MIN_WAIT_S"]),
     }
 
 
@@ -107,6 +108,7 @@ def health_view(h):
         "can_issue_links": roster.get("can_issue_links"),
         "send_cap_per_recipient": (h.get("send_ceiling") or {}).get("per_recipient_per_hour"),
         "send_cap_global": (h.get("send_ceiling") or {}).get("global_per_hour"),
+        "digest_min_wait_s": h.get("digest_min_wait_s"),
     }
 
 

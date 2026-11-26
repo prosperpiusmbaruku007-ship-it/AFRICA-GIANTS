@@ -141,6 +141,8 @@ class Settings:
     # behind the 2026-11-25 reminder storm (4,264 reminders to one reviewer in 16 h). Any value below 1 is
     # read as 1, so a mistyped or zeroed tunable can never turn the cap off.
     max_renotifies: int = 1
+    # A digest is sent only once some pending draft has waited this long since its card (core.digest_trigger). 2026-11-26.
+    digest_min_wait_s: float = 3600.0
 
     # One short "I'm working on it" if the answer is slow. A user who hears nothing for
     # three minutes concludes the service is broken; one Wappfly message is far cheaper
@@ -1213,6 +1215,34 @@ def digest_candidates(items, max_renotifies=None):
 
 
 DIGEST_EVERY_S = 3600.0
+
+
+DIGEST_MIN_WAIT_DEFAULT_S = 3600.0
+
+
+def parse_digest_min_wait(v):
+    """Seconds. Missing, unparseable or < 60 -> the 3600 default: a mistyped tunable can never bring back the digest-right-after-the-card noise."""
+    try:
+        n = float(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return DIGEST_MIN_WAIT_DEFAULT_S
+    return n if n >= 60 else DIGEST_MIN_WAIT_DEFAULT_S
+
+
+def digest_trigger(items, now=None, min_wait_s=DIGEST_MIN_WAIT_DEFAULT_S):
+    """THE DIGEST RULE (founder, 2026-11-26): a digest is sent only when AT LEAST ONE pending item has waited >= `min_wait_s` since its card
+    (`first_notified_at`, falling back to `ts_held`). The first digest used to fire ten seconds after the last first-card -- a summary of messages
+    the reviewer had just received. FAIL-CLOSED: an item with no parseable timestamp does not trigger. Pure."""
+    now = now or datetime.now(timezone.utc)
+    for it in items:
+        if it.get("status") != "pending":
+            continue
+        try:
+            if (now - datetime.fromisoformat(it.get("first_notified_at") or it.get("ts_held"))).total_seconds() >= float(min_wait_s):
+                return True
+        except Exception:                                            # noqa: BLE001
+            continue
+    return False
 
 
 def digest_due(last_digest_ts, now_ts, *, every_s=DIGEST_EVERY_S):
