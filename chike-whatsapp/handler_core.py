@@ -60,7 +60,7 @@ WELCOME = (
     "*Jaribu kuuliza, kwa mfano:*\n"
     "• Mshahara wa TZS 800,000, PAYE ni kiasi gani?\n"
     "• Leseni ya biashara inadumu muda gani?\n\n"
-    "Ili upate jibu sahihi, kila jibu hukaguliwa kwanza, kwa hiyo linaweza kuchukua muda kidogo.\n\n"
+    "Ili upate jibu sahihi, majibu mengi hukaguliwa kwanza, kwa hiyo jibu linaweza kuchukua muda.\n\n"
     "Uliza swali lako 👇"
 )
 
@@ -2249,7 +2249,7 @@ def cohort_capacity(declared_size, reviewers):
 # reading." So it is not a runbook step; it is code, and it is VERBATIM the founder's text (the runbook's
 # §8a copy is asserted equal to this constant in tests, so the two cannot drift apart).
 DISCLOSURE_TEXT = (
-    "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Asante kwa kutusaidia kuiboresha Chike.")
+    "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. Asante kwa kutusaidia kuiboresha Chike.")
 
 # States in which the participant HAS been told (or the message is on its way and must never be repeated).
 DISCLOSURE_OK = ("delivered", "pending_receipt", "already")

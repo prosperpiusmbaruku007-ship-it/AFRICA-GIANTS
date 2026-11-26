@@ -412,17 +412,22 @@ reading no longer applies.
 2026-11-12; do not paraphrase or shorten it — dropping any limb of it is dropping the
 disclosure):
 
-> Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Asante kwa kutusaidia kuiboresha Chike.
+> Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. Asante kwa kutusaidia kuiboresha Chike.
+
+**Amended 2026-11-26 (founder).** "kila jibu linasomwa" became "majibu mengi yanasomwa" so the sentence matches live behaviour (model-free engine answers
+may auto-send after 15 minutes, prefixed as an unchecked automated calculation), and "Usitume nywila wala namba za benki." was added. The wording is the
+founder's; the rule that no limb may be dropped stands.
 
 What each sentence is for, so nobody "tidies" one away:
 
 | sentence (gist) | the R7 limb it carries |
 |---|---|
 | *majaribio… msaidizi wa maswali ya kodi na sheria za biashara* | what Chike is — and is not (not a general assistant) |
-| *kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa* | **supervised test; a person reads every answer** |
+| *kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa* | **supervised test; a person reads MOST answers** (model-free engine answers may auto-send after 15 minutes, with an explicit unchecked-automated prefix) |
 | *jibu linaweza kuchukua muda — wakati mwingine saa kadhaa* | **latency is real** — a 9pm question may wait until morning, and a participant who does not expect that stops asking |
 | *majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA* | **confirm important answers with TRA** |
 | *usitume taarifa binafsi zisizo za lazima* | do not send personal data we do not need |
+| *usitume nywila wala namba za benki* | do not send passwords or bank numbers (added 2026-11-26) |
 
 ⚠️ **This is the message, not yet an enforced step.** Nothing in the handler sends it today — it is
 sent by hand, and **nothing checks that it was.** Under the R35 rule a condition with no

@@ -32,7 +32,7 @@ WELCOME_TEXT = (
     "*Jaribu kuuliza, kwa mfano:*\n"
     "• Mshahara wa TZS 800,000, PAYE ni kiasi gani?\n"
     "• Leseni ya biashara inadumu muda gani?\n\n"
-    "Ili upate jibu sahihi, kila jibu hukaguliwa kwanza, kwa hiyo linaweza kuchukua muda kidogo.\n\n"
+    "Ili upate jibu sahihi, majibu mengi hukaguliwa kwanza, kwa hiyo jibu linaweza kuchukua muda.\n\n"
     "Uliza swali lako 👇"
 )
 
@@ -80,10 +80,13 @@ def test_swahili_only_no_tagline_no_gn_codes():
 
 
 def test_it_does_not_repeat_the_first_contact_disclosure_verbatim():
-    def shared(a, b, n=30):
+    # ACCEPTED OVERLAP (founder, 2026-11-26): both end "...jibu linaweza kuchukua muda" (30 chars): the welcome deliberately repeats the idea that an answer
+    # may take time. The guard is for a COPIED SENTENCE, so it is 40 characters.
+    def shared(a, b, n=40):
         return {a[i:i + n] for i in range(len(a) - n + 1)} & {b[i:i + n] for i in range(len(b) - n + 1)}
     assert not shared(hc.WELCOME, hc.DISCLOSURE_TEXT)
     assert shared(hc.DISCLOSURE_TEXT, hc.DISCLOSURE_TEXT), "positive control: a copy of the disclosure IS caught"
+    assert shared(hc.WELCOME, hc.WELCOME + hc.DISCLOSURE_TEXT[:80]) and shared(hc.WELCOME + hc.DISCLOSURE_TEXT, hc.DISCLOSURE_TEXT), "a pasted disclosure sentence IS caught"
 
 
 def test_it_fits_a_whatsapp_message_and_carries_no_link():

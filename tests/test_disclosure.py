@@ -22,9 +22,9 @@ _spec.loader.exec_module(hc)
 
 FOUNDERS_TEXT = (
     "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. "
-    "Kwa sasa ni jaribio linalosimamiwa: kila jibu linasomwa na mtu kabla ya kutumwa kwako, hivyo jibu "
+    "Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu "
     "linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; "
-    "kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. "
+    "kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. "
     "Asante kwa kutusaidia kuiboresha Chike.")
 SENDER = "255700000011@s.whatsapp.net"
 
