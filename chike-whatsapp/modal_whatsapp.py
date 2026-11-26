@@ -98,7 +98,8 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
-                    "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S")
+                    "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
+                    "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
 
 def _committed_tunables():
     """The deploy-time tunables from the COMMITTED, secret-free `deploy_tunables.json` (2026-11-16), applied whatever the deploying shell holds.
@@ -227,6 +228,8 @@ INFLIGHT = modal.Dict.from_name("chike-inflight-kv", create_if_missing=True)
 BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)
 # Rolling-hour send counts (no phone numbers: `<epoch_ms>:<salted recipient tag>:<nonce>` keys) -- see _send_once / core.send_ceiling_decision.
 SEND_CEILING = modal.Dict.from_name("chike-send-ceiling-kv", create_if_missing=True)
+# Per-sender daily question slots (item C). One key per (EAT day, sender hash, n): no phone number, no text. Entries age out on their own.
+DAILY_LIMIT = modal.Dict.from_name("chike-daily-limit-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -384,6 +387,8 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
     if retry_of:
         import dataclasses
         settings = dataclasses.replace(settings, slow_ack_after_s=0)    # 0 = the ack kill switch
+    elif await _daily_limit_gate(sender, settings):                     # item C: a reviewer-requested retry never counts against the participant
+        return {"fallback": False, "error_class": None, "supervision": None, "daily_limit": True}
 
     async def ask(message):
         return await ChikeModel().run.remote.aio(message)
@@ -425,6 +430,11 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
             item["duplicates_pending"] = core.pending_duplicates(item, _queue_items())
         except Exception:                                            # noqa: BLE001
             item["duplicates_pending"] = []
+        try:    # DIGEST-ONLY MODE (scale audit): past the threshold a new card is not pushed on its own, it is listed in the 15-minute digest
+            _pending_now = len(core.digest_candidates(_queue_items()))
+            item["notify_mode"] = core.notify_mode(_pending_now + 1, _digest_only_above())
+        except Exception:                                            # noqa: BLE001
+            item["notify_mode"] = "card"                             # unreadable queue: the reviewer is told
         try:
             REVIEW_QUEUE[item["review_id"]] = item
         except Exception as e:                                       # noqa: BLE001
@@ -444,6 +454,9 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         # the sweeper will re-notify; returning False here would mark the answer as
         # undelivered when in fact it is safely pending. Two different failures, two
         # different records.
+        if item.get("notify_mode") == "digest_only":
+            print(f"[review] DIGEST-ONLY: {item['review_id']} held, no card pushed (more than {_digest_only_above()} pending); it is in the next digest", flush=True)
+            return True, None
         try:
             sent = await _notify_reviewers(item)
             _mark_notified(item, sent)
@@ -683,18 +696,79 @@ def _health_digest_min_wait():
         return 3600.0
 
 
+def _health_queue_depth():
+    """Pending count, oldest age, the current notify mode and whether the queue alert would fire now. None when the queue cannot be read."""
+    try:
+        core = _core()
+        items = _queue_items()
+        pend = core.digest_candidates(items)
+        return {"pending": len(pend), "notify_mode": core.notify_mode(len(pend), _digest_only_above()),
+                "digest_only_above": _digest_only_above(), "alert_now": core.queue_depth_alert(items)}
+    except Exception:                                                # noqa: BLE001
+        return None
+
+
 def _health_send_ceiling():
     try:
-        return dict(zip(("per_recipient_per_hour", "global_per_hour"), _send_caps()), window_s=3600.0)
+        d = dict(zip(("per_recipient_per_hour", "global_per_hour"), _send_caps()), window_s=3600.0)    # the PARTICIPANT class (keys unchanged)
+        d["reviewer_per_recipient_per_hour"] = _reviewer_cap()
+        d["digest_only_above"] = _digest_only_above()
+        return d
     except Exception:                                                # noqa: BLE001
         return None                                                  # reported as unreadable: the tunables gate treats None as a mismatch
 
 
 def _send_caps():
+    """(participant per-recipient, participant global). Reviewer pushes are a SEPARATE class with their own ceiling (_reviewer_cap)."""
     return _core().parse_send_caps(os.environ.get("SEND_CAP_PER_RECIPIENT_PER_HOUR"), os.environ.get("SEND_CAP_GLOBAL_PER_HOUR"))
 
 
-async def _ceiling_alert(kind, detail):
+def _reviewer_cap():
+    return _core().parse_reviewer_cap(os.environ.get("SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR"))
+
+
+def _health_daily_limit():
+    """Same rule as core.parse_daily_limit, kept local so /health never depends on the package import."""
+    try:
+        n = int(str(os.environ.get("DAILY_QUESTION_LIMIT", "20")).strip())
+        return n if n >= 1 else 20
+    except Exception:                                                # noqa: BLE001
+        return 20
+
+
+def _daily_limit():
+    return _core().parse_daily_limit(os.environ.get("DAILY_QUESTION_LIMIT"))
+
+
+async def _daily_limit_gate(sender, settings):
+    """True when this question must NOT be answered because the sender is over today's limit (the notice, once a day, is sent here).
+    Test senders are exempt. FAILS OPEN: a counter-store error admits the question (a courtesy limit must never block a real user)."""
+    core = _core()
+    try:
+        key = _sender_key(sender, settings)
+        if core.is_test_sender_hash(settings, key):
+            return False
+        limit = _daily_limit()
+        r = core.claim_daily_slot(lambda k, v: DAILY_LIMIT.put(k, v, skip_if_exists=True), lambda k: DAILY_LIMIT.get(k),
+                                  lambda k, v: DAILY_LIMIT.__setitem__(k, v), key, limit)
+        if r["admitted"]:
+            return False
+        first_today = DAILY_LIMIT.put(f"{r['day']}:{key}:notice", "1", skip_if_exists=True)
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[daily-limit] counter unavailable ({type(e).__name__}) -- question ADMITTED (fail-open)", flush=True)
+        return False
+    print(f"[daily-limit] ...{core.number_tail(sender)} is over {limit}/day -- not answered" + ("; notice sent" if first_today else "; no second notice today"), flush=True)
+    row = (await core.deliver_daily_limit_notice(sender, _send_once, settings, BUILD, limit=limit)) if first_today else core.blank_row_for("daily_limit", sender, settings, BUILD)
+    row["notice_sent"] = bool(first_today)
+    _write_row(row)
+    return True
+
+
+def _digest_only_above():
+    return _core().parse_digest_only_above(os.environ.get("DIGEST_ONLY_ABOVE"))
+
+
+async def _ceiling_alert(kind, detail, label="SEND CEILING"):
     """healthchecks.io /fail ping, at most once per hour per kind (atomic put(skip_if_exists), R43). The body carries counts, never a number."""
     import asyncio
     import time as _t
@@ -702,7 +776,7 @@ async def _ceiling_alert(kind, detail):
         bucket = int(_t.time() // _core().SEND_WINDOW_S)
         if not SEND_CEILING.put(f"alert:{kind}:{bucket}", _t.time(), skip_if_exists=True):
             return
-        await asyncio.to_thread(_ping_healthcheck, "fail", f"chike-whatsapp SEND CEILING {kind}: {detail}"[:900])
+        await asyncio.to_thread(_ping_healthcheck, "fail", f"chike-whatsapp {label} {kind}: {detail}"[:900])
     except Exception as e:                                           # noqa: BLE001
         print(f"[ceiling] alert not sent ({type(e).__name__})", flush=True)
 
@@ -715,8 +789,16 @@ async def _ceiling_gate(to):
     import uuid
     core = _core()
     per_rcpt, glob = _send_caps()
+    try:
+        roster = _settings().roster
+    except Exception:                                                # noqa: BLE001
+        roster = []                                                  # unknown roster: everyone is a PARTICIPANT (fail-safe class)
+    is_rev = core.is_reviewer_number(to, roster)
+    if is_rev:
+        per_rcpt = _reviewer_cap()
+        glob = per_rcpt * max(1, len(roster))                        # the reviewer class's own hard brake: every reviewer at their cap, no more
     now = _t.time()
-    tag = core.send_ceiling_tag(to, os.environ.get("SENDER_SALT", ""))
+    tag = core.send_ceiling_tag(to, os.environ.get("SENDER_SALT", ""), reviewer=is_rev)
     key = core.send_ceiling_key(now, tag, uuid.uuid4().hex[:8])
     try:
         SEND_CEILING[key] = 1
@@ -738,10 +820,10 @@ async def _ceiling_gate(to):
             pass
         print(f"[ceiling] SEND REFUSED: {d['capped']} ceiling reached (recipient {d['recipient_n'] - 1}/{per_rcpt}, "
               f"global {d['global_n'] - 1}/{glob} in the last hour)", flush=True)
-        await _ceiling_alert("CAP", f"{'/'.join(d['capped'])} ceiling reached -- sending STOPPED (recipient {per_rcpt}/h, global {glob}/h)")
+        await _ceiling_alert("CAP", f"{d['class']} {'/'.join(d['capped'])} ceiling reached -- sending STOPPED (recipient {per_rcpt}/h, class total {glob}/h)")
         return False, f"send ceiling reached ({'/'.join(d['capped'])}): refused"
     if d["warn"]:
-        await _ceiling_alert("WARNING", f"{'/'.join(d['warn'])} at 50% or more (recipient {d['recipient_n']}/{per_rcpt}, global {d['global_n']}/{glob} per hour)")
+        await _ceiling_alert("WARNING", f"{d['class']} {'/'.join(d['warn'])} at 50% or more (recipient {d['recipient_n']}/{per_rcpt}, class total {d['global_n']}/{glob} per hour)")
     return True, None
 
 
@@ -2087,7 +2169,7 @@ def reconcile_receipts():
     return {"reconciled": done, "gave_up": dropped, "waiting": left, "orphaned": orphaned}
 
 
-async def _send_digest(items):
+async def _send_digest(items, overload=False):
     """The HOURLY roster message while any draft is pending. Roster
     only: it reaches reviewers, never a participant, and lives outside the sweeper so the
     sweeper's AST test (no direct send, no reading `sender`) still holds."""
@@ -2097,7 +2179,8 @@ async def _send_digest(items):
         return 0
     n = 0
     for number, name in settings.roster:
-        text = core.digest_text(items, lambda it, number=number: _draft_link(settings, it, number))
+        text = core.digest_text(items, lambda it, number=number: _draft_link(settings, it, number),
+                                max_items=core.DIGEST_ONLY_MAX_ITEMS if overload else 5, overload=overload)
         ok, detail = await _send_once(number, text)
         if ok or core.is_pending_receipt(detail):
             n += 1
@@ -2125,7 +2208,9 @@ async def _sweep_review_queue_locked():
     core = _core()
     settings = _settings()
     released, renotified, pending = 0, 0, 0
-    for it in _queue_items():
+    all_items = _queue_items()
+    digest_only = core.notify_mode(len(core.digest_candidates(all_items)), _digest_only_above()) == "digest_only"
+    for it in all_items:
         it = _fresh_item(it)                     # the queue snapshot is old by the time we reach this item
         if it is None or it.get("status") != "pending":
             continue
@@ -2141,7 +2226,7 @@ async def _sweep_review_queue_locked():
                   f"...{_core().number_tail(it.get('released_from'))} — back to the roster, "
                   f"NOT sent", flush=True)
         it = _fresh_item(it)                     # a timeout send may have decided it while we released/scanned
-        if it is not None and it.get("status") == "pending" and core.needs_renotify(
+        if it is not None and not digest_only and it.get("status") == "pending" and core.needs_renotify(
                 it, renotify_after_s=settings.renotify_after_s, max_renotifies=settings.max_renotifies):
             it = _stamp_renotify_claim(it)       # atomic claim + stamp BEFORE the send; None = someone else has it / cannot record
             if it is None:
@@ -2154,19 +2239,25 @@ async def _sweep_review_queue_locked():
     digest_sent = 0
     try:
         import time as _t
-        waiting = core.digest_candidates(_queue_items())     # [] when nothing is pending: no digest for an empty queue
+        waiting = core.digest_candidates(all_items)          # [] when nothing is pending: no digest for an empty queue
         last = BRIDGE_WATCH.get("digest_ts")
         now_t = _t.time()
         # ATOMIC per hour: put(skip_if_exists) on an hour-bucket key, never a read-then-write (R43), so two overlapping sweeps send one digest.
         if waiting and core.digest_trigger(waiting, min_wait_s=settings.digest_min_wait_s) and core.digest_due(last, now_t) and BRIDGE_WATCH.put(f"digest_claim_{int(now_t // core.DIGEST_EVERY_S)}", now_t,
                                                                           skip_if_exists=True):
-            digest_sent = await _send_digest(waiting)
+            digest_sent = await _send_digest(waiting, overload=digest_only)
             if digest_sent:
                 BRIDGE_WATCH["digest_ts"] = _t.time()
                 print(f"[sweep] HOURLY DIGEST of {len(waiting)} pending draft(s) to "
                       f"{digest_sent} reviewer(s)", flush=True)
     except Exception as e:                                           # noqa: BLE001
         print(f"[sweep] digest failed: {type(e).__name__}", flush=True)
+    try:    # QUEUE-DEPTH ALERT: healthchecks /fail, at most once an hour (shared dedup with the ceiling alerts), waking hours only
+        reason = core.queue_depth_alert(all_items)
+        if reason:
+            await _ceiling_alert("DEPTH", reason, label="REVIEW QUEUE")
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[sweep] queue alert failed: {type(e).__name__}", flush=True)
     if pending or released or renotified:
         print(f"[sweep] pending={pending} released={released} renotified={renotified}",
               flush=True)
@@ -2558,6 +2649,8 @@ def health():
         "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
         "max_renotifies": _health_max_renotifies(),
         "send_ceiling": _health_send_ceiling(),
+        "queue_depth": _health_queue_depth(),
+        "daily_question_limit": _health_daily_limit(),
         "digest_min_wait_s": _health_digest_min_wait(),
         "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),

@@ -20,7 +20,8 @@ FILE = os.path.join(HERE, "deploy_tunables.json")
 
 REQUIRED = ("COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "MAX_RENOTIFIES", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "SUPERVISED",
             "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S", "SECOND_ACK_AFTER_S",
-            "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S")
+            "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
+            "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
 _SECRET_LIKE = re.compile(r"token|secret|password|salt|signing|roster|api_?key", re.IGNORECASE)
 _TRUE = ("1", "true", "yes", "on")
 
@@ -82,6 +83,9 @@ def expected_view(committed):
         "send_cap_per_recipient": int(committed["SEND_CAP_PER_RECIPIENT_PER_HOUR"]),
         "send_cap_global": int(committed["SEND_CAP_GLOBAL_PER_HOUR"]),
         "digest_min_wait_s": _num(committed["DIGEST_MIN_WAIT_S"]),
+        "send_cap_reviewer_per_recipient": int(committed["SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR"]),
+        "digest_only_above": int(committed["DIGEST_ONLY_ABOVE"]),
+        "daily_question_limit": int(committed["DAILY_QUESTION_LIMIT"]),
     }
 
 
@@ -109,6 +113,9 @@ def health_view(h):
         "send_cap_per_recipient": (h.get("send_ceiling") or {}).get("per_recipient_per_hour"),
         "send_cap_global": (h.get("send_ceiling") or {}).get("global_per_hour"),
         "digest_min_wait_s": h.get("digest_min_wait_s"),
+        "send_cap_reviewer_per_recipient": (h.get("send_ceiling") or {}).get("reviewer_per_recipient_per_hour"),
+        "digest_only_above": (h.get("send_ceiling") or {}).get("digest_only_above"),
+        "daily_question_limit": h.get("daily_question_limit"),
     }
 
 

@@ -1152,7 +1152,12 @@ def release_expired_claim(item, *, now=None):
 # over-refuse rather than over-send. The ledger holds NO phone numbers: keys are `<epoch_ms>:<recipient tag>:<nonce>`, the tag a salted hash.
 SEND_WINDOW_S = 3600.0
 SEND_CAP_PER_RECIPIENT_DEFAULT = 20
-SEND_CAP_GLOBAL_DEFAULT = 60
+# 2026-11-26 (scale audit): the PARTICIPANT-side global ceiling, 60 -> 150. At 3 questions/participant/day with an evening burst the modelled p95
+# peak is ~80 participant sends/h at 50 participants and ~145 at 100; 150 leaves ~2x headroom at wave 3. REVIEWER pushes are counted in their OWN
+# class (below) so a participant flood can never consume the capacity that carries a card to a reviewer, and the reverse.
+SEND_CAP_GLOBAL_DEFAULT = 150
+SEND_CAP_REVIEWER_PER_RECIPIENT_DEFAULT = 40
+REVIEWER_TAG_PREFIX = "R"       # a reviewer-class reservation key carries this on its recipient tag; no hex digit can, so it cannot collide
 
 
 def parse_send_caps(per_recipient, global_cap):
@@ -1166,9 +1171,30 @@ def parse_send_caps(per_recipient, global_cap):
     return _p(per_recipient, SEND_CAP_PER_RECIPIENT_DEFAULT), _p(global_cap, SEND_CAP_GLOBAL_DEFAULT)
 
 
-def send_ceiling_tag(to, salt=""):
+def parse_reviewer_cap(v):
+    """Per-reviewer pushes/hour. Missing, unparseable or < 1 -> the default: a mistyped tunable can never switch the reviewer ceiling off."""
+    try:
+        n = int(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return SEND_CAP_REVIEWER_PER_RECIPIENT_DEFAULT
+    return n if n >= 1 else SEND_CAP_REVIEWER_PER_RECIPIENT_DEFAULT
+
+
+def _local_digits(x):
+    return "".join(c for c in str(x).split("@")[0] if c.isdigit())
+
+
+def is_reviewer_number(to, roster):
+    """True when `to` is on the roster (`roster` = [(number, name), ...]). Compared on the digits of the local part, so a phone JID and a bare
+    number match. FAIL-SAFE direction: anything not provably a reviewer is counted as a PARTICIPANT, the stricter-per-recipient class."""
+    d = _local_digits(to)
+    return bool(d) and any(_local_digits(n) == d for n, _ in (roster or ()))
+
+
+def send_ceiling_tag(to, salt="", reviewer=False):
     digits = "".join(c for c in str(to).split("@")[0] if c.isdigit()) or str(to)
-    return hashlib.sha256((salt + "|send-ceiling|" + digits).encode("utf-8")).hexdigest()[:10]
+    tag = hashlib.sha256((salt + "|send-ceiling|" + digits).encode("utf-8")).hexdigest()[:10]
+    return REVIEWER_TAG_PREFIX + tag if reviewer else tag
 
 
 def send_ceiling_key(now_s, tag, nonce):
@@ -1180,6 +1206,7 @@ def send_ceiling_decision(keys, tag, now_s, *, per_recipient, global_cap, window
     e.g. alert-dedup markers, are ignored). Allowed only while BOTH counts are <= their caps; the 21st send to one recipient and the 61st
     overall are refused. `warn` lists which ceilings have reached 50%."""
     floor_ms = (float(now_s) - float(window_s)) * 1000.0
+    is_rev = str(tag).startswith(REVIEWER_TAG_PREFIX)
     glob = rec = 0
     for k in keys:
         try:
@@ -1188,13 +1215,15 @@ def send_ceiling_decision(keys, tag, now_s, *, per_recipient, global_cap, window
                 continue
         except Exception:                                            # noqa: BLE001
             continue
+        if ktag.startswith(REVIEWER_TAG_PREFIX) != is_rev:
+            continue                       # the OTHER class: counted against its own ceilings, never against this one
         glob += 1
         if ktag == tag:
             rec += 1
     over = [n for n, c, cap in (("recipient", rec, per_recipient), ("global", glob, global_cap)) if c > cap]
     warn = [n for n, c, cap in (("recipient", rec, per_recipient), ("global", glob, global_cap)) if c * 2 >= cap]
     return {"allowed": not over, "capped": over, "warn": warn, "recipient_n": rec, "global_n": glob,
-            "per_recipient": per_recipient, "global_cap": global_cap}
+            "per_recipient": per_recipient, "global_cap": global_cap, "class": "reviewer" if is_rev else "participant"}
 
 
 def effective_max_renotifies(max_renotifies):
@@ -1252,7 +1281,64 @@ def digest_due(last_digest_ts, now_ts, *, every_s=DIGEST_EVERY_S):
     return not last_digest_ts or (now_ts - float(last_digest_ts)) >= every_s
 
 
-def digest_text(items, link_for, *, now=None, max_items=5):
+# ── DIGEST-ONLY MODE (2026-11-26, scale audit) ──────────────────────────────────────────────────────────────────────
+# One reviewer push per card, plus a re-notify, hits the per-reviewer ceiling at ~25 participants, and a refused push means a card nobody is told
+# about. So when MORE THAN `above` drafts are pending, new cards are NOT pushed individually (and the sweeper stops re-notifying): the reviewer
+# already knows there is a backlog, and the existing hourly digest (founder's rule, 2026-11-26: hourly, only once an item has waited 60 min) carries
+# them, listing up to 10 drafts with their own links. The digest cadence is deliberately NOT changed by this mode.
+# A draft is never dropped: it stays pending and appears in the digest.
+DIGEST_ONLY_ABOVE_DEFAULT = 8
+DIGEST_ONLY_MAX_ITEMS = 10
+
+
+def parse_digest_only_above(v):
+    """Missing, unparseable or < 1 -> the default, so a mistyped tunable can neither disable the mode nor make every card digest-only."""
+    try:
+        n = int(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return DIGEST_ONLY_ABOVE_DEFAULT
+    return n if n >= 1 else DIGEST_ONLY_ABOVE_DEFAULT
+
+
+def notify_mode(pending, above=DIGEST_ONLY_ABOVE_DEFAULT):
+    """'digest_only' when strictly more than `above` drafts are pending, else 'card'. An unreadable count is 'card' (the reviewer is told)."""
+    try:
+        return "digest_only" if int(pending) > int(above) else "card"
+    except Exception:                                                # noqa: BLE001
+        return "card"
+
+
+QUEUE_ALERT_MAX_PENDING = 10
+QUEUE_ALERT_MAX_AGE_MIN = 45
+_EAT_OFFSET = timedelta(hours=3)
+QUEUE_ALERT_HOURS_EAT = (7, 22)        # 07:00-22:00 East Africa Time: overnight waits are normal and must not page anyone
+
+
+def queue_depth_alert(items, now=None, *, max_pending=QUEUE_ALERT_MAX_PENDING, max_age_min=QUEUE_ALERT_MAX_AGE_MIN, hours_eat=QUEUE_ALERT_HOURS_EAT):
+    """A reason string when the review queue is backed up during waking hours, else None. Alerts when pending > max_pending OR the oldest pending
+    draft has waited > max_age_min minutes. Pure. A draft with an unparseable timestamp cannot be aged and is skipped for the age test (it still
+    counts toward the depth test)."""
+    now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    local_hour = (now + _EAT_OFFSET).hour
+    if not (hours_eat[0] <= local_hour < hours_eat[1]):
+        return None
+    pend = digest_candidates(items)
+    reasons = []
+    if len(pend) > max_pending:
+        reasons.append(f"{len(pend)} drafts pending (> {max_pending})")
+    oldest = None
+    for it in pend:
+        try:
+            age = (now - datetime.fromisoformat(it.get("ts_held"))).total_seconds() / 60.0
+        except Exception:                                            # noqa: BLE001
+            continue
+        oldest = age if oldest is None else max(oldest, age)
+    if oldest is not None and oldest > max_age_min:
+        reasons.append(f"oldest pending draft is {int(oldest)} min old (> {max_age_min})")
+    return "; ".join(reasons) or None
+
+
+def digest_text(items, link_for, *, now=None, max_items=5, overload=False):
     """The HOURLY roster message while at least one draft is pending: how many, how old the oldest is, and each reviewer's own link.
     Roster-only: nothing here is, or can become, a participant message."""
     now = now or datetime.now(timezone.utc)
@@ -1264,7 +1350,8 @@ def digest_text(items, link_for, *, now=None, max_items=5):
             return None
     ages = [a for a in (_age_h(i) for i in items) if a is not None]
     oldest = f"{max(ages)}" if ages else "?"
-    lines = [f"📋 MUHTASARI WA KILA SAA — rasimu {len(items)} bado zinasubiri · ya zamani zaidi: saa {oldest} zilizopita"]
+    head = "MUHTASARI — FOLENI NI KUBWA, kadi mpya zinakuja hapa" if overload else "MUHTASARI WA KILA SAA"
+    lines = [f"📋 {head} — rasimu {len(items)} bado zinasubiri · ya zamani zaidi: saa {oldest} zilizopita"]
     for it in items[:max_items]:
         age_h = _age_h(it)
         tag = " [MODELI IMESHINDWA]" if it.get("fallback") else ""
@@ -2321,6 +2408,76 @@ def review_summary(items, signing_key=None, test_hashes=()):
             "a 0.0 edit rate with nothing decided reads exactly like a perfect model; None "
             "cannot be mistaken for one"),
     }
+
+
+# ── PER-SENDER DAILY QUESTION LIMIT (item C, 2026-11-26 scale audit) ───────────────────────────────────────────────
+# A courtesy and a cost brake, NOT a safety control: it fails OPEN. A limit that blocked a real participant because the counter store hiccuped would be
+# the expensive direction (a wrongly refused question looks exactly like a question nobody asked). The day is the EAT calendar day (UTC+3).
+# EXACT, with no read-modify-write: question n claims slot n with put(skip_if_exists), so two simultaneous questions cannot both take the 20th.
+DAILY_QUESTION_LIMIT_DEFAULT = 20
+
+
+def parse_daily_limit(v):
+    """Missing, unparseable or < 1 -> the default: a mistyped tunable can neither switch the limit off nor lock every participant out."""
+    try:
+        n = int(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return DAILY_QUESTION_LIMIT_DEFAULT
+    return n if n >= 1 else DAILY_QUESTION_LIMIT_DEFAULT
+
+
+def eat_day(now=None):
+    return ((now or datetime.now(timezone.utc)).astimezone(timezone.utc) + timedelta(hours=3)).strftime("%Y-%m-%d")
+
+
+def claim_daily_slot(claim, peek, poke, sender_key, limit, now=None):
+    """{admitted, n, limit, day}. `claim(key, value) -> bool` is an ATOMIC put-if-absent; `peek(key)`/`poke(key, n)` carry a progress HINT only (a stale
+    hint costs extra claims, never a wrong answer, because slots are claimed contiguously from 1). Pure apart from the injected callables."""
+    day = eat_day(now)
+    hint_key = f"{day}:{sender_key}:hint"
+    try:
+        start = max(0, min(int(peek(hint_key) or 0), int(limit)))
+    except Exception:                                                # noqa: BLE001
+        start = 0
+    stamp = (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+    for n in range(start + 1, int(limit) + 1):
+        if claim(f"{day}:{sender_key}:{n}", stamp):
+            try:
+                poke(hint_key, n)
+            except Exception:                                        # noqa: BLE001
+                pass
+            return {"admitted": True, "n": n, "limit": int(limit), "day": day}
+    return {"admitted": False, "n": int(limit), "limit": int(limit), "day": day}
+
+
+def blank_row_for(kind, sender, settings, build="dev"):
+    """A transcript row for a message that sent nothing (no text recorded)."""
+    return _blank_row(kind, sender, settings, build)
+
+
+def daily_limit_text(limit):
+    return (f"Samahani, umefikia kikomo cha maswali {int(limit)} kwa siku ya leo. Tafadhali uliza tena kesho — tutafurahi kukusaidia. 🙏\n\n"
+            f"(You have reached today's limit of {int(limit)} questions. Please ask again tomorrow.)")
+
+
+async def deliver_daily_limit_notice(sender, send_once, settings, build="dev", limit=DAILY_QUESTION_LIMIT_DEFAULT):
+    """The one polite message when the limit is first hit that day. No question text is recorded: nothing here needed it."""
+    t0 = time.monotonic()
+    row = _blank_row("daily_limit", sender, settings, build)
+    text = daily_limit_text(limit)
+    row["reply"] = "DAILY_LIMIT"
+    row["reply_chars"] = len(text)
+    try:
+        ok, send_error = await send_with_retry(send_once, sender, text, settings)
+        row["send_ok"], row["send_error"] = ok, send_error
+        row["send_state"] = send_state(ok, send_error)
+    except Exception as e:                                           # noqa: BLE001
+        row["send_ok"] = False
+        row["error_class"] = "handler_bug"
+        row["error_detail"] = scrub(f"{type(e).__name__}: {e}", settings.secrets)
+    finally:
+        row["total_latency_ms"] = int((time.monotonic() - t0) * 1000)
+    return row
 
 
 async def deliver_greeting(sender, send_once, settings, build="dev"):

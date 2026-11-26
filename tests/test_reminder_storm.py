@@ -57,7 +57,7 @@ def sim(monkeypatch):
     for k, v in {"SENDER_SALT": "s", "REVIEWER_ROSTER": "+255700000098:Prosper", "REVIEW_SIGNING_KEY": "k",
                  "REVIEW_D_URL": "https://d.example", "REVIEW_CLAIM_URL": "https://c.example", "REVIEW_ACT_URL": "https://a.example",
                  "RENOTIFY_AFTER_S": "420", "MAX_RENOTIFIES": "1", "SEND_CAP_PER_RECIPIENT_PER_HOUR": "20",
-                 "SEND_CAP_GLOBAL_PER_HOUR": "60"}.items():
+                 "SEND_CAP_GLOBAL_PER_HOUR": "60", "DIGEST_ONLY_ABOVE": "100000"}.items():
         monkeypatch.setenv(k, v)
     pkg = types.ModuleType("chike_whatsapp")
     pkg.handler_core = core
@@ -231,6 +231,7 @@ def test_the_sweep_fails_closed_when_the_lock_store_is_broken(sim, monkeypatch):
 def test_with_the_real_ceiling_no_rolling_hour_exceeds_20_sends_to_the_reviewer(sim, monkeypatch):
     """The whole stack: the REAL _send_once (ceiling gate) with only the raw transport faked. 20 unreviewed items -> 20 cards fill the per-recipient
     cap in the first minute; nothing further goes out to the reviewer until the window rolls, and the cap alert is raised."""
+    monkeypatch.setenv("SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "20")    # the reviewer class default is 40 (scale audit); this test pins the ENFORCEMENT at its own value
     transport, alerts = [], []
 
     async def raw(to, text):

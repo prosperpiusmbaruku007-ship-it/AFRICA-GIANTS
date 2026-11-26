@@ -110,8 +110,8 @@ def test_old_reservations_age_out_of_the_window():
 
 
 def test_a_mistyped_cap_cannot_switch_a_ceiling_off():
-    assert core.parse_send_caps("0", "-5") == (20, 60)
-    assert core.parse_send_caps("junk", None) == (20, 60)
+    assert core.parse_send_caps("0", "-5") == (20, 150)
+    assert core.parse_send_caps("junk", None) == (20, 150)
     assert core.parse_send_caps("5", "7") == (5, 7)
 
 
