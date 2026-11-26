@@ -377,6 +377,28 @@ carries both, **from 2026-11-26 on**.
    Pinned in `tests/test_futa_identity_forms.py` so it stays documented.
 4. The participant's own phone, WhatsApp's servers and Meta: outside this system. The confirmation message says so.
 
+### 6b. End-to-end FUTA test with a throwaway number (founder's plan, 2026-11-26): NOT on the test phones
+
+The dry run on 2026-11-26 showed a FUTA on the test phones would delete 68 of 74 transcripts and 32 of 41 review items, i.e. most of the recorded pilot history. So the live test uses a throwaway number that is not a test sender and not a reviewer. Never put the number in the repo or a transcript; give the script only its last four digits.
+
+**Part 1: seed (any day).**
+1. From the throwaway phone send `Habari Chike`. Expect: the disclosure, then the welcome (a fresh number sees both, in that order, a second apart: this is also the first live look at the bridge's paced gap).
+2. Send two real questions (one engine question, e.g. `Mshahara wa TZS 800,000, PAYE ni kiasi gani?`, and one fact question). Approve them from the reviewer phone.
+3. `python scripts/futa_check.py --last4 NNNN` and write down the output: the number's records (transcripts, review items) and **everyone else's total** (the control).
+
+**Part 2: make the archive half testable (3+ days later).** Archive records exist only for decided items older than 3 days, so wait for the daily archive run after day 3, then `python scripts/futa_check.py --last4 NNNN` again: the archive counts for the number must now be above 0. (If you cannot wait, the Dict half and the tombstones can still be tested the same day; the archive deletion then has nothing to remove, and says so with `archive_removed_dirs 0`.)
+
+**Part 3: delete.**
+4. From the throwaway phone send exactly `FUTA`. Expect the confirmation prompt. Check: nothing was deleted yet (`futa_check.py` unchanged).
+5. Send `NDIO` within 10 minutes. Expect `Imekamilika...`. (Sending anything else first, or waiting past 10 minutes, deletes nothing.)
+
+**Part 4: the residue check, immediately after.**
+6. `python scripts/futa_check.py --last4 NNNN`. Required: `RESIDUE TOTAL: 0`; `everyone else's records` **identical to Part 1's**; `tombstones` up by about 10 (one per identity form); the last logged deletion shows `verified=True residue_stores=[]`.
+7. `/health` is unchanged in shape. If the participant received `Samahani, kufuta hakujakamilika`, the deletion is queued: the next archive run finishes it (`futa_retry:*`), then re-run step 6.
+8. Expect, and do not count as a failure: bridge delivery-ledger rows for the number reappearing for up to 24 h (receipts rewrite them), and the session keys (accepted limits, 6a). `futa_check.py` deliberately does not read the ledger.
+
+A tail match is a prompt to look, not proof (another number can share its last four digits); the authority is the in-Modal hash scan that decides what the participant is told, recorded as `verified` in the log.
+
 ---
 
 ## 7. Verifying the roster live — before any participant
