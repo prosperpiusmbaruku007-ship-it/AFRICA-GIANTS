@@ -2166,7 +2166,7 @@ def _archive_pass(store=None):
     summary = core.archive_run(
         review_items=_scan_dict(REVIEW_QUEUE), transcripts=_scan_dict(TRANSCRIPTS), store=store or _archive_store(),
         signing_key=settings.review_signing_key, now=datetime.now(timezone.utc), hot_days=core.ARCHIVE_HOT_DAYS_DEFAULT,
-        remove_review=lambda rid: REVIEW_QUEUE.pop(rid, None))
+        remove_review=lambda rid: REVIEW_QUEUE.pop(rid, None), test_hashes=_test_sender_parse()[0])
     summary["auth_keys_touched"] = _touch_auth_keys()
     summary["alias_keys_touched"] = _touch_dict(IDENTITY_ALIASES)
     return summary

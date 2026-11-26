@@ -69,7 +69,7 @@ def test_a_route_with_nothing_reviewed_prints_na_never_a_zero_rate(files, capsys
 
 
 def test_test_items_are_counted_and_the_report_holds_no_text_or_sender(files, capsys):
-    items = [_hot(1, "sent", test_sender=True), _hot(2, "sent")]
+    items = [_hot(1, "sent", test_sender=True), _hot(2, "sent", sh="cccccccccccc")]            # a DIFFERENT sender: not the test sender's hash
     (files / "items.json").write_text(json.dumps(items), encoding="utf-8")
     _, out = _run(["--file", str(files / "rows.json"), "--reviews", str(files / "items.json")], capsys)
     assert "1 test excluded" in out
@@ -99,3 +99,36 @@ def test_the_render_has_a_row_per_route_and_handles_an_empty_queue():
     assert "(no review items)" in cli.render_routes(core.route_report([]))
     out = cli.render_routes(core.route_report([_hot(1, "sent"), _hot(2, "sent", route="engine:sdl")]))
     assert "paye" in out and "sdl" in out
+
+
+# ── 2026-11-26: older rows carry no test flag but share their sender's hash ─────────────────────────────────────
+def test_an_unflagged_item_from_a_test_senders_hash_is_excluded_and_counted():
+    flagged = _hot(1, "sent", test_sender=True)                                     # sender H1, flagged
+    old_unflagged = _hot(2, "edited")                                               # SAME sender H1, written before the flag existed
+    other = _hot(3, "sent", sh="cccccccccccc")                                      # a real participant
+    th = core.test_hashes_from([flagged, old_unflagged, other])
+    assert th == {flagged["sender_hash"]}
+    rep = core.route_report([flagged, old_unflagged, other], test_hashes=th)
+    assert rep["excluded_test"] == 2 and rep["routes"]["paye"]["approved_unchanged"] == 1 and rep["routes"]["paye"]["edited"] == 0
+
+
+def test_PLANT_without_the_hashes_the_unflagged_item_is_counted_as_a_real_participant():
+    flagged, old_unflagged = _hot(1, "sent", test_sender=True), _hot(2, "edited")
+    rep = core.route_report([flagged, old_unflagged])                               # the pre-fix call
+    assert rep["excluded_test"] == 1 and rep["routes"]["paye"]["edited"] == 1, "the bug: the tester's older edit is reported as a real one"
+
+
+def test_the_cli_applies_the_hashes_it_finds_on_flagged_records(files, capsys):
+    items = [_hot(1, "sent", test_sender=True), _hot(2, "edited"), _hot(3, "sent", sh="cccccccccccc")]
+    (files / "items.json").write_text(json.dumps(items), encoding="utf-8")
+    _, out = _run(["--file", str(files / "rows.json"), "--reviews", str(files / "items.json")], capsys)
+    assert "2 test excluded" in out, out
+
+
+def test_the_archive_aggregate_excludes_an_unflagged_item_from_a_test_sender_hash(tmp_path):
+    store = Spy(tmp_path / "vol")
+    unflagged = item(1, "edited", days_ago=9)                                        # no test flag, sender hash H1
+    core.archive_run(review_items={unflagged["review_id"]: unflagged}, transcripts={}, store=store, signing_key="k", now=NOW,
+                     test_hashes={unflagged["sender_hash"]})
+    ag = core.read_aggregates(store)[0]
+    assert ag["excluded_test"] == 1 and ag["routes"] == {}, "counted as test, not as a real edit"

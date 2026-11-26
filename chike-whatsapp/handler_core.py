@@ -2834,11 +2834,23 @@ def _blank_outcomes():
     return {"approved_unchanged": 0, "edited": 0, "withheld": 0, "auto_sent": 0, "pending": 0, "other": 0}
 
 
-def route_report(items, aggregates=(), include_test=False):
+def test_hashes_from(*collections):
+    """The sender hashes of every row/item that IS flagged as a test sender. Older rows were written before TEST_SENDERS existed and carry no flag, but
+    share their sender's hash, so a hash seen on ANY flagged record classifies all of that sender's records (2026-11-26: 4 unflagged tester items were
+    being counted as real participants by the per-route report)."""
+    out = set()
+    for coll in collections:
+        for r in coll or ():
+            if isinstance(r, dict) and r.get("test_sender") and r.get("sender_hash"):
+                out.add(r["sender_hash"])
+    return out
+
+
+def route_report(items, aggregates=(), include_test=False, test_hashes=()):
     """Per-route review outcomes (item D): for each route, how many drafts a reviewer approved unchanged, edited or withheld, plus auto-sent and
     pending. `items` are the HOT review items; `aggregates` are the archived per-day aggregates (text-free), so history survives archiving.
     TEST items are excluded and COUNTED (an exclusion that cannot be seen is R39's shrinking count). Counts only: no text, no sender."""
-    live = [i for i in items if include_test or not _is_test_item(i)]
+    live = [i for i in items if include_test or not _is_test_item(i, test_hashes)]
     out = {"routes": {}, "excluded_test": len(items) - len(live), "hot_items": len(live), "archived_days": 0}
     for i in live:
         for ro in item_routes(i):
@@ -2866,7 +2878,7 @@ def id_digest(record_id):
     return hashlib.sha256(("archive-agg|" + str(record_id)).encode("utf-8")).hexdigest()[:16]
 
 
-def _merge_aggregate(existing, items):
+def _merge_aggregate(existing, items, test_hashes=()):
     """Idempotent: a record already counted (by id DIGEST, never the id) is skipped, so a re-run after a crash cannot double-count, and a record
     archived by a run that crashed before this step is still counted by the next one."""
     ag = existing or {"day": None, "routes": {}, "per_reviewer": {}, "excluded_test": 0, "decided_latency_sum_s": 0, "decided_latency_n": 0, "counted": []}
@@ -2877,7 +2889,7 @@ def _merge_aggregate(existing, items):
             continue
         seen.add(d)
         ag["counted"].append(d)
-        if _is_test_item(i):
+        if _is_test_item(i, test_hashes):
             ag["excluded_test"] += 1
             continue
         for ro in item_routes(i):
@@ -2894,7 +2906,7 @@ def _merge_aggregate(existing, items):
     return ag
 
 
-def archive_run(*, review_items, transcripts, store, signing_key, now, hot_days=ARCHIVE_HOT_DAYS_DEFAULT, remove_review=lambda rid: None):
+def archive_run(*, review_items, transcripts, store, signing_key, now, hot_days=ARCHIVE_HOT_DAYS_DEFAULT, remove_review=lambda rid: None, test_hashes=()):
     """ONE archive pass. `review_items` {review_id: item}, `transcripts` {key: row} (read-only here), `store` an ArchiveStore.
     `remove_review(rid)` pops the item from the hot Dict and is called ONLY for an item whose archive file has been COMMITTED and READ BACK
     byte-identical (item F: move before remove). Any failure leaves the Dict copy in place. Returns a text-free summary."""
@@ -2963,7 +2975,7 @@ def archive_run(*, review_items, transcripts, store, signing_key, now, hot_days=
                 cur = json.loads(raw) if raw else None
             except Exception:                                        # noqa: BLE001
                 cur = None
-            ag = _merge_aggregate(cur, recs)
+            ag = _merge_aggregate(cur, recs, test_hashes)
             ag["day"] = day
             store.write(rel, serialize_archive(ag))
             summary["aggregates_days"] += 1

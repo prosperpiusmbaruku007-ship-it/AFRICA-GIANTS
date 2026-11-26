@@ -89,7 +89,8 @@ def main(argv):
     if reviews is None:
         print("per-route review report skipped: give --reviews items.json (offline) or run without --file (live)")
         return 0
-    print(render_routes(core.route_report(reviews, aggs, include_test="--include-test" in argv)))
+    th = core.test_hashes_from(reviews, rows)          # a hash seen on ANY flagged record classifies all of that sender's older, unflagged ones
+    print(render_routes(core.route_report(reviews, aggs, include_test="--include-test" in argv, test_hashes=th)))
     if note:
         print("  NOTE: " + note)
     return 0
