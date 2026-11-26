@@ -24,7 +24,7 @@ import handler_core as hc                                   # noqa: E402
 
 
 def _settings(**kw):
-    base = dict(slow_ack_after_s=0.01, second_ack_after_s=0, model_timeout_s=5,
+    base = dict(slow_ack_after_s=0.01, model_timeout_s=5,
                 send_attempts=1, send_retry_delay_s=0, sender_salt="s")
     base.update(kw)
     return hc.Settings(**base)
@@ -99,13 +99,17 @@ def test_the_ACKS_still_reach_the_user_while_the_answer_is_held():
     assert row["acks_sent"] >= 1
     assert r.sent, "the ack ladder was held along with the answer"
     assert r.held, "the answer was not held"
-    # And the ack says a PERSON is checking — not "nearly done", which would be a lie.
-    assert "mtu" in r.sent[0][1], r.sent[0][1]
+    # And it is THE one ack (founder, 2026-11-27): it promises no time ("nearly done" would be a lie at 2am) and says the answer is being prepared AND checked.
+    # It no longer names "a person": the first-contact message says that ("majibu mengi husomwa na mtu").
+    assert r.sent[0][1] == hc.ACK_TEXT and "kukaguliwa" in r.sent[0][1] and "karibu" not in r.sent[0][1].lower(), r.sent[0][1]
 
 
-def test_the_supervised_ack_differs_from_the_autonomous_one():
-    assert hc.Settings().supervised_ack != hc.SLOW_ACK
-    assert "inapitiwa" in hc.Settings().supervised_ack
+def test_there_is_one_ack_text_and_the_old_two_are_gone():
+    """2026-11-27: the supervised ack, the autonomous ack and the 45 s cold-start ack are replaced by ONE text; nothing may bring a second rung back by accident."""
+    assert hc.ACK_TEXT == "Nimepata swali lako 🙏 Jibu linaandaliwa na kukaguliwa; litakufikia hapa hapa."
+    s = hc.Settings()
+    assert not hasattr(s, "supervised_ack") and not hasattr(s, "second_ack_after_s")
+    assert not hasattr(hc, "SLOW_ACK") and not hasattr(hc, "SECOND_ACK")
 
 
 # ── the misconfiguration path, which is the dangerous one ──────────────────────────────

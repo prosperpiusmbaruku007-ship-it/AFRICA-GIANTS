@@ -104,11 +104,9 @@ def test_a_pending_answer_is_not_followed_by_a_fallback_message():
     class St(_S):
         supervised = False
         slow_ack_after_s = 0
-        second_ack_after_s = 0
         model_timeout_s = 5
         cold_start_suspected_s = 30
         sender_salt = ""
-        supervised_ack = ""
 
     async def ask(q):
         return {"reply": "Jibu"}

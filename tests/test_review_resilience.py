@@ -27,8 +27,7 @@ def _run(coro):
 
 
 def _settings(**kw):
-    base = dict(supervised=True, slow_ack_after_s=0, second_ack_after_s=0,
-                model_timeout_s=0.05, supervised_model_timeout_s=2.0,
+    base = dict(supervised=True, slow_ack_after_s=0, model_timeout_s=0.05, supervised_model_timeout_s=2.0,
                 cold_start_suspected_s=30, sender_salt="")
     base.update(kw)
     return core.Settings(**base)

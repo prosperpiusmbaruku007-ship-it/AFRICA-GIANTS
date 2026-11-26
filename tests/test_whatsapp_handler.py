@@ -206,7 +206,7 @@ def test_a_slow_answer_gets_an_ack_first_so_the_user_is_not_left_in_silence():
 
     out = Outbox()
     row = run(slow, out, slow_ack_after_s=0.2)
-    assert out.texts == [core.SLOW_ACK, "jibu"]
+    assert out.texts == [core.ACK_TEXT, "jibu"]
     assert row["ack_sent"] is True
     assert row["fallback"] is False
 
@@ -224,7 +224,7 @@ def test_the_ack_still_precedes_a_fallback_when_the_model_times_out():
 
     out = Outbox()
     run(never, out, model_timeout_s=0.6, slow_ack_after_s=0.2)
-    assert out.texts == [core.SLOW_ACK, core.FALLBACK]
+    assert out.texts == [core.ACK_TEXT, core.FALLBACK]
 
 
 def test_the_ack_can_be_disabled():
@@ -238,120 +238,89 @@ def test_the_ack_can_be_disabled():
 
 
 # ---------------------------------------------------------------------------
-# the SECOND ack — the first one became a broken promise at 82 seconds
+# THE ONE ACK (founder, 2026-11-27): once per question, at the first threshold, never a second
 # ---------------------------------------------------------------------------
 
-def test_a_very_slow_answer_gets_a_second_ack_that_explains_itself():
-    """The real delivery acked at 12s and answered at 94.2s. "Subiri kidogo" at 82
-    seconds of silence reads as a system that has stopped, not as reassurance."""
+def test_a_very_slow_answer_even_a_cold_start_gets_exactly_one_ack():
+    """The cold path used to add a second "Bado ninafanya kazi..." at 45 s. There is no second ack now, however long the wait."""
     async def very_slow(_message):
-        await asyncio.sleep(0.9)
+        await asyncio.sleep(0.9)                 # many times the 0.2 s threshold: the cold-start shape
         return {"reply": "jibu"}
 
     out = Outbox()
-    row = run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.5)
-    assert out.texts == [core.SLOW_ACK, core.SECOND_ACK, "jibu"]
-    assert row["acks_sent"] == 2
+    row = run(very_slow, out, slow_ack_after_s=0.2)
+    assert out.texts == [core.ACK_TEXT, "jibu"], out.texts
+    assert row["acks_sent"] == 1
     assert row["ack_sent"] is True, "the original field keeps its meaning for old readers"
 
 
-def test_the_second_ack_never_arrives_after_the_answer():
-    """THE FAILURE A PER-RUNG TIMER WOULD HAVE. Two independent timers can both be in
-    flight when the answer lands, and the loser then tells a user who has already been
-    answered that we are still working — worse than the silence it was meant to fill.
-    The single sequential walker re-checks `answered` before every rung."""
-    async def slow(_message):
-        await asyncio.sleep(0.4)
-        return {"reply": "jibu"}
-
-    out = Outbox()
-    row = run(slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.6)
-    assert out.texts == [core.SLOW_ACK, "jibu"], \
-        "the answer beat the second rung, so it must never be sent"
-    assert row["acks_sent"] == 1
-    assert out.texts[-1] == "jibu", "the last thing the user hears is the answer"
-
-
-def test_the_ladder_is_capped_at_two_however_long_the_wait():
-    """Structural, not a counter: the ladder is a two-element list and the loop cannot
-    outlive it. No timeout, retry or error path ends with a user pinged indefinitely."""
+def test_the_ack_is_capped_at_one_however_long_the_wait():
+    """Structural: the coroutine sends at most one message and cannot outlive that. No timeout, retry or error path ends with a user pinged twice."""
     async def never(_message):
         await asyncio.sleep(30)
 
     out = Outbox()
-    row = run(never, out, model_timeout_s=1.2, slow_ack_after_s=0.1,
-              second_ack_after_s=0.3)
-    assert row["acks_sent"] == 2, "two rungs over a wait many times longer than both"
-    assert out.texts == [core.SLOW_ACK, core.SECOND_ACK, core.FALLBACK]
+    row = run(never, out, model_timeout_s=1.2, slow_ack_after_s=0.1)
+    assert row["acks_sent"] == 1, "one ack over a wait twelve times longer than the threshold"
+    assert out.texts == [core.ACK_TEXT, core.FALLBACK]
 
 
-def test_the_kill_switch_disables_the_whole_ladder_not_half_of_it():
-    """`SLOW_ACK_AFTER_S=0` is the documented kill switch and people will reach for it
-    to stop the chatter. Leaving the second rung running would be the worst reading of
-    that instruction — the user still gets pinged, just later and once."""
+def test_the_ack_never_arrives_after_the_answer():
+    """An answer that beats the threshold is never followed by a reassurance: the coroutine waits on `answered` first."""
+    async def quick(_message):
+        await asyncio.sleep(0.1)
+        return {"reply": "jibu"}
+
+    out = Outbox()
+    row = run(quick, out, slow_ack_after_s=0.5)
+    assert out.texts == ["jibu"] and row["acks_sent"] == 0
+    assert out.texts[-1] == "jibu", "the last thing the user hears is the answer"
+
+
+def test_the_kill_switch_disables_the_ack():
+    """`SLOW_ACK_AFTER_S=0` (also used by a reviewer-requested retry, which must not re-ack a participant who was already acked)."""
     async def very_slow(_message):
         await asyncio.sleep(0.7)
         return {"reply": "jibu"}
 
     out = Outbox()
-    row = run(very_slow, out, slow_ack_after_s=0, second_ack_after_s=0.2)
+    row = run(very_slow, out, slow_ack_after_s=0)
     assert out.texts == ["jibu"]
     assert row["acks_sent"] == 0
 
 
-def test_the_second_rung_alone_can_be_disabled():
-    async def very_slow(_message):
-        await asyncio.sleep(0.7)
-        return {"reply": "jibu"}
-
-    out = Outbox()
-    row = run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0)
-    assert out.texts == [core.SLOW_ACK, "jibu"]
-    assert row["acks_sent"] == 1
+def test_the_ack_is_exactly_the_founders_text_and_swahili_only():
+    assert core.ACK_TEXT == "Nimepata swali lako \U0001f64f Jibu linaandaliwa na kukaguliwa; litakufikia hapa hapa."
+    for english in ("Got your question", "Still working", "One moment", "I won't leave", "system starts"):
+        assert english not in core.ACK_TEXT
+    assert "\n" not in core.ACK_TEXT, "one line: there is no second (English) line any more"
+    assert not hasattr(core, "SLOW_ACK") and not hasattr(core, "SECOND_ACK"), "the two old texts are gone"
 
 
-def test_the_second_ack_names_a_range_and_never_a_number_we_cannot_keep():
-    """The 12s ack broke at 82s precisely because "kidogo"/"one moment" implies a bound
-    the cold path cannot hold. The replacement hedges, names the cause, and ends on the
-    only guarantee the architecture actually provides."""
-    assert "dakika moja hadi mbili" in core.SECOND_ACK, "a range, not a point estimate"
-    assert "sekunde" not in core.SECOND_ACK, "no second-precision promise"
-    assert "unaanza upya" in core.SECOND_ACK, "name the reason — a wait with a cause"
-    assert "Sitakuacha bila jibu" in core.SECOND_ACK, \
-        "end on the promise .spawn() and the fallback path actually keep"
-
-
-def test_rung_timing_is_measured_from_the_start_not_summed_nominally():
-    """`send_with_retry` on rung one can take seconds. If rung two were scheduled by
-    sleeping the nominal gap afterwards, it would drift past the cold-start window it
-    exists to cover — so the second ack must land at ~second_ack_after_s from t0, not at
-    slow_ack_after_s + second_ack_after_s + however long the first send took."""
+def test_the_ack_lands_at_the_threshold_even_when_the_send_is_slow():
+    """Timing is measured from the start of the question, so a sluggish Wappfly delays the ack's DELIVERY, not the decision to send it."""
     import time as _t
 
     class SlowOutbox(Outbox):
         async def send_once(self, to, text):
-            await asyncio.sleep(0.25)          # a sluggish Wappfly
+            await asyncio.sleep(0.25)
             return await super().send_once(to, text)
 
     async def very_slow(_message):
-        await asyncio.sleep(1.4)
+        await asyncio.sleep(1.0)
         return {"reply": "jibu"}
 
-    out, t0 = SlowOutbox(), _t.monotonic()
-    stamps = []
+    out, t0, stamps = SlowOutbox(), _t.monotonic(), []
     original = out.send_once
 
     async def stamping(to, text):
         result = await original(to, text)
         stamps.append((text, _t.monotonic() - t0))
         return result
-
     out.send_once = stamping
-    run(very_slow, out, slow_ack_after_s=0.2, second_ack_after_s=0.6)
-    second = [t for text, t in stamps if text == core.SECOND_ACK][0]
-    assert second < 1.0, (
-        f"second ack landed at {second:.2f}s; nominal summing would put it past "
-        f"0.2 + 0.25 + 0.6 = 1.05s")
+    run(very_slow, out, slow_ack_after_s=0.2)
+    ack_at = [t for text, t in stamps if text == core.ACK_TEXT]
+    assert len(ack_at) == 1 and ack_at[0] < 0.6, f"the single ack landed at {ack_at}"
 
 
 # ---------------------------------------------------------------------------
@@ -595,7 +564,7 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
     # 0/false/no/off, so a typo stays ON. Not a secret; /health reports its PARSED value and pre-flight
     # gate 3b refuses a deploy where it is not true.
     tunables = {"CHIKE_BUILD", "CHIKE_PREFLIGHT_NO_SCHEDULE", "DISCLOSURE", "WAPPFLY_SEND_URL", "MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
-                "SECOND_ACK_AFTER_S", "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
+                "COLD_START_SUSPECTED_S", "SEND_ATTEMPTS",
                 "WAPPFLY_TIMEOUT_S", "SUPERVISED",
                 "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL",
                 # 2026-11-11 watcher: optional-with-default. The four REQUIRED alert keys are

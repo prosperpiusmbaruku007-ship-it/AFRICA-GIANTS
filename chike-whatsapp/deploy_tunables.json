@@ -10,7 +10,6 @@
   "MODEL_TIMEOUT_S": "240",
   "SUPERVISED_MODEL_TIMEOUT_S": "1800",
   "SLOW_ACK_AFTER_S": "12",
-  "SECOND_ACK_AFTER_S": "45",
   "REVIEW_D_URL": "https://prosperpiusmbaruku007--chike-whatsapp-d.modal.run",
   "REVIEW_CLAIM_URL": "https://prosperpiusmbaruku007--chike-whatsapp-review-claim.modal.run",
   "SEND_CAP_PER_RECIPIENT_PER_HOUR": "20",
@@ -20,5 +19,6 @@
   "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR": "40",
   "DIGEST_ONLY_ABOVE": "8",
   "_scale_2026_11_26": "Scale audit: SEND_CAP_GLOBAL_PER_HOUR 60 -> 150 is the PARTICIPANT-class global ceiling; reviewer pushes are a separate class capped per reviewer (SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR 40). DIGEST_ONLY_ABOVE 8: more than 8 pending drafts -> no per-card pushes, a 15-minute digest instead.",
-  "DAILY_QUESTION_LIMIT": "20"
+  "DAILY_QUESTION_LIMIT": "20",
+  "_ack_2026_11_27": "SECOND_ACK_AFTER_S was REMOVED: there is exactly one acknowledgement per question now (founder, 2026-11-27); SLOW_ACK_AFTER_S is its threshold and 0 disables it."
 }

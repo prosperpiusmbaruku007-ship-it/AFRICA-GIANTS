@@ -33,7 +33,7 @@ KEY = "test-signing-key"
 
 
 def _settings(**kw):
-    base = dict(slow_ack_after_s=0, second_ack_after_s=0, model_timeout_s=5,
+    base = dict(slow_ack_after_s=0, model_timeout_s=5,
                 send_attempts=1, send_retry_delay_s=0, sender_salt="s",
                 supervised=True, roster=ROSTER, review_signing_key=KEY)
     base.update(kw)

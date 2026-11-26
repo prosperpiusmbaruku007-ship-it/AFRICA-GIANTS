@@ -97,7 +97,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 # be given a test roster without writing to the production secret.
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
-                    "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
+                    "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
                     "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
                     "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
 
@@ -262,7 +262,6 @@ def _settings():
         max_renotifies=int(os.environ.get("MAX_RENOTIFIES", "1") or 1),
         digest_min_wait_s=_core().parse_digest_min_wait(os.environ.get("DIGEST_MIN_WAIT_S")),
         slow_ack_after_s=float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
-        second_ack_after_s=float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
         send_attempts=int(os.environ.get("SEND_ATTEMPTS", "2")),
         sender_salt=os.environ.get("SENDER_SALT", ""),
@@ -3016,7 +3015,6 @@ def health():
         # Reported so the live check can prove WHICH ack timing is serving. R16: a
         # config-only change has no code diff to remind you a deploy happened, and a
         # warm container will happily keep the old value.
-        "second_ack_after_s": float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         "webhook_token_set": bool(os.environ.get("WEBHOOK_TOKEN", "")),
         "transcripts_endpoint": bool(os.environ.get("ADMIN_TOKEN", "")),
         "transcript_store": store,

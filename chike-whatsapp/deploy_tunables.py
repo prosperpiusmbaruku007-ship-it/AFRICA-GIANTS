@@ -19,7 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FILE = os.path.join(HERE, "deploy_tunables.json")
 
 REQUIRED = ("COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "MAX_RENOTIFIES", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "SUPERVISED",
-            "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S", "SECOND_ACK_AFTER_S",
+            "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
             "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
             "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
 _SECRET_LIKE = re.compile(r"token|secret|password|salt|signing|roster|api_?key", re.IGNORECASE)
@@ -76,7 +76,6 @@ def expected_view(committed):
         "model_timeout_s": _num(committed["MODEL_TIMEOUT_S"]),
         "supervised_model_timeout_s": _num(committed["SUPERVISED_MODEL_TIMEOUT_S"]),
         "slow_ack_after_s": _num(committed["SLOW_ACK_AFTER_S"]),
-        "second_ack_after_s": _num(committed["SECOND_ACK_AFTER_S"]),
         "disclosure_enabled": True,
         "review_urls_set": True,
         "can_issue_links": True,
@@ -106,7 +105,6 @@ def health_view(h):
         "model_timeout_s": h.get("model_timeout_s"),
         "supervised_model_timeout_s": h.get("supervised_model_timeout_s"),
         "slow_ack_after_s": h.get("slow_ack_after_s"),
-        "second_ack_after_s": h.get("second_ack_after_s"),
         "disclosure_enabled": disc.get("enabled"),
         "review_urls_set": roster.get("review_urls_set"),
         "can_issue_links": roster.get("can_issue_links"),

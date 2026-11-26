@@ -79,37 +79,10 @@ FALLBACK = (
     "Please try again shortly."
 )
 
-SLOW_ACK = (
-    "Nimepokea swali lako — ninaandaa jibu. Subiri kidogo. ⏳\n"
-    "Got your question — preparing an answer. One moment."
-)
-
-# THE SECOND RUNG, AND WHY IT EXISTS: the first ack became a broken promise.
-#
-# The one real delivery (2026-08-14, build f98fc67) acked at 12s and answered at 94.2s.
-# The user sat through 82 SECONDS OF SILENCE after being told "subiri kidogo" — and at 82
-# seconds "one moment" does not reassure, it reads as a system that has stopped.
-#
-# Three things this copy does that the first ack does not:
-#   NAMES THE REASON      — "mfumo unaanza upya". A wait with a cause is a wait; a wait
-#                           with no cause is a fault. The cold start is the truth and the
-#                           user can hear it.
-#   HEDGES THE BOUND      — "dakika moja hadi mbili", a RANGE. Deliberately not "sekunde
-#                           thelathini": naming a number we cannot keep is precisely how
-#                           the 12s ack broke at 82s. Observed cold completions are
-#                           60.6/60.8/97.9s, so a range is the honest form.
-#   ENDS ON THE ONE PROMISE THE ARCHITECTURE KEEPS — the answer will arrive here. That is
-#                           not optimism: `.spawn()` makes Modal responsible for running
-#                           the job to completion, and the fallback path sends something
-#                           even when the model fails. It is the only guarantee we have,
-#                           and it is the one the user actually needs.
-SECOND_ACK = (
-    "Bado ninafanya kazi kwenye swali lako. Mara ya kwanza huchukua dakika moja hadi "
-    "mbili kwa sababu mfumo unaanza upya. Sitakuacha bila jibu — nitakutumia hapa hapa "
-    "likiwa tayari. ⏳\n"
-    "Still working on your question. The first one takes a minute or two while the "
-    "system starts up. I won't leave you without an answer — it will arrive right here."
-)
+# THE ONE ACKNOWLEDGEMENT (founder, 2026-11-27). Sent ONCE per question, at the first threshold (`slow_ack_after_s`, 12 s), and never again: no second ack, even on a cold
+# start. It replaces BOTH earlier texts (the 12 s "Nimepokea swali lako..." / supervised ack, and the 45 s cold-start "Bado ninafanya kazi..." with its English copy). The 15-minute
+# HOLDING message (handler_core.holding_text) is a separate event and is unchanged. Swahili only.
+ACK_TEXT = "Nimepata swali lako 🙏 Jibu linaandaliwa na kukaguliwa; litakufikia hapa hapa."
 
 
 @dataclass
@@ -139,19 +112,8 @@ class Settings:
 
     # One short "I'm working on it" if the answer is slow. A user who hears nothing for
     # three minutes concludes the service is broken; one Wappfly message is far cheaper
-    # than keeping a GPU warm. 0 DISABLES THE WHOLE LADDER, second rung included — it is
-    # the kill switch, so it must not leave half the acks running.
+    # than keeping a GPU warm. 0 DISABLES THE ACK (the kill switch; a reviewer-requested retry uses it).
     slow_ack_after_s: float = 12.0
-
-    # The second rung, at 45s. The band is measured, not chosen for roundness:
-    #   warm p90                 9.8s  (48 questions, 2026-08-11)
-    #   earliest observed cold  60.6s  (3/3 determinism run, 2026-08-14)
-    # 45 is the middle of the empty band — far enough above warm p90 that a warm request
-    # NEVER sees it, and below the earliest cold completion ever measured so a cold
-    # request ALWAYS does. Under ~30s risks firing at a slow-warm request about to
-    # answer; over 60s can land after the answer it was meant to cover. 0 disables this
-    # rung only.
-    second_ack_after_s: float = 45.0
 
     # A PROXY, not a measurement — neither Modal's response nor its Python API tells the
     # handler whether the container was cold. Warm p90 was 9.8s over 48 questions
@@ -230,11 +192,6 @@ class Settings:
 
     # An unacted draft is re-notified this often. RE-NOTIFIED — never auto-sent.
     renotify_after_s: float = 1800.0
-    # What the user is told while a human reads their answer. Held replies can take hours,
-    # so the honest ack says a person is checking — not "nearly done".
-    supervised_ack: str = ("Nimepata swali lako. Jibu linapitiwa na mtu kwanza ili "
-                           "kuhakikisha ni sahihi — nitakujibu hivi punde. Asante kwa "
-                           "kuvumilia.")
 
 
 def scrub(text, secrets=()) -> str:
@@ -644,41 +601,21 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
         state = {"acks_sent": 0}
 
         async def ack_ladder():
-            """Walk the rungs, stop the moment the answer lands.
+            """Wait up to `slow_ack_after_s` for the answer; if it has not landed, send THE ack, once. Then return.
 
-            ONE COROUTINE, NOT ONE TIMER PER RUNG. Two independent timers can BOTH be in
-            flight when the answer arrives, and the loser then reassures a user who has
-            already been answered — "still working on it" delivered after the reply is
-            worse than the silence it was meant to fill. A single sequential walker
-            cannot do that: it re-checks `answered` before every rung and returns.
-
-            THE CAP IS STRUCTURAL, NOT A COUNTER. The ladder is a two-element list and
-            the loop cannot outlive it, so there is no failure mode — no retry, no
-            timeout, no exception path — that ends with a user being pinged indefinitely.
-
-            Delays are computed from ELAPSED time rather than by sleeping each gap in
-            turn: `send_with_retry` on rung one can itself take seconds, and nominal
-            bookkeeping would push rung two past the cold-start window it exists to cover.
+            ONE ACK, NO LOOP (founder, 2026-11-27): there is no second rung, so no failure mode (a retry, a timeout, an exception path, a cold start) can end with a participant
+            pinged twice for one question. The cap is structural: the coroutine sends at most one message and cannot outlive that. It re-checks `answered` first, so an
+            answer that beat the threshold is never followed by a reassurance.
             """
             if settings.slow_ack_after_s <= 0:
-                return                     # kill switch — the whole ladder, not half of it
-            # In supervised mode the first rung says a PERSON is checking the answer,
-            # because that is true and because the wait is now human-paced rather than
-            # GPU-paced. "Nearly done" would be a lie at 2am.
-            first = settings.supervised_ack if settings.supervised else SLOW_ACK
-            rungs = [(settings.slow_ack_after_s, first)]
-            if settings.second_ack_after_s > settings.slow_ack_after_s:
-                rungs.append((settings.second_ack_after_s, SECOND_ACK))
-            t_ack = time.monotonic()
-            for after_s, message in rungs:
-                delay = max(0.0, after_s - (time.monotonic() - t_ack))
-                try:
-                    await asyncio.wait_for(answered.wait(), timeout=delay)
-                    return                 # the answer beat this rung — stay quiet
-                except asyncio.TimeoutError:
-                    pass
-                state["acks_sent"] += 1
-                await send_with_retry(send_once, sender, message, settings)
+                return                     # the kill switch
+            try:
+                await asyncio.wait_for(answered.wait(), timeout=settings.slow_ack_after_s)
+                return                     # the answer beat the threshold: stay quiet
+            except asyncio.TimeoutError:
+                pass
+            state["acks_sent"] += 1
+            await send_with_retry(send_once, sender, ACK_TEXT, settings)
 
         ack_task = asyncio.create_task(ack_ladder())
         m0 = time.monotonic()

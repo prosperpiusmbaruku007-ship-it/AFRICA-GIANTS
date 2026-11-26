@@ -65,7 +65,7 @@ def test_the_salt_matters_so_a_hash_cannot_be_forged_without_it():
 
 # ── rows and items carry the flag; nothing else about them changes ──────────────────────────────
 def _settings(**kw):
-    base = dict(slow_ack_after_s=0.01, second_ack_after_s=0, model_timeout_s=5, send_attempts=1,
+    base = dict(slow_ack_after_s=0.01, model_timeout_s=5, send_attempts=1,
                 send_retry_delay_s=0, sender_salt=SALT)
     base.update(kw)
     return core.Settings(**base)
