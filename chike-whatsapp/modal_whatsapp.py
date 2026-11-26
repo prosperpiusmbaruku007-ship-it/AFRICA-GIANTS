@@ -241,6 +241,9 @@ FUTA_PENDING = modal.Dict.from_name("chike-futa-pending-kv", create_if_missing=T
 # Phone <-> linked-ID pairs, recorded when one inbound carries both. KEYS ONLY, as `<phone hash>:<lid hash>` (salted hashes, no number): a deletion on
 # request follows a participant's linked-ID to the rows stored under it. put(skip_if_exists), so there is no read-modify-write. FUTA deletes the pairs too.
 IDENTITY_ALIASES = modal.Dict.from_name("chike-identity-aliases-kv", create_if_missing=True)
+# KEY-ONLY index of bridge sends to PARTICIPANTS: `<owner hash>:<message id>` -> send time. Written at send time so a deletion on request can find a person's ledger
+# rows by KEY instead of reading the whole ledger (which made a FUTA take 7 min 46 s). The owner hash is of the CANONICAL digits. Pruned with the ledger (24 h).
+LEDGER_INDEX = modal.Dict.from_name("chike-ledger-index-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -505,6 +508,13 @@ async def greet_and_send(sender: str, sender_lid: str = None):
     settings = _settings()
     disclosure = ((await _ensure_disclosure(sender, settings, alias=sender_lid))
                   if settings.disclosure_enabled else {})
+    if disclosure.get("disclosure_state") in core.FIRST_CONTACT_SENT_STATES and not _has_pending_question(sender, settings):
+        # A NEW number's first contact was a greeting: the single first-contact message (which contains everything the welcome says) was just sent, and it IS the reply.
+        # (If a question is already pending, the "your answer is still being prepared" notice carries separate information and still follows, as before.)
+        row = core.first_contact_greeting_row(sender, settings, BUILD, disclosure)
+        row.update(disclosure)
+        _write_row(row)
+        return {"send_ok": row["send_ok"]}
     # A greeting while a question is PENDING must not get the welcome menu (it reads as "your question was
     # forgotten"); it gets one brief line saying the answer is still being prepared.
     if _has_pending_question(sender, settings):
@@ -848,6 +858,23 @@ async def _send_once(to: str, text: str):
     return await _send_once_wappfly(to, text)
 
 
+def _index_ledger_send(to, body):
+    """Record `<owner hash>:<message id>` for a send to a PARTICIPANT (reviewers are not indexed). Best effort and never raises: a lost index entry only means a
+    deletion on request cannot find that one ledger row, which the 24 h prune removes anyway."""
+    try:
+        mid = body.get("id") if isinstance(body, dict) else None
+        if not mid:
+            return
+        import time as _t
+        core = _core()
+        settings = _settings()
+        if core.is_reviewer_number(to, settings.roster):
+            return
+        LEDGER_INDEX.put(core.ledger_index_key(core.ledger_owner_hash(to, settings.sender_salt), str(mid)), _t.time(), skip_if_exists=True)
+    except Exception:                                                # noqa: BLE001
+        pass
+
+
 async def _send_once_bridge(to: str, text: str):
     """ok is True ONLY on WhatsApp's delivery receipt, relayed by the bridge. Accepted-but-not-
     receipted comes back as a PENDING_RECEIPT detail, which the retry layer never retries (a
@@ -867,6 +894,7 @@ async def _send_once_bridge(to: str, text: str):
             body = r.json()
         except Exception:                                            # noqa: BLE001
             body = None
+        _index_ledger_send(to, body)
         return core.bridge_send_result(r.status_code, body)
     except (httpx.ConnectError, httpx.ConnectTimeout) as e:
         return False, f"bridge unreachable: {type(e).__name__}"      # never reached it: retryable
@@ -2172,6 +2200,11 @@ def _archive_pass(store=None):
         remove_review=lambda rid: REVIEW_QUEUE.pop(rid, None), test_hashes=_test_sender_parse()[0])
     summary["auth_keys_touched"] = _touch_auth_keys()
     summary["alias_keys_touched"] = _touch_dict(IDENTITY_ALIASES)
+    try:    # BRIDGE-LEDGER-PRUNE-1: rows older than 24 h (never a row still awaited by the receipt reconciler, never one with an unreadable timestamp)
+        import time as _t
+        summary.update(core.prune_bridge_ledger(BRIDGE_LEDGER, LEDGER_INDEX, _t.time(), protect=set(PENDING_ROWS.keys())))
+    except Exception as e:                                           # noqa: BLE001
+        summary["ledger_prune_error"] = type(e).__name__               # visible in /health's last_summary; never fails the archive
     return summary
 
 
@@ -2204,7 +2237,7 @@ def run_archive():
 def _futa_stores():
     """Every hot store that can hold a participant's records, by the names handler_core.futa_purge expects."""
     return {"transcripts": TRANSCRIPTS, "review": REVIEW_QUEUE, "pending_rows": PENDING_ROWS, "disclosures": DISCLOSURES, "daily": DAILY_LIMIT,
-            "inflight": INFLIGHT, "autosend": AUTOSEND, "bridge_ledger": BRIDGE_LEDGER, "futa_pending": FUTA_PENDING, "aliases": IDENTITY_ALIASES}
+            "inflight": INFLIGHT, "autosend": AUTOSEND, "bridge_ledger": BRIDGE_LEDGER, "futa_pending": FUTA_PENDING, "aliases": IDENTITY_ALIASES, "ledger_index": LEDGER_INDEX}
 
 
 def _record_alias(sender, sender_lid):
@@ -2240,6 +2273,17 @@ def _futa_hashes(sender, sender_lid, settings):
             hs.append(h)
     except Exception:                                                # noqa: BLE001
         pass
+    return hs
+
+
+def _futa_ledger_hashes(sender, sender_lid, settings):
+    """The owner hash(es) the ledger index is keyed by: of the CANONICAL digits, so 255.../+255.../0.../device-suffixed forms are ONE hash (plus the linked-ID's)."""
+    core = _core()
+    hs = [core.ledger_owner_hash(sender, settings.sender_salt)]
+    if sender_lid:
+        h = core.ledger_owner_hash(sender_lid, settings.sender_salt)
+        if h not in hs:
+            hs.append(h)
     return hs
 
 
@@ -2313,10 +2357,12 @@ async def futa_request(sender: str, sender_lid: str = None):
     return {"status": "asked"}
 
 
-@app.function(image=image, secrets=SECRETS, timeout=600)
+@app.function(image=image, secrets=SECRETS, timeout=1800)
 async def futa_confirm(sender: str, sender_lid: str = None):
-    """Step 2: delete the sender's records from the hot Dicts, then (through the single archiver writer) from the archive Volume, then VERIFY. The log
-    records numbers and a verdict only: no text, no hash, no number. No transcript row is written for any of it."""
+    """Step 2: ACKNOWLEDGE AT ONCE (before any scan), then delete the sender's records from the hot Dicts (the bridge ledger BY KEY, never scanned), then (through the single
+    archiver writer) from the archive Volume, then VERIFY, then say "Imekamilika". The log records numbers and a verdict only: no text, no hash, no number. No transcript row
+    is written for any of it. Idempotent: a second NDIO while this runs is swallowed (`already_running`) and never becomes a question for the model. Timeout 1800 s is a
+    safety net, not the plan: with the ledger off the slow path the whole thing is a handful of reads."""
     import time as _t
     import uuid
     core = _core()
@@ -2324,24 +2370,41 @@ async def futa_confirm(sender: str, sender_lid: str = None):
     hashes = _futa_hashes(sender, sender_lid, settings)
     if not core.futa_pending_live(FUTA_PENDING.get(hashes[0]), _t.time()):
         return {"status": "expired"}
-    digits = core._local_digits(sender)
-    stores = _futa_stores()
-    counts = core.futa_purge(stores, hashes, digits)
+    run_key = f"futa_running:{hashes[0]}"
+    now = _t.time()
+    if not ARCHIVE_STATE.put(run_key, {"ts": now}, skip_if_exists=True):
+        cur = ARCHIVE_STATE.get(run_key) or {}
+        if now - float((cur or {}).get("ts") or 0) < 1800:
+            return {"status": "already_running"}
+        ARCHIVE_STATE[run_key] = {"ts": now}                    # a run that died holding the key more than 30 minutes ago: take over
     try:
-        vol = await _futa_volume_delete(hashes)
-    except Exception as e:                                           # noqa: BLE001
-        vol = {"ok": False, "error": type(e).__name__}
-    if not vol.get("ok"):
-        ARCHIVE_STATE[f"futa_retry:{hashes[0]}"] = {"ts": _t.time()}           # the daily archiver finishes it
-    residue = core.futa_residue(stores, hashes, digits)
-    ok = bool(vol.get("ok")) and not residue
-    ARCHIVE_STATE[f"futa:{int(_t.time())}:{uuid.uuid4().hex[:6]}"] = {
-        "ts": _t.time(), "counts": counts, "archive_removed_dirs": vol.get("removed_dirs"), "verified": ok,
-        "residue_stores": sorted({n for n, _ in residue})}
-    await core.send_with_retry(_send_once, sender, core.FUTA_DONE_TEXT if ok else core.FUTA_INCOMPLETE_TEXT, settings)
-    core.futa_purge(stores, hashes, digits)               # the confirmation send itself can write a bridge-ledger row for this number: one more pass
-    print(f"[futa] {'done' if ok else 'INCOMPLETE'} counts={counts}", flush=True)
-    return {"status": "done" if ok else "incomplete", "counts": counts}
+        # 1. THE ACKNOWLEDGEMENT GOES FIRST: a participant must hear something within seconds, whatever the scans cost afterwards. A failed ack never stops the deletion.
+        await core.send_with_retry(_send_once, sender, core.FUTA_ACK_TEXT, settings)
+        digits = core._local_digits(sender)
+        lhashes = _futa_ledger_hashes(sender, sender_lid, settings)
+        stores = _futa_stores()
+        ledger_ids = core.ledger_ids_for(list(LEDGER_INDEX.keys()), lhashes)      # KEYS ONLY: no ledger row is read
+        counts = core.futa_purge(stores, hashes, digits, lhashes)
+        try:
+            vol = await _futa_volume_delete(hashes)
+        except Exception as e:                                   # noqa: BLE001
+            vol = {"ok": False, "error": type(e).__name__}
+        if not vol.get("ok"):
+            ARCHIVE_STATE[f"futa_retry:{hashes[0]}"] = {"ts": _t.time()}            # the daily archiver finishes it
+        residue = core.futa_residue(stores, hashes, digits, lhashes, ledger_ids=ledger_ids)
+        ok = bool(vol.get("ok")) and not residue
+        ARCHIVE_STATE[f"futa:{int(_t.time())}:{uuid.uuid4().hex[:6]}"] = {
+            "ts": _t.time(), "counts": counts, "archive_removed_dirs": vol.get("removed_dirs"), "verified": ok,
+            "residue_stores": sorted({n for n, _ in residue})}
+        await core.send_with_retry(_send_once, sender, core.FUTA_DONE_TEXT if ok else core.FUTA_INCOMPLETE_TEXT, settings)
+        core.futa_purge_ledger(stores, lhashes)                  # the ack and the final message are participant sends too: remove their ledger rows, by key
+        print(f"[futa] {'done' if ok else 'INCOMPLETE'} counts={counts}", flush=True)
+        return {"status": "done" if ok else "incomplete", "counts": counts}
+    finally:
+        try:
+            ARCHIVE_STATE.pop(run_key, None)
+        except Exception:                                        # noqa: BLE001
+            pass
 
 
 def _archive_health():

@@ -2248,8 +2248,36 @@ def cohort_capacity(declared_size, reviewers):
 # "A disclosure that depends on me remembering will eventually be skipped, and dropping it voids the R7
 # reading." So it is not a runbook step; it is code, and it is VERBATIM the founder's text (the runbook's
 # §8a copy is asserted equal to this constant in tests, so the two cannot drift apart).
-DISCLOSURE_TEXT = (
-    "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. Asante kwa kutusaidia kuiboresha Chike.")
+# THE FIRST-CONTACT MESSAGE (founder, 2026-11-27): ONE message for every NEW number, whatever they send first, replacing BOTH the separate disclosure
+# and the welcome for that number. It is an AMENDMENT TO THE R7 DISCLOSURE READING (docs/decisions/2026-11-27_first_contact_message.md): it carries every
+# limb of the old disclosure in new wording (tests/test_first_contact.py pins each limb so none can drop silently). Existing numbers are unchanged: they have
+# already been told, and keep the returning-user WELCOME. `DISCLOSURE_TEXT` is kept as the name every code path already uses for "the message sent once."
+LEGACY_DISCLOSURE_TEXT_V1 = (
+    "Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. Asante kwa kutusaidia kuiboresha Chike.")      # NEVER SENT any more: kept so the limb-mapping test can show nothing was lost
+
+FIRST_CONTACT_TEXT = (
+    "Habari, karibu! 👋\n"
+    "\n"
+    "Mimi ni *Chike*, msaidizi (AI) wa Africa Giants. Ninajibu kwa Kiswahili maswali ya kodi na kanuni za biashara Tanzania.\n"
+    "\n"
+    "*Ukiwa nami:*\n"
+    "💡 Unajua kiasi halisi cha kulipa: PAYE, NSSF, SDL, VAT\n"
+    "⏰ Unajua tarehe za mwisho, unaepuka faini\n"
+    "📋 Unajua usajili na leseni unazohitaji: TRA, BRELA, NSSF, OSHA\n"
+    "\n"
+    "*Jaribu kuuliza, kwa mfano:*\n"
+    "• Mshahara wa TZS 800,000, PAYE ni kiasi gani?\n"
+    "• Leseni ya biashara inadumu muda gani?\n"
+    "\n"
+    "*Kabla hujaanza:*\n"
+    "• Chike yuko katika hatua za mwanzo: majibu mengi husomwa na mtu kabla ya kukufikia, kwa hiyo jibu linaweza kuchukua muda, wakati mwingine saa kadhaa.\n"
+    "• Majibu ni mwongozo, si ushauri rasmi wa kisheria. Kwa maamuzi makubwa, thibitisha na TRA au mamlaka husika.\n"
+    "• Usitume nywila, namba za benki wala taarifa binafsi zisizo za lazima.\n"
+    "• Maswali yako hutusaidia kuiboresha Chike. Kufuta taarifa zako, tuma FUTA.\n"
+    "\n"
+    "Uliza swali lako 👇"
+)
+DISCLOSURE_TEXT = FIRST_CONTACT_TEXT
 
 # States in which the participant HAS been told (or the message is on its way and must never be repeated).
 DISCLOSURE_OK = ("delivered", "pending_receipt", "already")
@@ -2467,6 +2495,20 @@ async def deliver_daily_limit_notice(sender, send_once, settings, build="dev", l
         row["error_detail"] = scrub(f"{type(e).__name__}: {e}", settings.secrets)
     finally:
         row["total_latency_ms"] = int((time.monotonic() - t0) * 1000)
+    return row
+
+
+FIRST_CONTACT_SENT_STATES = ("delivered", "pending_receipt")
+
+
+def first_contact_greeting_row(sender, settings, build, disclosure):
+    """The transcript row for a GREETING that was a number's first contact: the first-contact message WAS the reply, so no welcome follows. No text is recorded."""
+    row = _blank_row("greeting", sender, settings, build)
+    state = (disclosure or {}).get("disclosure_state")
+    row["reply"] = "FIRST_CONTACT"
+    row["reply_chars"] = len(FIRST_CONTACT_TEXT)
+    row["send_ok"] = state == "delivered"
+    row["send_state"] = state
     return row
 
 
@@ -3051,6 +3093,7 @@ FUTA_DONE_TEXT = (
     "Imekamilika. Maswali yako, majibu na rekodi za ukaguzi zimefutwa. Tumebaki na hesabu tu zisizo na maandishi yako wala namba yako. "
     "(Mazungumzo yaliyo kwenye simu yako au WhatsApp hayabadiliki.) Ukiuliza tena, utaanza upya."
 )
+FUTA_ACK_TEXT = "Sawa, ninafuta taarifa zako sasa. Itachukua dakika chache; nitakujulisha ikikamilika."   # sent the moment NDIO arrives, BEFORE any scan (founder, 2026-11-27)
 FUTA_INCOMPLETE_TEXT = (
     "Samahani, kufuta hakujakamilika kikamilifu. Tumeandika ombi lako na tutalimaliza hivi karibuni."
 )
@@ -3108,6 +3151,15 @@ def _futa_needles(hashes, digits):
 
 
 def _safe_items(d):
+    """A SNAPSHOT of the store's entries, taken with one streaming `items()` call (not one network read per key); per-key reads only as a fallback."""
+    try:
+        snap = list(d.items())
+    except Exception:                                # noqa: BLE001
+        snap = None
+    if snap is not None:
+        for k, v in snap:
+            yield k, v
+        return
     for k in list(d.keys()):
         try:
             yield k, d[k]
@@ -3115,28 +3167,87 @@ def _safe_items(d):
             continue
 
 
-def futa_residue(stores, hashes, digits):
+# ── THE BRIDGE LEDGER IS NEVER SCANNED (2026-11-27). It holds ~3,500 rows keyed by message id; reading every one, three times, made a FUTA take 7 min 46 s and
+# would have overrun the function timeout past ~4,500 rows. Instead every send to a participant records `<owner hash>:<message id>` in a KEY-ONLY index at send
+# time, where the owner hash is of the CANONICAL digits (255.../+255.../0.../device-suffixed forms all collapse to one). A deletion lists the index KEYS once and
+# pops exactly the rows that belong to the person.
+def ledger_owner_hash(to, salt=""):
+    return sender_ids(canonical_tz_digits(to), salt)[0]
+
+
+def ledger_index_key(owner_hash, message_id):
+    return f"{owner_hash}:{message_id}"
+
+
+def ledger_ids_for(index_keys, ledger_hashes):
+    """The message ids whose index key belongs to any of `ledger_hashes`. Works on KEYS only."""
+    lh = {h for h in (ledger_hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
+    out = []
+    for k in index_keys:
+        owner, _, mid = str(k).partition(":")
+        if owner in lh and mid:
+            out.append(mid)
+    return out
+
+
+def futa_purge_ledger(stores, ledger_hashes):
+    """Pop one person's ledger rows and index keys, by KEY. Returns how many."""
+    idx, led = stores.get("ledger_index"), stores.get("bridge_ledger")
+    if idx is None or led is None or not ledger_hashes:
+        return 0
+    n = 0
+    lh = {h for h in ledger_hashes if _SENDER_HASH_RE.match(str(h or ""))}
+    for k in list(idx.keys()):                      # KEYS ONLY: one listing, no value is read
+        owner, _, mid = str(k).partition(":")
+        if owner in lh and mid:
+            led.pop(mid, None)
+            idx.pop(k, None)
+            n += 1
+    return n
+
+
+def futa_residue(stores, hashes, digits, ledger_hashes=(), ledger_ids=()):
     """[(store, key), ...] for every record in `stores` that still mentions this sender (by hash or phone digits, in the key OR anywhere in the value).
-    The live flow uses it to VERIFY a deletion; the tests use it to prove a deleted sender is gone, and that this scan CAN find one."""
+    The live flow uses it to VERIFY a deletion; the tests use it to prove a deleted sender is gone, and that this scan CAN find one.
+
+    THE BRIDGE LEDGER IS NOT SCANNED (it is O(ledger)): it is verified through the key-only INDEX (`ledger_hashes`: no index key may remain) and through
+    `ledger_ids` (the ids that were found BEFORE the purge: none of those rows may remain). A ledger row sent before the index existed is invisible here
+    and ages out by the 24 h prune: an accepted limit (runbook 6a)."""
     needles = _futa_needles(hashes, digits)
+    lh = {h for h in (ledger_hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
     found = []
-    if not needles:
+    if not needles and not lh and not ledger_ids:
         return found
     for name, d in stores.items():
+        if name == "bridge_ledger":
+            continue
+        if name == "ledger_index":
+            found += [(name, k) for k in list(d.keys()) if str(k).partition(":")[0] in lh]          # keys only
+            continue
+        if not needles:
+            continue
         for k, v in _safe_items(d):
             if any(n in str(k) for n in needles) or any(n in json.dumps(v, default=str) for n in needles):
                 found.append((name, k))
+    led = stores.get("bridge_ledger")
+    if led is not None:
+        for mid in ledger_ids or ():
+            try:
+                if led.get(mid) is not None:
+                    found.append(("bridge_ledger", mid))
+            except Exception:                        # noqa: BLE001
+                found.append(("bridge_ledger", mid))   # unreadable counts as residue: the loud direction
     return found
 
 
-def futa_purge(stores, hashes, digits):
+def futa_purge(stores, hashes, digits, ledger_hashes=()):
     """Delete one sender's records from the hot Dict stores. `stores` maps names to dict-likes: transcripts, review, pending_rows, disclosures, daily,
     inflight, autosend, bridge_ledger, futa_pending. Returns NUMBERS ONLY (text-free, hash-free), safe to log."""
     hs = {h for h in (hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
     needles = _futa_needles(hashes, digits)
     canon = canonical_tz_digits(digits)
     digs = canon if len(canon) >= 9 else None
-    counts = {name: 0 for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending", "aliases")}
+    counts = {name: 0 for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending", "aliases", "ledger_index")}
     if not needles:
         return counts
     tkeys, rids = set(), set()
@@ -3171,10 +3282,9 @@ def futa_purge(stores, hashes, digits):
         if str(k).split(":", 1)[-1] in rids:
             stores["autosend"].pop(k, None)
             counts["autosend"] += 1
-    for k, row in _safe_items(stores["bridge_ledger"]):
-        if digs and isinstance(row, dict) and canonical_tz_digits(row.get("to")) == digs:
-            stores["bridge_ledger"].pop(k, None)
-            counts["bridge_ledger"] += 1
+    removed = futa_purge_ledger(stores, ledger_hashes)          # by KEY: the ledger itself is never read
+    counts["bridge_ledger"] += removed
+    counts["ledger_index"] += removed
     for k in list(stores["futa_pending"].keys()):
         if k in hs:
             stores["futa_pending"].pop(k, None)
@@ -3202,3 +3312,38 @@ def alias_hashes(alias_keys, hashes):
             if parts[1] in hs:
                 extra.add(parts[0])
     return extra - hs
+
+
+# ── BRIDGE-LEDGER-PRUNE-1 (2026-11-27): the bridge node forgets a ledger row after 24 h in MEMORY but its Dict copy was never deleted (3,534 rows against ~2,400 in the
+# last 24 h), so the Dict only grew. The daily archiver prunes rows older than 24 h. Never guesses: a row with no readable timestamp is kept and counted, and a row
+# still awaited by the receipt reconciler (PENDING_ROWS) is kept until that gives up.
+LEDGER_MAX_AGE_S = 24 * 3600.0
+
+
+def prune_bridge_ledger(ledger, index, now_ts, protect=(), max_age_s=LEDGER_MAX_AGE_S):
+    """Delete ledger rows and index entries STRICTLY older than `max_age_s` (a row at exactly 24 h is kept). Returns counts."""
+    protect = set(protect or ())
+    out = {"ledger_pruned": 0, "ledger_kept_young": 0, "ledger_kept_protected": 0, "ledger_kept_bad_ts": 0, "index_pruned": 0, "index_kept_bad_ts": 0}
+    for k, r in _safe_items(ledger):
+        try:
+            age = float(now_ts) - float((r or {}).get("ts"))
+        except (TypeError, ValueError, AttributeError):
+            out["ledger_kept_bad_ts"] += 1
+            continue
+        if age <= max_age_s:
+            out["ledger_kept_young"] += 1
+        elif k in protect:
+            out["ledger_kept_protected"] += 1
+        else:
+            ledger.pop(k, None)
+            out["ledger_pruned"] += 1
+    for k, v in _safe_items(index):
+        try:
+            age = float(now_ts) - float(v)
+        except (TypeError, ValueError):
+            out["index_kept_bad_ts"] += 1
+            continue
+        if age > max_age_s:
+            index.pop(k, None)
+            out["index_pruned"] += 1
+    return out

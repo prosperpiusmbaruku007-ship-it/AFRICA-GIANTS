@@ -88,12 +88,16 @@ class _World:
 
 # ── the text ──────────────────────────────────────────────────────────────────────────────
 def test_the_disclosure_is_verbatim_the_founders_text():
-    assert hc.DISCLOSURE_TEXT == FOUNDERS_TEXT
+    """2026-11-27 (founder amendment to the R7 reading): the message sent once to a new number IS the single first-contact message. The V1 disclosure text is kept,
+    pinned, as NEVER-SENT history (tests/test_first_contact.py maps every V1 limb to its place in the new text)."""
+    assert hc.DISCLOSURE_TEXT is hc.FIRST_CONTACT_TEXT
+    assert hc.LEGACY_DISCLOSURE_TEXT_V1 == FOUNDERS_TEXT
 
 
 def test_the_runbook_copy_and_the_code_cannot_drift_apart():
     md = open(os.path.join(_ROOT, "chike-whatsapp", "SUPERVISED_PILOT_RUNBOOK.md"), encoding="utf-8").read()
-    assert "> " + hc.DISCLOSURE_TEXT in md, "runbook 8a no longer matches DISCLOSURE_TEXT"
+    quoted = "\n".join(("> " + ln) if ln else ">" for ln in hc.DISCLOSURE_TEXT.split("\n"))
+    assert quoted in md.replace("\r\n", "\n"), "runbook 8a no longer matches DISCLOSURE_TEXT (the first-contact message), line for line"
 
 
 # ── once, recorded, before the send is confirmed ─────────────────────────────────────────

@@ -65,6 +65,7 @@ def _seed(m, jid):
     m.DAILY_LIMIT[f"2026-11-26:{h}:notice"] = "1"
     m.INFLIGHT[h] = {"ts": 1.0}
     m.BRIDGE_LEDGER["LEDGER-" + h[:4]] = {"to": jid, "ts": 1, "status": "delivered", "rank": 3}
+    m.LEDGER_INDEX[core.ledger_index_key(core.ledger_owner_hash(jid, "salt"), "LEDGER-" + h[:4])] = time.time()      # what _send_once_bridge records at send time
     old = item(1, "sent", days_ago=9, sh=h)
     core.archive_run(review_items={old["review_id"]: old}, transcripts={f"2026-11/{h}-old.json": {"ts": "2026-11-20T10:00:00+00:00", "kind": "question",
                      "sender_hash": h, "question": "archived q"}}, store=m.vol, signing_key="k", now=NOW)
@@ -90,7 +91,9 @@ def _archive_residue(m, h, digits):
 
 def all_residue(m, jid):
     h, digits = m.h[jid], jid.split("@")[0]
-    return {"dicts": core.futa_residue(_dict_stores(m), [h], digits), "archive": _archive_residue(m, h, digits)}
+    lh = [core.ledger_owner_hash(jid, "salt")]
+    ids = core.ledger_ids_for(list(m.LEDGER_INDEX.keys()), lh)
+    return {"dicts": core.futa_residue(_dict_stores(m), [h], digits, lh, ids), "archive": _archive_residue(m, h, digits)}
 
 
 def _futa_all(m, jid):
@@ -160,12 +163,12 @@ def test_a_confirmed_deletion_removes_the_sender_from_every_dict_and_the_archive
 
 def test_every_store_actually_lost_records_not_just_the_obvious_one(mw):
     counts = _futa_all(mw, A)["counts"]
-    for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending"):
+    for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "ledger_index", "futa_pending"):
         assert counts[name] >= 1, f"{name}: nothing was deleted, so the purge does not reach it ({counts})"
 
 
 def test_PLANT_a_dict_only_delete_leaves_archive_residue_and_the_scan_reports_it(mw):
-    core.futa_purge(_dict_stores(mw), [mw.h[A]], A_DIGITS)               # what an implementation that forgot the Volume would do
+    core.futa_purge(_dict_stores(mw), [mw.h[A]], A_DIGITS, [core.ledger_owner_hash(A, "salt")])      # what an implementation that forgot the Volume would do
     r = all_residue(mw, A)
     assert r["dicts"] == [] and r["archive"], "the archive scan is not inert: it finds exactly what the naive delete leaves"
 
@@ -219,7 +222,7 @@ def test_PLANT_a_failed_archive_deletion_says_incomplete_queues_a_retry_and_the_
 
 def test_the_participant_is_never_told_done_when_residue_remains(mw, monkeypatch):
     real_purge = core.futa_purge
-    monkeypatch.setattr(hc, "futa_purge", lambda stores, hashes, digits: {k: 0 for k in real_purge(stores, [], "")})   # a purge that deletes nothing
+    monkeypatch.setattr(hc, "futa_purge", lambda stores, hashes, digits, ledger_hashes=(): {k: 0 for k in real_purge(stores, [], "")})   # a purge that deletes nothing
     out = _futa_all(mw, A)
     assert out["status"] == "incomplete" and core.FUTA_DONE_TEXT not in mw.sent, "the verification, not the purge's own report, decides what the participant is told"
 

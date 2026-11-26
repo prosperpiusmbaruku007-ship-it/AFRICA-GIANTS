@@ -42,6 +42,8 @@ def _seed_forms(m):
         core.archive_run(review_items={old["review_id"]: old}, transcripts={}, store=m.vol, signing_key="k", now=NOW)
     m.BRIDGE_LEDGER["LED-DEV"] = {"to": "255700000099:12@s.whatsapp.net", "ts": 1, "rank": 3}        # a device-suffixed address
     m.BRIDGE_LEDGER["LED-LOCAL"] = {"to": "0700000099@s.whatsapp.net", "ts": 1, "rank": 3}
+    for mid, to in (("LED-DEV", "255700000099:12@s.whatsapp.net"), ("LED-LOCAL", "0700000099@s.whatsapp.net")):           # indexed at send time by the CANONICAL owner hash
+        m.LEDGER_INDEX[core.ledger_index_key(core.ledger_owner_hash(to, "salt"), mid)] = 1.0
     assert m._record_alias(A, LID) is True
 
 
@@ -125,7 +127,8 @@ def test_each_single_form_is_deleted(mw, form):
     assert f"2026-11/solo-{h}.json" not in mw.TRANSCRIPTS and h not in mw.DISCLOSURES, f"records under {form!r} survived"
 
 
-def test_device_suffixed_and_local_format_ledger_addresses_are_purged_by_canonical_digits(seeded):
+def test_device_suffixed_and_local_format_ledger_rows_are_found_through_the_canonical_owner_hash(seeded):
+    assert core.ledger_owner_hash("255700000099:12@s.whatsapp.net", "salt") == core.ledger_owner_hash("0700000099", "salt") == core.ledger_owner_hash(A, "salt")
     _futa_all(seeded, A)
     assert "LED-DEV" not in seeded.BRIDGE_LEDGER and "LED-LOCAL" not in seeded.BRIDGE_LEDGER
 
@@ -138,7 +141,7 @@ def test_every_form_hash_gets_a_tombstone_so_none_can_be_re_archived(seeded):
 
 def test_PLANT_a_purge_that_handles_only_the_primary_hash_leaves_residue_and_done_is_withheld(seeded, monkeypatch):
     real = core.futa_purge
-    monkeypatch.setattr(hc, "futa_purge", lambda stores, hashes, digits: real(stores, list(hashes)[:1], ""))       # the pre-fix behaviour
+    monkeypatch.setattr(hc, "futa_purge", lambda stores, hashes, digits, ledger_hashes=(): real(stores, list(hashes)[:1], ""))       # the pre-fix behaviour
     out = _futa_all(seeded, A)
     assert out["status"] == "incomplete" and core.FUTA_DONE_TEXT not in seeded.sent and seeded.sent[-1] == core.FUTA_INCOMPLETE_TEXT
     log = [v for k, v in seeded.ARCHIVE_STATE.items() if str(k).startswith("futa:")][0]

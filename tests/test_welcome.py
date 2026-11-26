@@ -79,14 +79,11 @@ def test_swahili_only_no_tagline_no_gn_codes():
     assert _content_problems(OLD_WELCOME_SNIPPET), "positive control: the old welcome IS caught by the same checker"
 
 
-def test_it_does_not_repeat_the_first_contact_disclosure_verbatim():
-    # ACCEPTED OVERLAP (founder, 2026-11-26): both end "...jibu linaweza kuchukua muda" (30 chars): the welcome deliberately repeats the idea that an answer
-    # may take time. The guard is for a COPIED SENTENCE, so it is 40 characters.
-    def shared(a, b, n=40):
-        return {a[i:i + n] for i in range(len(a) - n + 1)} & {b[i:i + n] for i in range(len(b) - n + 1)}
-    assert not shared(hc.WELCOME, hc.DISCLOSURE_TEXT)
-    assert shared(hc.DISCLOSURE_TEXT, hc.DISCLOSURE_TEXT), "positive control: a copy of the disclosure IS caught"
-    assert shared(hc.WELCOME, hc.WELCOME + hc.DISCLOSURE_TEXT[:80]) and shared(hc.WELCOME + hc.DISCLOSURE_TEXT, hc.DISCLOSURE_TEXT), "a pasted disclosure sentence IS caught"
+def test_the_first_contact_message_opens_exactly_like_the_returning_user_welcome():
+    """2026-11-27: a new number gets ONE message (FIRST_CONTACT_TEXT) that replaces the disclosure AND the welcome. It must open with the welcome's own
+    introduction, benefits and examples, so a new user and a returning user see the same pinned example questions."""
+    intro = hc.WELCOME.split("Ili upate jibu sahihi")[0]
+    assert intro and hc.FIRST_CONTACT_TEXT.startswith(intro), "the first-contact message must begin with the welcome's introduction, verbatim"
 
 
 def test_it_fits_a_whatsapp_message_and_carries_no_link():
