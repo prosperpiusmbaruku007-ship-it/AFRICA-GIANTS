@@ -3000,3 +3000,27 @@ def delete_sender_archive(store, sender_hash, now):
     store.reload()
     gone = all(not store.exists(f"{ARCHIVE_ROOT}/{kind}/{sender_hash}") for kind in ARCHIVE_KINDS)
     return {"removed_dirs": removed, "verified_gone": gone}
+
+
+ARCHIVE_WINDOW_START_S = 1 * 3600 + 20 * 60      # 01:20 UTC = 04:20 EAT: well clear of the 05:00 UTC canary and the evening burst
+ARCHIVE_WINDOW_END_S = ARCHIVE_WINDOW_START_S + 1800
+ARCHIVE_OVERDUE_S = 36 * 3600
+
+
+def archive_due(now_ts, already_claimed):
+    """True inside the daily window when today's archive run has NOT been claimed. Pure; exactly-once is the caller's put(skip_if_exists)."""
+    if already_claimed:
+        return False
+    try:
+        sec = int(float(now_ts)) % 86400
+    except (TypeError, ValueError):
+        return False
+    return ARCHIVE_WINDOW_START_S <= sec < ARCHIVE_WINDOW_END_S
+
+
+def archive_overdue(last_ok_ts, now_ts):
+    """True when there has been no successful archive run for more than 36 h, or never. Unreadable counts as overdue (the loud direction)."""
+    try:
+        return (float(now_ts) - float(last_ok_ts)) > ARCHIVE_OVERDUE_S
+    except (TypeError, ValueError):
+        return True

@@ -602,7 +602,7 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
                 # reported by name under /health's wappfly.alerting.missing, and the pre-flight
                 # refuses an image where that list is non-empty.
                 "TRANSPORT", "BRIDGE_URL", "BRIDGE_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "ALERT_FROM", "ALERT_SMTP_PORT",
-                "HEALTHCHECK_PING_URL", "HEALTHCHECK_CANARY_URL", "TEST_SENDERS",
+                "HEALTHCHECK_PING_URL", "HEALTHCHECK_CANARY_URL", "HEALTHCHECK_ARCHIVE_URL", "TEST_SENDERS",
                 "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "INFERENCE_HEALTH_URL",
                 # 2026-11-26 send ceilings: tunables (reported under /health send_ceiling), not secrets.
                 "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",

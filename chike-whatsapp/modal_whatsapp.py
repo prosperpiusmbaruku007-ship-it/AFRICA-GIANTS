@@ -230,6 +230,12 @@ BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing
 SEND_CEILING = modal.Dict.from_name("chike-send-ceiling-kv", create_if_missing=True)
 # Per-sender daily question slots (item C). One key per (EAT day, sender hash, n): no phone number, no text. Entries age out on their own.
 DAILY_LIMIT = modal.Dict.from_name("chike-daily-limit-kv", create_if_missing=True)
+# The DURABLE ARCHIVE (docs/decisions/2026-11-26_dict_retention_and_durable_archive.md). The Volume is written by ONE function (run_archive, behind a lock):
+# a Volume is not safe for concurrent per-row writes (the 2026-08-14 incident). ARCHIVE_STATE holds that lock and the last-run record.
+ARCHIVE_VOL = modal.Volume.from_name("chike-archive", create_if_missing=True)
+ARCHIVE_STATE = modal.Dict.from_name("chike-archive-state-kv", create_if_missing=True)
+# The bridge's WhatsApp login. READ here only (a daily touch): Dict entries expire after 7 days of inactivity and a long bridge outage must not cost the login.
+BRIDGE_AUTH = modal.Dict.from_name("chike-bridge-auth-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -2080,6 +2086,121 @@ def review_queue(token: str = None, include_sender: bool = False):
 # `reconcile_receipts` tick checks the daily window and `.spawn()`s this UNSCHEDULED function, which has its own 30-minute timeout (a GPU scarcity start has taken ~20 minutes). `.spawn()` and not a detached coroutine:
 # Modal tracks a spawned call to completion (R16b). The once-a-day decision is `put(skip_if_exists=True)` on a per-date key (R43: never a read-then-write).
 # STRUCTURAL LIMITS, asserted by AST in tests/test_model_canary.py: no WhatsApp send, no queue / transcript / review access, one model call, one ping.
+def _archive_lock_acquire(token, ttl_s=1800.0):
+    """One archiver (or deletion) at a time: the Volume has exactly one writer. put(skip_if_exists) is the atomic acquire; a lock older than ttl is stolen.
+    FAIL-CLOSED: a lock store that cannot be used means nothing writes the Volume."""
+    import time as _t
+    try:
+        if ARCHIVE_STATE.put("lock", {"token": token, "ts": _t.time()}, skip_if_exists=True):
+            return True
+        cur = ARCHIVE_STATE.get("lock") or {}
+        if _t.time() - float((cur or {}).get("ts") or 0) > ttl_s:
+            ARCHIVE_STATE.pop("lock", None)
+            return bool(ARCHIVE_STATE.put("lock", {"token": token, "ts": _t.time()}, skip_if_exists=True))
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[archive] lock unavailable ({type(e).__name__}) -- nothing written (fail-closed)", flush=True)
+    return False
+
+
+def _archive_lock_release(token):
+    try:
+        cur = ARCHIVE_STATE.get("lock") or {}
+        if (cur or {}).get("token") == token:
+            ARCHIVE_STATE.pop("lock", None)
+    except Exception:                                                # noqa: BLE001
+        pass
+
+
+def _archive_store():
+    return _core().ArchiveStore("/archive", commit=ARCHIVE_VOL.commit, reload=ARCHIVE_VOL.reload)
+
+
+def _scan_dict(d):
+    out = {}
+    for k in list(d.keys()):
+        try:
+            out[k] = d[k]
+        except Exception:                                            # noqa: BLE001
+            continue
+    return out
+
+
+def _touch_auth_keys():
+    """Read every key of the bridge's auth Dict: a read resets the 7-day inactivity clock (Modal Dict docs). Returns the number touched."""
+    n = 0
+    for k in list(BRIDGE_AUTH.keys()):
+        try:
+            BRIDGE_AUTH.get(k)
+            n += 1
+        except Exception:                                            # noqa: BLE001
+            continue
+    return n
+
+
+def _archive_pass(store=None):
+    """ONE archive pass (the caller holds the lock). Reading every review item and transcript row also keeps them alive."""
+    from datetime import datetime, timezone
+    core = _core()
+    settings = _settings()
+    summary = core.archive_run(
+        review_items=_scan_dict(REVIEW_QUEUE), transcripts=_scan_dict(TRANSCRIPTS), store=store or _archive_store(),
+        signing_key=settings.review_signing_key, now=datetime.now(timezone.utc), hot_days=core.ARCHIVE_HOT_DAYS_DEFAULT,
+        remove_review=lambda rid: REVIEW_QUEUE.pop(rid, None))
+    summary["auth_keys_touched"] = _touch_auth_keys()
+    return summary
+
+
+@app.function(image=image, secrets=SECRETS, timeout=1800, volumes={"/archive": ARCHIVE_VOL})
+def run_archive():
+    """THE SINGLE VOLUME WRITER, daily, spawned from the reconcile tick. No WhatsApp send. Ping the dead-man check on success, /fail on error."""
+    import time as _t
+    import uuid
+    token = uuid.uuid4().hex
+    if not _archive_lock_acquire(token):
+        print("[archive] another archiver (or a deletion) holds the lock -- skipped", flush=True)
+        return {"skipped": "locked"}
+    try:
+        summary = _archive_pass()
+        ARCHIVE_STATE["last"] = {"ts": _t.time(), "ok": True, "summary": summary}
+        ok, err = _ping_healthcheck("ok", f"archive ok: {summary}"[:900], url_env="HEALTHCHECK_ARCHIVE_URL")
+        print(f"[archive] done {summary}; dead-man ping {'ok' if ok else err}", flush=True)
+        return summary
+    except Exception as e:                                           # noqa: BLE001
+        ARCHIVE_STATE["last_error"] = {"ts": _t.time(), "error_class": type(e).__name__}
+        _ping_healthcheck("fail", f"archive FAILED: {type(e).__name__}", url_env="HEALTHCHECK_ARCHIVE_URL")
+        print(f"[archive] FAILED {type(e).__name__}: {e}", flush=True)
+        raise
+    finally:
+        _archive_lock_release(token)
+
+
+def _archive_health():
+    """Never raises, never imports the package. last_ok_age_s None = never ran. `overdue` is the same 36 h rule the dead-man check uses."""
+    import time as _t
+    try:
+        last = ARCHIVE_STATE.get("last") or {}
+        ts = last.get("ts")
+        age = None if ts is None else round(_t.time() - float(ts))
+        return {"last_ok_age_s": age, "overdue": age is None or age > 36 * 3600, "last_summary": last.get("summary"),
+                "last_error": ARCHIVE_STATE.get("last_error"), "hot_days": 3,
+                "dead_man_configured": bool(os.environ.get("HEALTHCHECK_ARCHIVE_URL", "").strip())}
+    except Exception:                                                # noqa: BLE001
+        return None
+
+
+def _maybe_spawn_archive(now):
+    """Once a day, from the reconcile tick: claim today's run (put skip_if_exists, R43) and spawn the single-writer archiver. Takes no cron slot."""
+    core = _core()
+    if not core.archive_due(now, False):
+        return None
+    day = core.canary_date(now)
+    if not ARCHIVE_STATE.put(f"claim_{day}", now, skip_if_exists=True):
+        return None
+    run_archive.spawn()
+    print(f"[archive] spawned for {day}", flush=True)
+    return day
+
+
 def _maybe_spawn_canary(now):
     core = _core()
     if not core.canary_due(now, False):
@@ -2134,6 +2255,10 @@ def reconcile_receipts():
     done = dropped = left = orphaned = 0
     now = time.time()
     try:
+        try:
+            _maybe_spawn_archive(now)         # never allowed to break the reconcile loop; a missed run is caught by the dead-man check
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[archive] spawn failed ({type(e).__name__})", flush=True)
         _maybe_spawn_canary(now)           # never allowed to break the reconcile loop; a canary that is lost is caught by the SILENCE of its own check
     except Exception as e:                                           # noqa: BLE001
         print(f"[canary] not spawned: {type(e).__name__}", flush=True)
@@ -2650,6 +2775,7 @@ def health():
         "max_renotifies": _health_max_renotifies(),
         "send_ceiling": _health_send_ceiling(),
         "queue_depth": _health_queue_depth(),
+        "archive": _archive_health(),
         "daily_question_limit": _health_daily_limit(),
         "digest_min_wait_s": _health_digest_min_wait(),
         "review_timeout": _review_timeout_health(),
