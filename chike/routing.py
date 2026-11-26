@@ -2640,7 +2640,24 @@ def is_uncomputable_payroll_amount(text: str) -> bool:
         return False
     has_payroll = any(c in ql for c in _PAYROLL_CTX)
     has_levy = bool(_explicit_levy(ql) or _natural_levy(ql))   # named levy OR generic 'makato'
-    return has_payroll and has_levy and _has_money_ask(ql)
+    if has_payroll and has_levy and _has_money_ask(ql):
+        return True
+    return first_person_deduction_ask_no_figure(text)
+
+
+# 2026-11-26 (founder, Fix A): "Nikatwe PAYE kiasi gani mimi?" carries no payroll-context word, so the guard above never fired and the FACT path let the model invent a salary (live: TZS 800,000 -> 78,000).
+# A FIRST-PERSON ask for the person's OWN deduction, with no figure, is the same "give me your salary" case. `PAYE` counts on its own; the generic `kodi` counts ONLY with a deduction verb (katwa/nikatwe/...),
+# because a shop owner's "Nilipe kodi kiasi gani mimi?" is a different question (which tax? on what?) and must not be told to supply a salary. Raw strings (R39); no digits allowed.
+_FP_DEDUCTION_VERB = re.compile(r"(?<![a-z])(?:kukatwa|ninakatwa|nakatwa|nikatwe|nikatwa|katwa|hukatwa)(?![a-z])")
+_FP_KODI_WORD = re.compile(r"(?<![a-z])kodi(?![a-z])")
+
+
+def first_person_deduction_ask_no_figure(text: str) -> bool:
+    """True for a first-person, figure-free, money-asking question about the person's own PAYE (or `kodi` + a deduction verb). Pure; the caller has established detect_intent == 'none'."""
+    ql = text.lower()
+    if re.search(r"[0-9]", ql) or not _FP_FIRST_PERSON.search(ql) or not _has_money_ask(ql):
+        return False
+    return bool(_FP_PAYE_WORD.search(ql) or (_FP_KODI_WORD.search(ql) and _FP_DEDUCTION_VERB.search(ql)))
 
 
 # ── FIXED STATUTORY STATEMENTS (2026-11-16) ─────────────────────────────────────────────────────────────────────────
