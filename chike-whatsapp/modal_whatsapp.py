@@ -926,9 +926,12 @@ def _smtp_configured():
     return all(os.environ.get(k, "") for k in _SMTP_KEYS)
 
 
-def _ping_healthcheck(kind, body="", url_env="HEALTHCHECK_PING_URL"):
+def _ping_healthcheck(kind, body="", url_env="HEALTHCHECK_PING_URL", user_agent="chike-bridge-watch"):
     """(ok, error). kind 'ok' -> the check's ping URL; 'fail' -> `<url>/fail`. Three attempts (the service's own advice),
-    each 10 s. The error is a CLASS or an HTTP status -- never the URL, which is the credential."""
+    each 10 s. The error is a CLASS or an HTTP status -- never the URL, which is the credential.
+
+    `user_agent` is the label healthchecks.io shows beside each ping. It DEFAULTS to the original "chike-bridge-watch" so the bridge watcher, the canary and the
+    alert pings are unchanged; the archiver passes its own ("chike-archive"), because its pings were showing up on its own check labelled as the bridge watcher."""
     import time
     import urllib.error
     import urllib.request
@@ -943,7 +946,7 @@ def _ping_healthcheck(kind, body="", url_env="HEALTHCHECK_PING_URL"):
     for attempt in range(3):
         try:
             req = urllib.request.Request(target, data=data, method="POST",
-                                         headers={"User-Agent": "chike-bridge-watch"})
+                                         headers={"User-Agent": str(user_agent)})
             with urllib.request.urlopen(req, timeout=10) as r:
                 if 200 <= int(r.status) < 300:
                     return True, None
@@ -2186,12 +2189,12 @@ def run_archive():
         summary = _archive_pass()
         summary["futa_retries_done"] = retries
         ARCHIVE_STATE["last"] = {"ts": _t.time(), "ok": True, "summary": summary}
-        ok, err = _ping_healthcheck("ok", f"archive ok: {summary}"[:900], url_env="HEALTHCHECK_ARCHIVE_URL")
+        ok, err = _ping_healthcheck("ok", f"archive ok: {summary}"[:900], url_env="HEALTHCHECK_ARCHIVE_URL", user_agent="chike-archive")
         print(f"[archive] done {summary}; dead-man ping {'ok' if ok else err}", flush=True)
         return summary
     except Exception as e:                                           # noqa: BLE001
         ARCHIVE_STATE["last_error"] = {"ts": _t.time(), "error_class": type(e).__name__}
-        _ping_healthcheck("fail", f"archive FAILED: {type(e).__name__}", url_env="HEALTHCHECK_ARCHIVE_URL")
+        _ping_healthcheck("fail", f"archive FAILED: {type(e).__name__}", url_env="HEALTHCHECK_ARCHIVE_URL", user_agent="chike-archive")
         print(f"[archive] FAILED {type(e).__name__}: {e}", flush=True)
         raise
     finally:

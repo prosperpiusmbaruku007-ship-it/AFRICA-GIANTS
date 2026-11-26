@@ -165,4 +165,8 @@ def test_health_reports_the_canary_without_leaking_the_url(monkeypatch):
 
 def test_the_ping_helper_still_defaults_to_the_bridge_heartbeat_key():
     fn = _fn("_ping_healthcheck")
-    assert [ast.unparse(d) for d in fn.args.defaults][-1] == "'HEALTHCHECK_PING_URL'"
+    # by NAME, not by position: a later parameter (user_agent, 2026-11-26) must not be able to masquerade as the url_env default
+    params = [a.arg for a in fn.args.args]
+    defaults = dict(zip(params[len(params) - len(fn.args.defaults):], [ast.unparse(d) for d in fn.args.defaults]))
+    assert defaults["url_env"] == "'HEALTHCHECK_PING_URL'", defaults
+    assert defaults["user_agent"] == "'chike-bridge-watch'", "the original label stays the default for every caller that does not pass one"

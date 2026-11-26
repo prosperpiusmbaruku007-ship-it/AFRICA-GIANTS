@@ -49,8 +49,9 @@ def mw(monkeypatch, tmp_path):
     m.vol = Spy(tmp_path / "vol")
     monkeypatch.setattr(m, "_archive_store", lambda: m.vol)
     monkeypatch.setattr(m, "BRIDGE_AUTH", CountingDict({f"auth-{i}": f"v{i}" for i in range(5)}))
-    m.pings = []
-    monkeypatch.setattr(m, "_ping_healthcheck", lambda kind, body="", url_env="HEALTHCHECK_PING_URL": (m.pings.append((kind, url_env)) or (True, None)))
+    m.pings, m.ping_labels = [], []
+    monkeypatch.setattr(m, "_ping_healthcheck", lambda kind, body="", url_env="HEALTHCHECK_PING_URL", user_agent=None:
+                        (m.pings.append((kind, url_env)) or m.ping_labels.append(user_agent) or (True, None)))
     # seed: an old decided item (must move), a pending one and a recent decided one (must stay)
     m.old = item(1, "sent", days_ago=9)
     m.pend = item(2, "pending", days_ago=9)
@@ -105,6 +106,7 @@ def test_a_success_pings_ok_to_the_ARCHIVE_check_and_records_the_run(mw):
     _live_now(mw)
     mw.run_archive.get_raw_f()()
     assert mw.pings == [("ok", "HEALTHCHECK_ARCHIVE_URL")], "the dead-man check, not the bridge or canary one"
+    assert mw.ping_labels == ["chike-archive"], "and labelled as itself, not as the bridge watcher"
     assert mw.ARCHIVE_STATE["last"]["ok"] is True and "lock" not in mw.ARCHIVE_STATE, "recorded, and the lock was released"
 
 
