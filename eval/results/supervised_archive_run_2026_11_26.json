@@ -1,0 +1,70 @@
+{
+ "started_utc": "2026-11-26T20:27:28+00:00",
+ "backup_dir_used": "scratch\\backups\\20261126T202503Z",
+ "surprises": [
+  "aggregates count real/test 0/36 != expected 3/33"
+ ],
+ "expectation": {
+  "items_before": 41,
+  "transcripts_before": 75,
+  "expected_moved": 36,
+  "expected_test": 33,
+  "expected_real": 3,
+  "expected_review_after": 5,
+  "expected_transcripts_archived": 40,
+  "pending_in_backup": 0
+ },
+ "before": {
+  "review_queue": 41,
+  "transcripts": 75,
+  "autosend_claims": 28,
+  "disclosures": 2,
+  "identity_aliases": 1,
+  "archive_state": 0
+ },
+ "run_summary": {
+  "review_archived": 36,
+  "review_removed": 36,
+  "review_kept_failed": 0,
+  "review_kept_leak": 0,
+  "review_tombstoned_dropped": 0,
+  "review_already_present": 0,
+  "review_changed_since_archive": 0,
+  "transcripts_archived": 40,
+  "transcripts_already_present": 0,
+  "transcripts_kept_leak": 0,
+  "aggregates_days": 8,
+  "tombstones_pruned": 0,
+  "auth_keys_touched": 309,
+  "alias_keys_touched": 1,
+  "futa_retries_done": 0
+ },
+ "after": {
+  "review_queue": 5,
+  "transcripts": 75,
+  "autosend_claims": 28,
+  "disclosures": 2,
+  "identity_aliases": 1,
+  "archive_state": 1
+ },
+ "volume": {
+  "review_files": 36,
+  "transcript_files": 40,
+  "aggregate_files": 8,
+  "tombstones": 0,
+  "leaks": 0,
+  "mismatched": 0,
+  "missing": 0,
+  "aggregate_real_counted": 0,
+  "aggregate_test_counted": 36
+ },
+ "finished_utc": "2026-11-26T20:32:30+00:00",
+ "verify_only_rerun_utc": "2026-11-26T20:32:11+00:00",
+ "download_returncode": 0,
+ "adjudication": {
+  "surprise_1": "download failed in the first run: the destination folder did not exist and the harness swallowed the CLI error. Harness fixed (creates the folder, records the return code, fails loudly); the archive itself was fine (84 files visible on the Volume). Re-checked with --verify-only, no second archiver run.",
+  "surprise_2": "aggregates counted 0 real / 36 test where the expectation said 3 real / 33 test. ADJUDICATED: the archiver is right and the expectation was a lower bound. The expectation derives test hashes only from FLAGGED records; the 3 items are one sender in linked-ID form (tail 6995), unflagged, decided 10-11 Nov by the founder, i.e. the founder's test phone under its linked-ID identity. The app's own count uses the configured TEST_SENDERS list: /health cohort.participants_seen = 0 over all 75 transcript rows, test_senders listed 2 / seen 2, so that hash is a configured test identity. No real participant has ever used the system.",
+  "consequence": "scripts/answer_path_summary.py classifies by flag + flagged-record hashes only, which UNDER-classifies test identities that carry no flag (here: the linked-ID form). Its 'real' counts are therefore an upper bound on real traffic until it can read the configured list (a small function returning the hashes, or a token-gated /health field).",
+  "dead_man_ping": "not confirmed from the engineer side: the container log replay stops at 23:34 EAT, before the run. ARCHIVE_STATE.last.ok was recorded and /health shows last_ok_age_s small, overdue false. Founder: check the healthchecks.io dashboard for a ping at about 20:4x UTC on 2026-11-26."
+ }
+}
