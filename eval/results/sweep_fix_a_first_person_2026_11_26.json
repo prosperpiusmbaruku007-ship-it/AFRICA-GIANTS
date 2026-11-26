@@ -1,0 +1,155 @@
+{
+ "before": "HEAD",
+ "probes": [
+  {
+   "text": "Nikatwe PAYE kiasi gani mimi?",
+   "before": false,
+   "after": true,
+   "expected": true,
+   "ok": true,
+   "why": "the live specimen: fabricated TZS 800,000 -> 78,000"
+  },
+  {
+   "text": "Nikatwe PAYE kiasi gani?",
+   "before": false,
+   "after": true,
+   "expected": true,
+   "ok": true,
+   "why": "no `mimi`; nikatwe is itself first person"
+  },
+  {
+   "text": "PAYE yangu ni kiasi gani?",
+   "before": false,
+   "after": true,
+   "expected": true,
+   "ok": true,
+   "why": "yangu"
+  },
+  {
+   "text": "Ninakatwa kodi kiasi gani mimi?",
+   "before": false,
+   "after": true,
+   "expected": true,
+   "ok": true,
+   "why": "generic kodi WITH a deduction verb"
+  },
+  {
+   "text": "Mshahara wa mgeni ni mkubwa, nikatwe PAYE kiasi gani mimi?",
+   "before": true,
+   "after": true,
+   "expected": true,
+   "ok": true,
+   "why": "already clarified before (payroll word): unchanged"
+  },
+  {
+   "text": "Nilipe kodi kiasi gani mimi?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "FOUNDER MUST-NOT: a shop owner's kodi with no deduction verb"
+  },
+  {
+   "text": "Nilipe kodi ya duka kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "kodi, no deduction verb"
+  },
+  {
+   "text": "Ninalipa kodi ya pango kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "kodi, no deduction verb"
+  },
+  {
+   "text": "Nilipe VAT kiasi gani mimi?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "other levy, no PAYE, no kodi"
+  },
+  {
+   "text": "Nikikaa nchini siku 183, PAYE yangu ni ya mkazi au asiye mkazi?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "rs_04 REGIME question: no money ask"
+  },
+  {
+   "text": "Nikikaa nchini muda mrefu, PAYE yangu ni ya mkazi au asiye mkazi?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "the regime question with NO digit: only the money-ask limb protects it"
+  },
+  {
+   "text": "PAYE ni kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "money ask + PAYE but NOT first person"
+  },
+  {
+   "text": "PAYE yangu ni asilimia ngapi?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "a RATE ask"
+  },
+  {
+   "text": "Nikichelewa kulipa PAYE yangu nitatozwa faini kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "penalty ask"
+  },
+  {
+   "text": "Nikatwe PAYE kiasi gani mimi, mshahara 800,000?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "a figure: engine route, not a clarification"
+  },
+  {
+   "text": "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "third person: the R1 statement route"
+  },
+  {
+   "text": "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "R2 statement route, no first person"
+  },
+  {
+   "text": "PAYE inakatwa lini?",
+   "before": false,
+   "after": false,
+   "expected": false,
+   "ok": true,
+   "why": "no first person, a date ask"
+  }
+ ],
+ "failures": [],
+ "diversions": [],
+ "population": {
+  "questions": 6287,
+  "files": 139
+ }
+}
