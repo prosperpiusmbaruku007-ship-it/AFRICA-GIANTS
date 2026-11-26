@@ -1314,6 +1314,16 @@ shipping — ON THE CONDITION BELOW.**
 > **This amendment WIDENS what may send unreviewed; the first one widened who may review. It is therefore the most consequential
 > change to this reading to date, and its limits are the void list below. The timeout is OFF unless `AUTOSEND_ENGINE` is explicitly on.**
 
+> ### ⚖️ **AMENDMENT 2026-11-27 — THE DISCLOSURE IS NOW THE SINGLE FIRST-CONTACT MESSAGE (founder; recorded at their instruction, not a quiet edit).**
+> **FROM:** a separate disclosure message, then the welcome. **TO:** ONE message for every NEW number, whatever it sends first: a greeting first gets that message only; a question first
+> gets that message and then the normal answer flow. **Existing numbers are unchanged** (already told). The text is `handler_core.FIRST_CONTACT_TEXT`; the V1 disclosure survives only as the
+> never-sent `LEGACY_DISCLOSURE_TEXT_V1`.
+>
+> **Every limb of the V1 disclosure is carried in new wording and is pinned limb by limb in `tests/test_first_contact.py`** (what Chike is, early-stage, a person reads most answers, sometimes
+> hours, guidance not legal advice, confirm with TRA, no unnecessary personal data, no passwords or bank numbers, messages help improve Chike), plus the new FUTA instruction. **One wording
+> change:** the literal words "jaribio linalosimamiwa" (a supervised test) no longer appear in the message; the supervision limb is carried by "Chike yuko katika hatua za mwanzo" together with
+> "husomwa na mtu". Void-list item 5 (dropping the participant disclosure) is enforced by that limb test: a pinned phrase may not be removed. Full record: `docs/decisions/2026-11-27_first_contact_message.md`.
+
 **WHY THE CONDITION IS THE WHOLE RULING AND NOT A CAVEAT.** What R7 forbids is an unsupervised
 system giving a Tanzanian employer a confident wrong compliance answer. A cohort where a human
 reads every reply before it goes is **not that system** — the human is the gate. Remove the

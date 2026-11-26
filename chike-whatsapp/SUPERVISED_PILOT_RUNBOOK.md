@@ -370,8 +370,7 @@ request's own linked-ID plus every linked-ID recorded as paired with the number.
 carries both, **from 2026-11-26 on**.
 
 **ACCEPTED, NOT COVERED:**
-1. **The bridge delivery ledger** keeps the recipient address for up to 24 hours and rewrites it on delivery receipts; FUTA purges it, but a receipt that
-   arrives afterwards can write it back until it ages out.
+1. **The bridge delivery ledger** is deleted BY KEY (since 2026-11-27): every participant send records `<owner hash>:<message id>` in a key-only index, and a deletion removes exactly that person's rows, never reading the ledger. Not found, and left to the **24 h prune** (BRIDGE-LEDGER-PRUNE-1, in the daily archive run): rows sent **before** the index existed, and a row the bridge node re-writes from a delivery receipt that arrives after the deletion.
 2. **WhatsApp session keys** in the bridge auth store: the key names contain the participant's number. They are removed only by re-pairing the bridge.
 3. **A linked-ID never paired with the phone** (stored before 2026-11-26, or never seen alongside it) cannot be derived from the number and is not found.
    Pinned in `tests/test_futa_identity_forms.py` so it stays documented.
@@ -390,7 +389,7 @@ The dry run on 2026-11-26 showed a FUTA on the test phones would delete 68 of 74
 
 **Part 3: delete.**
 4. From the throwaway phone send exactly `FUTA`. Expect the confirmation prompt. Check: nothing was deleted yet (`futa_check.py` unchanged).
-5. Send `NDIO` within 10 minutes. Expect `Imekamilika...`. (Sending anything else first, or waiting past 10 minutes, deletes nothing.)
+5. Send `NDIO` within 10 minutes. Expect, **within seconds**, the acknowledgement *"Sawa, ninafuta taarifa zako sasa. Itachukua dakika chache; nitakujulisha ikikamilika."*, and then `Imekamilika...` when the deletion is verified (the first live test, before the ledger was taken off the slow path, took 7 min 46 s with no message in between). Note the times of both. (Sending anything else first, or waiting past 10 minutes, deletes nothing.)
 
 **Part 4: the residue check, immediately after.**
 6. `python scripts/futa_check.py --last4 NNNN`. Required: `RESIDUE TOTAL: 0`; `everyone else's records` **identical to Part 1's**; `tombstones` up by about 10 (one per identity form); the last logged deletion shows `verified=True residue_stores=[]`.
@@ -449,28 +448,53 @@ reads every answer before it is sent, that answers may therefore take hours, and
 important answers should still be confirmed with TRA. If that disclosure is dropped, the R7
 reading no longer applies.
 
-### 8a. THE MESSAGE EVERY PARTICIPANT RECEIVES BEFORE THEIR FIRST QUESTION
+### 8a. THE FIRST-CONTACT MESSAGE: THE ONE MESSAGE EVERY NEW NUMBER RECEIVES, WHATEVER THEY SEND FIRST
 
 **Send this, exactly, before a participant's first question is answered** (founder's text,
 2026-11-12; do not paraphrase or shorten it — dropping any limb of it is dropping the
 disclosure):
 
-> Karibu kwenye majaribio ya Chike. Chike ni msaidizi wa maswali ya kodi na sheria za biashara Tanzania. Kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa kwako, hivyo jibu linaweza kuchukua muda — wakati mwingine saa kadhaa. Majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA au mamlaka husika. Usitume taarifa binafsi zisizo za lazima. Usitume nywila wala namba za benki. Asante kwa kutusaidia kuiboresha Chike.
+> Habari, karibu! 👋
+>
+> Mimi ni *Chike*, msaidizi (AI) wa Africa Giants. Ninajibu kwa Kiswahili maswali ya kodi na kanuni za biashara Tanzania.
+>
+> *Ukiwa nami:*
+> 💡 Unajua kiasi halisi cha kulipa: PAYE, NSSF, SDL, VAT
+> ⏰ Unajua tarehe za mwisho, unaepuka faini
+> 📋 Unajua usajili na leseni unazohitaji: TRA, BRELA, NSSF, OSHA
+>
+> *Jaribu kuuliza, kwa mfano:*
+> • Mshahara wa TZS 800,000, PAYE ni kiasi gani?
+> • Leseni ya biashara inadumu muda gani?
+>
+> *Kabla hujaanza:*
+> • Chike yuko katika hatua za mwanzo: majibu mengi husomwa na mtu kabla ya kukufikia, kwa hiyo jibu linaweza kuchukua muda, wakati mwingine saa kadhaa.
+> • Majibu ni mwongozo, si ushauri rasmi wa kisheria. Kwa maamuzi makubwa, thibitisha na TRA au mamlaka husika.
+> • Usitume nywila, namba za benki wala taarifa binafsi zisizo za lazima.
+> • Maswali yako hutusaidia kuiboresha Chike. Kufuta taarifa zako, tuma FUTA.
+>
+> Uliza swali lako 👇
 
 **Amended 2026-11-26 (founder).** "kila jibu linasomwa" became "majibu mengi yanasomwa" so the sentence matches live behaviour (model-free engine answers
 may auto-send after 15 minutes, prefixed as an unchecked automated calculation), and "Usitume nywila wala namba za benki." was added. The wording is the
 founder's; the rule that no limb may be dropped stands.
 
+**AMENDMENT TO THE R7 DISCLOSURE READING, 2026-11-27 (founder).** The separate disclosure message is gone. A NEW number now gets ONE message, whatever it sends first: the text above, which replaces BOTH the disclosure and the welcome for that number. A greeting first gets that message only; a question first gets that message and then the normal answer flow. **Existing numbers are unchanged** (they were already told, and keep the returning-user welcome). Every limb of the V1 disclosure is carried in new wording and is pinned limb by limb in `tests/test_first_contact.py`, so none can drop silently. **One wording change to know about:** the literal words "jaribio linalosimamiwa" (a supervised test) no longer appear; the supervision limb is carried by "Chike yuko katika hatua za mwanzo" together with "husomwa na mtu". The founder chose this wording. The V1 text is kept in the code only as the never-sent constant `LEGACY_DISCLOSURE_TEXT_V1`.
+
 What each sentence is for, so nobody "tidies" one away:
 
-| sentence (gist) | the R7 limb it carries |
-|---|---|
-| *majaribio… msaidizi wa maswali ya kodi na sheria za biashara* | what Chike is — and is not (not a general assistant) |
-| *kwa sasa ni jaribio linalosimamiwa: majibu mengi yanasomwa na mtu kabla ya kutumwa* | **supervised test; a person reads MOST answers** (model-free engine answers may auto-send after 15 minutes, with an explicit unchecked-automated prefix) |
-| *jibu linaweza kuchukua muda — wakati mwingine saa kadhaa* | **latency is real** — a 9pm question may wait until morning, and a participant who does not expect that stops asking |
-| *majibu ni mwongozo, si ushauri rasmi wa kisheria; kwa maamuzi muhimu, thibitisha na TRA* | **confirm important answers with TRA** |
-| *usitume taarifa binafsi zisizo za lazima* | do not send personal data we do not need |
-| *usitume nywila wala namba za benki* | do not send passwords or bank numbers (added 2026-11-26) |
+| limb of the V1 disclosure | where it is in the first-contact message | the R7 limb it carries |
+|---|---|---|
+| *majaribio… msaidizi wa maswali ya kodi na sheria za biashara* | "msaidizi (AI) wa Africa Giants… maswali ya kodi na kanuni za biashara" | what Chike is, and is not |
+| *jaribio linalosimamiwa* (a supervised test) | "Chike yuko katika hatua za mwanzo" (early stage) | **supervised / early-stage pilot** |
+| *majibu mengi yanasomwa na mtu kabla ya kutumwa* | "majibu mengi husomwa na mtu kabla ya kukufikia" | **a person reads MOST answers** (model-free engine answers may auto-send after 15 minutes, with an explicit unchecked-automated prefix) |
+| *wakati mwingine saa kadhaa* | "wakati mwingine saa kadhaa" | **latency is real**: a 9pm question may wait until morning |
+| *mwongozo, si ushauri rasmi wa kisheria* | "mwongozo, si ushauri rasmi wa kisheria" | **guidance, not formal legal advice** |
+| *thibitisha na TRA au mamlaka husika* | "thibitisha na TRA au mamlaka husika" | **confirm important answers with TRA** |
+| *usitume taarifa binafsi zisizo za lazima* | "taarifa binafsi zisizo za lazima" | do not send personal data we do not need |
+| *usitume nywila wala namba za benki* | "nywila, namba za benki" | do not send passwords or bank numbers |
+| *Asante kwa kutusaidia kuiboresha Chike* | "Maswali yako hutusaidia kuiboresha Chike" | **messages help improve Chike** (the only hint of how questions are used) |
+| (new) | "Kufuta taarifa zako, tuma FUTA" | how to delete their records |
 
 ⚠️ **This is the message, not yet an enforced step.** Nothing in the handler sends it today — it is
 sent by hand, and **nothing checks that it was.** Under the R35 rule a condition with no
