@@ -238,6 +238,9 @@ ARCHIVE_STATE = modal.Dict.from_name("chike-archive-state-kv", create_if_missing
 BRIDGE_AUTH = modal.Dict.from_name("chike-bridge-auth-kv", create_if_missing=True)
 # Pending FUTA (deletion-on-request) confirmations: one key per sender hash, valid for 10 minutes. Holds a timestamp only.
 FUTA_PENDING = modal.Dict.from_name("chike-futa-pending-kv", create_if_missing=True)
+# Phone <-> linked-ID pairs, recorded when one inbound carries both. KEYS ONLY, as `<phone hash>:<lid hash>` (salted hashes, no number): a deletion on
+# request follows a participant's linked-ID to the rows stored under it. put(skip_if_exists), so there is no read-modify-write. FUTA deletes the pairs too.
+IDENTITY_ALIASES = modal.Dict.from_name("chike-identity-aliases-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -1205,6 +1208,7 @@ def webhook(item: dict, token: str = None):
             _m = (item.get("data") or {}).get("messages") or {}
             print(f"[chike] LID sender; messages keys = {sorted(_m)[:30]}; "
                   f"key keys = {sorted(_m.get('key') or {})[:15]}")
+        _record_alias(parsed["sender"], parsed.get("sender_lid"))
         if parsed["kind"] == "greeting":
             greet_and_send.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
         elif parsed["kind"] == "futa":
@@ -2131,6 +2135,17 @@ def _scan_dict(d):
     return out
 
 
+def _touch_dict(d):
+    n = 0
+    for k in list(d.keys()):
+        try:
+            d.get(k)
+            n += 1
+        except Exception:                                            # noqa: BLE001
+            continue
+    return n
+
+
 def _touch_auth_keys():
     """Read every key of the bridge's auth Dict: a read resets the 7-day inactivity clock (Modal Dict docs). Returns the number touched."""
     n = 0
@@ -2153,6 +2168,7 @@ def _archive_pass(store=None):
         signing_key=settings.review_signing_key, now=datetime.now(timezone.utc), hot_days=core.ARCHIVE_HOT_DAYS_DEFAULT,
         remove_review=lambda rid: REVIEW_QUEUE.pop(rid, None))
     summary["auth_keys_touched"] = _touch_auth_keys()
+    summary["alias_keys_touched"] = _touch_dict(IDENTITY_ALIASES)
     return summary
 
 
@@ -2185,16 +2201,42 @@ def run_archive():
 def _futa_stores():
     """Every hot store that can hold a participant's records, by the names handler_core.futa_purge expects."""
     return {"transcripts": TRANSCRIPTS, "review": REVIEW_QUEUE, "pending_rows": PENDING_ROWS, "disclosures": DISCLOSURES, "daily": DAILY_LIMIT,
-            "inflight": INFLIGHT, "autosend": AUTOSEND, "bridge_ledger": BRIDGE_LEDGER, "futa_pending": FUTA_PENDING}
+            "inflight": INFLIGHT, "autosend": AUTOSEND, "bridge_ledger": BRIDGE_LEDGER, "futa_pending": FUTA_PENDING, "aliases": IDENTITY_ALIASES}
+
+
+def _record_alias(sender, sender_lid):
+    """When an inbound carries both the phone and a linked-ID, remember the pair (hashes only). Never raises; a lost pair only narrows what a deletion can follow."""
+    if not sender_lid:
+        return False
+    try:
+        core = _core()
+        salt = _settings().sender_salt
+        ph, lh = core.sender_ids(sender, salt)[0], core.sender_ids(sender_lid, salt)[0]
+        if ph == lh:
+            return False
+        IDENTITY_ALIASES.put(core.alias_pair_key(ph, lh), "1", skip_if_exists=True)
+        return True
+    except Exception:                                                # noqa: BLE001
+        return False
 
 
 def _futa_hashes(sender, sender_lid, settings):
+    """Every sender hash this person may be stored under: the request's own (first: it is the FUTA_PENDING key), every string FORM of the number
+    (255..., +255..., 0..., with and without @s.whatsapp.net / @c.us), the request's linked-ID, and every linked-ID recorded for any of them."""
     core = _core()
-    hs = [core.sender_ids(sender, settings.sender_salt)[0]]
+    salt = settings.sender_salt
+    hs = [core.sender_ids(sender, salt)[0]]
+    extra = [core.sender_ids(f, salt)[0] for f in core.futa_identity_forms(sender)]
     if sender_lid:
-        h = core.sender_ids(sender_lid, settings.sender_salt)[0]
+        extra.append(core.sender_ids(sender_lid, salt)[0])
+    for h in extra:
         if h not in hs:
             hs.append(h)
+    try:
+        for h in sorted(core.alias_hashes(list(IDENTITY_ALIASES.keys()), hs)):
+            hs.append(h)
+    except Exception:                                                # noqa: BLE001
+        pass
     return hs
 
 

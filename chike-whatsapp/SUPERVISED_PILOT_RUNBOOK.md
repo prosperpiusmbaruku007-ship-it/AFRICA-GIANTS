@@ -356,6 +356,27 @@ curl -s -X POST "https://<workspace>--chike-whatsapp-review_purge.modal.run?toke
 Drops the number from every **decided** item. Pending items are untouched — purging one makes
 its answer undeliverable.
 
+### 6a. Deletion on request (FUTA): what it removes, and what it cannot (founder-accepted limits, 2026-11-26)
+
+A participant sends exactly `FUTA`, then confirms with `NDIO` within 10 minutes (nothing is deleted before the confirmation, and it expires). It removes
+their transcripts, review items, pending-receipt rows, disclosure flag, daily-limit slots, in-flight markers, auto-send claims, bridge delivery-ledger rows,
+recorded phone-to-linked-ID pairs, and their files in the archive Volume (written only by the single archiver, under its lock). It leaves a **text-free
+tombstone** (a salted hash and a date, kept 90 days, so a copy read before the deletion cannot be re-archived) and **numbers-only aggregate counts**. The
+deletion is logged without content. "Imekamilika" (done) is sent **only after a residue scan over every store finds nothing**; otherwise the participant is
+told it is incomplete and the archive half is finished by the daily run.
+
+**Identity forms covered:** the number as 255..., +255... and 0..., each bare and with @s.whatsapp.net / @c.us, a device-suffixed address (`:12`), and the
+request's own linked-ID plus every linked-ID recorded as paired with the number. Pairs are recorded (as salted hashes, never a number) only when one inbound
+carries both, **from 2026-11-26 on**.
+
+**ACCEPTED, NOT COVERED:**
+1. **The bridge delivery ledger** keeps the recipient address for up to 24 hours and rewrites it on delivery receipts; FUTA purges it, but a receipt that
+   arrives afterwards can write it back until it ages out.
+2. **WhatsApp session keys** in the bridge auth store: the key names contain the participant's number. They are removed only by re-pairing the bridge.
+3. **A linked-ID never paired with the phone** (stored before 2026-11-26, or never seen alongside it) cannot be derived from the number and is not found.
+   Pinned in `tests/test_futa_identity_forms.py` so it stays documented.
+4. The participant's own phone, WhatsApp's servers and Meta: outside this system. The confirmation message says so.
+
 ---
 
 ## 7. Verifying the roster live — before any participant

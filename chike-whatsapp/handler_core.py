@@ -3064,11 +3064,34 @@ def futa_pending_live(record, now_ts):
         return False
 
 
+def canonical_tz_digits(x):
+    """The digits of a number or address in one canonical form: a device suffix (`:12`) and the `@domain` are dropped, and a Tanzanian local number
+    (0700000099) becomes its international form (255700000099). Anything else is returned as its bare digits."""
+    d = "".join(c for c in str(x or "").split("@")[0].split(":")[0] if c.isdigit())
+    if len(d) == 10 and d.startswith("0"):
+        return "255" + d[1:]
+    return d
+
+
+def futa_identity_forms(number_like):
+    """EVERY string a sender hash may have been computed from for this number: 255..., +255..., 0..., each bare and with the @s.whatsapp.net and @c.us
+    suffixes. (A linked-ID cannot be derived from the number: it is followed through the recorded alias pairs instead.)"""
+    c = canonical_tz_digits(number_like)
+    if not c:
+        return []
+    bases = [c, "+" + c]
+    if c.startswith("255") and len(c) == 12:
+        bases.append("0" + c[3:])
+    return [b + sfx for b in bases for sfx in ("", "@s.whatsapp.net", "@c.us")]
+
+
 def _futa_needles(hashes, digits):
     needles = {h for h in (hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
-    d = "".join(c for c in str(digits or "") if c.isdigit())
+    d = canonical_tz_digits(digits)
     if len(d) >= 9:                                  # never match on a short or empty digit string: that would delete other people's records
         needles.add(d)
+        if d.startswith("255") and len(d) == 12:
+            needles.add("0" + d[3:])                 # the local form of the same number
     return needles
 
 
@@ -3099,8 +3122,9 @@ def futa_purge(stores, hashes, digits):
     inflight, autosend, bridge_ledger, futa_pending. Returns NUMBERS ONLY (text-free, hash-free), safe to log."""
     hs = {h for h in (hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
     needles = _futa_needles(hashes, digits)
-    digs = next((n for n in needles if n not in hs), None)
-    counts = {name: 0 for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending")}
+    canon = canonical_tz_digits(digits)
+    digs = canon if len(canon) >= 9 else None
+    counts = {name: 0 for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending", "aliases")}
     if not needles:
         return counts
     tkeys, rids = set(), set()
@@ -3110,7 +3134,7 @@ def futa_purge(stores, hashes, digits):
             tkeys.add(k)
             counts["transcripts"] += 1
     for k, it in _safe_items(stores["review"]):
-        if isinstance(it, dict) and (it.get("sender_hash") in hs or (digs and _local_digits(it.get("sender")) == digs)):
+        if isinstance(it, dict) and (it.get("sender_hash") in hs or (digs and canonical_tz_digits(it.get("sender")) == digs)):
             stores["review"].pop(k, None)
             rids.add(str(it.get("review_id") or k))
             counts["review"] += 1
@@ -3136,11 +3160,33 @@ def futa_purge(stores, hashes, digits):
             stores["autosend"].pop(k, None)
             counts["autosend"] += 1
     for k, row in _safe_items(stores["bridge_ledger"]):
-        if digs and isinstance(row, dict) and _local_digits(row.get("to")) == digs:
+        if digs and isinstance(row, dict) and canonical_tz_digits(row.get("to")) == digs:
             stores["bridge_ledger"].pop(k, None)
             counts["bridge_ledger"] += 1
     for k in list(stores["futa_pending"].keys()):
         if k in hs:
             stores["futa_pending"].pop(k, None)
             counts["futa_pending"] += 1
+    for k in list((stores.get("aliases") or {}).keys()):                 # the recorded LID <-> phone pairs (salted hashes only): either end
+        if any(part in hs for part in str(k).split(":")):
+            stores["aliases"].pop(k, None)
+            counts["aliases"] += 1
     return counts
+
+
+def alias_pair_key(phone_hash, lid_hash):
+    return f"{phone_hash}:{lid_hash}"
+
+
+def alias_hashes(alias_keys, hashes):
+    """The other end of every recorded phone<->LID pair that touches `hashes`, so a deletion follows a linked-ID to the rows stored under it."""
+    hs = set(hashes)
+    extra = set()
+    for k in alias_keys:
+        parts = str(k).split(":")
+        if len(parts) == 2 and _SENDER_HASH_RE.match(parts[0]) and _SENDER_HASH_RE.match(parts[1]):
+            if parts[0] in hs:
+                extra.add(parts[1])
+            if parts[1] in hs:
+                extra.add(parts[0])
+    return extra - hs
