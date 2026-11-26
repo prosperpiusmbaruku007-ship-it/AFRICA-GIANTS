@@ -1421,22 +1421,22 @@ def answer_trace_record(path, model_calls, guards, fallback=False, error_class=N
         return {"cls": "unknown", "path": None, "routes": [], "model_calls": None, "guard_fired": None, "guards": None, "error_class": None}
 
 
-def count_holding_sent(items, include_test=False):
+def count_holding_sent(items, include_test=False, test_hashes=()):
     """HOLDING MESSAGES SENT (founder 2026-11-25): a SEPARATE EVENT from an answer path. The timeout sweep records `holding_notice_ts` / `holding_notice_ok` on the review item when it sends the one holding message;
     this counts them (test items excluded unless asked, and the exclusion is visible). Pure."""
     items = list(items)
-    live = items if include_test else [i for i in items if not _is_test_item(i)]
+    live = items if include_test else [i for i in items if not _is_test_item(i, test_hashes)]
     sent = [i for i in live if i.get("holding_notice_ts")]
     return {"holding_sent": len(sent), "holding_failed": sum(1 for i in sent if i.get("holding_notice_ok") is False),
             "excluded_test": 0 if include_test else len(items) - len(live)}
 
 
-def summarize_answer_paths(rows, include_test=False):
+def summarize_answer_paths(rows, include_test=False, test_hashes=()):
     """The split, from transcript rows (or review items) carrying `answer_trace`. Seeded / designated test senders are EXCLUDED and counted
     (an invisible exclusion is R39's shrinking count). Rows with no `answer_trace` (written before this existed) are counted as `untraced`, never as a class."""
     rows = list(rows)
-    test = [r for r in rows if _is_test_item(r)]          # the ONE definition of a test item (the structural guard forbids a second reader of test_sender)
-    live = rows if include_test else [r for r in rows if not _is_test_item(r)]
+    test = [r for r in rows if _is_test_item(r, test_hashes)]          # the ONE definition of a test item (the structural guard forbids a second reader of test_sender)
+    live = rows if include_test else [r for r in rows if not _is_test_item(r, test_hashes)]
     out = {"n": len(live), "excluded_test": 0 if include_test else len(test), "untraced": 0, "by_class": {}, "by_route": {},
            "model_free": 0, "model_called": 0, "model_calls_unknown": 0, "guard_fired": 0}
     for r in live:
@@ -2841,7 +2841,7 @@ def test_hashes_from(*collections):
     out = set()
     for coll in collections:
         for r in coll or ():
-            if isinstance(r, dict) and r.get("test_sender") and r.get("sender_hash"):
+            if isinstance(r, dict) and r.get("sender_hash") and _is_test_item(r):      # the ONE definition; this function never reads the flag itself
                 out.add(r["sender_hash"])
     return out
 

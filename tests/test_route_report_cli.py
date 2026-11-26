@@ -132,3 +132,50 @@ def test_the_archive_aggregate_excludes_an_unflagged_item_from_a_test_sender_has
                      test_hashes={unflagged["sender_hash"]})
     ag = core.read_aggregates(store)[0]
     assert ag["excluded_test"] == 1 and ag["routes"] == {}, "counted as test, not as a real edit"
+
+
+# ── the same flag-only classification in the answer-path summary and the holding count (2026-11-26) ──────────────
+def _trace_row(sh, test=False):
+    r = {"kind": "question", "sender_hash": sh, "answer_trace": {"cls": "engine", "routes": ["paye"], "model_calls": 0, "guard_fired": False}}
+    if test:
+        r["test_sender"] = True
+    return r
+
+
+def test_the_answer_path_summary_excludes_an_unflagged_row_from_a_test_senders_hash():
+    rows = [_trace_row("aaaaaaaaaaaa", test=True), _trace_row("aaaaaaaaaaaa"), _trace_row("cccccccccccc")]
+    th = core.test_hashes_from(rows)
+    s = core.summarize_answer_paths(rows, test_hashes=th)
+    assert s["excluded_test"] == 2 and s["n"] == 1
+
+
+def test_PLANT_the_summary_without_the_hashes_counts_the_testers_older_row_as_real():
+    rows = [_trace_row("aaaaaaaaaaaa", test=True), _trace_row("aaaaaaaaaaaa"), _trace_row("cccccccccccc")]
+    s = core.summarize_answer_paths(rows)                                            # the pre-fix call
+    assert s["excluded_test"] == 1 and s["n"] == 2, "the bug: an older tester row is reported as a real message"
+
+
+def test_the_holding_count_excludes_an_unflagged_item_from_a_test_senders_hash():
+    flagged = dict(_hot(1, "sent", test_sender=True), holding_notice_ts="t", holding_notice_ok=True)
+    older = dict(_hot(2, "sent"), holding_notice_ts="t", holding_notice_ok=False)         # same sender, no flag
+    real = dict(_hot(3, "sent", sh="cccccccccccc"), holding_notice_ts="t", holding_notice_ok=True)
+    th = core.test_hashes_from([flagged, older, real])
+    c = core.count_holding_sent([flagged, older, real], test_hashes=th)
+    assert c == {"holding_sent": 1, "holding_failed": 0, "excluded_test": 2}
+    assert core.count_holding_sent([flagged, older, real])["holding_failed"] == 1, "plant: pre-fix, the tester's failed holding message counted as a real failure"
+
+
+def test_the_cli_uses_the_hashes_for_all_three_outputs(files, capsys):
+    rows = [_trace_row("aaaaaaaaaaaa", test=True), _trace_row("aaaaaaaaaaaa"), _trace_row("cccccccccccc")]
+    items = [_hot(1, "sent", test_sender=True), _hot(2, "edited"), _hot(3, "sent", sh="cccccccccccc")]
+    (files / "rows.json").write_text(json.dumps(rows), encoding="utf-8")
+    (files / "items.json").write_text(json.dumps(items), encoding="utf-8")
+    _, out = _run(["--file", str(files / "rows.json"), "--reviews", str(files / "items.json")], capsys)
+    assert "answer paths: 1 messages (2 test excluded" in out and "2 test excluded" in out.split("review outcomes per route")[1], out
+
+
+def test_the_helper_adds_no_second_reader_of_the_test_sender_flag():
+    import ast
+    tree = ast.parse(open(os.path.join(_ROOT, "chike-whatsapp", "handler_core.py"), encoding="utf-8").read())
+    fn = next(n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name == "test_hashes_from")
+    assert not [n for n in ast.walk(fn) if isinstance(n, ast.Constant) and n.value in ("test_sender", "test_sender_hashes")], "reuse _is_test_item, the one definition"

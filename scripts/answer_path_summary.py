@@ -20,6 +20,10 @@ def _core():
     return m
 
 
+def _hashes(*collections):
+    return _core().test_hashes_from(*collections)
+
+
 def render(s):
     lines = [f"answer paths: {s['n']} messages ({s['excluded_test']} test excluded, {s['untraced']} untraced)"]
     for k, v in sorted(s["by_class"].items(), key=lambda kv: -kv[1]):
@@ -68,29 +72,34 @@ def _dir_aggregates(path):
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")      # in main(), never at import (R40)
     core = _core()
-    if "--file" in argv:
-        rows = json.load(open(argv[argv.index("--file") + 1], encoding="utf-8"))
-    else:
+    live = "--file" not in argv
+    reviews, aggs, note, all_rows = None, [], None, []
+    if live:
         import modal
         d = modal.Dict.from_name("chike-transcripts-kv")
-        rows = [v for _, v in d.items() if isinstance(v, dict) and v.get("kind") == "question"]
-    print(render(core.summarize_answer_paths(rows, include_test="--include-test" in argv)))
-    reviews, aggs, note = None, [], None
-    if "--file" not in argv:
+        all_rows = [v for _, v in d.items() if isinstance(v, dict)]
+        rows = [v for v in all_rows if v.get("kind") == "question"]
         q = modal.Dict.from_name("chike-review-queue-kv")
         reviews = [v for _, v in q.items() if isinstance(v, dict)]
-        h = core.count_holding_sent(reviews, include_test="--include-test" in argv)
-        print(f"holding messages sent (a separate event, not an answer path): {h['holding_sent']} ({h['holding_failed']} failed, {h['excluded_test']} test excluded)")
         aggs, note = _volume_aggregates()
-    elif "--reviews" in argv:
-        reviews = json.load(open(argv[argv.index("--reviews") + 1], encoding="utf-8"))
-        if "--archive-dir" in argv:
-            aggs = _dir_aggregates(argv[argv.index("--archive-dir") + 1])
+    else:
+        rows = json.load(open(argv[argv.index("--file") + 1], encoding="utf-8"))
+        if "--reviews" in argv:
+            reviews = json.load(open(argv[argv.index("--reviews") + 1], encoding="utf-8"))
+            if "--archive-dir" in argv:
+                aggs = _dir_aggregates(argv[argv.index("--archive-dir") + 1])
+    # a hash seen on ANY flagged record (a greeting row, a review item) marks all of that sender's older, UNFLAGGED records as test too:
+    # rows written before TEST_SENDERS existed carry no flag. Derived once, after everything is loaded, and used by all three outputs below.
+    th = core.test_hashes_from(rows, reviews, all_rows)
+    inc = "--include-test" in argv
+    print(render(core.summarize_answer_paths(rows, include_test=inc, test_hashes=th)))
+    if live:
+        h = core.count_holding_sent(reviews, include_test=inc, test_hashes=th)
+        print(f"holding messages sent (a separate event, not an answer path): {h['holding_sent']} ({h['holding_failed']} failed, {h['excluded_test']} test excluded)")
     if reviews is None:
         print("per-route review report skipped: give --reviews items.json (offline) or run without --file (live)")
         return 0
-    th = core.test_hashes_from(reviews, rows)          # a hash seen on ANY flagged record classifies all of that sender's older, unflagged ones
-    print(render_routes(core.route_report(reviews, aggs, include_test="--include-test" in argv, test_hashes=th)))
+    print(render_routes(core.route_report(reviews, aggs, include_test=inc, test_hashes=th)))
     if note:
         print("  NOTE: " + note)
     return 0
