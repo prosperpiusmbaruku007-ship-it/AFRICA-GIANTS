@@ -2629,3 +2629,374 @@ def canary_verdict(out, expect=CANARY_EXPECT):
     if missing:
         return "fail", f"the reply lacks the expected figure {missing}: {reply[:120]!r}"
     return "ok", ""
+
+
+# ── DURABLE ARCHIVE (2026-11-26; docs/decisions/2026-11-26_dict_retention_and_durable_archive.md) ──────────────────────────────
+# Modal Dict entries expire after 7 days of inactivity, and the review items (draft / final / edit_reason: the labelled corrections) and the
+# transcript corpus were alive only because other code happened to read them. This is the pure half of the fix: what gets written, where, how it
+# is verified, and how a sender is deleted. The Volume is written by ONE function only (the archiver, behind a lock): a Volume is not safe for
+# concurrent per-row writes (2026-08-14), and per-sender files make deletion a directory removal.
+ARCHIVE_ROOT = "archive"
+ARCHIVE_HOT_DAYS_DEFAULT = 3            # a decided review item stays in the hot Dict this long, then is archived and removed (item F)
+ARCHIVE_TRANSCRIPT_MIN_AGE_DAYS = 3     # transcript rows are archived once old enough that the receipt reconciler (2 days) has stopped updating them
+TOMBSTONE_KEEP_DAYS = 90
+ARCHIVE_DECIDED = ("sent", "edited", "withheld", "auto_sent")
+ARCHIVE_KINDS = ("review", "transcript")
+_SENDER_HASH_RE = re.compile(r"^[0-9a-f]{12}$")
+_JID_LEAK_RE = re.compile(r"\d{6,}@[A-Za-z.]+")      # a phone / linked-id address anywhere in a string value
+
+
+class ArchiveLeak(ValueError):
+    """A record still carries a phone address after scrubbing. It is NOT archived (fail-closed), and the caller must keep the Dict copy."""
+
+
+def parse_archive_hot_days(v):
+    try:
+        n = float(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return ARCHIVE_HOT_DAYS_DEFAULT
+    return n if n >= 1 else ARCHIVE_HOT_DAYS_DEFAULT
+
+
+def _strings(o):
+    if isinstance(o, str):
+        yield o
+    elif isinstance(o, dict):
+        for k, v in o.items():
+            yield from _strings(k)
+            yield from _strings(v)
+    elif isinstance(o, (list, tuple)):
+        for v in o:
+            yield from _strings(v)
+
+
+def assert_no_phone_address(rec):
+    for s in _strings(rec):
+        if _JID_LEAK_RE.search(s):
+            raise ArchiveLeak("a phone address survived scrubbing")
+
+
+def archive_record(kind, obj, signing_key):
+    """The text-free-of-identifiers copy to archive. The participant's number is dropped (the salted `sender_hash` stays); a reviewer's number becomes
+    the reviewer HANDLE. The question and answer text are CONTENT and stay (they are the corpus). Raises ArchiveLeak if any phone address remains."""
+    rec = json.loads(json.dumps(obj, default=str))
+    rec.pop("sender", None)
+    rec.pop("sender_lid", None)
+    for k in ("claimed_by", "released_from", "decided_by"):
+        who = rec.pop(k, None)
+        if who:
+            rec[k + "_handle"] = reviewer_handle(signing_key, who)
+    rec["_archive"] = {"schema": 1, "kind": kind}
+    assert_no_phone_address(rec)
+    return rec
+
+
+def safe_file_name(s):
+    return re.sub(r"[^A-Za-z0-9._-]", "_", str(s))[:150]
+
+
+def archive_relpath(kind, sender_hash, record_id):
+    if kind not in ARCHIVE_KINDS:
+        raise ValueError("unknown archive kind")
+    owner = sender_hash if _SENDER_HASH_RE.match(str(sender_hash or "")) else "_unattributed"
+    return f"{ARCHIVE_ROOT}/{kind}/{owner}/{safe_file_name(record_id)}.json"
+
+
+def serialize_archive(rec):
+    return json.dumps(rec, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _parse_ts(s):
+    try:
+        t = datetime.fromisoformat(str(s))
+        return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
+    except Exception:                                                # noqa: BLE001
+        return None
+
+
+def decided_at(item):
+    return _parse_ts(item.get("decided_ts") or item.get("auto_sent_ts") or item.get("ts_held"))
+
+
+def is_archivable_review(item, now, hot_days=ARCHIVE_HOT_DAYS_DEFAULT):
+    """Decided (never pending) and decided at least `hot_days` ago. An unparseable timestamp is NOT archivable: it stays hot, visible, never guessed."""
+    if not isinstance(item, dict) or item.get("status") not in ARCHIVE_DECIDED:
+        return False
+    t = decided_at(item)
+    return bool(t) and (now - t) >= timedelta(days=float(hot_days))
+
+
+class ArchiveStore:
+    """The Volume, as a directory. `commit` / `reload` are the Volume's own (no-ops in tests). Single writer by construction: only the archiver
+    function mounts it read-write."""
+
+    def __init__(self, root, commit=lambda: None, reload=lambda: None):
+        self.root, self._commit, self._reload = str(root), commit, reload
+
+    def _p(self, rel):
+        import os
+        root = os.path.normpath(self.root)
+        p = os.path.normpath(os.path.join(root, rel))
+        if not (p == root or p.startswith(root + os.sep)):
+            raise ValueError("path escapes the archive root")
+        return p
+
+    def exists(self, rel):
+        import os
+        return os.path.exists(self._p(rel))
+
+    def read(self, rel):
+        try:
+            with open(self._p(rel), "rb") as f:
+                return f.read()
+        except FileNotFoundError:
+            return None
+
+    def write(self, rel, data):
+        import os
+        p = self._p(rel)
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        tmp = p + ".tmp"
+        with open(tmp, "wb") as f:
+            f.write(data)
+        os.replace(tmp, p)
+
+    def delete_tree(self, rel):
+        import os
+        import shutil
+        p = self._p(rel)
+        if os.path.isdir(p):
+            shutil.rmtree(p)
+            return True
+        return False
+
+    def delete_file(self, rel):
+        import os
+        try:
+            os.remove(self._p(rel))
+            return True
+        except FileNotFoundError:
+            return False
+
+    def listdir(self, rel):
+        import os
+        try:
+            return sorted(os.listdir(self._p(rel)))
+        except FileNotFoundError:
+            return []
+
+    def commit(self):
+        self._commit()
+
+    def reload(self):
+        self._reload()
+
+
+def tombstone_rel(sender_hash):
+    return f"{ARCHIVE_ROOT}/tombstones/{sender_hash}.json"
+
+
+def is_tombstoned(store, sender_hash):
+    return bool(_SENDER_HASH_RE.match(str(sender_hash or ""))) and store.exists(tombstone_rel(sender_hash))
+
+
+def write_tombstone(store, sender_hash, now):
+    """Text-free: the salted sender hash and the date, so an archiver run that had already read a row cannot write it back after a deletion."""
+    store.write(tombstone_rel(sender_hash), serialize_archive({"sender_hash": sender_hash, "deleted_at": now.isoformat(timespec="seconds")}))
+
+
+def prune_tombstones(store, now, keep_days=TOMBSTONE_KEEP_DAYS):
+    n = 0
+    for name in store.listdir(f"{ARCHIVE_ROOT}/tombstones"):
+        raw = store.read(f"{ARCHIVE_ROOT}/tombstones/{name}")
+        try:
+            t = _parse_ts(json.loads(raw)["deleted_at"])
+        except Exception:                                            # noqa: BLE001
+            continue                                                 # unreadable: kept, not guessed at
+        if t and (now - t) > timedelta(days=keep_days):
+            store.delete_file(f"{ARCHIVE_ROOT}/tombstones/{name}")
+            n += 1
+    return n
+
+
+def review_outcome(item):
+    st = item.get("status")
+    return {"sent": "approved_unchanged", "edited": "edited", "withheld": "withheld", "auto_sent": "auto_sent", "pending": "pending"}.get(st, "other")
+
+
+def item_routes(item):
+    t = item.get("answer_trace")
+    routes = list((t or {}).get("routes") or ()) if isinstance(t, dict) else []
+    return routes or [item.get("answer_path") or "unknown"]
+
+
+def _blank_outcomes():
+    return {"approved_unchanged": 0, "edited": 0, "withheld": 0, "auto_sent": 0, "pending": 0, "other": 0}
+
+
+def route_report(items, aggregates=(), include_test=False):
+    """Per-route review outcomes (item D): for each route, how many drafts a reviewer approved unchanged, edited or withheld, plus auto-sent and
+    pending. `items` are the HOT review items; `aggregates` are the archived per-day aggregates (text-free), so history survives archiving.
+    TEST items are excluded and COUNTED (an exclusion that cannot be seen is R39's shrinking count). Counts only: no text, no sender."""
+    live = [i for i in items if include_test or not _is_test_item(i)]
+    out = {"routes": {}, "excluded_test": len(items) - len(live), "hot_items": len(live), "archived_days": 0}
+    for i in live:
+        for ro in item_routes(i):
+            out["routes"].setdefault(ro, _blank_outcomes())[review_outcome(i)] += 1
+    for ag in aggregates:
+        out["archived_days"] += 1
+        out["excluded_test"] += int(ag.get("excluded_test") or 0)
+        for ro, c in (ag.get("routes") or {}).items():
+            tgt = out["routes"].setdefault(ro, _blank_outcomes())
+            for k, v in c.items():
+                tgt[k] = tgt.get(k, 0) + int(v)
+    for ro, c in out["routes"].items():
+        decided = c["approved_unchanged"] + c["edited"] + c["withheld"]
+        c["reviewed"] = decided
+        c["unchanged_rate"] = None if not decided else round(c["approved_unchanged"] / decided, 3)   # None, never 0.0, on nothing reviewed (R39)
+    return out
+
+
+def aggregate_day_key(item):
+    t = decided_at(item)
+    return t.astimezone(timezone.utc).strftime("%Y-%m-%d") if t else "unknown"
+
+
+def id_digest(record_id):
+    return hashlib.sha256(("archive-agg|" + str(record_id)).encode("utf-8")).hexdigest()[:16]
+
+
+def _merge_aggregate(existing, items):
+    """Idempotent: a record already counted (by id DIGEST, never the id) is skipped, so a re-run after a crash cannot double-count, and a record
+    archived by a run that crashed before this step is still counted by the next one."""
+    ag = existing or {"day": None, "routes": {}, "per_reviewer": {}, "excluded_test": 0, "decided_latency_sum_s": 0, "decided_latency_n": 0, "counted": []}
+    seen = set(ag.setdefault("counted", []))
+    for i in items:
+        d = id_digest(i.get("review_id"))
+        if d in seen:
+            continue
+        seen.add(d)
+        ag["counted"].append(d)
+        if _is_test_item(i):
+            ag["excluded_test"] += 1
+            continue
+        for ro in item_routes(i):
+            c = ag["routes"].setdefault(ro, _blank_outcomes())
+            c[review_outcome(i)] += 1
+        h = i.get("decided_by_handle")
+        if h and i.get("status") in ("sent", "edited", "withheld"):
+            r = ag["per_reviewer"].setdefault(h, {"sent": 0, "edited": 0, "withheld": 0})
+            r[i["status"]] += 1
+        lat = i.get("decision_latency_s")
+        if isinstance(lat, int) and i.get("status") in ("sent", "edited", "withheld"):
+            ag["decided_latency_sum_s"] += lat
+            ag["decided_latency_n"] += 1
+    return ag
+
+
+def archive_run(*, review_items, transcripts, store, signing_key, now, hot_days=ARCHIVE_HOT_DAYS_DEFAULT, remove_review=lambda rid: None):
+    """ONE archive pass. `review_items` {review_id: item}, `transcripts` {key: row} (read-only here), `store` an ArchiveStore.
+    `remove_review(rid)` pops the item from the hot Dict and is called ONLY for an item whose archive file has been COMMITTED and READ BACK
+    byte-identical (item F: move before remove). Any failure leaves the Dict copy in place. Returns a text-free summary."""
+    summary = {"review_archived": 0, "review_removed": 0, "review_kept_failed": 0, "review_kept_leak": 0, "review_tombstoned_dropped": 0,
+               "review_already_present": 0, "review_changed_since_archive": 0, "transcripts_archived": 0, "transcripts_already_present": 0,
+               "transcripts_kept_leak": 0, "aggregates_days": 0, "tombstones_pruned": 0}
+    store.reload()
+    pending_remove = []          # (review_id, rel, expected_bytes, item_for_aggregate, was_new)
+    for rid, item in list(review_items.items()):
+        if not is_archivable_review(item, now, hot_days):
+            continue
+        sh = item.get("sender_hash")
+        if is_tombstoned(store, sh):
+            remove_review(rid)                       # a deleted sender's lingering item is dropped, not archived
+            summary["review_tombstoned_dropped"] += 1
+            continue
+        try:
+            rec = archive_record("review", item, signing_key)
+        except ArchiveLeak:
+            summary["review_kept_leak"] += 1
+            continue
+        rel = archive_relpath("review", sh, rid)
+        data = serialize_archive(rec)
+        existing = store.read(rel)
+        if existing is None:
+            store.write(rel, data)
+            summary["review_archived"] += 1
+            pending_remove.append((rid, rel, data, rec, True))
+        else:
+            summary["review_already_present"] += 1
+            if existing != data:
+                summary["review_changed_since_archive"] += 1      # visible, never silently overwritten (write-once)
+                continue
+            pending_remove.append((rid, rel, data, rec, False))
+    for key, row in list(transcripts.items()):
+        if not isinstance(row, dict):
+            continue
+        t = _parse_ts(row.get("ts"))
+        if not t or (now - t) < timedelta(days=ARCHIVE_TRANSCRIPT_MIN_AGE_DAYS) or is_tombstoned(store, row.get("sender_hash")):
+            continue
+        try:
+            rec = archive_record("transcript", row, signing_key)
+        except ArchiveLeak:
+            summary["transcripts_kept_leak"] += 1
+            continue
+        rel = archive_relpath("transcript", row.get("sender_hash"), key)
+        if store.exists(rel):
+            summary["transcripts_already_present"] += 1
+        else:
+            store.write(rel, serialize_archive(rec))
+            summary["transcripts_archived"] += 1
+    store.commit()
+    store.reload()
+    verified, by_day = [], {}
+    for rid, rel, data, rec, was_new in pending_remove:
+        if store.read(rel) != data:
+            summary["review_kept_failed"] += 1       # the file is not there, or not identical: the Dict copy STAYS
+            continue
+        verified.append(rid)
+        by_day.setdefault(aggregate_day_key(rec), []).append(rec)
+    try:
+        for day, recs in by_day.items():
+            rel = f"{ARCHIVE_ROOT}/aggregates/{day}.json"
+            raw = store.read(rel)
+            try:
+                cur = json.loads(raw) if raw else None
+            except Exception:                                        # noqa: BLE001
+                cur = None
+            ag = _merge_aggregate(cur, recs)
+            ag["day"] = day
+            store.write(rel, serialize_archive(ag))
+            summary["aggregates_days"] += 1
+        summary["tombstones_pruned"] = prune_tombstones(store, now)
+        store.commit()                                # files + aggregates are durable BEFORE any Dict copy is removed
+    except Exception:                                 # noqa: BLE001
+        summary["review_kept_failed"] += len(verified)
+        summary["aggregate_failed"] = True
+        return summary                                # nothing removed; the next run counts idempotently
+    for rid in verified:
+        remove_review(rid)
+        summary["review_removed"] += 1
+    return summary
+
+
+def read_aggregates(store):
+    out = []
+    for name in store.listdir(f"{ARCHIVE_ROOT}/aggregates"):
+        try:
+            out.append(json.loads(store.read(f"{ARCHIVE_ROOT}/aggregates/{name}")))
+        except Exception:                                            # noqa: BLE001
+            continue
+    return out
+
+
+def delete_sender_archive(store, sender_hash, now):
+    """Remove every archived record of one sender (both kinds) and leave a tombstone. Verified after a reload. Returns {removed_dirs, verified_gone}."""
+    if not _SENDER_HASH_RE.match(str(sender_hash or "")):
+        raise ValueError("not a sender hash")
+    store.reload()
+    removed = sum(1 for kind in ARCHIVE_KINDS if store.delete_tree(f"{ARCHIVE_ROOT}/{kind}/{sender_hash}"))
+    write_tombstone(store, sender_hash, now)
+    store.commit()
+    store.reload()
+    gone = all(not store.exists(f"{ARCHIVE_ROOT}/{kind}/{sender_hash}") for kind in ARCHIVE_KINDS)
+    return {"removed_dirs": removed, "verified_gone": gone}
