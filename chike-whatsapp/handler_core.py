@@ -1813,6 +1813,10 @@ AUTOSEND_ELIGIBLE_ENGINE_ROUTES = frozenset({
 # INCOME TAX rate -- a wrong-topic reply that was eligible to auto-send. It returns only on the founder's explicit word, after the wrong-topic audit clears it (PROGRESS 4ai). Listing it in the EXCLUDED set (as
 # fixed_statement is) would make a bare re-add of the entry fail a test; see tests/test_autosend_wrong_topic.py.
 AUTOSEND_EXCLUDED_ENGINE_ROUTES = frozenset({"engine:fixed_statement", "engine:corporate_tax"})
+# 2026-11-26 (founder): an AMOUNT-BEARING rent reply ("Ikiwa wewe ni wakala wa kuzuia: 10% × X = Y") is reviewed like a model answer; only the plain rent STATEMENT may auto-send.
+# FAIL-CLOSED: any multiplication sign in a rent working/draft counts as amount-bearing, so a reworded line cannot slip past the exact marker. The first marker is held verbatim
+# in chike/rules_engine/rent_wht.py (AMOUNT_BEARING_MARKER); tests/test_rent_wht_amount_line.py asserts they agree.
+AMOUNT_BEARING_RENT_MARKERS = ("Ikiwa wewe ni wakala wa kuzuia: 10% ×", "×")
 
 
 def engine_only_verdict(item):
@@ -1834,6 +1838,8 @@ def engine_only_verdict(item):
             return False, f"route {part!r} is not on the auto-send allowlist (unknown route: fails closed)"
     if not str(item.get("engine_working") or "").strip():
         return False, "no deterministic working"
+    if "engine:rent_wht" in path.split("+") and any(m in str(item.get("engine_working") or "") + str(item.get("draft") or "") for m in AMOUNT_BEARING_RENT_MARKERS):
+        return False, "amount-bearing rent reply: reviewed like a model answer (founder, 2026-11-26)"
     if evidence_is_loud(item):
         return False, "the evidence block is empty"
     guards = item.get("guards")

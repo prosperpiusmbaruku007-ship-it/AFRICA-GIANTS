@@ -1051,7 +1051,7 @@ def alert_test_remote(kind: str = "fail"):
 # min_containers=0 and a long scaledown: a CPU container is ~$0.10/mo used this way
 # against ~$5.68/mo always-warm, and the GPU's own cold start dwarfs the webhook's.
 # Buy warmth only if the transcripts show Wappfly retrying on slow delivery — the same
-# discipline as holding the GPU scaledown at 300.
+# discipline as holding the GPU scaledown at 600 (300 until 2026-11-26).
 @app.function(image=image, secrets=SECRETS,
               min_containers=0, scaledown_window=1200)
 @modal.fastapi_endpoint(method="POST")

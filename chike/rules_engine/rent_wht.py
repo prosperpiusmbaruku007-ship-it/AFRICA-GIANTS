@@ -43,12 +43,46 @@ rent by 10% would produce a figure indistinguishable from a fabrication whenever
 precondition is unmet — the Guard B shape.
 """
 
+import re
+from decimal import Decimal
+
 from .results import ComputationResult
 
 # The single statutory rate. Named so a future reader looking for a resident/non-resident
 # pair finds this instead and reads why there isn't one.
 RENT_WHT_RATE_BOTH_RESIDENCIES = 0.10
-_CITATION = "Sheria ya Kodi ya Mapato Cap.332, Jedwali la Kwanza aya 4(b)(ii)"
+# R44 (2026-11-26, founder-approved): served Swahili text names the Act, never a chapter or paragraph number of a consolidated Act (they renumber between
+# editions). The paragraph lives in `ComputationResult.note` (metadata, not rendered into the reply).
+_CITATION = "Sheria ya Kodi ya Mapato (ITA), Jedwali la Kwanza"
+
+# The conditional computed line (founder-approved 2026-11-26). The marker is ALSO held, verbatim, in chike-whatsapp/handler_core.py
+# (AMOUNT_BEARING_RENT_MARKERS) so an amount-bearing rent reply is never auto-sent; tests/test_rent_wht_amount_line.py asserts the two agree.
+AMOUNT_BEARING_MARKER = "Ikiwa wewe ni wakala wa kuzuia: 10% ×"
+
+_RENT_WORD = re.compile(r"pango|(?<![a-z])rent(?![a-z])|kodi\s+ya\s+(?:nyumba|jengo|ofisi|duka|fremu|chumba)|mwenye\s+nyumba|landlord", re.I)
+_NOT_RENT_FIGURE = re.compile(r"mauzo|mapato|turnover|faida|mtaji|mshahara|salary|mkopo|deni|bei", re.I)
+_RENT_AMOUNT_REACH = 60      # characters between the figure and the nearest rent word
+
+
+def rent_amount(text):
+    """The ONE rent figure in the question, or None. Declines (None) unless there is exactly one plausible amount AND a rent word within
+    60 characters of it AND no turnover/income/salary/price word immediately before it: a lone figure that is not the rent must never be multiplied
+    (Guard B). Pure."""
+    from .. import swahili_numbers as swn
+    located = [(pos, a) for pos, a in swn.parse_amounts_located(text) if a >= swn.MIN_PLAUSIBLE_AMOUNT]
+    if len(located) != 1:
+        return None
+    pos, amount = located[0]
+    if not any(abs(m.start() - pos) <= _RENT_AMOUNT_REACH for m in _RENT_WORD.finditer(text)):
+        return None
+    if _NOT_RENT_FIGURE.search(text[max(0, pos - 40):pos]):
+        return None
+    return amount
+
+
+def _fmt(d):
+    d = Decimal(d)
+    return f"{int(d):,}" if d == d.to_integral_value() else f"{d.quantize(Decimal('0.01')):,.2f}"
 
 _RATE_SENTENCE = (
     "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakaazi wa kikodi NA wasio wakaazi wa kikodi "
@@ -74,7 +108,7 @@ _RESIDENTIAL_NOTE = (
 
 
 def rent_wht_statement(letting_is_commercial=None,
-                       payer_is_withholding_agent=None) -> ComputationResult:
+                       payer_is_withholding_agent=None, rent_amount=None) -> ComputationResult:
     """State the rent WHT rate and its precondition. Never computes an amount.
 
     `payer_is_withholding_agent=None` is the NORMAL case, not a degraded one: nothing
@@ -83,7 +117,8 @@ def rent_wht_statement(letting_is_commercial=None,
     prose — it must never be inferred from the question text.
     """
     inputs = {"letting_is_commercial": letting_is_commercial,
-              "payer_is_withholding_agent": payer_is_withholding_agent}
+              "payer_is_withholding_agent": payer_is_withholding_agent,
+              "rent_amount": None if rent_amount is None else str(rent_amount)}
 
     parts = [_RATE_SENTENCE]
 
@@ -103,6 +138,11 @@ def rent_wht_statement(letting_is_commercial=None,
                      "kwenye pango unalolipa.")
     else:
         parts.append(_AGENT_SENTENCE)
+
+    if rent_amount is not None:
+        # CONDITIONAL, never an obligation: the payer's agent status is never inferred, so the sum is stated under the "if". `amount` stays None (R19).
+        withheld = Decimal(rent_amount) * Decimal(str(RENT_WHT_RATE_BOTH_RESIDENCIES))
+        parts.append(f"{AMOUNT_BEARING_MARKER} TZS {_fmt(rent_amount)} = TZS {_fmt(withheld)}.")
 
     return ComputationResult(
         computation="rent_wht",

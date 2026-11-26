@@ -247,7 +247,7 @@ def classify_question(message: str) -> bool:
     image=image,
     gpu=_GPU,
     volumes={'/persistent-storage': volume},
-    scaledown_window=300,
+    scaledown_window=600,   # 300 -> 600 (founder, 2026-11-26, docs/decisions/2026-11-26_proposal_scaledown_window_5_to_10_min.md). NO min_containers: always-warm stays ruled out.
     timeout=600,
     secrets=[modal.Secret.from_name('huggingface-secret')],
 )

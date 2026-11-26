@@ -30,6 +30,7 @@ from typing import Callable, Optional, Sequence
 
 from . import rules_engine
 from . import swahili_numbers as swn
+from .rules_engine import rent_wht as _rent_wht_mod
 from .rules_engine import premise, rates
 from .rules_engine.results import ComputationResult
 from .model_abstraction import ModelBackend
@@ -883,7 +884,8 @@ class Orchestrator:
         return self._deterministic_answer(
             sq,
             rules_engine.rent_wht_statement(
-                letting_is_commercial=routing.rent_letting_is_commercial(sq.text)))
+                letting_is_commercial=routing.rent_letting_is_commercial(sq.text),
+                rent_amount=_rent_wht_mod.rent_amount(sq.text)))      # one rent figure -> the conditional "Ikiwa wewe ni wakala wa kuzuia: 10% × X = Y" line; else the statement alone
 
     def _answer_applicability(self, sq: SubQuestion) -> SubAnswer:
         """Deterministic yes/no for an applicability-only levy question. SDL needs the

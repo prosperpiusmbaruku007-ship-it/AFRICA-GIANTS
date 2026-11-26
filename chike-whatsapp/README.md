@@ -81,7 +81,7 @@ Then confirm `/health.build` matches the commit, force a failure, and check a ne
 
 `min_containers=0` with a 20-minute CPU scaledown ≈ **$0.10/mo**; always-warm would be
 **$5.68/mo**. Buy warmth only if transcripts show Wappfly retrying on slow webhook delivery —
-the same discipline as holding the GPU scaledown at 300. Volume storage is free at this scale
+the same discipline as holding the GPU scaledown at 600 (300 until 2026-11-26). Volume storage is free at this scale
 (1 TiB/mo included).
 
 ## Tests

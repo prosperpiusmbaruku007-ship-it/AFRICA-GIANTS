@@ -1042,7 +1042,7 @@ Hence three gates, in increasing cost:
 **After EVERY Modal redeploy, before claiming a change is live:**
 1. Force fresh containers — **having already pre-flighted** — `python -m modal app stop
    chike-inference --yes` then `python -m modal deploy chike-inference/modal_app.py` — **or**
-   wait past the 300s `scaledown_window` with no traffic (test requests reset the idle timer,
+   wait past the `scaledown_window` (600s since 2026-11-26, was 300s) with no traffic (test requests reset the idle timer,
    so "wait" means actually wait).
 
    **⚠️ SKIPPING `app stop` LEAVES THE WEB TIER WARM, and `/health`'s `build_matches` now

@@ -60,7 +60,11 @@ from chike.routing import detect_intent, rent_letting_is_commercial     # noqa: 
 # The exact figure the quarantined corpus rows asserted. Never legitimate in a rent-WHT reply.
 FORBIDDEN = "asilimia 15"
 REQUIRED_RATE = "asilimia 10"
-REQUIRED_CITATION = "4(b)(ii)"
+# 2026-11-26 (R44, founder-approved): this used to be REQUIRED_CITATION = "4(b)(ii)" -- the reply had to CARRY the First Schedule paragraph number. R44 says
+# served Swahili text names a consolidated Act without a section/paragraph number (they renumber between editions), so the premise is inverted: the reply must
+# name the Act and must NOT carry the paragraph. The paragraph moved to ComputationResult.note (metadata).
+REQUIRED_CITATION = "Sheria ya Kodi ya Mapato"
+FORBIDDEN_PARAGRAPH = "4(b)(ii)"
 
 
 def pipeline(question: str):
@@ -91,6 +95,7 @@ def check(row):
         ok = (routed
               and REQUIRED_RATE in reply
               and REQUIRED_CITATION in reply
+              and FORBIDDEN_PARAGRAPH not in reply
               and FORBIDDEN not in reply)
     elif expect == "not_rent_wht":
         # Deliberately NOT asserting which route it takes: pinning another engine's verdict

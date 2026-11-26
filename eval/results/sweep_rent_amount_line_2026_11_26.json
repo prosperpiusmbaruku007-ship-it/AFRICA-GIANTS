@@ -1,0 +1,118 @@
+{
+ "population": 6287,
+ "routed": [
+  {
+   "file": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_007_20260609",
+   "question": "WHT kwa kodi ya pango (rent) kwa wakazi na wasio wakazi ni asilimia ngapi?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "datasets/tier1a/cleaned_pairs/batch_004_cleaned.jsonl",
+   "id": "tier1a_wht_deep_022_20260609",
+   "question": "Malipo ya pango kwa mwenye nyumba asiye wakazi Tanzania yatatozwa WHT ya asilimia ngapi?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "datasets/tier1a/rejected/quarantine_survivors_reswept_2026_10_06.jsonl",
+   "id": "",
+   "question": "Kodi ya zuio kwenye pango la ardhi/mali isiyohamishika kwa mkazi Tanzania ni asilimia 15 — je, ni sahihi?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "datasets/tier1a/sft/train_sft.jsonl",
+   "id": "",
+   "question": "Ni nini maana ya kodi ya zuio hasa inapolipa kwenye pango la kibiashara?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "id": "ext_43",
+   "question": "Nina nyumba kijijini nimemkodisha mfanyabiashara mdogo. Yeye anatakiwa kunikata kodi kabla ya kunilipa kodi ya pango?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/accuracy_gate/edge_probe_extended_078_DRAFT.jsonl",
+   "id": "ext_44",
+   "question": "Nikimlipa mwenye nyumba kodi ya pango ofisini, ni lazima nikate kodi kabla ya kumpa fedha?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/accuracy_gate/eval_questions_002_additions.jsonl",
+   "id": "eval_218",
+   "question": "Kiwango cha withholding tax kwa kodi ya pango la biashara kwa mtu asiye mkazi ni asilimia ngapi?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/refusal_gate/preliminary/gate2_prelim_2026_11_22.jsonl",
+   "id": "gp_26",
+   "question": "Habari, kampuni yangu inalipa kodi ya pango kwa jengo tunalotumia kama ofisi. Withholding tax ya hiyo rent inapaswa kukatwa kwa kiwango gani?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/engine_reachability_probes.jsonl",
+   "id": "er_rent_01",
+   "question": "Ninalipa pango la ofisi kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/engine_reachability_probes.jsonl",
+   "id": "er_rent_02",
+   "question": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "id": "rwp_01",
+   "question": "Ninalipa pango la ofisi TZS 800,000 kwa mwezi, nimkate mwenye nyumba kiasi gani?",
+   "amount": "800000",
+   "line": "Ikiwa wewe ni wakala wa kuzuia: 10% × TZS 800,000 = TZS 80,000."
+  },
+  {
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "id": "rwp_02",
+   "question": "Nakodisha duka la biashara, nimkate mwenye duka asilimia ngapi kwenye pango?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "id": "rwp_03",
+   "question": "Tunalipa pango la godown kila mwezi, tumkate mwenye nyumba kiasi gani?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "id": "rwp_04",
+   "question": "Mwenye nyumba wangu anataka kodi ya pango, je nizuie kitu chochote kabla ya kumlipa?",
+   "amount": null,
+   "line": null
+  },
+  {
+   "file": "eval/routing/rent_wht_pipeline_probes.jsonl",
+   "id": "rwp_05",
+   "question": "Nalipa pango la kiwanda kwa wenye jengo; niwakate asilimia ngapi?",
+   "amount": null,
+   "line": null
+  }
+ ],
+ "declined_single_figure": [
+  {
+   "file": "datasets/tier1a/sft/train_sft.jsonl",
+   "id": "",
+   "question": "Nina kampuni binafsi na nina mpango wa kuongeza wanahisa. Je, ninaweza kuweka thamani ya hisa hadi milioni tano?"
+  }
+ ],
+ "r44_violations": []
+}
