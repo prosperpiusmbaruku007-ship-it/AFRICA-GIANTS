@@ -1,4 +1,6 @@
 # PROPOSAL (not built) — route recall R1 and R2: two no-figure "kiasi gani" questions that should reach a statement and don't
+
+> **STATUS 2026-11-26: APPROVED by the founder WITH the first-person keep-veto and a one-line addition to the salary clarification. BUILT LOCALLY, NOT PUSHED, NOT DEPLOYED** (ships in the next `chike-inference` window). The keep-veto is scoped to first person AND an amount ask: the first draft vetoed first person alone and the build sweep caught it removing `rs_04` (a first-person regime question); narrowed, 0 diversions over 6,287 questions, 18 probes both ways, 11 committed tests with two plants. `eval/results/sweep_R1_R2_build_2026_11_26.json`.
 2026-11-26. Definitions are the founder's (clarified 2026-11-26 after the crash). **Propose only; nothing in `chike/` is changed.** Harness: `eval/routing/sweep_R1_R2_kiasi_gani_2026_11_26.py` → `eval/results/sweep_R1_R2_kiasi_gani_2026_11_26.json` (committed with this note, R18).
 
 ## The two live rows (2026-11-25 answer-path check, `eval/results/answer_path_live_table_2026_11_26.md`)

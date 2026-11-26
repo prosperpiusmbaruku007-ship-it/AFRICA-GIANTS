@@ -1,0 +1,278 @@
+{
+ "before": "6f27ff1",
+ "probes": [
+  {
+   "text": "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "expected": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "ok": true,
+   "why": "R1"
+  },
+  {
+   "text": "Mgeni anayefanya kazi Tanzania analipa PAYE kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "expected": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "ok": true,
+   "why": "R1 variant"
+  },
+  {
+   "text": "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ],
+   "expected": [
+    "fixed_statement",
+    "director_fees_wht"
+   ],
+   "ok": true,
+   "why": "R2"
+  },
+  {
+   "text": "Ada ya wakurugenzi hukatwa kodi kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "fixed_statement",
+    "director_fees_wht"
+   ],
+   "expected": [
+    "fixed_statement",
+    "director_fees_wht"
+   ],
+   "ok": true,
+   "why": "R2 plural"
+  },
+  {
+   "text": "Mfanyakazi mgeni analipwa TZS 2,000,000, PAYE kiasi gani?",
+   "before": [
+    "paye",
+    null
+   ],
+   "after": [
+    "paye",
+    null
+   ],
+   "expected": [
+    "paye",
+    null
+   ],
+   "ok": true,
+   "why": "R1 with an amount: engine path unchanged"
+  },
+  {
+   "text": "Mfanyakazi mgeni analipwa milioni mbili, PAYE kiasi gani?",
+   "before": [
+    "paye",
+    null
+   ],
+   "after": [
+    "paye",
+    null
+   ],
+   "expected": null,
+   "ok": true,
+   "why": "amount in words: report only"
+  },
+  {
+   "text": "Ada ya mkurugenzi ni TZS 5,000,000, WHT ni kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "R2 with an amount: model path for now"
+  },
+  {
+   "text": "Mshahara wa mgeni ni mkubwa, nikatwe PAYE kiasi gani mimi?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "FIRST PERSON stays off the statement route"
+  },
+  {
+   "text": "Mgeni analipa PAYE kiasi gani mimi?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "first person, bare"
+  },
+  {
+   "text": "Nikikaa nchini siku 183, PAYE yangu ni ya mkazi au asiye mkazi?",
+   "before": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "after": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "expected": [
+    "fixed_statement",
+    "paye_residency"
+   ],
+   "ok": true,
+   "why": "first person REGIME question (rs_04) keeps its statement -- the over-broad first draft of the keep-veto removed it"
+  },
+  {
+   "text": "PAYE yangu kama mgeni ni kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "first person 'yangu'"
+  },
+  {
+   "text": "Mgeni wa Kenya analipa PAYE kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "another country"
+  },
+  {
+   "text": "Mgeni analipa NSSF kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "no PAYE word"
+  },
+  {
+   "text": "Ada ya mkurugenzi nilipwe kiasi gani?",
+   "before": [
+    "none",
+    null
+   ],
+   "after": [
+    "none",
+    null
+   ],
+   "expected": [
+    "none",
+    null
+   ],
+   "ok": true,
+   "why": "no tax need-word"
+  }
+ ],
+ "failures": [],
+ "diversions": [],
+ "line_probes": [
+  {
+   "text": "Mshahara wa mgeni ni mkubwa, nikatwe PAYE kiasi gani mimi?",
+   "expected": true,
+   "got": true,
+   "ok": true
+  },
+  {
+   "text": "PAYE yangu kama mgeni ni kiasi gani?",
+   "expected": true,
+   "got": true,
+   "ok": true
+  },
+  {
+   "text": "Nikatwe PAYE kiasi gani mimi?",
+   "expected": false,
+   "got": false,
+   "ok": true
+  },
+  {
+   "text": "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "expected": false,
+   "got": false,
+   "ok": true
+  },
+  {
+   "text": "Mgeni PAYE kiasi gani mimi, mshahara 2,000,000?",
+   "expected": false,
+   "got": false,
+   "ok": true
+  }
+ ],
+ "population": {
+  "questions": 6287,
+  "files": 139
+ }
+}

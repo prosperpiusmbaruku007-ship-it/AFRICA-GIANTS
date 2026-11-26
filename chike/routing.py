@@ -2557,6 +2557,19 @@ def _strip_unclear_spans(ql: str) -> str:
     return ql
 
 
+_FP_PAYE_WORD = re.compile(r"(?<![a-z])paye(?![a-z])")
+_FP_FOREIGN = re.compile(r"mgeni|wageni|kigeni|foreign|expat|non-?resident")
+_FP_FIRST_PERSON = re.compile(r"(?<![a-z])(?:mimi|yangu|wangu|zangu|nikatwe|ninakatwa|nakatwa|nilipe|ninalipa|nilipwa|nalipa)(?![a-z])")
+
+
+def first_person_foreign_paye_no_figure(text: str) -> bool:
+    """2026-11-26 (founder): a FIRST-PERSON, no-figure PAYE question that also names mgeni / foreign status. It gets the salary clarification
+    (it asks for its OWN amount) plus ONE line saying the rate follows ukaazi wa kikodi, not citizenship. Pure; the caller has already established
+    that the payroll clarification applies (is_uncomputable_payroll_amount), so this only decides whether the extra line is added. No digits allowed."""
+    ql = text.lower()
+    return bool(_FP_PAYE_WORD.search(ql) and _FP_FOREIGN.search(ql) and _FP_FIRST_PERSON.search(ql) and not re.search(r"[0-9]", ql))
+
+
 def paye_residency_unclear(text: str) -> bool:
     """True when the question raises residency WITHOUT settling it.
 
@@ -2979,8 +2992,11 @@ _FS_TOPICS = (
      re.compile(r"(?<![a-z])paye(?![a-z])"),
      re.compile(r"foreign|kigeni|mgeni|wageni|expat|raia|citizen|(?<![a-z])resident|mkazi|mkaazi|wakazi|ukazi|ukaazi|residen|makazi\s+ya\s+kudumu|permanent\s+home|siku\s+183|183\s+days|non-?resident"),
      re.compile(r"[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,}|(?<![a-z])tzs(?![a-z])|shilingi|milioni|elfu|(?<![a-z])laki(?![a-z])|million|thousand|(?<![a-z])(?:nssf|sdl|wcf|vat|efd|osha|brela|nhif|zuio)(?![a-z])|director'?s?\s+fees?|ada\s+(?:ya|za)\s+(?:mkurugenzi|wakurugenzi)|dividend|gawio|royalt|software|(?<![a-z])rent(?![a-z])|pango|riba|interest|(?<![a-z])wht(?![a-z])|withholding|"
+               # 2026-11-26 (founder): a FIRST-PERSON no-figure ask ("nikatwe PAYE kiasi gani mimi?") wants its OWN amount -- the salary clarification serves it, not the regime statement. `kiasi gani` was released from this veto for R1; this keeps the first person out.
+               # NARROWED the same day by the build sweep: first person ALONE removed "Nikikaa nchini siku 183, PAYE yangu ni ya mkazi au asiye mkazi?" (rs_04), a REGIME question. Only first person AND an amount ask is vetoed.
+               r"(?=.*(?<![a-z])(?:mimi|yangu|wangu|zangu|nikatwe|ninakatwa|nakatwa|nilipe|ninalipa|nilipwa|nalipa)(?![a-z]))(?=.*kiasi\s+gani)|"
                r"adhabu|faini|penalty|tarehe|(?<![a-z])lini(?![a-z])|deadline|muda|kuwasilisha|kulipa|fomu|(?<![a-z])forms?(?![a-z])|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni|p9|cheti|certificate|return|ritani|"
-               r"msingi|(?<![a-z])base(?![a-z])|posho|allowances?|bonasi|bonus|kamisheni|commission|faida\s+zisizo|benefits?\s+in\s+kind|kokotoa|(?<![a-z])hesabu|inakokotolewa|inahesabiwa|kiasi\s+gani|kampuni|corporate|severance|kuachishwa|"
+               r"msingi|(?<![a-z])base(?![a-z])|posho|allowances?|bonasi|bonus|kamisheni|commission|faida\s+zisizo|benefits?\s+in\s+kind|kokotoa|(?<![a-z])hesabu|inakokotolewa|inahesabiwa|kampuni|corporate|severance|kuachishwa|"
                r"kenya|uganda|rwanda|burundi|zanzibar|visiwani|marekani|uingereza|india|china|afrika\s+kusini|nigeria|(?<![a-z])add(?![a-z])|ongeza|last\s+week|wiki\s+iliyopita|new\s+answer|jibu\s+jipya|"
                r"kibali|permit|visa|uhamiaji|immigration|passport|pasipoti|januari|februari|machi|aprili|mei(?![a-z])|juni|julai|agosti|septemba|oktoba|novemba|desemba|january|february|march|april|june|july|august|september|october|november|december|"
                # from reading the first sweep (55 diversions, 2026-11-25; 24 were wrong-topic): where to get HELP, an English "when" / "due", LEAVING / resigning, NGOs and exemptions, another country's tax and TREATIES (the founder accepted the DTA omission), AVOIDING / hiding / self-employed claims, share OPTIONS, income paid OUTSIDE Tanzania,
@@ -2996,7 +3012,7 @@ _FS_TOPICS = (
      re.compile(r"zuio|withholding|withheld|(?<![a-z])wht(?![a-z])|(?<![a-z])paye(?![a-z])|asilimia|kiwango|(?<![a-z])rates?(?![a-z])|percent|%|kodi|(?<![a-z])tax(?![a-z])|inakatwa|hukatwa|kukatwa|final|mwisho|credit|mkopo|ritani|return|ukaazi|ukazi|resident|mkazi|mkaazi|wakazi|wakaazi|mgeni|foreign"),
      re.compile(r"[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,}|(?<![a-z])tzs(?![a-z])|shilingi|milioni|elfu|(?<![a-z])laki(?![a-z])|million|thousand|(?<![a-z])(?:nssf|sdl|wcf|vat|efd|osha|brela|nhif)(?![a-z])|"
                r"adhabu|faini|penalty|riba|interest|dividend|gawio|royalt|software|(?<![a-z])rent(?![a-z])|pango|tarehe|(?<![a-z])lini(?![a-z])|deadline|muda\s+gani|kuwasilisha|fomu|(?<![a-z])forms?(?![a-z])|wapi|jinsi|namna|nawezaje|hatua|mchakato|nyaraka|documents|online|mtandaoni|"
-               r"kokotoa|(?<![a-z])hesabu|kiasi\s+gani|kenya|uganda|rwanda|burundi|zanzibar|visiwani|marekani|uingereza|india|china|afrika\s+kusini|nigeria|"
+               r"kokotoa|(?<![a-z])hesabu|kenya|uganda|rwanda|burundi|zanzibar|visiwani|marekani|uingereza|india|china|afrika\s+kusini|nigeria|"
                r"(?<![a-z])when(?![a-z])|(?<![a-z])where(?![a-z])|januari|februari|machi|aprili|mei(?![a-z])|juni|julai|agosti|septemba|oktoba|novemba|desemba|january|february|march|april|june|july|august|september|october|november|december|"
                r"kuteuliwa|kuondolewa|kufukuzwa|kujiuzulu|appoint|resign|dismiss|shares?(?![a-z])|hisa|bonasi|bonus|posho|allowances?|mshahara\s+wa\s+msingi")),
 )

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""R1 / R2 ROUTE RECALL -- PROPOSAL SWEEP (2026-11-26). READ-ONLY: nothing in chike/ is changed; the candidate is applied in memory only.
+"""R1 / R2 ROUTE RECALL -- PROPOSAL SWEEP (2026-11-26). HISTORICAL: its premise (the vetoes still carry `kiasi gani`) holds only on commits up to 6f27ff1; after the build use eval/routing/sweep_R1_R2_build_2026_11_26.py. READ-ONLY: nothing in chike/ is changed; the candidate is applied in memory only.
 
 The candidate: drop the `kiasi\s+gani` alternative from the VETO lists of the two fixed topics `paye_residency` (R1: "Mfanyakazi mgeni analipa PAYE kiasi gani?") and
 `director_fees_wht` (R2: "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?"). Both vetoes already carry money figures / TZS / "kokotoa" / "hesabu", so a question WITH an amount

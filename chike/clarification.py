@@ -22,6 +22,17 @@ PAYROLL_AMOUNT = (
     "shilingi ngapi, kisha nitakuletea hesabu kamili."
 )
 
+# 2026-11-26 (founder): appended to PAYROLL_AMOUNT ONLY for a first-person, no-figure PAYE question that names mgeni / foreign status
+# (routing.first_person_foreign_paye_no_figure). PAYROLL_AMOUNT itself is unchanged (dual-file parity with the production constant).
+PAYROLL_AMOUNT_RESIDENCY_LINE = " Kumbuka: kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi, si uraia wala kuwa mgeni."
+
+
+def payroll_amount_for(question: str = "") -> str:
+    """PAYROLL_AMOUNT, plus the one residency line when the question is a first-person no-figure PAYE ask naming mgeni / foreign status."""
+    from . import routing
+    return PAYROLL_AMOUNT + (PAYROLL_AMOUNT_RESIDENCY_LINE if question and routing.first_person_foreign_paye_no_figure(question) else "")
+
+
 # Compute-intent but the specific levy is unresolved ('ambiguous_multi').
 AMBIGUOUS_LEVY = (
     "Naweza kukusaidia kuhesabu makato ya mshahara, lakini niambie unahitaji hesabu ya "

@@ -949,7 +949,7 @@ class Orchestrator:
         # with no salary/payroll figure given can't be computed — clarify instead of
         # letting the fact/RAG model invent a number (rc_22). No model call, no retrieval.
         if routing.is_uncomputable_payroll_amount(sq.text):
-            return SubAnswer(sub_question=sq, text=clarification.PAYROLL_AMOUNT,
+            return SubAnswer(sub_question=sq, text=clarification.payroll_amount_for(sq.text),
                              needs_clarification=True)
         facts = tuple(self.retriever(sq.text))
         prompt = self._build_fact_prompt(sq.text, facts)
@@ -981,7 +981,7 @@ class Orchestrator:
         # Same never-guess fabrication guard as _answer_fact, applied to the collapsed
         # whole-question generation (rc_22 arrives here via the all-fact path).
         if routing.is_uncomputable_payroll_amount(generation_question):
-            return SubAnswer(sub_question=sq, text=clarification.PAYROLL_AMOUNT,
+            return SubAnswer(sub_question=sq, text=clarification.payroll_amount_for(generation_question),
                              needs_clarification=True)
         facts = self._pool_facts(retrieval_queries)
         prompt = self._build_fact_prompt(generation_question, facts)
