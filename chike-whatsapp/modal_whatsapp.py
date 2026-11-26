@@ -236,6 +236,8 @@ ARCHIVE_VOL = modal.Volume.from_name("chike-archive", create_if_missing=True)
 ARCHIVE_STATE = modal.Dict.from_name("chike-archive-state-kv", create_if_missing=True)
 # The bridge's WhatsApp login. READ here only (a daily touch): Dict entries expire after 7 days of inactivity and a long bridge outage must not cost the login.
 BRIDGE_AUTH = modal.Dict.from_name("chike-bridge-auth-kv", create_if_missing=True)
+# Pending FUTA (deletion-on-request) confirmations: one key per sender hash, valid for 10 minutes. Holds a timestamp only.
+FUTA_PENDING = modal.Dict.from_name("chike-futa-pending-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -1205,6 +1207,10 @@ def webhook(item: dict, token: str = None):
                   f"key keys = {sorted(_m.get('key') or {})[:15]}")
         if parsed["kind"] == "greeting":
             greet_and_send.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
+        elif parsed["kind"] == "futa":
+            futa_request.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
+        elif core.futa_confirm_word(parsed["text"]) and _futa_is_pending(parsed["sender"]):
+            futa_confirm.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
         else:
             answer_and_send.spawn(parsed["sender"], parsed["text"],
                                   sender_lid=parsed.get("sender_lid"))
@@ -2160,7 +2166,9 @@ def run_archive():
         print("[archive] another archiver (or a deletion) holds the lock -- skipped", flush=True)
         return {"skipped": "locked"}
     try:
+        retries = _process_futa_retries(_archive_store())
         summary = _archive_pass()
+        summary["futa_retries_done"] = retries
         ARCHIVE_STATE["last"] = {"ts": _t.time(), "ok": True, "summary": summary}
         ok, err = _ping_healthcheck("ok", f"archive ok: {summary}"[:900], url_env="HEALTHCHECK_ARCHIVE_URL")
         print(f"[archive] done {summary}; dead-man ping {'ok' if ok else err}", flush=True)
@@ -2172,6 +2180,123 @@ def run_archive():
         raise
     finally:
         _archive_lock_release(token)
+
+
+def _futa_stores():
+    """Every hot store that can hold a participant's records, by the names handler_core.futa_purge expects."""
+    return {"transcripts": TRANSCRIPTS, "review": REVIEW_QUEUE, "pending_rows": PENDING_ROWS, "disclosures": DISCLOSURES, "daily": DAILY_LIMIT,
+            "inflight": INFLIGHT, "autosend": AUTOSEND, "bridge_ledger": BRIDGE_LEDGER, "futa_pending": FUTA_PENDING}
+
+
+def _futa_hashes(sender, sender_lid, settings):
+    core = _core()
+    hs = [core.sender_ids(sender, settings.sender_salt)[0]]
+    if sender_lid:
+        h = core.sender_ids(sender_lid, settings.sender_salt)[0]
+        if h not in hs:
+            hs.append(h)
+    return hs
+
+
+def _futa_is_pending(sender):
+    import time as _t
+    try:
+        core = _core()
+        return core.futa_pending_live(FUTA_PENDING.get(_sender_key(sender, _settings())), _t.time())
+    except Exception:                                                # noqa: BLE001
+        return False                                                 # unreadable: the word is treated as an ordinary message, nothing is deleted
+
+
+async def _futa_volume_delete(hashes):
+    """The archive half of a deletion. The Volume has ONE writer, so this never writes it from here: it asks the archiver function to."""
+    return await archive_delete_senders.remote.aio(list(hashes))
+
+
+@app.function(image=image, secrets=SECRETS, timeout=600, volumes={"/archive": ARCHIVE_VOL})
+def archive_delete_senders(sender_hashes):
+    """Delete these senders' files from the archive Volume and leave tombstones. Takes the SAME lock as the daily archiver (waits up to 2 minutes), so the
+    Volume still has exactly one writer. Returns {ok, removed_dirs}."""
+    import time as _t
+    import uuid
+    from datetime import datetime, timezone
+    core = _core()
+    token = uuid.uuid4().hex
+    deadline = _t.time() + 120
+    while not _archive_lock_acquire(token):
+        if _t.time() > deadline:
+            return {"ok": False, "error": "archiver busy"}
+        _t.sleep(3)
+    try:
+        store = _archive_store()
+        now = datetime.now(timezone.utc)
+        res = [core.delete_sender_archive(store, h, now) for h in sender_hashes]
+        return {"ok": all(r["verified_gone"] for r in res), "removed_dirs": sum(r["removed_dirs"] for r in res)}
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[futa] archive deletion failed ({type(e).__name__})", flush=True)
+        return {"ok": False, "error": type(e).__name__}
+    finally:
+        _archive_lock_release(token)
+
+
+def _process_futa_retries(store):
+    """A deletion whose archive half failed is queued as `futa_retry:<hash>`; the daily archiver finishes it (it already holds the lock)."""
+    from datetime import datetime, timezone
+    core = _core()
+    done = 0
+    for k in list(ARCHIVE_STATE.keys()):
+        if not str(k).startswith("futa_retry:"):
+            continue
+        try:
+            r = core.delete_sender_archive(store, str(k).split(":", 1)[1], datetime.now(timezone.utc))
+        except ValueError:
+            ARCHIVE_STATE.pop(k, None)
+            continue
+        if r["verified_gone"]:
+            ARCHIVE_STATE.pop(k, None)
+            done += 1
+    return done
+
+
+@app.function(image=image, secrets=SECRETS, timeout=120)
+async def futa_request(sender: str, sender_lid: str = None):
+    """Step 1 of deletion on request: ask for confirmation. NOTHING is deleted here, and no transcript row is written."""
+    import time as _t
+    core = _core()
+    settings = _settings()
+    FUTA_PENDING[_sender_key(sender, settings)] = {"ts": _t.time()}
+    await core.send_with_retry(_send_once, sender, core.FUTA_PROMPT_TEXT, settings)
+    return {"status": "asked"}
+
+
+@app.function(image=image, secrets=SECRETS, timeout=600)
+async def futa_confirm(sender: str, sender_lid: str = None):
+    """Step 2: delete the sender's records from the hot Dicts, then (through the single archiver writer) from the archive Volume, then VERIFY. The log
+    records numbers and a verdict only: no text, no hash, no number. No transcript row is written for any of it."""
+    import time as _t
+    import uuid
+    core = _core()
+    settings = _settings()
+    hashes = _futa_hashes(sender, sender_lid, settings)
+    if not core.futa_pending_live(FUTA_PENDING.get(hashes[0]), _t.time()):
+        return {"status": "expired"}
+    digits = core._local_digits(sender)
+    stores = _futa_stores()
+    counts = core.futa_purge(stores, hashes, digits)
+    try:
+        vol = await _futa_volume_delete(hashes)
+    except Exception as e:                                           # noqa: BLE001
+        vol = {"ok": False, "error": type(e).__name__}
+    if not vol.get("ok"):
+        ARCHIVE_STATE[f"futa_retry:{hashes[0]}"] = {"ts": _t.time()}           # the daily archiver finishes it
+    residue = core.futa_residue(stores, hashes, digits)
+    ok = bool(vol.get("ok")) and not residue
+    ARCHIVE_STATE[f"futa:{int(_t.time())}:{uuid.uuid4().hex[:6]}"] = {
+        "ts": _t.time(), "counts": counts, "archive_removed_dirs": vol.get("removed_dirs"), "verified": ok,
+        "residue_stores": sorted({n for n, _ in residue})}
+    await core.send_with_retry(_send_once, sender, core.FUTA_DONE_TEXT if ok else core.FUTA_INCOMPLETE_TEXT, settings)
+    core.futa_purge(stores, hashes, digits)               # the confirmation send itself can write a bridge-ledger row for this number: one more pass
+    print(f"[futa] {'done' if ok else 'INCOMPLETE'} counts={counts}", flush=True)
+    return {"status": "done" if ok else "incomplete", "counts": counts}
 
 
 def _archive_health():

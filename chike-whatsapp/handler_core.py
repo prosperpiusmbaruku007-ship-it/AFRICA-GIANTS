@@ -530,7 +530,7 @@ def parse_webhook(body):
               or (messages.get("key") or {}).get("remoteJid") or "")
     if not text or not sender:
         return None
-    kind = "greeting" if text.lower() in GREETINGS else "question"
+    kind = "futa" if futa_word(text) else ("greeting" if text.lower() in GREETINGS else "question")
     out = {"kind": kind, "sender": sender, "text": text}
     if sender.endswith("@lid"):
         # A linked-ID is not a phone number. Wappfly also sends the phone in
@@ -3024,3 +3024,123 @@ def archive_overdue(last_ok_ts, now_ts):
         return (float(now_ts) - float(last_ok_ts)) > ARCHIVE_OVERDUE_S
     except (TypeError, ValueError):
         return True
+
+
+# ── FUTA: DELETION ON REQUEST (item E, 2026-11-26) ──────────────────────────────────────────────────────────────────────
+# A participant sends exactly "FUTA"; we ask them to confirm with "NDIO" within 10 minutes; only then do we delete their questions, answers and review records
+# from the hot Dicts AND their files from the archive Volume (by the single archiver writer), keep only text-free aggregate counts, and log the deletion
+# WITHOUT content. The FUTA texts are fixed strings, not model output, and are not held for review: a privacy request must not wait for a reviewer.
+FUTA_CONFIRM_WINDOW_S = 600.0
+FUTA_PROMPT_TEXT = (
+    "Umeomba kufuta taarifa zako zote kwenye Chike: maswali yako, majibu na rekodi za ukaguzi. Hii haiwezi kurudishwa.\n\n"
+    "Kuthibitisha, jibu *NDIO* ndani ya dakika 10. Usipojibu, hakuna kitakachofutwa."
+)
+FUTA_DONE_TEXT = (
+    "Imekamilika. Maswali yako, majibu na rekodi za ukaguzi zimefutwa. Tumebaki na hesabu tu zisizo na maandishi yako wala namba yako. "
+    "(Mazungumzo yaliyo kwenye simu yako au WhatsApp hayabadiliki.) Ukiuliza tena, utaanza upya."
+)
+FUTA_INCOMPLETE_TEXT = (
+    "Samahani, kufuta hakujakamilika kikamilifu. Tumeandika ombi lako na tutalimaliza hivi karibuni."
+)
+
+
+def _plain_word(text):
+    return re.sub(r"[^\w]", "", str(text or "").lower())
+
+
+def futa_word(text):
+    """True only for the exact word FUTA (any case, surrounding punctuation ignored). 'nifute', 'futa akaunti' and a sentence are ordinary text."""
+    return _plain_word(text) == "futa"
+
+
+def futa_confirm_word(text):
+    return _plain_word(text) in ("ndio", "ndiyo")
+
+
+def futa_pending_live(record, now_ts):
+    try:
+        return (float(now_ts) - float((record or {}).get("ts"))) < FUTA_CONFIRM_WINDOW_S
+    except (TypeError, ValueError):
+        return False
+
+
+def _futa_needles(hashes, digits):
+    needles = {h for h in (hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
+    d = "".join(c for c in str(digits or "") if c.isdigit())
+    if len(d) >= 9:                                  # never match on a short or empty digit string: that would delete other people's records
+        needles.add(d)
+    return needles
+
+
+def _safe_items(d):
+    for k in list(d.keys()):
+        try:
+            yield k, d[k]
+        except Exception:                            # noqa: BLE001
+            continue
+
+
+def futa_residue(stores, hashes, digits):
+    """[(store, key), ...] for every record in `stores` that still mentions this sender (by hash or phone digits, in the key OR anywhere in the value).
+    The live flow uses it to VERIFY a deletion; the tests use it to prove a deleted sender is gone, and that this scan CAN find one."""
+    needles = _futa_needles(hashes, digits)
+    found = []
+    if not needles:
+        return found
+    for name, d in stores.items():
+        for k, v in _safe_items(d):
+            if any(n in str(k) for n in needles) or any(n in json.dumps(v, default=str) for n in needles):
+                found.append((name, k))
+    return found
+
+
+def futa_purge(stores, hashes, digits):
+    """Delete one sender's records from the hot Dict stores. `stores` maps names to dict-likes: transcripts, review, pending_rows, disclosures, daily,
+    inflight, autosend, bridge_ledger, futa_pending. Returns NUMBERS ONLY (text-free, hash-free), safe to log."""
+    hs = {h for h in (hashes or ()) if _SENDER_HASH_RE.match(str(h or ""))}
+    needles = _futa_needles(hashes, digits)
+    digs = next((n for n in needles if n not in hs), None)
+    counts = {name: 0 for name in ("transcripts", "review", "pending_rows", "disclosures", "daily", "inflight", "autosend", "bridge_ledger", "futa_pending")}
+    if not needles:
+        return counts
+    tkeys, rids = set(), set()
+    for k, row in _safe_items(stores["transcripts"]):
+        if isinstance(row, dict) and row.get("sender_hash") in hs:
+            stores["transcripts"].pop(k, None)
+            tkeys.add(k)
+            counts["transcripts"] += 1
+    for k, it in _safe_items(stores["review"]):
+        if isinstance(it, dict) and (it.get("sender_hash") in hs or (digs and _local_digits(it.get("sender")) == digs)):
+            stores["review"].pop(k, None)
+            rids.add(str(it.get("review_id") or k))
+            counts["review"] += 1
+    for mid, fname in _safe_items(stores["pending_rows"]):
+        if fname in tkeys:
+            stores["pending_rows"].pop(mid, None)
+            counts["pending_rows"] += 1
+    for k in list(stores["disclosures"].keys()):
+        if k in hs:
+            stores["disclosures"].pop(k, None)
+            counts["disclosures"] += 1
+    for k in list(stores["daily"].keys()):
+        parts = str(k).split(":")
+        if len(parts) >= 2 and parts[1] in hs:
+            stores["daily"].pop(k, None)
+            counts["daily"] += 1
+    for k in list(stores["inflight"].keys()):
+        if k in hs:
+            stores["inflight"].pop(k, None)
+            counts["inflight"] += 1
+    for k in list(stores["autosend"].keys()):
+        if str(k).split(":", 1)[-1] in rids:
+            stores["autosend"].pop(k, None)
+            counts["autosend"] += 1
+    for k, row in _safe_items(stores["bridge_ledger"]):
+        if digs and isinstance(row, dict) and _local_digits(row.get("to")) == digs:
+            stores["bridge_ledger"].pop(k, None)
+            counts["bridge_ledger"] += 1
+    for k in list(stores["futa_pending"].keys()):
+        if k in hs:
+            stores["futa_pending"].pop(k, None)
+            counts["futa_pending"] += 1
+    return counts
