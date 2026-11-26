@@ -1719,8 +1719,22 @@ _PATH_TOPICS = {"nssf": "nssf", "wcf": "wcf", "sdl": "tra", "paye": "tra", "vat_
                 "presumptive": "tra", "corporate_tax": "tra", "partnership_tax": "tra", "rent_wht": "tra"}
 
 
+# ⛔ NO TANZANIAN AUTHORITY FOR A QUESTION THAT IS NOT ABOUT TANZANIA (founder, 2026-11-26): a football question and a foreign-country question
+# were told to contact TRA. These are matched on the QUESTION only and WIN over every topic cue: the holding message then carries the generic
+# "mamlaka husika" and no number. Word-bounded, named things only. TRADE-OFF, stated: a cross-border question that names a country (e.g. exporting
+# to Kenya) also gets the generic line -- the conservative direction, because naming no authority is cheaper than naming the wrong one.
+_OFFTOPIC_RE = _re_tok.compile(
+    _WB + r"(mpira|kandanda|football|soccer|simba sc|yanga|azam fc|ligi kuu|premier league|la liga|champions league|uefa|fifa|"
+          r"kombe la dunia|world cup|taifa stars|messi|ronaldo|"
+          r"kenya|uganda|rwanda|burundi|zambia|malawi|msumbiji|mozambique|congo|drc|nigeria|ghana|ethiopia|afrika kusini|south africa|"
+          r"uingereza|united kingdom|marekani|america|usa|china|uchina|india|dubai|ulaya|europe|kra|ura|rra|sars|hmrc|irs)" + _WE, _re_tok.I)
+
+
 def holding_authorities(item):
-    """Ordered list of authority keys for the holding message; [] when the topic is not known (or is more than two things)."""
+    """Ordered list of authority keys for the holding message; [] when the topic is not known (or is more than two things),
+    and ALWAYS [] for a football or foreign-country question (see _OFFTOPIC_RE)."""
+    if _OFFTOPIC_RE.search(str(item.get("question") or "")):
+        return []
     found = []
     for part in str(item.get("answer_path") or "").split("+"):
         if part.startswith("engine:"):
