@@ -13,5 +13,7 @@
   "SECOND_ACK_AFTER_S": "45",
   "REVIEW_D_URL": "https://prosperpiusmbaruku007--chike-whatsapp-d.modal.run",
   "REVIEW_CLAIM_URL": "https://prosperpiusmbaruku007--chike-whatsapp-review-claim.modal.run",
+  "SEND_CAP_PER_RECIPIENT_PER_HOUR": "20",
+  "SEND_CAP_GLOBAL_PER_HOUR": "60",
   "REVIEW_ACT_URL": "https://prosperpiusmbaruku007--chike-whatsapp-review-act.modal.run"
 }

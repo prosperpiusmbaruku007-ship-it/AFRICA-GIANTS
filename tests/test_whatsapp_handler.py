@@ -604,6 +604,8 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
                 "TRANSPORT", "BRIDGE_URL", "BRIDGE_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "ALERT_FROM", "ALERT_SMTP_PORT",
                 "HEALTHCHECK_PING_URL", "HEALTHCHECK_CANARY_URL", "TEST_SENDERS",
                 "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "INFERENCE_HEALTH_URL",
+                # 2026-11-26 send ceilings: tunables (reported under /health send_ceiling), not secrets.
+                "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR",
                 # 2026-11-16 deploy-shell switches of the tunables gate (modal_whatsapp._committed_tunables): not secrets.
                 "CHIKE_TUNABLES_OVERRIDE", "CHIKE_TUNABLES_FILE"}   # 2026-11-13: alert key (reported under /health alerting.missing); designated test senders (reported under cohort.test_senders)
     assert read - tunables == set(mw.EXPECTED_KEYS), (

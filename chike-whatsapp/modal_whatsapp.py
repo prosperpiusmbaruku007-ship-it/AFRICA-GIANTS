@@ -98,7 +98,7 @@ BUILD = os.environ.get("CHIKE_BUILD", "") or "dev"
 _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S",
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
                     "SECOND_ACK_AFTER_S", "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
-                    "INFERENCE_HEALTH_URL")
+                    "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR")
 
 def _committed_tunables():
     """The deploy-time tunables from the COMMITTED, secret-free `deploy_tunables.json` (2026-11-16), applied whatever the deploying shell holds.
@@ -225,6 +225,8 @@ AUTOSEND = modal.Dict.from_name("chike-autosend-kv", create_if_missing=True)
 # Keyed by sender hash; stamped at the start of answer_and_send, cleared when it ends, ignored once stale.
 INFLIGHT = modal.Dict.from_name("chike-inflight-kv", create_if_missing=True)
 BRIDGE_LEDGER = modal.Dict.from_name("chike-bridge-ledger-kv", create_if_missing=True)
+# Rolling-hour send counts (no phone numbers: `<epoch_ms>:<salted recipient tag>:<nonce>` keys) -- see _send_once / core.send_ceiling_decision.
+SEND_CEILING = modal.Dict.from_name("chike-send-ceiling-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -663,8 +665,81 @@ def _disclosure_banner(it):
     return ""
 
 
+def _health_max_renotifies():
+    """The cap actually applied (>= 1, no uncapped mode). Same rule as core.effective_max_renotifies, kept local so /health never depends on the package import."""
+    try:
+        return max(1, int(os.environ.get("MAX_RENOTIFIES", "1")))
+    except Exception:                                                # noqa: BLE001
+        return 1
+
+
+def _health_send_ceiling():
+    try:
+        return dict(zip(("per_recipient_per_hour", "global_per_hour"), _send_caps()), window_s=3600.0)
+    except Exception:                                                # noqa: BLE001
+        return None                                                  # reported as unreadable: the tunables gate treats None as a mismatch
+
+
+def _send_caps():
+    return _core().parse_send_caps(os.environ.get("SEND_CAP_PER_RECIPIENT_PER_HOUR"), os.environ.get("SEND_CAP_GLOBAL_PER_HOUR"))
+
+
+async def _ceiling_alert(kind, detail):
+    """healthchecks.io /fail ping, at most once per hour per kind (atomic put(skip_if_exists), R43). The body carries counts, never a number."""
+    import asyncio
+    import time as _t
+    try:
+        bucket = int(_t.time() // _core().SEND_WINDOW_S)
+        if not SEND_CEILING.put(f"alert:{kind}:{bucket}", _t.time(), skip_if_exists=True):
+            return
+        await asyncio.to_thread(_ping_healthcheck, "fail", f"chike-whatsapp SEND CEILING {kind}: {detail}"[:900])
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[ceiling] alert not sent ({type(e).__name__})", flush=True)
+
+
+async def _ceiling_gate(to):
+    """(allowed, detail). EVERY outbound message goes through here. FAIL-CLOSED: if the ledger cannot be written or read, nothing is sent.
+    Reserve first, then count: a racing container sees our reservation and both over-refuse rather than over-send. A refused reservation is
+    deleted, so a stuck retry loop cannot keep the window pinned full."""
+    import time as _t
+    import uuid
+    core = _core()
+    per_rcpt, glob = _send_caps()
+    now = _t.time()
+    tag = core.send_ceiling_tag(to, os.environ.get("SENDER_SALT", ""))
+    key = core.send_ceiling_key(now, tag, uuid.uuid4().hex[:8])
+    try:
+        SEND_CEILING[key] = 1
+        keys = list(SEND_CEILING.keys())
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[ceiling] ledger unavailable ({type(e).__name__}) -- send REFUSED (fail-closed)", flush=True)
+        return False, "send ceiling ledger unavailable: refused (fail-closed)"
+    d = core.send_ceiling_decision(keys, tag, now, per_recipient=per_rcpt, global_cap=glob)
+    for k in keys:                                                   # best-effort prune of reservations older than the window
+        try:
+            if float(str(k).split(":", 1)[0]) < (now - core.SEND_WINDOW_S) * 1000.0:
+                SEND_CEILING.pop(k, None)
+        except Exception:                                            # noqa: BLE001
+            continue
+    if not d["allowed"]:
+        try:
+            SEND_CEILING.pop(key, None)
+        except Exception:                                            # noqa: BLE001
+            pass
+        print(f"[ceiling] SEND REFUSED: {d['capped']} ceiling reached (recipient {d['recipient_n'] - 1}/{per_rcpt}, "
+              f"global {d['global_n'] - 1}/{glob} in the last hour)", flush=True)
+        await _ceiling_alert("CAP", f"{'/'.join(d['capped'])} ceiling reached -- sending STOPPED (recipient {per_rcpt}/h, global {glob}/h)")
+        return False, f"send ceiling reached ({'/'.join(d['capped'])}): refused"
+    if d["warn"]:
+        await _ceiling_alert("WARNING", f"{'/'.join(d['warn'])} at 50% or more (recipient {d['recipient_n']}/{per_rcpt}, global {d['global_n']}/{glob} per hour)")
+    return True, None
+
+
 async def _send_once(to: str, text: str):
-    """(ok, detail). The retry policy lives in handler_core, where it is tested."""
+    """(ok, detail). The retry policy lives in handler_core, where it is tested. Every outbound passes the send ceilings first."""
+    allowed, why = await _ceiling_gate(to)
+    if not allowed:
+        return False, why
     if TRANSPORT == "bridge":
         return await _send_once_bridge(to, text)
     return await _send_once_wappfly(to, text)
@@ -2398,7 +2473,8 @@ def health():
         "app": "chike-whatsapp",
         "model_timeout_s": float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
-        "max_renotifies": _core().effective_max_renotifies(os.environ.get("MAX_RENOTIFIES", "1")),   # >=1; no uncapped mode
+        "max_renotifies": _health_max_renotifies(),
+        "send_ceiling": _health_send_ceiling(),
         "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a

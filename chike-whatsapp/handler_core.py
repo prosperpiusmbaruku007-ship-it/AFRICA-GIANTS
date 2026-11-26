@@ -1140,6 +1140,58 @@ def release_expired_claim(item, *, now=None):
     return out, True
 
 
+# ⛔ SEND CEILINGS (2026-11-26, after the reminder storm: 4,264 reminders to one reviewer number in ~16 h and nothing in the system counted sends).
+# EVERY outbound message passes `_send_once`, and `_send_once` asks THIS function first. FAIL-CLOSED: a ledger that cannot be read refuses the send.
+# Two ceilings, both per rolling hour: per RECIPIENT and GLOBAL. A warning at 50% of either; at the cap the send is REFUSED and an alert is raised.
+# The count is reserve-then-count (the caller writes its own reservation key BEFORE asking), so two containers racing both see each other and
+# over-refuse rather than over-send. The ledger holds NO phone numbers: keys are `<epoch_ms>:<recipient tag>:<nonce>`, the tag a salted hash.
+SEND_WINDOW_S = 3600.0
+SEND_CAP_PER_RECIPIENT_DEFAULT = 20
+SEND_CAP_GLOBAL_DEFAULT = 60
+
+
+def parse_send_caps(per_recipient, global_cap):
+    """(per_recipient, global) as ints. Missing, unparseable or < 1 -> the default: a mistyped tunable can never switch a ceiling off."""
+    def _p(v, d):
+        try:
+            n = int(str(v).strip())
+        except Exception:                                            # noqa: BLE001
+            return d
+        return n if n >= 1 else d
+    return _p(per_recipient, SEND_CAP_PER_RECIPIENT_DEFAULT), _p(global_cap, SEND_CAP_GLOBAL_DEFAULT)
+
+
+def send_ceiling_tag(to, salt=""):
+    digits = "".join(c for c in str(to).split("@")[0] if c.isdigit()) or str(to)
+    return hashlib.sha256((salt + "|send-ceiling|" + digits).encode("utf-8")).hexdigest()[:10]
+
+
+def send_ceiling_key(now_s, tag, nonce):
+    return f"{int(float(now_s) * 1000)}:{tag}:{nonce}"
+
+
+def send_ceiling_decision(keys, tag, now_s, *, per_recipient, global_cap, window_s=SEND_WINDOW_S):
+    """Decide a send whose reservation key is ALREADY in `keys`. Counts reservations inside the rolling window (keys that do not parse,
+    e.g. alert-dedup markers, are ignored). Allowed only while BOTH counts are <= their caps; the 21st send to one recipient and the 61st
+    overall are refused. `warn` lists which ceilings have reached 50%."""
+    floor_ms = (float(now_s) - float(window_s)) * 1000.0
+    glob = rec = 0
+    for k in keys:
+        try:
+            ms, ktag, _ = str(k).split(":", 2)
+            if float(ms) < floor_ms:
+                continue
+        except Exception:                                            # noqa: BLE001
+            continue
+        glob += 1
+        if ktag == tag:
+            rec += 1
+    over = [n for n, c, cap in (("recipient", rec, per_recipient), ("global", glob, global_cap)) if c > cap]
+    warn = [n for n, c, cap in (("recipient", rec, per_recipient), ("global", glob, global_cap)) if c * 2 >= cap]
+    return {"allowed": not over, "capped": over, "warn": warn, "recipient_n": rec, "global_n": glob,
+            "per_recipient": per_recipient, "global_cap": global_cap}
+
+
 def effective_max_renotifies(max_renotifies):
     """The cap actually applied: never below 1, and an unparseable value is 1. There is no uncapped mode (2026-11-26)."""
     try:
