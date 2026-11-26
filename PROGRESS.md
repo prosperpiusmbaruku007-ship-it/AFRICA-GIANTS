@@ -1643,7 +1643,7 @@ Not defects, recorded: the registration-threshold control ("Duka la dawa linatak
 
 **Response.** `chike-whatsapp` stopped 2026-11-26 05:55Z (08:55 UTC+3) and kept stopped until the approved deploy; the 20 items were cleared to 0 pending.
 
-**Per-item reminder counts (the 20-row table; time order of first notification).** *Reading: only counts survive — items were cleared, so per-item route, held time and question are not recoverable and are NOT in this table.*
+**Per-item reminder counts for the STORM (time order of first notification).** *(CORRECTED 2026-11-26: this block was first labelled "the 20-row table"; that was my wrong reading. The 20-row table is the 2026-11-25 answer-path live check, rebuilt from the transcript rows at `eval/results/answer_path_live_table_2026_11_26.md`: 20 rows, logged class differs from its prediction on one, row 17 = R1; fields not recoverable are marked `lost`, 18 of 20 review items having been cleared.)* Reading: only counts survive — items were cleared, so per-item route, held time and question are not recoverable and are NOT in this table.*
 
 | # | reminders | notifications incl. card | × the 137 expected |
 |---|---|---|---|
@@ -1685,6 +1685,8 @@ Not defects, recorded: the registration-threshold control ("Duka la dawa linatak
 **`answer_path_summary --include-test` (2026-11-26 ~07:19Z, over the transcript store):** 42 messages, 0 excluded, **18 untraced** (rows before the answer-path log); fact_model 9 (37.5%), engine 5, fixed_statement 5, ooc 4, clarification 1; model-free 11, model called 13, guard fired 1; **3 holding messages sent, 0 failed.** The 37.5%/20.8% shares are over the 24 traced rows, not 42.
 
 **Not done / open.** (a) The 60/h global ceiling also counts participant acks and answers, so it can bind before the reviewer ceiling once the cohort grows. (b) 20 drafts held at once fill the reviewer's 20/h with first cards; reminders and digests then wait for the window. (c) The foreign-country holding rule also gives the generic line to cross-border questions that name a country (conservative direction). (d) The sweep lock TTL is 300 s while the sweep function timeout is 600 s; the per-reminder claim is the defence if a long sweep's lock is stolen.
+
+**DECISIONS 2026-11-26 (founder), for the next `chike-inference` window, none built:** rent statement R44 strip + conditional line approved, **amount-bearing rent variant excluded from auto-send**; `scaledown_window` 300 → 600 s approved (docs/decisions/2026-11-26_proposal_*). **R1/R2 route recall** ("Mfanyakazi mgeni analipa PAYE kiasi gani?", "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?"): cause is `kiasi\s+gani` in the veto of `paye_residency` / `director_fees_wht`; sweep 0 diversions over 6,287 questions (R21 lower bound), probes both ways pass; one open decision (first-person "nikatwe … mimi" would divert). `docs/decisions/2026-11-26_proposal_route_recall.md`.
 
 **CONTROLLED TEST (pre-registered 2026-11-26 07:00Z, before the first message): 4 questions held 07:13:10Z–07:14:30Z (store `ts_held`); the clock runs from 07:14:30Z to 09:14:30Z.** Predicted: 4 cards; ≤ 4 reminders (one per item); hourly digests only while pending; ≤ 1 holding message per item on the test phone. Q1 (`engine:fixed_statement`, 0 model calls) is excluded from auto-send; Q2 (`engine:paye`) made 2 model calls so it is model-path and will not auto-send either. **RESULT: _to be appended at 09:15Z._**
 

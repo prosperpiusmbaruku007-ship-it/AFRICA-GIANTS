@@ -1,4 +1,6 @@
 # PROPOSAL (not built, not deployed) — rent-WHT statement: R44 strip + a conditional computed line
+
+> **FOUNDER DECISION 2026-11-26: APPROVED** for the next `chike-inference` window: the R44 strip AND the conditional line, and **the amount-bearing variant is EXCLUDED from auto-send** (option (a) below). The eligibility check must therefore be able to see that a rent reply carries the conditional computed line; plant: an amount-bearing rent draft held at 15 minutes must get a holding message, not an auto-send; a no-amount rent statement must still auto-send (positive control).
 2026-11-26. Queued for the next `chike-inference` window with the other index/renderer work. `chike-whatsapp` is untouched.
 
 ## 1. R44 strip (Swahili answer text names a consolidated Act without a section/paragraph number)

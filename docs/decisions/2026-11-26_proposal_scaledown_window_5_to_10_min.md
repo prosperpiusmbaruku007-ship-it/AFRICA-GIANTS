@@ -1,4 +1,6 @@
 # PROPOSAL (not built, not deployed) — `chike-inference` `scaledown_window` 300 s → 600 s
+
+> **FOUNDER DECISION 2026-11-26: APPROVED** for the next `chike-inference` window (300 → 600 s; no `min_containers`). The cost figures below stand as the approved basis; they are GPU-only lower bounds (CPU/memory not measured).
 2026-11-26. Queued for the next `chike-inference` window. **No always-warm** (`min_containers` stays unset).
 
 ## What changes

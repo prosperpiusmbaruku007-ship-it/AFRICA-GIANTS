@@ -1,0 +1,128 @@
+{
+ "candidate": "drop `kiasi\\s+gani|` from the veto of paye_residency, director_fees_wht",
+ "probes": [
+  {
+   "kind": "must_route",
+   "text": "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "before": null,
+   "after": "paye_residency",
+   "expected": "paye_residency",
+   "ok": true,
+   "why": "R1 founding phrasing"
+  },
+  {
+   "kind": "must_route",
+   "text": "Mgeni anayefanya kazi Tanzania analipa PAYE kiasi gani?",
+   "before": null,
+   "after": "paye_residency",
+   "expected": "paye_residency",
+   "ok": true,
+   "why": "R1 second phrasing"
+  },
+  {
+   "kind": "must_route",
+   "text": "Ada ya mkurugenzi inakatwa kodi ya zuio kiasi gani?",
+   "before": null,
+   "after": "director_fees_wht",
+   "expected": "director_fees_wht",
+   "ok": true,
+   "why": "R2 founding phrasing"
+  },
+  {
+   "kind": "must_route",
+   "text": "Mkurugenzi akilipwa ada, kodi ya zuio inakatwa kiasi gani?",
+   "before": null,
+   "after": null,
+   "expected": null,
+   "ok": true,
+   "why": "R2 variant WITHOUT the 'ada ya mkurugenzi' noun phrase -- the director cue does not match, expected None (records the cue's reach)"
+  },
+  {
+   "kind": "must_route",
+   "text": "Ada ya wakurugenzi hukatwa kodi kiasi gani?",
+   "before": null,
+   "after": "director_fees_wht",
+   "expected": "director_fees_wht",
+   "ok": true,
+   "why": "R2 plural"
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mfanyakazi mgeni analipwa TZS 2,000,000, PAYE kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "amount present -> engine path unchanged",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mfanyakazi mgeni analipwa milioni mbili, PAYE kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "amount in words -> unchanged",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Ada ya mkurugenzi ni TZS 5,000,000, inakatwa kodi ya zuio kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "amount present -> unchanged (model path)",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mgeni wa Kenya analipa PAYE kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "another country vetoes",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mgeni analipa NSSF kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "no PAYE word",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mfanyakazi mgeni, PAYE na SDL kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "another levy vetoes",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Ada ya mkurugenzi nilipwe kiasi gani?",
+   "before": null,
+   "after": null,
+   "ok": true,
+   "why": "no tax/withholding need-word",
+   "report_only": false
+  },
+  {
+   "kind": "must_not_change",
+   "text": "Mshahara wa mgeni ni mkubwa, nikatwe PAYE kiasi gani mimi?",
+   "before": null,
+   "after": "paye_residency",
+   "ok": true,
+   "why": "FIRST PERSON, no figure -- read this one (reported, not asserted)",
+   "report_only": true
+  }
+ ],
+ "pin_failures": [],
+ "diversions": [],
+ "population": {
+  "questions": 6287,
+  "files": 139
+ }
+}
