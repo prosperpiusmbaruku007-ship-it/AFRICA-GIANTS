@@ -223,8 +223,9 @@ def test_review_act_retry_spawns_the_question_again_with_retry_of_and_never_send
 def test_the_sweeper_still_has_no_send_path_after_the_digest_was_added():
     import ast
     tree = ast.parse(_src("modal_whatsapp.py"))
-    fn = next(n for n in ast.walk(tree) if isinstance(n, ast.AsyncFunctionDef)
-              and n.name == "sweep_review_queue")
+    fn = ast.Module(body=[n for n in ast.walk(tree) if isinstance(n, ast.AsyncFunctionDef)
+                          and n.name in ("sweep_review_queue", "_sweep_review_queue_locked")], type_ignores=[])
+    assert len(fn.body) == 2, "the sweeper is the lock wrapper AND its locked body (2026-11-26)"
     called = {getattr(c.func, "id", None) or getattr(c.func, "attr", None)
               for c in ast.walk(fn) if isinstance(c, ast.Call)}
     assert "_send_once" not in called and "spawn" not in called and "answer_and_send" not in called

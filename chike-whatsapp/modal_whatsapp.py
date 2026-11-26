@@ -1231,7 +1231,62 @@ def _fresh_item(item):
         return item
 
 
-def _mark_notified(item, sent_count, *, renotify=False):
+def _stamp_renotify_claim(item):
+    """ATOMIC CLAIM + STAMP-BEFORE-SEND for one reminder (2026-11-26, the reminder storm). Returns the fresh stored item, or None when this
+    reminder must NOT be sent: the item is gone, or another sweep already claimed reminder number N for it.
+
+    The claim is `put(skip_if_exists=True)` on a per-(item, reminder number) key -- never a read-then-write (R43) -- so however many sweeps overlap,
+    reminder N of an item is sent by at most one of them. `last_notified_at` and `renotify_count` are written BEFORE the send, so a sweep that
+    starts while this one is still awaiting the network already sees the item as notified (the old code stamped AFTER the send, and a slow send
+    made every overlapping sweep think the item was still due). Only this sweep's own fields are changed on a fresh re-read."""
+    from datetime import datetime, timezone
+    fresh = _fresh_item(item)
+    if fresh is None or fresh.get("status") != "pending":
+        return None
+    n = int(fresh.get("renotify_count") or 0) + 1
+    try:
+        if not BRIDGE_WATCH.put(f"rn:{fresh['review_id']}:{n}", datetime.now(timezone.utc).isoformat(), skip_if_exists=True):
+            return None
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[sweep] reminder claim unavailable ({type(e).__name__}) -- NOT sending (fail-closed)", flush=True)
+        return None
+    fields = {"last_notified_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "renotify_count": n}
+    fresh.update(fields)
+    try:
+        REVIEW_QUEUE[fresh["review_id"]] = fresh
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[sweep] could not stamp {fresh['review_id']} before sending ({e}) -- NOT sending (fail-closed)", flush=True)
+        return None
+    item.update(fields)
+    return fresh
+
+
+def _sweep_lock_acquire(token, ttl_s=300.0):
+    """One re-notify sweep at a time. put(skip_if_exists) is the atomic acquire; a lock older than `ttl_s` (a sweep that died holding it) is
+    stolen. FAIL-CLOSED: if the lock store cannot be used the sweep does not run -- a skipped sweep costs a minute, an overlapping one cost 4,264 pings."""
+    import time as _t
+    try:
+        if BRIDGE_WATCH.put("sweep_lock", {"token": token, "ts": _t.time()}, skip_if_exists=True):
+            return True
+        cur = BRIDGE_WATCH.get("sweep_lock") or {}
+        if _t.time() - float((cur or {}).get("ts") or 0) > ttl_s:
+            BRIDGE_WATCH.pop("sweep_lock", None)
+            return bool(BRIDGE_WATCH.put("sweep_lock", {"token": token, "ts": _t.time()}, skip_if_exists=True))
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[sweep] lock unavailable ({type(e).__name__}) -- sweep skipped (fail-closed)", flush=True)
+    return False
+
+
+def _sweep_lock_release(token):
+    try:
+        cur = BRIDGE_WATCH.get("sweep_lock") or {}
+        if (cur or {}).get("token") == token:
+            BRIDGE_WATCH.pop("sweep_lock", None)
+    except Exception:                                                # noqa: BLE001
+        pass
+
+
+def _mark_notified(item, sent_count, *, renotify=False, prestamped=False):
     """Record a notification WITHOUT clobbering anything written since the caller read the item.
 
     ⛔ LOST-UPDATE BUG, FOUND LIVE 2026-11-13: this used to write the caller's (stale) copy back whole. A re-notify sweep that
@@ -1244,12 +1299,13 @@ def _mark_notified(item, sent_count, *, renotify=False):
         print(f"[review] {item.get('review_id')} no longer exists -- notification NOT recorded (not resurrecting it)", flush=True)
         return
     stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    fields = {"last_notified_at": stamp,
-              "notify_count": int(fresh.get("notify_count") or 0) + 1,
+    fields = {"notify_count": int(fresh.get("notify_count") or 0) + 1,
               "first_notified_at": fresh.get("first_notified_at") or stamp,    # decision latency counts from here
               "last_notify_recipients": sent_count}
-    if renotify:
-        fields["renotify_count"] = int(fresh.get("renotify_count") or 0) + 1
+    if not prestamped:                       # a pre-stamped reminder (_stamp_renotify_claim) already wrote these BEFORE sending
+        fields["last_notified_at"] = stamp
+        if renotify:
+            fields["renotify_count"] = int(fresh.get("renotify_count") or 0) + 1
     fresh.update(fields)
     item.update(fields)
     try:
@@ -2041,7 +2097,21 @@ async def _send_digest(items):
 @app.function(image=image, secrets=SECRETS, timeout=600,
               schedule=_sched(modal.Period(minutes=1)))
 async def sweep_review_queue():
-    """Release expired claims; re-notify unclaimed drafts. Never sends to a participant."""
+    """Release expired claims; re-notify unclaimed drafts. Never sends to a participant.
+
+    ⛔ OVERLAP-SAFE (2026-11-26): one sweep at a time (lock), and each reminder is claimed atomically and stamped BEFORE it is sent."""
+    import uuid
+    token = uuid.uuid4().hex
+    if not _sweep_lock_acquire(token):
+        print("[sweep] another sweep holds the lock -- skipped", flush=True)
+        return {"pending": 0, "released": 0, "renotified": 0, "skipped": "overlap", "sent_to_participants": 0}
+    try:
+        return await _sweep_review_queue_locked()
+    finally:
+        _sweep_lock_release(token)
+
+
+async def _sweep_review_queue_locked():
     core = _core()
     settings = _settings()
     released, renotified, pending = 0, 0, 0
@@ -2063,8 +2133,11 @@ async def sweep_review_queue():
         it = _fresh_item(it)                     # a timeout send may have decided it while we released/scanned
         if it is not None and it.get("status") == "pending" and core.needs_renotify(
                 it, renotify_after_s=settings.renotify_after_s, max_renotifies=settings.max_renotifies):
+            it = _stamp_renotify_claim(it)       # atomic claim + stamp BEFORE the send; None = someone else has it / cannot record
+            if it is None:
+                continue
             sent = await _notify_reviewers(it, renotify=True)
-            _mark_notified(it, sent, renotify=True)
+            _mark_notified(it, sent, renotify=True, prestamped=True)
             renotified += 1
             print(f"[sweep] RENOTIFIED {it['review_id']} to {sent} reviewer(s) — "
                   f"still pending, still unsent", flush=True)

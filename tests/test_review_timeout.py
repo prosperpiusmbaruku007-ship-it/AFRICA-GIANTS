@@ -554,7 +554,7 @@ def _calls(fn):
 
 
 def test_the_original_sweeper_STILL_has_no_send_path():
-    fn = _fn("sweep_review_queue")
+    fn = ast.Module(body=[_fn("sweep_review_queue"), _fn("_sweep_review_queue_locked")], type_ignores=[])   # wrapper + locked body (2026-11-26)
     assert "_send_once" not in _calls(fn) and not _calls(fn) & {"_do_auto_send", "_do_holding_notice", "review_timeout_sweep"}
     names = {n.id for n in ast.walk(fn) if isinstance(n, ast.Name)}
     assert "item" not in names or True

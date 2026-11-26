@@ -281,10 +281,12 @@ def test_the_sweeper_cannot_REACH_a_participant():
     """
     src = open(os.path.join(_ROOT, "chike-whatsapp", "modal_whatsapp.py"),
                encoding="utf-8").read()
-    fn = next((n for n in ast.walk(ast.parse(src))
-               if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
-               and n.name == "sweep_review_queue"), None)
-    assert fn is not None, "sweep_review_queue has been renamed — re-point this test"
+    # 2026-11-26: the sweep is a lock wrapper (`sweep_review_queue`) around `_sweep_review_queue_locked`; BOTH are the sweeper.
+    fns = [n for n in ast.walk(ast.parse(src))
+           if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+           and n.name in ("sweep_review_queue", "_sweep_review_queue_locked")]
+    assert {f.name for f in fns} == {"sweep_review_queue", "_sweep_review_queue_locked"}, "the sweeper was renamed — re-point this test"
+    fn = ast.Module(body=fns, type_ignores=[])
 
     subscripts = {n.slice.value for n in ast.walk(fn)
                   if isinstance(n, ast.Subscript) and isinstance(n.slice, ast.Constant)
