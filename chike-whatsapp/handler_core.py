@@ -47,31 +47,21 @@ GREETINGS = {
     "habari chike",
 }
 
+# FOUNDER-AUTHORED WELCOME (2026-11-26), Swahili only. The two example questions under 'Jaribu kuuliza' are VERIFIED ROUTES, pinned by
+# tests/test_welcome.py: change an example and that test must be changed with it, so the welcome can never advertise a question that
+# routes somewhere unverified. It never calls the model (the greeting path is model-free, also pinned there).
 WELCOME = (
-    "Habari! Karibu sana. 🙏\n\n"
-    "Mimi ni *Chike* — msaidizi wako wa maswali ya biashara\n"
-    "kutoka *Africa Giants*.\n"
-    "_Fahamu Biashara Yako, Maarifa Yako._\n\n"
-    "Ninakusaidia na:\n"
-    "• Kodi — VAT, PAYE, SDL, EFD\n"
-    "• Usajili — BRELA, TRA, NSSF, OSHA\n"
-    "• Sheria — GN 487A, vibali, leseni\n"
-    "• Mishahara — GN 605A, WCF\n\n"
-    "Uliza swali lako sasa hivi. 👇\n\n"
-    "---\n\n"
-    "Hello! Welcome. 🙏\n\n"
-    "I am *Chike* — your assistant for business questions\n"
-    "from *Africa Giants*.\n"
-    "_Understand Your Business, That Knowledge Is Yours._\n\n"
-    "I can help with:\n"
-    "• Tax — VAT, PAYE, SDL, EFD\n"
-    "• Registration — BRELA, TRA, NSSF, OSHA\n"
-    "• Law — GN 487A, permits, licences\n"
-    "• Wages — GN 605A, WCF\n\n"
-    "Ask your question now. 👇\n\n"
-    "---\n"
-    "_⚠ Beta: thibitisha majibu muhimu na TRA._\n"
-    "_⚠ Beta: verify important answers with TRA._"
+    "Habari, karibu! 👋\n\n"
+    "Mimi ni *Chike*, msaidizi (AI) wa Africa Giants. Ninajibu kwa Kiswahili maswali ya kodi na kanuni za biashara Tanzania.\n\n"
+    "*Ukiwa nami:*\n"
+    "💡 Unajua kiasi halisi cha kulipa: PAYE, NSSF, SDL, VAT\n"
+    "⏰ Unajua tarehe za mwisho, unaepuka faini\n"
+    "📋 Unajua usajili na leseni unazohitaji: TRA, BRELA, NSSF, OSHA\n\n"
+    "*Jaribu kuuliza, kwa mfano:*\n"
+    "• Mshahara wa TZS 800,000, PAYE ni kiasi gani?\n"
+    "• Leseni ya biashara inadumu muda gani?\n\n"
+    "Ili upate jibu sahihi, kila jibu hukaguliwa kwanza, kwa hiyo linaweza kuchukua muda kidogo.\n\n"
+    "Uliza swali lako 👇"
 )
 
 # SENT INSTEAD OF THE WELCOME WHILE A QUESTION IS PENDING (founder, 2026-11-12). A participant who says

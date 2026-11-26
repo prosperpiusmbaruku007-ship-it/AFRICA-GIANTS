@@ -101,8 +101,8 @@ def test_first_person_vat_registration_reaches_the_engine():
 def test_the_welcome_no_longer_calls_chike_an_adviser():
     """The disclosure says answers are 'si ushauri rasmi'; a welcome calling Chike 'mshauri wako' contradicts it."""
     assert "mshauri" not in hc.WELCOME.lower() and "adviser" not in hc.WELCOME.lower()
-    assert "msaidizi wako wa maswali ya biashara" in hc.WELCOME
-    assert "assistant for business questions" in hc.WELCOME
+    assert "msaidizi (AI)" in hc.WELCOME             # 2026-11-26 founder text: Swahili only, still an assistant, never an adviser
+    assert "assistant for business questions" not in hc.WELCOME
     assert "msaidizi" in hc.DISCLOSURE_TEXT          # the two now describe Chike the same way
 
 
