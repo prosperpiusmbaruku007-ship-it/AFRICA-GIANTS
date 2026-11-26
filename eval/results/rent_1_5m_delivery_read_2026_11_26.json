@@ -1,0 +1,18 @@
+{
+ "status": "sent",
+ "decided_by": "255712615913@s.whatsapp.net",
+ "decided_at": null,
+ "sent_at": null,
+ "send_state": "delivered",
+ "send_state_at_send": null,
+ "send_error": null,
+ "edit_reason": null,
+ "claimed_by": "255712615913@s.whatsapp.net",
+ "model_calls": 0,
+ "guards": [],
+ "holding_notice_ts": "2026-11-26T13:51:20+00:00",
+ "holding_notice_ok": true,
+ "review_id": "2026-11-26T13:36:00+00:00-b5908217",
+ "final": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakaazi wa kikodi NA wasio wakaazi wa kikodi (Sheria ya Kodi ya Mapato (ITA), Jedwali la Kwanza). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata. Ikiwa wewe ni wakala wa kuzuia: 10% × TZS 1,500,000 = TZS 150,000.",
+ "draft_equals_final": true
+}

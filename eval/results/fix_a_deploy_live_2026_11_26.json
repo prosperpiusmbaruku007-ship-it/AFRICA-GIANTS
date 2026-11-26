@@ -1,0 +1,235 @@
+{
+ "identity": {
+  "build": "a21a0a0",
+  "rag_rows_loaded": 224,
+  "rag_embeddings_shape": [
+   224,
+   768
+  ],
+  "rag_facts_text_sha256": "e97ed6019e2a90d96800204acc141f4e44408a46c5fa82ffe996db0b37928f6b",
+  "config_rag_fact_count": 224,
+  "adapter_repo": "prospAprospA007/africa-giants-adapter-v15",
+  "coldstart": {
+   "container_import_ts": 1795705569.711,
+   "enter_started_ts": 1795705569.744,
+   "enter_done_ts": 1795705616.479,
+   "import_to_enter_s": 0.0,
+   "load_s": 46.7,
+   "gpu": "Tesla T4"
+  }
+ },
+ "health": {
+  "build": "a21a0a0",
+  "build_matches": null,
+  "web_build": null,
+  "gpu_build": null,
+  "status": "ok"
+ },
+ "rows": [
+  {
+   "arm": "FIXA",
+   "q": "Nikatwe PAYE kiasi gani mimi?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 1.4,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA",
+   "q": "Nikatwe PAYE kiasi gani?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 2.0,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA",
+   "q": "PAYE yangu ni kiasi gani?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 1.4,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA",
+   "q": "Ninakatwa kodi kiasi gani mimi?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 1.6,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA-NEG",
+   "q": "Nilipe kodi kiasi gani mimi?",
+   "reply": "Kodi huwa inategemeana na mapato yako halisi. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "elapsed_s": 19.2,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_clarification": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA-NEG",
+   "q": "Nilipe VAT kiasi gani mimi?",
+   "reply": "Kiwango cha VAT ni asilimia 18%. Thibitisha na tra.go.tz.",
+   "path": "fact",
+   "model_calls": 1,
+   "guards": [],
+   "elapsed_s": 5.0,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_clarification": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA-NEG",
+   "q": "PAYE yangu ni asilimia ngapi?",
+   "reply": "PAYE HAINA kiwango kimoja: ni mabano yanayopanda kulingana na mshahara wa mwezi wa mfanyakazi. Viwango vya PAYE vya kila mwezi (mkaazi wa kikodi, 2025/26): kiwango cha 1: hadi TZS 270,000 = 0%; kiwango cha 2: TZS 270,001 hadi TZS 520,000 = 8% ya kinachozidi TZS 270,000; kiwango cha 3: TZS 520,001 hadi TZS 760,000 = TZS 20,000 + 20% ya kinachozidi TZS 520,000; kiwango cha 4: TZS 760,001 hadi TZS 1,000,000 = TZS 68,000 + 25% ya kinachozidi TZS 760,000; kiwango cha 5: zaidi ya TZS 1,000,000 = TZS 128,000 + 30% ya kinachozidi TZS 1,000,000. Asiye mkaazi wa kikodi analipa 15% tambarare (kodi ya mwisho, si mabano). Hakuna punguzo la kibinafsi tofauti — kiwango cha 0% cha mwanzo ndicho kisicholipiwa kodi. Thibitisha na TRA (tra.go.tz).",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 2.3,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_clarification": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "FIXA-NEG",
+   "q": "Nikatwe PAYE kiasi gani mimi, mshahara 800,000?",
+   "reply": "Kwa mshahara wa TZS 800,000, unatakiwa kulipa PAYE ya asilimia 25, sawa na TZS 78,000. Thibitisha na TRA (tra.go.tz).\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "elapsed_s": 13.1,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path_not_clarification": true,
+    "path": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "UNCHANGED",
+   "q": "Mshahara wa mgeni ni mkubwa, nikatwe PAYE kiasi gani mimi?",
+   "reply": "Ili nikuhesabie makato ya mshahara (kama PAYE, NSSF, SDL) kwa usahihi, nahitaji kiasi cha mshahara au jumla ya mishahara kwa mwezi. Tafadhali niambie mshahara ni shilingi ngapi, kisha nitakuletea hesabu kamili. Kumbuka: kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi, si uraia wala kuwa mgeni.",
+   "path": "clarification",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 6.2,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "UNCHANGED",
+   "q": "Mfanyakazi mgeni analipa PAYE kiasi gani?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 3.2,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "UNCHANGED",
+   "q": "Nikikaa nchini siku 183, PAYE yangu ni ya mkazi au asiye mkazi?",
+   "reply": "Kiwango cha PAYE kinategemea UKAAZI WA KIKODI wa mfanyakazi kwa mwaka husika wa mapato, si uraia wala kuwa mgeni; ni jambo tofauti na kibali cha ukaazi cha uhamiaji (Sheria ya Kodi ya Mapato). Mtu ni mkaazi wa kikodi wa Tanzania akiwa: (a) na makazi ya kudumu Tanzania na yupo nchini sehemu yoyote ya mwaka; au (b) yupo nchini kwa jumla ya siku 183 au zaidi katika mwaka; au (c) yupo nchini katika mwaka huo na katika kila mmoja wa miaka miwili iliyotangulia kwa wastani wa zaidi ya siku 122 kwa mwaka; au (d) ni mtumishi au afisa wa Serikali ya Jamhuri aliyetumwa nje ya nchi. Mkaazi wa kikodi analipa PAYE kwa mabano ya mshahara wa mwezi (0% hadi 30%); asiye mkaazi wa kikodi analipa asilimia 15 tambarare, ambayo ni kodi ya mwisho (final) kwenye malipo ya ajira. Kwa hiyo mgeni anayekidhi kigezo chochote kati ya (a) hadi (d) ni mkaazi wa kikodi na analipa kwa mabano, si 15%. Thibitisha ukaazi wako wa kikodi na TRA.",
+   "path": "engine:fixed_statement",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 3.7,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "UNCHANGED",
+   "q": "Kodi ya zuio kwenye pango la ofisi ni asilimia ngapi?",
+   "reply": "Kodi ya zuio kwenye PANGO ni asilimia 10 — kiwango kimoja kwa wakaazi wa kikodi NA wasio wakaazi wa kikodi (Sheria ya Kodi ya Mapato (ITA), Jedwali la Kwanza). Hakuna tofauti ya kiwango kwa sababu ya makao ya mwenye nyumba. Kiwango hiki cha asilimia 10 kinatajwa kwa pango la KIBIASHARA kwenye jedwali la TRA. LAKINI kukata kodi hii ni WAJIBU WA WAKALA WA KUZUIA (withholding agent) tu. Mtu wa kawaida anayelipa pango si wakala wa kuzuia kwa sababu ya kulipa pango peke yake — wajibu huu unamhusu anayefanya biashara/ana wajibu huo kisheria. Kama hujui kama wewe ni wakala wa kuzuia, thibitisha na TRA (tra.go.tz) KABLA ya kukata.",
+   "path": "engine:rent_wht",
+   "model_calls": 0,
+   "guards": [],
+   "elapsed_s": 5.2,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true,
+    "model_calls": true
+   },
+   "ok": true
+  },
+  {
+   "arm": "UNCHANGED",
+   "q": "Mshahara wa TZS 800,000, PAYE ni kiasi gani?",
+   "reply": "Kwa mshahara wa TZS 800,000, PAYE inakokotolewa kwa kanda kama ifuatavyo:\n\nKanda 1 (0%): TZS 0 hadi 270,000\nKanda 2 (8%): TZS 270,001 hadi 520,000\nKanda 3 (20%): TZS 520,001 hadi 760,000\nKanda 4 (25%): TZS 760,001 hadi 800,000\n\nJumla ya PAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000)\n= TZS 68,000 + 25% × TZS 40,000\n= TZS 68,000 + TZS 10,000\n= TZS 78,000\n\nPAYE ya mshahara wa TZS 800,000 ni TZS 78,000. Thibitisha na TRA kupitia tra.go.tz.\nPAYE = TZS 68,000 + 25% × (TZS 800,000 − TZS 760,000) = TZS 78,000",
+   "path": "engine:paye",
+   "model_calls": 2,
+   "guards": [],
+   "elapsed_s": 28.0,
+   "checks": {
+    "must": true,
+    "must_not": true,
+    "path": true
+   },
+   "ok": true
+  }
+ ],
+ "identity_ok": true
+}
