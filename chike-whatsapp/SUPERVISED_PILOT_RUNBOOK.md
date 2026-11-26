@@ -441,9 +441,18 @@ does not send them, and nothing else will.
 
 ## ⚖️ THE REVIEW TIMEOUT, PILOT HOURS AND RE-NOTIFICATION (founder's decision, 2026-11-13)
 
-**Pilot hours: all 24 hours** — no quiet hours; every draft is pushed whenever it is ready. **Re-notify every 7 minutes, no cap**
-(`RENOTIFY_AFTER_S=420`, `MAX_RENOTIFIES=0`; the sweep runs every minute so 7 means 7, not 9; no cap means no daily digest). Consequence the
-founder chose: a model-path draft nobody reviews pings the roster every 7 minutes for ever.
+**Pilot hours: all 24 hours** — no quiet hours; every draft is pushed whenever it is ready. **REVISED 2026-11-26 (founder), after the
+2026-11-25 reminder storm** — the 2026-11-13 line here read *"Re-notify every 7 minutes, no cap … a draft nobody reviews pings the roster every
+7 minutes for ever"* (`MAX_RENOTIFIES=0`). It did exactly that: **4,264 reminders to one reviewer number in ~16 h** from 20 unreviewed test items,
+about twice the 137 each that one-per-420 s allows, because overlapping sweeps stamped `last_notified_at` only after a slow send. Now:
+
+- **First card + at most ONE reminder per draft** (`MAX_RENOTIFIES=1`, `RENOTIFY_AFTER_S=420`). **There is no uncapped mode:** any value below 1 is read as 1.
+- **An hourly digest while at least one draft is pending** (count, oldest age, links); **none when 0 are pending.** Reviewer pings stay 24 h, bounded by the two lines above and the ceilings below.
+- **Send ceilings in `_send_once` (every outbound passes it), fail-closed:** 20 per recipient per rolling hour AND 60 global (`SEND_CAP_PER_RECIPIENT_PER_HOUR`,
+  `SEND_CAP_GLOBAL_PER_HOUR`, both in `deploy_tunables.json`). A healthchecks.io warning at 50% of either; **at the cap sending STOPS and an alert is raised.**
+  Note the consequence: 20 drafts held at once fill the reviewer's 20/hour with their first cards — the later reminders and digest wait for the window.
+- **Overlap-safe sweep:** one sweep at a time (lock, fail-closed), each reminder claimed atomically per (draft, reminder number) and stamped BEFORE it is sent.
+- **Holding message:** football and foreign-country questions get the generic "mamlaka husika" line, never TRA's contact.
 
 **The 15-minute rule — a change to the R7 reading, recorded in CLAUDE.md.** From *"every reply is read by a human"* to *"every
 model-generated reply is read by a human; deterministic engine answers may send after 15 minutes unreviewed."* A draft not reviewed 15
