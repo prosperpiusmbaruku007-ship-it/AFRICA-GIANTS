@@ -62,6 +62,9 @@ where = ["src"]
 #     pytest tests/ -m network
 #     pytest tests/ -m integration
 addopts = "-m 'not network and not integration'"
+# TEST-FILE-MUTATION-1 (2026-11-26): a bare `pytest` collected the whole repo, including gitignored scratch scripts named test_*.py that REWRITE tracked test files when imported;
+# a run killed mid-write left tests/test_routing.py and tests/test_terminology_2026_11_25.py empty. A bare run now collects tests/ only (the pre-push hook already ran `pytest tests`).
+testpaths = ["tests"]
 markers = [
     "integration: requires the real RAG index + e5 model (network/GPU). Deselected by default via addopts, same as `network` — NOT because its skipif reliably protects a bare `pytest tests/` run, but because it can't: the skipif only catches file-absence, and the try/except around the model load can't catch a native segfault (see the comment above `addopts`). Run deliberately with `-m integration` on a machine that can accept the crash risk.",
     "network: makes a LIVE call to a deployed endpoint. Deselected by default via addopts — run with `-m network`. A failure here is evidence about the network or production, NEVER about the code under test.",
