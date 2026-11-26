@@ -340,7 +340,11 @@ def test_an_alias_that_was_never_told_does_not_suppress_a_new_participant():
 def test_the_webhook_hands_the_linked_id_through_to_both_entry_points():
     src, tree = _mw_tree()
     seg = src[src.index("def webhook"):src.index("# SUPERVISED REVIEW")]
-    assert seg.count('sender_lid=parsed.get("sender_lid")') == 2, "both spawns must pass the alias"
+    spawns, aliased = seg.count(".spawn("), seg.count('sender_lid=parsed.get("sender_lid")')
+    assert spawns >= 2 and spawns == aliased, f"EVERY spawn in the webhook must pass the alias ({spawns} spawns, {aliased} pass it)"
+    # control: the same rule applied to a segment where one spawn drops the alias must fail
+    broken = seg.replace('futa_request.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))', 'futa_request.spawn(parsed["sender"])')
+    assert broken.count(".spawn(") != broken.count('sender_lid=parsed.get("sender_lid")'), "the check can fail"
     for name in ("answer_and_send", "greet_and_send"):
         assert "sender_lid" in ast.get_source_segment(src, _fn(tree, name)), name
 
