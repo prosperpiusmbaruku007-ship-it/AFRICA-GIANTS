@@ -95,25 +95,28 @@ NOW = datetime(2026, 11, 11, 20, 0, tzinfo=timezone.utc)
 
 
 def test_renotify_stops_after_the_cap():
-    assert core.needs_renotify(_pending(renotify_count=2), now=NOW) is True
-    assert core.needs_renotify(_pending(renotify_count=3), now=NOW) is False
+    assert core.needs_renotify(_pending(renotify_count=0), now=NOW) is True, "the first reminder is allowed"
+    assert core.needs_renotify(_pending(renotify_count=1), now=NOW) is False, "default cap is ONE reminder (2026-11-26)"
     assert core.needs_renotify(_pending(renotify_count=9), now=NOW) is False
 
 
 def test_the_cap_is_a_setting_not_a_constant():
     assert core.needs_renotify(_pending(renotify_count=3), now=NOW, max_renotifies=5) is True
+    assert core.needs_renotify(_pending(renotify_count=1), now=NOW, max_renotifies=0) is False, "0 is NOT 'no cap' any more"
+    assert core.needs_renotify(_pending(renotify_count=1), now=NOW, max_renotifies="junk") is False
 
 
-def test_capped_drafts_go_to_the_digest_and_nothing_else_does():
+def test_the_digest_lists_every_pending_draft_and_nothing_else():
     items = [_pending(renotify_count=3), _pending(renotify_count=1),
              _pending(renotify_count=3, status="withheld")]
-    assert core.digest_candidates(items) == [items[0]]
+    assert core.digest_candidates(items) == items[:2]
+    assert core.digest_candidates([_pending(status="sent"), _pending(status="withheld")]) == [], "0 pending -> no digest"
 
 
-def test_digest_is_due_once_a_day():
+def test_digest_is_due_once_an_hour():
     assert core.digest_due(None, 1000.0) is True
-    assert core.digest_due(1000.0, 1000.0 + 3600) is False
-    assert core.digest_due(1000.0, 1000.0 + 86400) is True
+    assert core.digest_due(1000.0, 1000.0 + 3599) is False
+    assert core.digest_due(1000.0, 1000.0 + 3600) is True
 
 
 def test_digest_text_is_roster_only_and_carries_each_link_and_the_failure_tag():

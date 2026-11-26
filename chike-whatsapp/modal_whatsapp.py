@@ -240,7 +240,7 @@ def _settings():
     return Settings(
         model_timeout_s=float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         supervised_model_timeout_s=float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
-        max_renotifies=int(os.environ.get("MAX_RENOTIFIES", "3")),
+        max_renotifies=int(os.environ.get("MAX_RENOTIFIES", "1") or 1),
         slow_ack_after_s=float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         second_ack_after_s=float(os.environ.get("SECOND_ACK_AFTER_S", "45")),
         cold_start_suspected_s=float(os.environ.get("COLD_START_SUSPECTED_S", "30")),
@@ -1947,7 +1947,7 @@ def reconcile_receipts():
 
 
 async def _send_digest(items):
-    """The once-a-day roster message for drafts that used up their re-notifications. Roster
+    """The HOURLY roster message while any draft is pending. Roster
     only: it reaches reviewers, never a participant, and lives outside the sweeper so the
     sweeper's AST test (no direct send, no reading `sender`) still holds."""
     core = _core()
@@ -1996,13 +1996,16 @@ async def sweep_review_queue():
     digest_sent = 0
     try:
         import time as _t
-        capped = core.digest_candidates(_queue_items(), settings.max_renotifies)
+        waiting = core.digest_candidates(_queue_items())     # [] when nothing is pending: no digest for an empty queue
         last = BRIDGE_WATCH.get("digest_ts")
-        if capped and core.digest_due(last, _t.time()):
-            digest_sent = await _send_digest(capped)
+        now_t = _t.time()
+        # ATOMIC per hour: put(skip_if_exists) on an hour-bucket key, never a read-then-write (R43), so two overlapping sweeps send one digest.
+        if waiting and core.digest_due(last, now_t) and BRIDGE_WATCH.put(f"digest_claim_{int(now_t // core.DIGEST_EVERY_S)}", now_t,
+                                                                          skip_if_exists=True):
+            digest_sent = await _send_digest(waiting)
             if digest_sent:
                 BRIDGE_WATCH["digest_ts"] = _t.time()
-                print(f"[sweep] DAILY DIGEST of {len(capped)} capped draft(s) to "
+                print(f"[sweep] HOURLY DIGEST of {len(waiting)} pending draft(s) to "
                       f"{digest_sent} reviewer(s)", flush=True)
     except Exception as e:                                           # noqa: BLE001
         print(f"[sweep] digest failed: {type(e).__name__}", flush=True)
@@ -2395,7 +2398,7 @@ def health():
         "app": "chike-whatsapp",
         "model_timeout_s": float(os.environ.get("MODEL_TIMEOUT_S", "240")),
         "supervised_model_timeout_s": float(os.environ.get("SUPERVISED_MODEL_TIMEOUT_S", "1800")),
-        "max_renotifies": int(os.environ.get("MAX_RENOTIFIES", "3")),      # 0 = NO CAP
+        "max_renotifies": _core().effective_max_renotifies(os.environ.get("MAX_RENOTIFIES", "1")),   # >=1; no uncapped mode
         "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a

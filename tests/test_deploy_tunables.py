@@ -23,8 +23,10 @@ _spec = importlib.util.spec_from_file_location("dt_under_test", os.path.join(_RO
 dt = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(dt)
 
-# The live /health of chike-whatsapp read on 2026-11-15 after the corrective deploy (build 00516ec), reduced to the tunable-bearing fields.
-LIVE = {"supervised": True, "supervised_raw_env": "1", "max_renotifies": 0, "model_timeout_s": 240.0,
+# The live /health of chike-whatsapp read on 2026-11-15 after the corrective deploy (build 00516ec), reduced to the tunable-bearing fields --
+# EXCEPT max_renotifies, which is 1 here (2026-11-26): the fixture is "the app as deployed from the committed file", and the committed file moved
+# 0 -> 1 after the reminder storm. The REAL live app reads 0 until the approved deploy; the pre-flight's live-vs-file gate refuses until then.
+LIVE = {"supervised": True, "supervised_raw_env": "1", "max_renotifies": 1, "model_timeout_s": 240.0,
         "supervised_model_timeout_s": 1800.0, "slow_ack_after_s": 12.0, "second_ack_after_s": 45.0,
         "review_timeout": {"enabled": True, "after_s": 900.0, "raw_flag": "1", "raw_after_s": "900"},
         "cohort": {"declared_size": 15}, "disclosure": {"enabled": True},

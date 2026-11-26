@@ -1,0 +1,13 @@
+{
+ "captured": "2026-11-26, after `modal app stop chike-whatsapp --yes` (state stopped, 0 tasks); read-only; no phone numbers or sender hashes recorded",
+ "settings_in_force": {"RENOTIFY_AFTER_S": 420, "MAX_RENOTIFIES": 0, "note": "0 = no cap; founder decision 2026-11-13, runbook 'Re-notify every 7 minutes, no cap'; sweep schedule every 1 minute; 24h pilot hours; roster recipients per notification: 1"},
+ "window": {"first_notified_utc": "2026-11-25T13:51:55", "last_notified_utc": "2026-11-26T05:54:40"},
+ "items_held_since_2026-11-25T12:00Z": 20,
+ "status": {"pending": 19, "auto_sent": 1},
+ "reviewer_messages": {"initial_cards": 20, "renotifications": 4264, "total_notify_count": 4284, "recipients_per_notification": 1, "note": "upper bound: counts attempts recorded by _mark_notified; the phone UI shows '1000+'"},
+ "renotify_count_per_item_in_time_order": [123, 173, 123, 164, 172, 190, 204, 2, 188, 200, 173, 204, 251, 275, 265, 265, 288, 327, 345, 332],
+ "expected_if_one_per_420s_over_16h": 137,
+ "holding_messages": {"items_with_holding": 19, "ok": 18, "failed": 1, "per_item": 1, "repeats": 0},
+ "non_test_activity": {"transcript_rows_non_test": 0, "distinct_senders": 1, "test_flagged_items": "20 of 20"},
+ "bridge_log": "retention reached back only ~20 minutes (532 lines from 08:37 UTC+3): overnight send counts cannot be taken from it; no disconnect, logout, rate-limit or ban line in that window; 66 'link-preview-js' module-missing warnings (link preview generation fails; cosmetic)"
+}

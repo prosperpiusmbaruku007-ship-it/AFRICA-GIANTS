@@ -610,15 +610,16 @@ def test_the_runbook_and_claude_md_record_the_change_to_the_r7_reading():
     assert "evidence block is empty" in md and "guard fired" in md
 
 
-# ── re-notification: every 7 minutes, no cap ─────────────────────────────────────────────────────
-def test_zero_means_no_cap_and_seven_minutes_is_honoured():
+# ── re-notification: every 7 minutes, CAPPED AT ONE REMINDER (2026-11-26; was "no cap", the storm) ──────────────────
+def test_seven_minutes_is_honoured_and_zero_no_longer_means_no_cap():
     old = (NOW - timedelta(minutes=8)).isoformat()
-    it = _item(renotify_count=500, last_notified_at=old)
-    assert core.needs_renotify(it, now=NOW, renotify_after_s=420, max_renotifies=0) is True
-    assert core.needs_renotify(it, now=NOW, renotify_after_s=420, max_renotifies=3) is False, "the old cap still caps"
-    fresh = _item(renotify_count=500, last_notified_at=(NOW - timedelta(minutes=6)).isoformat())
-    assert core.needs_renotify(fresh, now=NOW, renotify_after_s=420, max_renotifies=0) is False
-    assert core.digest_candidates([it], 0) == [], "with no cap nothing is 'capped', so no digest"
+    it = _item(renotify_count=0, last_notified_at=old)
+    assert core.needs_renotify(it, now=NOW, renotify_after_s=420, max_renotifies=1) is True
+    spent = _item(renotify_count=1, last_notified_at=old)
+    assert core.needs_renotify(spent, now=NOW, renotify_after_s=420, max_renotifies=1) is False
+    assert core.needs_renotify(_item(renotify_count=500, last_notified_at=old), now=NOW, renotify_after_s=420, max_renotifies=0) is False
+    fresh = _item(renotify_count=0, last_notified_at=(NOW - timedelta(minutes=6)).isoformat())
+    assert core.needs_renotify(fresh, now=NOW, renotify_after_s=420, max_renotifies=1) is False
 
 
 def test_the_sweep_runs_every_minute_so_seven_minutes_means_seven_not_nine():

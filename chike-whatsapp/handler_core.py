@@ -136,9 +136,11 @@ class Settings:
     # at +21 min with nobody listening. The fallback is for a GENUINE failure (an exception),
     # not a slow start, so supervised mode waits up to this much longer limit.
     supervised_model_timeout_s: float = 1800.0
-    # Re-notify at most this many times per draft, then it moves to the daily digest. Without
-    # a cap an unacted draft pings the roster every renotify_after_s forever.
-    max_renotifies: int = 3
+    # Re-notify at most this many times per draft (first card + this many reminders), then the draft is
+    # only in the hourly digest. ⛔ THERE IS NO "0 = NO CAP" ANY MORE (2026-11-26): it was the setting
+    # behind the 2026-11-25 reminder storm (4,264 reminders to one reviewer in 16 h). Any value below 1 is
+    # read as 1, so a mistyped or zeroed tunable can never turn the cap off.
+    max_renotifies: int = 1
 
     # One short "I'm working on it" if the answer is slow. A user who hears nothing for
     # three minutes concludes the service is broken; one Wappfly message is far cheaper
@@ -1138,38 +1140,50 @@ def release_expired_claim(item, *, now=None):
     return out, True
 
 
-def renotify_exhausted(item, max_renotifies=3):
-    """True once a draft has used its re-notifications. It then goes to the daily digest."""
-    if int(max_renotifies) <= 0:           # 0 = NO CAP (founder, 2026-11-13: re-notify every N minutes, no cap)
-        return False
-    return int(item.get("renotify_count") or 0) >= int(max_renotifies)
+def effective_max_renotifies(max_renotifies):
+    """The cap actually applied: never below 1, and an unparseable value is 1. There is no uncapped mode (2026-11-26)."""
+    try:
+        return max(1, int(max_renotifies))
+    except Exception:                                                # noqa: BLE001
+        return 1
 
 
-def digest_candidates(items, max_renotifies=3):
-    """Pending drafts that have used up their re-notifications, oldest first."""
-    out = [i for i in items if i.get("status") == "pending"
-           and renotify_exhausted(i, max_renotifies)]
+def renotify_exhausted(item, max_renotifies=1):
+    """True once a draft has used its re-notifications. From then on it appears only in the hourly digest."""
+    return int(item.get("renotify_count") or 0) >= effective_max_renotifies(max_renotifies)
+
+
+def digest_candidates(items, max_renotifies=None):
+    """Every PENDING draft, oldest first. EMPTY when nothing is pending -- no digest is ever sent for an empty queue.
+    (`max_renotifies` is accepted and ignored: the 2026-11-26 digest covers all pending drafts, hourly, not only the capped ones.)"""
+    out = [i for i in items if i.get("status") == "pending"]
     return sorted(out, key=lambda i: i.get("ts_held") or "")
 
 
-def digest_due(last_digest_ts, now_ts, *, every_s=86400.0):
+DIGEST_EVERY_S = 3600.0
+
+
+def digest_due(last_digest_ts, now_ts, *, every_s=DIGEST_EVERY_S):
     return not last_digest_ts or (now_ts - float(last_digest_ts)) >= every_s
 
 
 def digest_text(items, link_for, *, now=None, max_items=5):
-    """The once-a-day roster message for drafts that stopped being re-notified. Names the
-    customer by tail only; each line carries that reviewer's own link. Roster-only: nothing
-    here is, or can become, a participant message."""
+    """The HOURLY roster message while at least one draft is pending: how many, how old the oldest is, and each reviewer's own link.
+    Roster-only: nothing here is, or can become, a participant message."""
     now = now or datetime.now(timezone.utc)
-    lines = [f"📋 MUHTASARI WA KILA SIKU — rasimu {len(items)} bado zinasubiri "
-             f"(zimeacha kukumbushwa)"]
-    for it in items[:max_items]:
+
+    def _age_h(it):
         try:
-            age_h = int((now - datetime.fromisoformat(it["ts_held"])).total_seconds() // 3600)
+            return int((now - datetime.fromisoformat(it["ts_held"])).total_seconds() // 3600)
         except Exception:                                            # noqa: BLE001
-            age_h = "?"
+            return None
+    ages = [a for a in (_age_h(i) for i in items) if a is not None]
+    oldest = f"{max(ages)}" if ages else "?"
+    lines = [f"📋 MUHTASARI WA KILA SAA — rasimu {len(items)} bado zinasubiri · ya zamani zaidi: saa {oldest} zilizopita"]
+    for it in items[:max_items]:
+        age_h = _age_h(it)
         tag = " [MODELI IMESHINDWA]" if it.get("fallback") else ""
-        lines += ["", f"• ...{it.get('sender_tail') or '????'} · saa {age_h} zilizopita{tag}",
+        lines += ["", f"• ...{it.get('sender_tail') or '????'} · saa {age_h if age_h is not None else '?'} zilizopita{tag}",
                   f"  {(it.get('question') or '')[:80]}", f"  {link_for(it)}"]
     if len(items) > max_items:
         lines.append(f"…na {len(items) - max_items} zaidi")
@@ -1177,7 +1191,7 @@ def digest_text(items, link_for, *, now=None, max_items=5):
     return "\n".join(lines)
 
 
-def needs_renotify(item, *, now=None, renotify_after_s=1800.0, max_renotifies=3):
+def needs_renotify(item, *, now=None, renotify_after_s=1800.0, max_renotifies=1):
     """True when an UNCLAIMED pending draft has gone unanswered long enough to re-notify.
 
     A claimed, unexpired draft is NOT re-notified — someone is reading it, and pinging the
