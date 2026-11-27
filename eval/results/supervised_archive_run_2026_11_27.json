@@ -1,0 +1,91 @@
+{
+ "started_utc": "2026-11-27T00:19:16+00:00",
+ "backup_dir_used": "scratch\\backups\\20261127T001830Z",
+ "surprises": [],
+ "ledger_before": {
+  "rows": 2642,
+  "must_prune": 862,
+  "old_but_awaited_must_keep": 0,
+  "young_must_keep": 1686,
+  "boundary_excluded": 94,
+  "unreadable_ts_must_keep": 0,
+  "awaited_ids_total": 0,
+  "index_entries": 0
+ },
+ "expectation_review": {
+  "items_in_backup": 5,
+  "archivable_now": 0,
+  "transcripts_in_backup": 75,
+  "transcripts_old_enough_in_total": 40,
+  "pending_in_backup": 0
+ },
+ "before": {
+  "review_queue": 5,
+  "transcripts": 75,
+  "bridge_ledger": 2642,
+  "ledger_index": 0,
+  "pending_rows": 0,
+  "identity_aliases": 1,
+  "bridge_auth": 324
+ },
+ "volume_before": {
+  "download_rc": 0,
+  "files": 94
+ },
+ "run_summary": {
+  "review_archived": 0,
+  "review_removed": 0,
+  "review_kept_failed": 0,
+  "review_kept_leak": 0,
+  "review_tombstoned_dropped": 0,
+  "review_already_present": 0,
+  "review_changed_since_archive": 0,
+  "transcripts_archived": 0,
+  "transcripts_already_present": 40,
+  "transcripts_kept_leak": 0,
+  "aggregates_days": 0,
+  "tombstones_pruned": 0,
+  "auth_keys_touched": 324,
+  "alias_keys_touched": 1,
+  "ledger_pruned": 919,
+  "ledger_kept_young": 1723,
+  "ledger_kept_protected": 0,
+  "ledger_kept_bad_ts": 0,
+  "index_pruned": 0,
+  "index_kept_bad_ts": 0,
+  "futa_retries_done": 0
+ },
+ "after": {
+  "review_queue": 5,
+  "transcripts": 75,
+  "bridge_ledger": 1723,
+  "ledger_index": 0,
+  "pending_rows": 0,
+  "identity_aliases": 1,
+  "bridge_auth": 324
+ },
+ "volume_after": {
+  "download_rc": 0,
+  "files": 94
+ },
+ "ledger_after": {
+  "rows": 1723,
+  "removed": 919,
+  "new_rows_since_snapshot": 0,
+  "index_entries": 0
+ },
+ "volume_diff": {
+  "new_files": 0,
+  "changed_files": 0,
+  "changed_non_aggregate": 0,
+  "files_missing_after": 0
+ },
+ "leaks": 0,
+ "state": {
+  "last_ok": true,
+  "last_ts_utc": "00:24:45",
+  "last_error": null,
+  "lock_present": false
+ },
+ "finished_utc": "2026-11-27T00:25:46+00:00"
+}
