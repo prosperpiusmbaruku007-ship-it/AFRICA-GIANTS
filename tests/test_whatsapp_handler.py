@@ -576,6 +576,8 @@ def test_every_secret_key_the_app_reads_is_declared_in_expected_keys():
                 # 2026-11-26 send ceilings: tunables (reported under /health send_ceiling), not secrets.
                 "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
                 "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT",
+                # 2026-11-28 pre-warm on greeting: tunables (reported under /health prewarm), not secrets.
+                "PREWARM_ENABLED", "PREWARM_PER_HOUR", "PREWARM_SENDER_COOLDOWN_S",
                 # 2026-11-16 deploy-shell switches of the tunables gate (modal_whatsapp._committed_tunables): not secrets.
                 "CHIKE_TUNABLES_OVERRIDE", "CHIKE_TUNABLES_FILE"}   # 2026-11-13: alert key (reported under /health alerting.missing); designated test senders (reported under cohort.test_senders)
     assert read - tunables == set(mw.EXPECTED_KEYS), (

@@ -27,7 +27,7 @@ _spec.loader.exec_module(dt)
 # EXCEPT max_renotifies, which is 1 here (2026-11-26): the fixture is "the app as deployed from the committed file", and the committed file moved
 # 0 -> 1 after the reminder storm. The REAL live app reads 0 until the approved deploy; the pre-flight's live-vs-file gate refuses until then.
 LIVE = {"supervised": True, "supervised_raw_env": "1", "max_renotifies": 1, "model_timeout_s": 240.0,
-        "supervised_model_timeout_s": 1800.0, "slow_ack_after_s": 12.0, "send_ceiling": {"per_recipient_per_hour": 20, "global_per_hour": 150, "reviewer_per_recipient_per_hour": 40, "digest_only_above": 8}, "daily_question_limit": 20, "digest_min_wait_s": 3600.0, "review_timeout": {"enabled": True, "after_s": 900.0, "raw_flag": "1", "raw_after_s": "900"},
+        "supervised_model_timeout_s": 1800.0, "slow_ack_after_s": 12.0, "send_ceiling": {"per_recipient_per_hour": 20, "global_per_hour": 150, "reviewer_per_recipient_per_hour": 40, "digest_only_above": 8}, "daily_question_limit": 20, "prewarm": {"enabled": True, "per_hour": 12, "sender_cooldown_s": 900.0, "last_touch_age_s": None}, "digest_min_wait_s": 3600.0, "review_timeout": {"enabled": True, "after_s": 900.0, "raw_flag": "1", "raw_after_s": "900"},
         "cohort": {"declared_size": 15}, "disclosure": {"enabled": True},
         "roster": {"reviewers": 1, "signing_key_set": True, "claim_ttl_s": 900.0, "renotify_after_s": 420.0,
                    "review_urls_set": True, "can_issue_links": True},

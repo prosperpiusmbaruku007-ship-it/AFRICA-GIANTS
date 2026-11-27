@@ -2369,6 +2369,57 @@ def review_summary(items, signing_key=None, test_hashes=()):
 # A courtesy and a cost brake, NOT a safety control: it fails OPEN. A limit that blocked a real participant because the counter store hiccuped would be
 # the expensive direction (a wrongly refused question looks exactly like a question nobody asked). The day is the EAT calendar day (UTC+3).
 # EXACT, with no read-modify-write: question n claims slot n with put(skip_if_exists), so two simultaneous questions cannot both take the 20th.
+# ── PRE-WARM ON GREETING (founder, 2026-11-28: minimise question-to-answer time) ───────────────────────────────────────────────────────────────────────
+# A cold GPU start is 45-72 s of a participant's first answer (measured: 8 of 15 answered questions were cold, p50 58 s to draft vs 10 s warm). A greeting is a strong signal a question is
+# coming, so the webhook asks the GPU app to START A CONTAINER (a cheap existing method, no generation, no user content, output unused) while the first-contact message is being sent.
+# The policy is pure and fail-closed: anything unparseable means NO warm-up, because the cost of a wrong yes is GPU money and the cost of a wrong no is the old behaviour.
+PREWARM_PER_HOUR_DEFAULT = 12
+PREWARM_SENDER_COOLDOWN_DEFAULT_S = 900.0
+PREWARM_RECENT_TOUCH_S = 300.0    # a model call (or a warm-up) this recent means the container is up: scaledown_window is 600 s, so 300 s leaves margin
+
+
+def parse_prewarm_enabled(v):
+    """ON only for an explicit truthy value. Missing or a typo is OFF: it costs money, so it must be asked for."""
+    return str(v if v is not None else "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def parse_prewarm_per_hour(v):
+    """Warm-ups per hour across ALL senders. 0 is a valid explicit value (none); missing, unparseable or negative falls back to the default cap, never to 'unlimited'."""
+    try:
+        n = int(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return PREWARM_PER_HOUR_DEFAULT
+    return n if n >= 0 else PREWARM_PER_HOUR_DEFAULT
+
+
+def parse_prewarm_cooldown_s(v):
+    try:
+        x = float(str(v).strip())
+    except Exception:                                                # noqa: BLE001
+        return PREWARM_SENDER_COOLDOWN_DEFAULT_S
+    return x if x >= 60 else PREWARM_SENDER_COOLDOWN_DEFAULT_S
+
+
+def prewarm_skip_reason(enabled, now_ts, last_touch_ts, recent_s=PREWARM_RECENT_TOUCH_S):
+    """None when a warm-up may be requested, else why not. `last_touch_ts` unreadable or in the future counts as 'no recent touch' (a clock quirk must not suppress warming forever)."""
+    if not enabled:
+        return "disabled"
+    try:
+        age = float(now_ts) - float(last_touch_ts)
+    except (TypeError, ValueError):
+        return None
+    if 0 <= age < recent_s:
+        return "recently_warm"
+    return None
+
+
+def prewarm_keys(sender_hash, now_ts, cooldown_s, per_hour):
+    """(the per-sender window claim key, the list of global slot keys for this hour). Claims are put(skip_if_exists=True), so each is atomic and a burst cannot overshoot either limit."""
+    window = int(float(now_ts) // float(cooldown_s))
+    hour = int(float(now_ts) // 3600)
+    return f"prewarm:s:{sender_hash}:{window}", [f"prewarm:g:{hour}:{i}" for i in range(max(0, int(per_hour)))]
+
+
 DAILY_QUESTION_LIMIT_DEFAULT = 20
 
 

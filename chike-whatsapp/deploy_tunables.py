@@ -21,7 +21,8 @@ FILE = os.path.join(HERE, "deploy_tunables.json")
 REQUIRED = ("COHORT_SIZE", "CLAIM_TTL_S", "RENOTIFY_AFTER_S", "MAX_RENOTIFIES", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S", "SUPERVISED",
             "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "SLOW_ACK_AFTER_S",
             "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
-            "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
+            "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT",
+            "PREWARM_ENABLED", "PREWARM_PER_HOUR", "PREWARM_SENDER_COOLDOWN_S")
 _SECRET_LIKE = re.compile(r"token|secret|password|salt|signing|roster|api_?key", re.IGNORECASE)
 _TRUE = ("1", "true", "yes", "on")
 
@@ -85,6 +86,9 @@ def expected_view(committed):
         "send_cap_reviewer_per_recipient": int(committed["SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR"]),
         "digest_only_above": int(committed["DIGEST_ONLY_ABOVE"]),
         "daily_question_limit": int(committed["DAILY_QUESTION_LIMIT"]),
+        "prewarm_enabled": committed["PREWARM_ENABLED"].strip().lower() in _TRUE,
+        "prewarm_per_hour": int(committed["PREWARM_PER_HOUR"]),
+        "prewarm_sender_cooldown_s": _num(committed["PREWARM_SENDER_COOLDOWN_S"]),
     }
 
 
@@ -114,6 +118,9 @@ def health_view(h):
         "send_cap_reviewer_per_recipient": (h.get("send_ceiling") or {}).get("reviewer_per_recipient_per_hour"),
         "digest_only_above": (h.get("send_ceiling") or {}).get("digest_only_above"),
         "daily_question_limit": h.get("daily_question_limit"),
+        "prewarm_enabled": (h.get("prewarm") or {}).get("enabled"),
+        "prewarm_per_hour": (h.get("prewarm") or {}).get("per_hour"),
+        "prewarm_sender_cooldown_s": (h.get("prewarm") or {}).get("sender_cooldown_s"),
     }
 
 

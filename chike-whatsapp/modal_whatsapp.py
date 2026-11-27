@@ -99,7 +99,8 @@ _DEPLOY_TUNABLES = ("TRANSPORT", "BRIDGE_URL", "SUPERVISED", "COHORT_SIZE", "CLA
                     "REVIEW_D_URL", "REVIEW_CLAIM_URL", "REVIEW_ACT_URL", "MODEL_TIMEOUT_S", "SUPERVISED_MODEL_TIMEOUT_S", "MAX_RENOTIFIES", "SLOW_ACK_AFTER_S",
                     "REVIEWER_ROSTER", "REVIEW_SIGNING_KEY", "AUTOSEND_ENGINE", "AUTOSEND_AFTER_S",
                     "INFERENCE_HEALTH_URL", "SEND_CAP_PER_RECIPIENT_PER_HOUR", "SEND_CAP_GLOBAL_PER_HOUR", "DIGEST_MIN_WAIT_S",
-                    "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT")
+                    "SEND_CAP_REVIEWER_PER_RECIPIENT_PER_HOUR", "DIGEST_ONLY_ABOVE", "DAILY_QUESTION_LIMIT",
+                    "PREWARM_ENABLED", "PREWARM_PER_HOUR", "PREWARM_SENDER_COOLDOWN_S")
 
 def _committed_tunables():
     """The deploy-time tunables from the COMMITTED, secret-free `deploy_tunables.json` (2026-11-16), applied whatever the deploying shell holds.
@@ -404,7 +405,9 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         return {"fallback": False, "error_class": None, "supervision": None, "daily_limit": True}
 
     async def ask(message):
-        return await ChikeModel().run.remote.aio(message)
+        out = await ChikeModel().run.remote.aio(message)
+        _note_model_touch()                      # the container was just used: a greeting in the next 5 minutes needs no warm-up
+        return out
 
     # ⛔ THE ANSWER AND THE ACKS TRAVEL THROUGH DIFFERENT CALLABLES IN SUPERVISED MODE.
     # `_send_once` still carries the ack ladder — a user who asks at 9pm must not sit in
@@ -500,29 +503,111 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
             "supervision": row.get("supervision")}
 
 
+# ── PRE-WARM ON GREETING (founder, 2026-11-28) ──────────────────────────────────────────────────────────────────────────────────────────────────────
+# Policy lives in handler_core (pure). This is the wiring: a THREAD (the Dict and spawn calls are blocking, and running them on the event loop would delay the very greeting this exists to
+# precede) that asks the GPU app to start a container by SPAWNING a cheap existing method. No user content is sent, no output is used, and every failure is swallowed: a warm-up can never
+# cost a participant their greeting. The model-touch stamp (written after every real model call and at every warm-up) is what makes it idempotent: a container used in the last 5 minutes is warm.
+_PREWARM_TOUCH_KEY = "prewarm:last_touch"
+
+
+def _health_prewarm():
+    """The PARSED settings (never the raw env), plus how long ago the container was last known used. Read-only, never raises."""
+    import time as _t
+    try:
+        enabled, per_hour, cooldown = _prewarm_config()
+        try:
+            last = BRIDGE_WATCH.get(_PREWARM_TOUCH_KEY)
+            age = round(_t.time() - float(last), 1) if last is not None else None
+        except Exception:                                            # noqa: BLE001
+            age = None
+        return {"enabled": enabled, "per_hour": per_hour, "sender_cooldown_s": cooldown, "last_touch_age_s": age}
+    except Exception:                                                # noqa: BLE001
+        return None
+
+
+def _prewarm_config():
+    core = _core()
+    return (core.parse_prewarm_enabled(os.environ.get("PREWARM_ENABLED")),
+            core.parse_prewarm_per_hour(os.environ.get("PREWARM_PER_HOUR")),
+            core.parse_prewarm_cooldown_s(os.environ.get("PREWARM_SENDER_COOLDOWN_S")))
+
+
+def _note_model_touch(now=None):
+    try:
+        import time as _t
+        BRIDGE_WATCH[_PREWARM_TOUCH_KEY] = float(now if now is not None else _t.time())
+    except Exception:                                                # noqa: BLE001
+        pass                                                         # a missing stamp only means one extra (capped) warm-up
+
+
+def _prewarm_sync(sender, settings):
+    """Blocking; run in a thread. Returns a reason string and NEVER raises."""
+    import time as _t
+    core = _core()
+    try:
+        enabled, per_hour, cooldown = _prewarm_config()
+        now = _t.time()
+        try:
+            last = BRIDGE_WATCH.get(_PREWARM_TOUCH_KEY)
+        except Exception:                                            # noqa: BLE001
+            last = None
+        reason = core.prewarm_skip_reason(enabled, now, last)
+        if reason:
+            return reason
+        sender_key, slots = core.prewarm_keys(_sender_key(sender, settings), now, cooldown, per_hour)
+        if not slots:
+            return "no_budget"
+        if not BRIDGE_WATCH.put(sender_key, now, skip_if_exists=True):
+            return "sender_cooldown"
+        if not any(BRIDGE_WATCH.put(k, now, skip_if_exists=True) for k in slots):
+            return "hourly_cap"
+        _note_model_touch(now)                                       # BEFORE the spawn: a second greeting seconds later must see a warm-up already in flight
+        ChikeModel().served_index_identity.spawn()                   # starts a container (runs load_model); the result is never read
+        print("[prewarm] spawned", flush=True)
+        return "spawned"
+    except Exception as e:                                           # noqa: BLE001
+        print(f"[prewarm] failed ({type(e).__name__}) -- the greeting is unaffected", flush=True)
+        return f"error:{type(e).__name__}"
+
+
+async def _settle_prewarm(task):
+    """Wait (bounded) for the warm-up thread so the function does not return with it still running; never raises."""
+    import asyncio
+    try:
+        await asyncio.wait_for(task, timeout=8)
+    except Exception:                                                # noqa: BLE001
+        pass
+
+
 @app.function(image=image, secrets=SECRETS,
               timeout=300, retries=0)
 async def greet_and_send(sender: str, sender_lid: str = None):
+    import asyncio
     core = _core()
     settings = _settings()
-    disclosure = ((await _ensure_disclosure(sender, settings, alias=sender_lid))
-                  if settings.disclosure_enabled else {})
-    if disclosure.get("disclosure_state") in core.FIRST_CONTACT_SENT_STATES and not _has_pending_question(sender, settings):
-        # A NEW number's first contact was a greeting: the single first-contact message (which contains everything the welcome says) was just sent, and it IS the reply.
-        # (If a question is already pending, the "your answer is still being prepared" notice carries separate information and still follows, as before.)
-        row = core.first_contact_greeting_row(sender, settings, BUILD, disclosure)
+    # Started BEFORE the first-contact send and run in a thread, so it neither waits for nor delays the greeting (see the pre-warm block above).
+    prewarm = asyncio.ensure_future(asyncio.to_thread(_prewarm_sync, sender, settings))
+    try:
+        disclosure = ((await _ensure_disclosure(sender, settings, alias=sender_lid))
+                      if settings.disclosure_enabled else {})
+        if disclosure.get("disclosure_state") in core.FIRST_CONTACT_SENT_STATES and not _has_pending_question(sender, settings):
+            # A NEW number's first contact was a greeting: the single first-contact message (which contains everything the welcome says) was just sent, and it IS the reply.
+            # (If a question is already pending, the "your answer is still being prepared" notice carries separate information and still follows, as before.)
+            row = core.first_contact_greeting_row(sender, settings, BUILD, disclosure)
+            row.update(disclosure)
+            _write_row(row)
+            return {"send_ok": row["send_ok"]}
+        # A greeting while a question is PENDING must not get the welcome menu (it reads as "your question was
+        # forgotten"); it gets one brief line saying the answer is still being prepared.
+        if _has_pending_question(sender, settings):
+            row = await core.deliver_pending_notice(sender, _send_once, settings, BUILD)
+        else:
+            row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
         row.update(disclosure)
         _write_row(row)
         return {"send_ok": row["send_ok"]}
-    # A greeting while a question is PENDING must not get the welcome menu (it reads as "your question was
-    # forgotten"); it gets one brief line saying the answer is still being prepared.
-    if _has_pending_question(sender, settings):
-        row = await core.deliver_pending_notice(sender, _send_once, settings, BUILD)
-    else:
-        row = await core.deliver_greeting(sender, _send_once, settings, BUILD)
-    row.update(disclosure)
-    _write_row(row)
-    return {"send_ok": row["send_ok"]}
+    finally:
+        await _settle_prewarm(prewarm)
 
 
 async def _ensure_disclosure(sender, settings, alias=None):
@@ -3012,6 +3097,7 @@ def health():
         "digest_min_wait_s": _health_digest_min_wait(),
         "review_timeout": _review_timeout_health(),
         "slow_ack_after_s": float(os.environ.get("SLOW_ACK_AFTER_S", "12")),
+        "prewarm": _health_prewarm(),
         # Reported so the live check can prove WHICH ack timing is serving. R16: a
         # config-only change has no code diff to remind you a deploy happened, and a
         # warm container will happily keep the old value.

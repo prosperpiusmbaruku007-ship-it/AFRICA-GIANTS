@@ -55,6 +55,9 @@ missing answer, and the transcript records the failure either way.
 | `SENDER_SALT` | recommended | salt for the pseudonymous `sender_hash` |
 | `MODEL_TIMEOUT_S` | no (240) | raised from Railway's 180; cold starts measured 64–216s |
 | `SLOW_ACK_AFTER_S` | no (12) | the ONE acknowledgement ("Nimepata swali lako..."), sent once per question if the answer is not ready by then; no second ack; `0` disables it |
+| `PREWARM_ENABLED` | no (1) | pre-warm on greeting: a greeting starts a GPU container (cheap method, no generation, nothing sent to the model); anything but `1/true/yes/on` is OFF |
+| `PREWARM_PER_HOUR` | no (12) | the cap on warm-ups per hour across ALL senders; `0` = none; unparseable falls back to 12, never to unlimited |
+| `PREWARM_SENDER_COOLDOWN_S` | no (900) | one warm-up per sender per this window (minimum 60); a model call or warm-up in the last 300 s also suppresses one |
 | `COLD_START_SUSPECTED_S` | no (30) | threshold for the transcript's cold-start **proxy** |
 | `SEND_ATTEMPTS` | no (2) | one retry on a failed send |
 
