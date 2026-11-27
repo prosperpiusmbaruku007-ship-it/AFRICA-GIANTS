@@ -8,6 +8,7 @@ import http from "node:http";
 import QRCode from "qrcode";
 import { makeKv, useKvAuthState } from "./authstate.mjs";
 import { createPacer, pacerConfig } from "./pacer.mjs";
+import { extractInbound, wantsReceiptWait } from "./inbound.mjs";
 import pino from "pino";
 import makeWASocket, {
   DisconnectReason, fetchLatestBaileysVersion, Browsers,
@@ -114,7 +115,7 @@ async function start() {
     if (type !== "notify") return;
     for (const m of messages) {
       if (!m.message || m.key.fromMe) continue;
-      const text = m.message.conversation || m.message.extendedTextMessage?.text || "";
+      const { text, quotedId } = extractInbound(m.message);     // text rule unchanged; ADDS the id of a quoted message (reply-to-approve, 2026-11-28)
       S.last_inbound_ts = now();
       if (!text || !WEBHOOK_URL) continue;
       // Baileys v7 puts the phone JID in remoteJidAlt when remoteJid is a linked-ID; hand it
@@ -124,7 +125,7 @@ async function start() {
       if (alt) key.senderPn = alt;
       const body = { event: "messages.received",
         data: { messages: { key, conversation: text, messageTimestamp: m.messageTimestamp,
-                            pushName: m.pushName } } };
+                            pushName: m.pushName, ...(quotedId ? { quotedId } : {}) } } };
       try {
         const r = await fetch(WEBHOOK_URL, { method: "POST",
           headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -152,7 +153,7 @@ function toJid(to) {
   return d ? d + "@s.whatsapp.net" : "";
 }
 
-async function send({ to, text }) {
+async function send({ to, text, wait_receipt }) {
   if (S.connection !== "open" || !sock) return { code: 503, body: { ok: false, error: "not_connected", connection: S.connection } };
   const jid = toJid(String(to || ""));
   if (!jid || !text) return { code: 400, body: { ok: false, error: "bad_request" } };
@@ -168,6 +169,9 @@ async function send({ to, text }) {
   const row = { to: jid, ts: now(), status: "sent", rank: 1, receipt_ts: null };
   LEDGER.set(id, row);
   kv.ledgerPut(id, row).catch(() => {});
+  // A reviewer CARD push asks not to wait for the receipt (wait_receipt === false): it is reported as accepted-but-pending, exactly like a send whose receipt did not arrive in time, so the caller's
+  // existing pending handling applies and nothing is resent. Every other send keeps waiting.
+  if (!wantsReceiptWait({ wait_receipt })) return { code: 200, body: { ok: false, id, status: row.status, pending: true, waited: false } };
   const t0 = Date.now();
   while (Date.now() - t0 < RECEIPT_WAIT_MS && row.rank < 3) await new Promise((r) => setTimeout(r, 250));
   // ok is true ONLY on a delivery receipt. "server_ack" means WhatsApp took it, not that it arrived,
