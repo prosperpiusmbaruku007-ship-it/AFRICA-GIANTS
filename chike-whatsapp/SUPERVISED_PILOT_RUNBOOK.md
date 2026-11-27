@@ -158,6 +158,31 @@ Opening the link shows the same thing plus the facts **in full**, and **claims t
 **A decision is taken once.** A second decision on a decided item is refused rather than
 overwritten — re-sending a compliance answer is worse than one missing answer.
 
+### 3a. Approving by WhatsApp reply (founder amendment, 2026-11-28)
+
+Besides the link, a roster reviewer can approve a draft by **replying `TUMA` to its card, quoting it** (long-press the card message, choose Reply, type `TUMA`, send). **Only that.** Editing, withholding and retrying
+still need the link, because they need a reason. A person still reads the draft (it is in the card) and a person still decides.
+
+**What you will get back, in one short line, and what each means** (a stranger who is not on the roster gets nothing at all):
+
+| you sent | reply to you | why |
+|---|---|---|
+| `TUMA` quoting the card | **`Imetumwa ✓`** | approved and handed to WhatsApp; the participant got the draft exactly as shown |
+| `TUMA` with no quote | "jibu kadi yenyewe kwa kuinukuu..." | nothing is approved "by default": it must name a card |
+| `tuma tafadhali`, `TUMA!`, `ok`, a thumbs-up | "andika TUMA peke yake..." | only the exact word counts |
+| `TUMA` quoting something that is not a card, or another reviewer's card | "...si kadi ya rasimu ninayoitambua" / "...haikutumwa kwako" | |
+| `TUMA` on a card already decided | "...tayari imeshaamuliwa (sent, <name>)" | **nothing is sent a second time** |
+| `TUMA` when the draft has changed since the card | "rasimu imebadilika... fungua kiungo" | you approve what you were shown, never a newer text |
+| `TUMA` while another reviewer holds the draft | "inashikiliwa na <name>" | the same lock the page uses |
+| `TUMA` on a model-failure card | "...modeli ilishindwa. Tumia kiungo" | there is no draft to approve |
+
+A reply is recorded like a page decision (`decided_by_name`, and `decided_via: whatsapp_reply`), so each channel's edit rate can be read separately (`/review_queue`, the transcripts).
+
+**It only works after BOTH deploys, in this order: `chike-whatsapp` first, then `chike-bridge`.** Until the bridge forwards the quoted-message id every reply arrives without a quote and is refused with "no quote", never approved.
+**Live check (founder, after both deploys):** (1) quote a card and send `TUMA`: expect `Imetumwa ✓` and the participant (use a test number) receiving the draft. (2) NEGATIVE cases, each must change nothing and
+tell you why: `tuma tafadhali` on a pending card; `TUMA` again on the card you just approved (must NOT send twice); `TUMA` with no quote; `TUMA` quoting an old card of another reviewer. (3) Confirm a normal
+question from your own number still reaches the model (a roster number chatting normally is untouched).
+
 ### The claim lock
 
 Opening a draft locks it to you. A second reviewer opening the same draft is told it is held,

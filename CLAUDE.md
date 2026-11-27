@@ -1324,6 +1324,23 @@ shipping — ON THE CONDITION BELOW.**
 > change:** the literal words "jaribio linalosimamiwa" (a supervised test) no longer appear in the message; the supervision limb is carried by "Chike yuko katika hatua za mwanzo" together with
 > "husomwa na mtu". Void-list item 5 (dropping the participant disclosure) is enforced by that limb test: a pinned phrase may not be removed. Full record: `docs/decisions/2026-11-27_first_contact_message.md`.
 
+> ### ⚖️ **AMENDMENT 2026-11-28 — A REVIEWER MAY APPROVE BY A QUOTED WHATSAPP REPLY OF EXACTLY `TUMA` (founder; recorded at their instruction, not a quiet edit).**
+> **FROM:** approving a draft meant opening the card's link and tapping **Tuma** (two taps and a page load). **TO:** a roster reviewer may ALSO approve by replying **exactly `TUMA`** (case-insensitive, trimmed) to that
+> card, quoting it. **The link + Tuma flow stays, and is the ONLY way to edit, withhold or retry.**
+>
+> **WHAT THIS DOES AND DOES NOT CHANGE.** It changes the FORM of the human decision, not who or what may send. **A person still reads the draft (the push carries it in full) and a person still decides; nothing sends
+> unreviewed, and the 2026-11-13 amendment's limits and void-list items 1-6 are untouched.** It is an amendment because the 2026-10-10 reading was written around a decision taken on a page, and a decision taken by a
+> single word in a chat is easier to give by accident.
+>
+> **Each safeguard is a distinct, tested refusal (`handler_core.reply_approve_verdict`), and every refusal tells a roster reviewer WHY in one line (a silent no-op reads as "it worked"); a stranger is sent nothing:**
+> the sender is on the roster · the message **quotes a specific card** (no quote is never "approve the latest") · that card is one **we pushed, to THIS reviewer** (an unknown id or someone else's card is ignored) ·
+> the text is **exactly `TUMA`** (`tuma tafadhali`, `TUMA!`, `ok`, `👍` are ignored) · the card is **still pending** (a decided card is ignored and the reviewer is told who decided it) · it is a **draft** (a model-failure card
+> needs the page) · **the draft is unchanged since that card was pushed** (the reviewer approves what they were shown, byte for byte) · **no other reviewer holds the claim**.
+> **An approval goes through the SAME decision function as the page** (`_decide_and_send`: the claim, `apply_decision`'s attribution and draft-immutability assert, stored before sent), proved by AST not to be
+> re-implemented; the reply handler can only ever take the `send` action and can message only a reviewer's number. On success the reviewer receives `Imetumwa ✓`. Every decision records `decided_via` (`page` or
+> `whatsapp_reply`) beside WHO decided, so each channel's edit rate can be read separately.
+> **Needs the bridge to forward the quoted-message id** (until the `chike-bridge` redeploy a reply arrives with no quote and is refused with "no quote", never approved). Full record: `docs/decisions/2026-11-28_reply_approve_and_parallel_pushes.md`.
+
 **WHY THE CONDITION IS THE WHOLE RULING AND NOT A CAVEAT.** What R7 forbids is an unsupervised
 system giving a Tanzanian employer a confident wrong compliance answer. A cohort where a human
 reads every reply before it goes is **not that system** — the human is the gate. Remove the
@@ -1399,7 +1416,9 @@ widen it.** Any one of these ends it and puts the cohort back under R7 as a laun
    unreviewed reply, because the record then says it was checked;
 4. **a cohort large enough that review becomes skimming**;
 5. **dropping the participant disclosure**;
-6. **collapsing draft/final into one field**, or dropping per-reviewer attribution.
+6. **collapsing draft/final into one field**, or dropping per-reviewer attribution;
+7. **a reply-approve that approves without a quote of a specific pending card pushed to that reviewer, from a sender not on the roster, on any text other than exactly `TUMA`, or for a draft changed since the card was pushed**
+   (added 2026-11-28): each of those is a separate refusal in `reply_approve_verdict` with its own plant in `tests/test_reply_approve.py`; weakening any one is a change to this reading, not a bug fix.
 
 **"We ran a pilot before the gates passed" is not a precedent for the next one** — the
 precedent is the condition, not the pilot.
