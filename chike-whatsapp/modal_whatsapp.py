@@ -245,6 +245,9 @@ IDENTITY_ALIASES = modal.Dict.from_name("chike-identity-aliases-kv", create_if_m
 # KEY-ONLY index of bridge sends to PARTICIPANTS: `<owner hash>:<message id>` -> send time. Written at send time so a deletion on request can find a person's ledger
 # rows by KEY instead of reading the whole ledger (which made a FUTA take 7 min 46 s). The owner hash is of the CANONICAL digits. Pruned with the ledger (24 h).
 LEDGER_INDEX = modal.Dict.from_name("chike-ledger-index-kv", create_if_missing=True)
+# REPLY-TO-APPROVE (founder amendment, 2026-11-28): WhatsApp message id of every reviewer CARD we push -> {review_id, reviewer, draft_sha, ts}. A quoted "TUMA" is mapped back to ONE draft through this and nothing else;
+# an id not in here is "unknown card" and approves nothing. Holds reviewer numbers (roster, not participants) and review ids only; pruned after 14 days by the archive run.
+REVIEW_PUSHES = modal.Dict.from_name("chike-review-pushes-kv", create_if_missing=True)
 # BRIDGE_SEND_TOKEN is the only key used from it; attached here so no one has to copy a token
 # between secrets by hand.
 BRIDGE_SECRET = modal.Secret.from_name("chike-bridge")
@@ -442,6 +445,7 @@ async def answer_and_send(sender: str, text: str, retry_of: str = None, sender_l
         item["disclosure_state"] = disclosure.get("disclosure_state")     # the card warns if it failed
         item["answer_path"] = captured.get("path")                         # engine vs model, on the card
         item["answer_trace"] = core.answer_trace_record(captured.get("path"), captured.get("model_calls"), captured.get("guards"), row.get("fallback"), row.get("error_class"))
+        core.stamp_route(item)                                             # an explicit `route` on EVERY item, so per-route outcomes survive archiving (founder, 2026-11-28)
         try:    # ANOTHER pending draft from this sender with the same / near-identical question (in the PUSH)
             item["duplicates_pending"] = core.pending_duplicates(item, _queue_items())
         except Exception:                                            # noqa: BLE001
@@ -932,6 +936,12 @@ async def _ceiling_gate(to):
     return True, None
 
 
+import contextvars as _cv
+# Per-TASK (each reviewer push runs in its own task), so concurrent pushes cannot read each other's id. Set by _send_once_bridge, read by the push coroutine that awaited it.
+_LAST_SEND_ID = _cv.ContextVar("chike_last_send_id", default=None)
+_NO_RECEIPT_WAIT = _cv.ContextVar("chike_no_receipt_wait", default=False)
+
+
 async def _send_once(to: str, text: str):
     """(ok, detail). The retry policy lives in handler_core, where it is tested. Every outbound passes the send ceilings first."""
     allowed, why = await _ceiling_gate(to)
@@ -973,11 +983,12 @@ async def _send_once_bridge(to: str, text: str):
                 timeout=float(os.environ.get("BRIDGE_TIMEOUT_S", "35"))) as client:
             r = await client.post(f"{BRIDGE_URL}/send",
                                   headers={"authorization": f"Bearer {token}"},
-                                  json={"to": to, "text": text})
+                                  json=({"to": to, "text": text, "wait_receipt": False} if _NO_RECEIPT_WAIT.get() else {"to": to, "text": text}))
         try:
             body = r.json()
         except Exception:                                            # noqa: BLE001
             body = None
+        _LAST_SEND_ID.set(body.get("id") if isinstance(body, dict) else None)
         _index_ledger_send(to, body)
         return core.bridge_send_result(r.status_code, body)
     except (httpx.ConnectError, httpx.ConnectTimeout) as e:
@@ -1323,6 +1334,19 @@ def webhook(item: dict, token: str = None):
             _m = (item.get("data") or {}).get("messages") or {}
             print(f"[chike] LID sender; messages keys = {sorted(_m)[:30]}; "
                   f"key keys = {sorted(_m.get('key') or {})[:15]}")
+        # A reviewer's reply to a CARD is a review interaction, never a participant question (founder amendment, 2026-11-28). Consumed here, before anything else sees it.
+        _quoted = parsed.get("quoted_id")
+        try:
+            _known_card = bool(_quoted) and REVIEW_PUSHES.get(_quoted) is not None
+        except Exception:                                            # noqa: BLE001
+            _known_card = False
+        _reply_class = core.classify_reviewer_reply(parsed, _settings().roster, _known_card)
+        if _reply_class == "review":
+            review_reply_and_act.spawn(parsed["sender"], parsed["text"], _quoted, sender_lid=parsed.get("sender_lid"))
+            return {"status": "ok"}
+        if _reply_class == "drop":
+            print("[review/reply] not_roster (a non-roster sender quoted a card; dropped)", flush=True)
+            return {"status": "ignored"}
         _record_alias(parsed["sender"], parsed.get("sender_lid"))
         if parsed["kind"] == "greeting":
             greet_and_send.spawn(parsed["sender"], sender_lid=parsed.get("sender_lid"))
@@ -1391,6 +1415,35 @@ def _draft_link(settings, item, number):
         f"{REVIEW_D_URL}/{core.review_link_token(settings.review_signing_key, item['review_id'], number)}")
 
 
+_NOTIFY_PARALLEL_MAX = 4
+
+
+async def _push_card(core, settings, item, number, name, renotify):
+    """One reviewer's card push. Returns (ok, detail). Never waits for the delivery receipt (the bridge returns on acceptance; a stall is flagged by the bridge watch and the sweeper re-notifies), and records
+    the WhatsApp message id of the card so a quoted reply can be mapped back to this draft. Runs in its own task, so the two context variables cannot leak into a sibling push."""
+    import time as _t
+    text = core.notification_text(
+        item, _draft_link(settings, item, number), reviewer_name=name,
+        renotify=renotify,
+        autosend_note_text=core.autosend_note(item, after_s=settings.autosend_after_s,
+                                              enabled=settings.autosend_enabled))
+    _LAST_SEND_ID.set(None)
+    _NO_RECEIPT_WAIT.set(True)
+    try:
+        ok, detail = await _send_once(number, text)
+        mid = _LAST_SEND_ID.get()
+    finally:
+        _NO_RECEIPT_WAIT.set(False)
+    if mid:
+        rec = core.card_push_record(item, number, _t.time())
+        if rec:                                                      # a model-failure card has no draft: nothing to approve by reply
+            try:
+                REVIEW_PUSHES[str(mid)] = rec
+            except Exception as e:                                   # noqa: BLE001
+                print(f"[review] card id not recorded ({type(e).__name__}): reply-to-approve is unavailable for this card; the link still works", flush=True)
+    return ok, detail
+
+
 async def _notify_reviewers(item, *, renotify=False):
     """Push one draft to every reviewer on the roster, each with their own link.
 
@@ -1423,19 +1476,28 @@ async def _notify_reviewers(item, *, renotify=False):
         item = {**item, "duplicates_pending": core.pending_duplicates(item, _queue_items())}
     except Exception:                                                # noqa: BLE001
         pass
+    import asyncio
     ok_count = 0
-    for number, name in settings.roster:
-        text = core.notification_text(
-            item, _draft_link(settings, item, number), reviewer_name=name,
-            renotify=renotify,
-            autosend_note_text=core.autosend_note(item, after_s=settings.autosend_after_s,
-                                                  enabled=settings.autosend_enabled))
-        ok, detail = await _send_once(number, text)
-        if ok or core.is_pending_receipt(detail):      # accepted by WhatsApp; the ceiling flags a stall
-            ok_count += 1
-        else:
-            print(f"[review] notify FAILED to ...{core.number_tail(number)} for "
-                  f"{item['review_id']}: {detail}", flush=True)
+    raised = None
+    reviewers = list(settings.roster)
+    # PARALLEL, in batches (founder, 2026-11-28): the pushes used to go one reviewer at a time, each waiting for WhatsApp's delivery receipt, so N reviewers cost N receipt waits. The bridge's pacer still
+    # spaces the sends (~2 s apart) and refuses one queued longer than ~10 s, so batches of _NOTIFY_PARALLEL_MAX stay inside that bound.
+    for i in range(0, len(reviewers), _NOTIFY_PARALLEL_MAX):
+        batch = reviewers[i:i + _NOTIFY_PARALLEL_MAX]
+        results = await asyncio.gather(*[_push_card(core, settings, item, number, name, renotify) for number, name in batch], return_exceptions=True)
+        for (number, name), res in zip(batch, results):
+            if isinstance(res, BaseException):
+                print(f"[review] notify RAISED to ...{core.number_tail(number)} for {item['review_id']}: {type(res).__name__}", flush=True)
+                raised = raised or res                    # re-raised below, once the whole batch has been attempted: the hold's handler keeps the draft pending, as before
+                continue
+            ok, detail = res
+            if ok or core.is_pending_receipt(detail):      # accepted by WhatsApp; the ceiling flags a stall
+                ok_count += 1
+            else:
+                print(f"[review] notify FAILED to ...{core.number_tail(number)} for "
+                      f"{item['review_id']}: {detail}", flush=True)
+    if raised is not None:
+        raise raised
     return ok_count
 
 
@@ -2071,6 +2133,95 @@ async def review_claim(request: Request):
                   "status": updated.get("status")})
 
 
+async def _decide_and_send(rid, existing, number, name, action, edited, reason, via="page"):
+    """THE ONE PLACE A DECISION IS STORED, SENT AND RECORDED (shared by the review page and a WhatsApp reply, 2026-11-28). Returns (payload, http status). Everything that makes a decision safe lives
+    in core.apply_decision (claim held by THIS reviewer, reason for a departure, the draft kept verbatim) and in the order below (store the decision BEFORE sending); a reply-to-approve gets all of it
+    by calling this, not by re-implementing it."""
+    core = _core()
+    existing, _released = core.release_expired_claim(existing)
+    try:
+        updated, to_send = core.apply_decision(
+            existing, action, reviewer=number, reviewer_name=name,
+            edited=edited, reason=reason)
+    except ValueError as e:
+        return {"ok": False, "detail": str(e)}, 409
+
+    updated["decided_via"] = via                                     # "page" or "whatsapp_reply": attribution of HOW it was decided, beside WHO
+    # ⚠️ STORE THE DECISION BEFORE SENDING. A stored decision with send_ok=false is
+    # recoverable; a successful send with no stored decision is a message the user has and
+    # the record does not — and the same answer can then be sent twice, which this app's own
+    # `retries=0` comment already names as worse than one missing answer.
+    send_ok, send_error = None, None
+    try:
+        REVIEW_QUEUE[rid] = updated
+    except Exception as e:                                           # noqa: BLE001
+        return {"ok": False, "detail": f"store failed: {e}"}, 500
+    if updated.get("status") == "retried":
+        # RETRY sends NOTHING to the participant: it re-asks the model and holds the NEW draft
+        # for review like any other (answer_and_send with retry_of: no new acks). If the job
+        # cannot be started the decision is put back, so the question is never left decided
+        # and unanswered.
+        try:
+            answer_and_send.spawn(existing["sender"], existing.get("question") or "", rid)
+        except Exception as e:                                       # noqa: BLE001
+            try:
+                REVIEW_QUEUE[rid] = existing
+            except Exception:                                        # noqa: BLE001
+                pass
+            return {"ok": False,
+                    "detail": f"retry could not be started ({type(e).__name__}); "
+                              f"the draft is still pending"}, 500
+        print(f"[review] RETRY of {rid} started by {name}", flush=True)
+    if to_send:
+        import time as _t
+        from datetime import datetime as _dt, timezone as _tz
+        _t0 = _t.monotonic()
+        send_ok, send_error = await _send_once(existing["sender"], to_send)
+        updated["send_ok"], updated["send_error"] = send_ok, send_error
+        updated["send_state"] = core.send_state(send_ok, send_error)
+        # THE DELIVERY STAMP (founder, 2026-11-28): when the send call RETURNED (on WhatsApp's delivery receipt when send_state is "delivered") and how long it took, so decision -> delivered is measurable per row.
+        updated["send_returned_ts"] = _dt.now(_tz.utc).isoformat(timespec="seconds")
+        updated["send_ms"] = int((_t.monotonic() - _t0) * 1000)
+        updated["reply_address_kind"] = core.reply_address_kind(existing["sender"])
+        try:
+            REVIEW_QUEUE[rid] = updated
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[review] send result recorded only in logs ({e})")
+
+    # The decided item also lands in the TRANSCRIPT store, so the analysis corpus holds
+    # draft / final / edit_reason as three separate fields without a manual export.
+    _write_row({
+        "ts": updated["decided_ts"], "build": updated.get("build"), "kind": "review",
+        "sender_hash": updated["sender_hash"], "sender_tail": updated.get("sender_tail"),
+        "sender_domain": core.sender_domain(existing["sender"]),
+        "reply_address_kind": core.reply_address_kind(existing["sender"]),
+        "send_state": updated.get("send_state"), "send_returned_ts": updated.get("send_returned_ts"), "send_ms": updated.get("send_ms"), "decided_via": via,
+        "route": updated.get("route"), "question": updated.get("question"),
+        "reply": updated.get("final"), "reply_chars": len(updated.get("final") or ""),
+        "model_latency_ms": updated.get("model_latency_ms"), "total_latency_ms": None,
+        "fallback": updated.get("fallback"), "error_class": updated.get("error_class"),
+        "error_detail": None, "cold_start_suspected": False, "ack_sent": False,
+        "acks_sent": 0, "send_ok": send_ok, "send_error": send_error,
+        "supervision": updated["status"],
+        "draft": updated["draft"], "final": updated.get("final"),
+        "edit_reason": updated.get("edit_reason"),
+        "decision_latency_s": updated.get("decision_latency_s"),
+        # ⛔ WHO decided, in the analysis corpus too — not only in the queue, which gets
+        # purged. Per-reviewer corrections are the signal that shows one reviewer approving
+        # what another would have caught, and it cannot be recovered later.
+        "decided_by_name": updated.get("decided_by_name"),
+        "test_sender": bool(updated.get("test_sender")),
+        "claim_count": updated.get("claim_count"),
+        "release_count": updated.get("release_count"),
+        "notify_count": updated.get("notify_count"),
+    })
+    print(f"[review] {updated['status'].upper()} {rid} by {name} "
+          f"latency={updated.get('decision_latency_s')}s "
+          f"reason={updated.get('edit_reason')!r}", flush=True)
+    return {"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
+            "send_error": send_error, "send_state": updated.get("send_state")}, 200
+
+
 @app.function(image=image, secrets=SECRETS, timeout=120)
 @modal.fastapi_endpoint(method="POST")
 async def review_act(request: Request):
@@ -2097,80 +2248,66 @@ async def review_act(request: Request):
         existing = REVIEW_QUEUE[rid]
     except Exception:                                                # noqa: BLE001
         return _cors({"ok": False, "detail": f"unknown review_id {rid!r}"}, 404)
-    existing, _released = core.release_expired_claim(existing)
-    try:
-        updated, to_send = core.apply_decision(
-            existing, item.get("action"), reviewer=number, reviewer_name=name,
-            edited=item.get("edited"), reason=item.get("reason"))
-    except ValueError as e:
-        return _cors({"ok": False, "detail": str(e)}, 409)
+    body, code = await _decide_and_send(rid, existing, number, name, item.get("action"), item.get("edited"), item.get("reason"), "page")
+    return _cors(body, code)
 
-    # ⚠️ STORE THE DECISION BEFORE SENDING. A stored decision with send_ok=false is
-    # recoverable; a successful send with no stored decision is a message the user has and
-    # the record does not — and the same answer can then be sent twice, which this app's own
-    # `retries=0` comment already names as worse than one missing answer.
-    send_ok, send_error = None, None
+
+@app.function(image=image, secrets=SECRETS, timeout=120, retries=0)
+async def review_reply_and_act(sender: str, text: str, quoted_id: str = None, sender_lid: str = None):
+    """A roster reviewer's WhatsApp reply to a card (founder amendment, 2026-11-28). Spawned by the webhook, which has already decided this message is a review interaction (core.classify_reviewer_reply).
+
+    The verdict is PURE (core.reply_approve_verdict: eight distinct refusals, each with a one-line reason to the reviewer); an approval then claims for THIS reviewer and goes through the same
+    _decide_and_send as the page. LOGS CARRY THE VERDICT CODE ONLY, never the text or the draft. A stranger gets nothing. A failure to tell the reviewer never undoes or repeats a decision."""
+    core = _core()
+    settings = _settings()
     try:
-        REVIEW_QUEUE[rid] = updated
+        push = REVIEW_PUSHES.get(quoted_id) if quoted_id else None
+    except Exception:                                                # noqa: BLE001
+        push = None
+    item = None
+    if isinstance(push, dict) and push.get("review_id"):
+        try:
+            item = REVIEW_QUEUE[push["review_id"]]
+        except Exception:                                            # noqa: BLE001
+            item = None
+    verdict = core.reply_approve_verdict(roster=settings.roster, sender=sender, text=text, quoted_id=quoted_id, push=push, item=item)
+    print(f"[review/reply] {verdict['code']}", flush=True)
+
+    async def tell(number, line):
+        try:
+            await _send_once(number, line)
+        except Exception as e:                                       # noqa: BLE001
+            print(f"[review/reply] could not tell the reviewer ({type(e).__name__})", flush=True)
+
+    if verdict["action"] != "approve":
+        if verdict.get("reply") and verdict.get("reviewer"):
+            await tell(verdict["reviewer"], verdict["reply"])
+        return {"approved": False, "code": verdict["code"]}
+    number, name, rid = verdict["reviewer"], verdict["name"], item["review_id"]
+    try:
+        fresh = REVIEW_QUEUE[rid]
+    except Exception:                                                # noqa: BLE001
+        await tell(number, core.REPLY_REASONS["card_gone"])
+        return {"approved": False, "code": "card_gone"}
+    fresh, _released = core.release_expired_claim(fresh)
+    claimed, outcome = core.claim(fresh, number, ttl_s=settings.claim_ttl_s)
+    if outcome not in ("claimed", "already_yours"):
+        code = "decided" if outcome == "decided" else "held_by_other"
+        holder = next((n for num, n in settings.roster if num == claimed.get("claimed_by")), "mtu mwingine")
+        await tell(number, core.REPLY_REASONS[code].format(status=claimed.get("status"), by=claimed.get("decided_by_name") or "?", holder=holder))
+        return {"approved": False, "code": code}
+    try:
+        REVIEW_QUEUE[rid] = claimed
     except Exception as e:                                           # noqa: BLE001
-        return _cors({"ok": False, "detail": f"store failed: {e}"}, 500)
-    if updated.get("status") == "retried":
-        # RETRY sends NOTHING to the participant: it re-asks the model and holds the NEW draft
-        # for review like any other (answer_and_send with retry_of: no new acks). If the job
-        # cannot be started the decision is put back, so the question is never left decided
-        # and unanswered.
-        try:
-            answer_and_send.spawn(existing["sender"], existing.get("question") or "", rid)
-        except Exception as e:                                       # noqa: BLE001
-            try:
-                REVIEW_QUEUE[rid] = existing
-            except Exception:                                        # noqa: BLE001
-                pass
-            return _cors({"ok": False,
-                          "detail": f"retry could not be started ({type(e).__name__}); "
-                                    f"the draft is still pending"}, 500)
-        print(f"[review] RETRY of {rid} started by {name}", flush=True)
-    if to_send:
-        send_ok, send_error = await _send_once(existing["sender"], to_send)
-        updated["send_ok"], updated["send_error"] = send_ok, send_error
-        updated["send_state"] = core.send_state(send_ok, send_error)
-        updated["reply_address_kind"] = core.reply_address_kind(existing["sender"])
-        try:
-            REVIEW_QUEUE[rid] = updated
-        except Exception as e:                                       # noqa: BLE001
-            print(f"[review] send result recorded only in logs ({e})")
-
-    # The decided item also lands in the TRANSCRIPT store, so the analysis corpus holds
-    # draft / final / edit_reason as three separate fields without a manual export.
-    _write_row({
-        "ts": updated["decided_ts"], "build": updated.get("build"), "kind": "review",
-        "sender_hash": updated["sender_hash"], "sender_tail": updated.get("sender_tail"),
-        "sender_domain": core.sender_domain(existing["sender"]),
-        "reply_address_kind": core.reply_address_kind(existing["sender"]),
-        "send_state": updated.get("send_state"), "question": updated.get("question"),
-        "reply": updated.get("final"), "reply_chars": len(updated.get("final") or ""),
-        "model_latency_ms": updated.get("model_latency_ms"), "total_latency_ms": None,
-        "fallback": updated.get("fallback"), "error_class": updated.get("error_class"),
-        "error_detail": None, "cold_start_suspected": False, "ack_sent": False,
-        "acks_sent": 0, "send_ok": send_ok, "send_error": send_error,
-        "supervision": updated["status"],
-        "draft": updated["draft"], "final": updated.get("final"),
-        "edit_reason": updated.get("edit_reason"),
-        "decision_latency_s": updated.get("decision_latency_s"),
-        # ⛔ WHO decided, in the analysis corpus too — not only in the queue, which gets
-        # purged. Per-reviewer corrections are the signal that shows one reviewer approving
-        # what another would have caught, and it cannot be recovered later.
-        "decided_by_name": updated.get("decided_by_name"),
-        "test_sender": bool(updated.get("test_sender")),
-        "claim_count": updated.get("claim_count"),
-        "release_count": updated.get("release_count"),
-        "notify_count": updated.get("notify_count"),
-    })
-    print(f"[review] {updated['status'].upper()} {rid} by {name} "
-          f"latency={updated.get('decision_latency_s')}s "
-          f"reason={updated.get('edit_reason')!r}", flush=True)
-    return _cors({"ok": True, "status": updated["status"], "by": name, "send_ok": send_ok,
-                  "send_error": send_error, "send_state": updated.get("send_state")})
+        print(f"[review/reply] claim not stored ({type(e).__name__}) -- NOT approving", flush=True)
+        await tell(number, core.REPLY_REASONS["send_failed"])
+        return {"approved": False, "code": "claim_store_failed"}
+    body, status = await _decide_and_send(rid, claimed, number, name, "send", None, None, "whatsapp_reply")
+    if body.get("ok") and (body.get("send_ok") or core.is_pending_receipt(body.get("send_error"))):
+        await tell(number, core.REPLY_APPROVED_TEXT)
+        return {"approved": True, "code": "approve"}
+    await tell(number, core.REPLY_REASONS["send_failed"] if body.get("ok") else core.REPLY_REASONS["decided"].format(status="?", by="?"))
+    return {"approved": bool(body.get("ok")), "code": "send_failed" if body.get("ok") else "decide_refused"}
 
 
 @app.function(image=image, secrets=SECRETS)
@@ -2289,6 +2426,11 @@ def _archive_pass(store=None):
         summary.update(core.prune_bridge_ledger(BRIDGE_LEDGER, LEDGER_INDEX, _t.time(), protect=set(PENDING_ROWS.keys())))
     except Exception as e:                                           # noqa: BLE001
         summary["ledger_prune_error"] = type(e).__name__               # visible in /health's last_summary; never fails the archive
+    try:    # card-push records older than 14 days (reply-to-approve map)
+        import time as _t3
+        summary.update(core.prune_review_pushes(REVIEW_PUSHES, _t3.time()))
+    except Exception as e:                                           # noqa: BLE001
+        summary["pushes_prune_error"] = type(e).__name__
     return summary
 
 
@@ -2749,15 +2891,18 @@ async def _do_auto_send(it, settings):
     except Exception as e:                                           # noqa: BLE001
         print(f"[autosend] store failed for {rid}: {type(e).__name__} -- NOT sent", flush=True)
         return False
+    import time as _t
+    _t0 = _t.monotonic()
     send_ok, send_error = await _send_once(cur["sender"], text)
+    _stamp = {"send_returned_ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), "send_ms": int((_t.monotonic() - _t0) * 1000)}
     fresh = _fresh_item(upd)
     if fresh is None:
         print(f"[autosend] {rid} was removed during the send -- result NOT written (not resurrecting it)", flush=True)
         return True
     fresh.update(send_ok=send_ok, send_error=send_error, send_state=core.send_state(send_ok, send_error),
                  reply_address_kind=core.reply_address_kind(cur["sender"]), status="auto_sent",
-                 auto_sent_ts=upd["auto_sent_ts"], auto_sent_text=text)
-    upd.update({k: fresh[k] for k in ("send_ok", "send_error", "send_state", "reply_address_kind")})
+                 auto_sent_ts=upd["auto_sent_ts"], auto_sent_text=text, **_stamp)
+    upd.update({k: fresh[k] for k in ("send_ok", "send_error", "send_state", "reply_address_kind", "send_returned_ts", "send_ms")})
     try:
         REVIEW_QUEUE[rid] = fresh
     except Exception as e:                                           # noqa: BLE001

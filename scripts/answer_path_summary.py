@@ -55,6 +55,11 @@ def render_latency(rep):
         for n, label in names:
             d = rep[key][n]
             lines.append(f"    {label:<28} n={d['n']:<3} p50={'-' if d['p50'] is None else d['p50']:<8} p90={'-' if d['p90'] is None else d['p90']:<8} max={'-' if d['max'] is None else d['max']}")
+    dv = rep.get("delivery") or {}
+    if dv:
+        d1, d2 = dv["decision_to_delivered_s"], dv["send_call_s"]
+        lines.append(f"  [delivery] decision -> delivered n={d1['n']} p50={'-' if d1['p50'] is None else d1['p50']} p90={'-' if d1['p90'] is None else d1['p90']} | send call n={d2['n']} p50={'-' if d2['p50'] is None else d2['p50']} | "
+                     f"{dv['no_stamp_legacy']} legacy without a stamp, {dv['not_delivered']} not receipted")
     lines += ["  NOT MEASURED: " + x for x in rep["not_measured"]]
     return "\n".join(lines)
 

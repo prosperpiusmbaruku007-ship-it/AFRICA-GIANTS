@@ -489,6 +489,9 @@ def parse_webhook(body):
         return None
     kind = "futa" if futa_word(text) else ("greeting" if text.lower() in GREETINGS else "question")
     out = {"kind": kind, "sender": sender, "text": text}
+    quoted = messages.get("quotedId") or (messages.get("key") or {}).get("quotedId")      # the bridge forwards the quoted message id (2026-11-28, reply-to-approve)
+    if isinstance(quoted, str) and quoted.strip():
+        out["quoted_id"] = quoted.strip()
     if sender.endswith("@lid"):
         # A linked-ID is not a phone number. Wappfly also sends the phone in
         # `cleanedSenderPn` / `senderPn` (seen 2026-11-10), and a phone JID is the address
@@ -1459,6 +1462,130 @@ def review_item(row, sender, draft, engine_working=None, facts=(), review_id=Non
         "decided_by": None,
         "decided_by_name": None,
     }
+
+
+# ── REPLY-TO-APPROVE (founder amendment, 2026-11-28) ─────────────────────────────────────────────────────────────────────────────────────────────
+# A reviewer may approve a draft by REPLYING "TUMA" to its card, quoting it. The link + Tuma-button flow is unchanged and stays the only way to edit, withhold or retry.
+# The push already carries the WHOLE draft, so this is read-then-approve; what it must never become is a way to approve a draft the reviewer was not shown. Every safeguard below
+# is a distinct, tested refusal, and every refusal tells the reviewer WHY in one short line (a silent no-op reads as "it worked" at 2am).
+#   1. the sender is on the roster                       (anyone else: dropped silently, nothing is sent to a stranger)
+#   2. the message QUOTES a card                         (no quote: ignored, never "approve the latest")
+#   3. that card is one WE pushed, to THIS reviewer      (an unknown id, or someone else's card: ignored)
+#   4. the text is exactly TUMA, case-insensitive, trimmed ("tuma tafadhali", "TUMA!" and "ok" are ignored)
+#   5. the card is still pending                         (a decided card: ignored, and the reviewer is told who decided it)
+#   6. the card is a DRAFT (not a model-failure card)    (those need the page: there is nothing to approve)
+#   7. the draft is UNCHANGED since that card was pushed (the reviewer approves what they were shown, byte for byte)
+#   8. no OTHER reviewer holds the claim                 (the same lock the page uses)
+# Approval then goes through the SAME decision function as the page (claim, apply_decision, store, send, record), so attribution and the draft-immutability assert are not re-implemented.
+REPLY_APPROVE_WORD = "TUMA"
+REPLY_APPROVED_TEXT = "Imetumwa ✓"
+REPLY_REASONS = {
+    "no_quote": "Sikuweza kutuma: jibu kadi yenyewe kwa kuinukuu (bonyeza ujumbe wa rasimu, chagua Reply), kisha andika TUMA tu.",
+    "unknown_card": "Sikuweza kutuma: ujumbe uliounukuu si kadi ya rasimu ninayoitambua. Tumia kiungo kwenye kadi.",
+    "wrong_reviewer": "Sikuweza kutuma: kadi hii haikutumwa kwako.",
+    "not_tuma": "Hakuna kilichotumwa: andika TUMA peke yake (hakuna maneno mengine). Kuhariri au kuzuia, tumia kiungo kwenye kadi.",
+    "card_gone": "Hakuna kilichotumwa: rasimu hii haipo tena kwenye foleni.",
+    "decided": "Hakuna kilichotumwa: rasimu hii tayari imeshaamuliwa ({status}, {by}).",
+    "no_draft": "Hakuna kilichotumwa: hii si rasimu ya jibu (modeli ilishindwa). Tumia kiungo kwenye kadi.",
+    "draft_changed": "Hakuna kilichotumwa: rasimu imebadilika tangu kadi hii ilipotumwa. Fungua kiungo kuona ya sasa.",
+    "held_by_other": "Hakuna kilichotumwa: rasimu inashikiliwa na {holder} kwa sasa.",
+    "send_failed": "Uamuzi umehifadhiwa lakini kutuma kumeshindikana. Angalia kiungo kwenye kadi.",
+}
+
+
+def is_reply_approve_word(text):
+    """EXACTLY the word, ignoring case and surrounding whitespace. 'tuma tafadhali', 'TUMA!', 'tuma 1' and 'ok' are NOT approvals: a loose match here is how a stray reply approves a compliance answer."""
+    return str(text if text is not None else "").strip().upper() == REPLY_APPROVE_WORD
+
+
+def draft_digest(draft):
+    return hashlib.sha256(str(draft if draft is not None else "").encode("utf-8")).hexdigest()[:16]
+
+
+def card_push_record(item, reviewer, now_ts):
+    """What is stored against a pushed card's WhatsApp message id so a quoted reply can be mapped back to ONE draft. None when this push carries no draft (a model-failure card, or an empty draft)."""
+    if item.get("fallback") or not str(item.get("draft") or "").strip():
+        return None
+    return {"review_id": item["review_id"], "reviewer": reviewer, "draft_sha": draft_digest(item["draft"]), "ts": float(now_ts), "kind": "card"}
+
+
+def prune_review_pushes(pushes, now_ts, max_age_s=14 * 86400):
+    """Remove card-push records older than max_age_s (same rule and shape as prune_bridge_ledger: unreadable timestamps are KEPT, never guessed at). Returns counts."""
+    removed = kept_bad = 0
+    for k in list(pushes.keys()):
+        rec = pushes.get(k)
+        try:
+            age = float(now_ts) - float(rec["ts"])
+        except Exception:                                            # noqa: BLE001
+            kept_bad += 1
+            continue
+        if age > max_age_s:
+            try:
+                pushes.pop(k, None)
+                removed += 1
+            except Exception:                                        # noqa: BLE001
+                pass
+    return {"pushes_pruned": removed, "pushes_kept_bad_ts": kept_bad}
+
+
+def classify_reviewer_reply(parsed, roster, quoted_is_known_card):
+    """'review' | 'drop' | 'none': what the webhook does with an inbound message BEFORE treating it as a participant's question.
+      review: a roster sender who sent exactly TUMA (quoting or not), or ANY text that quotes a card we pushed. It is consumed here: a reviewer's "TUMA" must never become a question to the model.
+      drop:   a NON-roster sender quoting one of our cards. Nothing is sent to them and nothing is approved.
+      none:   everything else (an ordinary participant message, including a roster number chatting normally)."""
+    is_roster = is_reviewer_number(parsed.get("sender"), roster)
+    if is_roster and (is_reply_approve_word(parsed.get("text")) or quoted_is_known_card):
+        return "review"
+    if quoted_is_known_card and not is_roster:
+        return "drop"
+    return "none"
+
+
+def reply_approve_verdict(*, roster, sender, text, quoted_id, push, item, now=None):
+    """Pure. {"action": "approve"|"ignore", "code", "reviewer", "name", "reply"} -- `reply` is the one short line to send the reviewer (None for a stranger).
+    Every check is its own refusal; see the block comment above for the order and the reason for each."""
+    now = now or datetime.now(timezone.utc)
+    d = _local_digits(sender)
+    seat = next(((n, nm) for n, nm in (roster or ()) if d and _local_digits(n) == d), None)
+    if seat is None:
+        return {"action": "ignore", "code": "not_roster", "reviewer": None, "name": None, "reply": None}
+    number, name = seat
+
+    def no(code, **fmt):
+        return {"action": "ignore", "code": code, "reviewer": number, "name": name, "reply": REPLY_REASONS[code].format(**fmt) if fmt else REPLY_REASONS[code]}
+    if not quoted_id:
+        return no("no_quote")
+    if not isinstance(push, dict) or not push.get("review_id"):
+        return no("unknown_card")
+    if push.get("reviewer") != number:
+        return no("wrong_reviewer")
+    if not is_reply_approve_word(text):
+        return no("not_tuma")
+    if not isinstance(item, dict):
+        return no("card_gone")
+    if item.get("review_id") != push.get("review_id"):
+        return no("unknown_card")                                    # the stored card points at a different draft than the queue holds: refuse, never guess
+    if item.get("status") != "pending":
+        return no("decided", status=item.get("status"), by=item.get("decided_by_name") or "?")
+    if item.get("fallback") or not str(item.get("draft") or "").strip():
+        return no("no_draft")
+    if push.get("draft_sha") != draft_digest(item.get("draft")):
+        return no("draft_changed")
+    holder = item.get("claimed_by")
+    if holder and holder != number and not _claim_expired(item, now):
+        return no("held_by_other", holder=next((nm for n, nm in (roster or ()) if n == holder), "mtu mwingine"))
+    return {"action": "approve", "code": "approve", "reviewer": number, "name": name, "reply": None}
+
+
+# ── THE ROUTE IS STORED ON EVERY REVIEW ITEM, hot and archived (founder, 2026-11-28) ─────────────────────────────────────────────────────────────────────
+# Archived items carried no route (36 of 36 on 2026-11-27: they predate `answer_path`), so per-route outcomes from real participants could not be computed. `stamp_route` writes an explicit `route`
+# (+ `routes`) beside the trace; `archive_record` derives it for anything that lacks one. A legacy item with no path says "unknown" -- it is NEVER back-filled by re-running the router on its question,
+# because the router today is not the route that was taken then.
+def stamp_route(item):
+    rts = item_routes(item)
+    item["routes"] = list(rts)
+    item["route"] = rts[0] if len(rts) == 1 else "+".join(sorted(set(rts)))
+    return item
 
 
 def apply_decision(item, action, *, reviewer=None, edited=None, reason=None,
@@ -2712,6 +2839,8 @@ def archive_record(kind, obj, signing_key):
     rec = json.loads(json.dumps(obj, default=str))
     rec.pop("sender", None)
     rec.pop("sender_lid", None)
+    if kind == "review" and not rec.get("route"):
+        stamp_route(rec)                  # explicit, so per-route outcomes survive archiving; "unknown" for a legacy item, never re-derived from the question
     for k in ("claimed_by", "released_from", "decided_by"):
         who = rec.pop(k, None)
         if who:
@@ -2930,11 +3059,29 @@ def latency_report(items, rows, include_test=False, test_hashes=()):
             legs[n].append(vals[n])
             bucket[n].append(vals[n])
 
+    # DECISION -> DELIVERED (founder, 2026-11-28): from the per-row stamp `send_returned_ts` (when the send call returned: on WhatsApp's delivery receipt when `send_state` is "delivered") and `send_ms`. Independent of the
+    # question-row join. Items decided BEFORE the stamp existed carry none: they are COUNTED (`no_stamp_legacy`), never estimated, and a send that was not receipted (`send_state` != delivered) is counted, not timed.
+    dlv, send_ms, no_stamp, not_delivered = [], [], 0, 0
+    for i in live_items:
+        if i.get("status") not in ("sent", "edited") or i.get("fallback"):
+            continue
+        if i.get("send_state") != "delivered":
+            not_delivered += 1
+            continue
+        ret, dec = _parse_ts(i.get("send_returned_ts")), _parse_ts(i.get("decided_ts"))
+        if ret is None or dec is None:
+            no_stamp += 1
+            continue
+        dlv.append(ret.timestamp() - dec.timestamp())
+        if isinstance(i.get("send_ms"), (int, float)):
+            send_ms.append(i["send_ms"] / 1000.0)
+
     def stats(d):
         return {n: {"n": len(v), "p50": _percentile(v, 0.5), "p90": _percentile(v, 0.9), "max": (round(max(v), 1) if v else None)} for n, v in d.items()}
     return {"answered_sent": answered, "unjoined": unjoined, "auto_sent_excluded": auto_excluded, "excluded_test": len(items) - len(live_items),
             "all": stats(legs), "cold": stats(cold["cold"]), "warm": stats(cold["warm"]),
-            "not_measured": ["decision -> delivered (no per-row delivery stamp is stored)"]}
+            "delivery": {**stats({"decision_to_delivered_s": dlv, "send_call_s": send_ms}), "no_stamp_legacy": no_stamp, "not_delivered": not_delivered},
+            "not_measured": ["decision -> delivered for items decided before the delivery stamp existed (2026-11-28): `delivery.no_stamp_legacy` counts them, none is estimated"]}
 
 
 def route_report(items, aggregates=(), include_test=False, test_hashes=()):

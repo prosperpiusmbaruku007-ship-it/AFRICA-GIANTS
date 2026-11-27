@@ -567,7 +567,10 @@ def test_only_the_two_timeout_helpers_send_to_a_participant_without_a_human_deci
     assert "review_timeout_sweep" not in senders, "the loop itself must not send; only the boxed helpers do"
     assert {"_do_auto_send", "_do_holding_notice"} <= set(senders)
     # and nothing else grew a participant send: the known set, so a new one has to be added HERE on purpose
-    allowed = {"_do_auto_send", "_do_holding_notice", "review_act", "_ensure_disclosure", "_notify_reviewers", "_send_digest",
+    # 2026-11-28: `review_act` and `_notify_reviewers` no longer send themselves. The human-decision participant send moved, unchanged, into `_decide_and_send` (shared by the page and the WhatsApp reply:
+    # apply_decision's claim + the stored-before-sent order are in that ONE place); the reviewer push moved into `_push_card`; `review_reply_and_act` and its inner `tell` message REVIEWERS only
+    # (tests/test_reply_approve.py proves by AST that no participant address can reach them). The two stale names were REMOVED, not kept, so they cannot be re-used as a place to add a send.
+    allowed = {"_do_auto_send", "_do_holding_notice", "_decide_and_send", "_push_card", "review_reply_and_act", "tell", "_ensure_disclosure", "_send_digest",
                "deliver_pending_notice", "greet_and_send", "answer_and_send", "mint_review_link", "_send_pending_notice",
                "_hold_for_review", "send_probe"}      # send_probe: roster[0] only, never a participant
     unknown = set(senders) - allowed
