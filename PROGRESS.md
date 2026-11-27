@@ -1795,6 +1795,26 @@ Run summary: `ledger_pruned 919`, `ledger_kept_young 1723`, `ledger_kept_protect
 
 **Queued, unchanged:** TEST-CLASSIFY-CONFIGURED-1, PARTICIPANTS-INDEX-1, PING-LABEL-2.
 
+### 4ch. 2026-11-28 — WAVE 1 WINDOWS DEPLOYED AND LIVE-CHECKED: PRE-WARM, PARALLEL PUSHES, REPLY-APPROVE (TUMA), ROUTE + DELIVERY STAMP, HELD-QUESTION ACK. TWO ITEMS QUEUED, NOT BUILT
+
+**State at wave-1 start:** chike-whatsapp build `71693fe` (supervised True, pending 0, pre-warm on 12/h, 900 s sender cooldown, 15-min auto-send timeout unchanged); chike-bridge build `b331896` (connected, 1 lease holder, quoted-message-id forwarded). origin/main == local. Full suite 5346 passed.
+Commits: `b331896` (B-a parallel pushes, B2 reply-approve, route + delivery stamp, bridge quoted id, 2026-11-28 amendment + void-list item 7 in CLAUDE.md), `71693fe` (held-question ack, Swahili-only pending notice).
+
+**Live checks, all PASSED (founder, 2026-11-28):**
+- pre-warm: Habari 12:00 EAT, question 12:02, answer 12:04; `/health` `prewarm.last_touch_age_s` 411 s at ~12:07 = one warm-up, the 12:03 second greeting did not reset it.
+- reply-approve: bare `TUMA` refused (no quote); quoted `TUMA` -> `Imetumwa ✓` + answer delivered (decision -> delivered 2.0 s); re-quote refused.
+- held-question ack (12:37): one ack immediately after the hold; `habari` while pending -> Swahili-only notice; answer approved via quoted `TUMA`.
+
+**Two defects found by those live checks, both fixed in `71693fe`:** (1) the 12 s ack ladder stayed quiet when pre-warm made the draft fast, so a held question got NO ack — the rule is now "a HELD question gets the ack once" (none if the hold failed or the kill switch is 0, never two); `tests/test_held_ack.py`, planted (2 fail without the fix); (2) the pending notice carried an English copy. Four existing tests counted the participant ack as a reviewer push and were corrected to exclude it.
+
+**NSSF "asilimia 5 kwa kila mwezi" (founder approved it live) VERIFIED:** NSSF Act Cap.50 R.E.2023 (`nssf_act_cap50_re2023.pdf`, edition asserted via `assert_edition`) s.14(3): "a sum equal to five per centum of the amount unpaid shall be added as penalty for each month or a part of a month after the date when payment should have been made". Already the locked fact `nssf_penalty`; served index rows 11, 63, 149.
+
+**QUEUED, NOT BUILT (founder, 2026-11-28):**
+1. **NSSF penalty remission proviso for the next regen.** s.14(3) continues: the Board "may, where it thinks fit, remit in whole or in part any penalty imposed by this subsection". The locked fact's `verified_by` already quotes it, but the Swahili index rows 63/149 do not state it, so the served answer reads as unconditional. Next regen: add it to the served rows briefly (R15: measure rank first; 172-char drafts held rank 1 where 415 did not), no section number in answer text (R44).
+2. **`scripts/answer_path_summary.py` should print route + `decided_via` per decided item.** Today the summary aggregates by route and shows no per-item `decided_via`, so the 12:04 item's channel could not be read off it (found while confirming the live check). Counts only, text-free, as now.
+
+**Engineering paused for wave 1.**
+
 ### 4cg. 2026-11-28 — QUESTION-TO-ANSWER TIME FOR WAVE 1: MEASURED, PRE-WARM BUILT (NOT PUSHED, NOT DEPLOYED); REVIEW CARD, SNAPSHOTS AND IMMEDIATE-SEND ARE PROPOSALS
 
 Full record and every source: `docs/decisions/2026-11-28_question_to_answer_time.md`. Harnesses and aggregates-only artifacts committed (R18): `eval/controls/measure_latency_legs_2026_11_28.py` -> `eval/results/latency_legs_2026_11_28.json`; `eval/controls/fs_route_evidence_2026_11_28.py` -> `eval/results/fs_route_evidence_2026_11_28.json`.
