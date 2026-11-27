@@ -1,0 +1,1237 @@
+{
+ "gn487a_penalties": {
+  "routed_total": 65,
+  "own_probe_rows": 3,
+  "foreign_rows": 62,
+  "foreign_in_gate_400": 5,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?"
+   },
+   {
+    "src": "eval_questions_002_additions.jsonl",
+    "q": "Mgeni akikutwa akifanya biashara iliyozuiliwa chini ya GN 487A, anapata adhabu gani?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Adhabu ya raia wa Tanzania anayemsaidia mgeni chini ya GN 487A ni TZS 10,000,000, sivyo?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Faini ya chini kabisa anayotozwa asiye raia kwa kukiuka GN 487A ni TZS ngapi hasa?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Raia wa Tanzania anayemsaidia mgeni kufanya biashara iliyozuiliwa chini ya GN 487A hupata faini ya TZS ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "GN 487A inasema nini kuhusu mpango wa 'jina la mkopo' (nominee) — kwanini unazuiwa?"
+   }
+  ]
+ },
+ "vat_withholding_rates": {
+  "routed_total": 59,
+  "own_probe_rows": 1,
+  "foreign_rows": 58,
+  "foreign_in_gate_400": 2,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?"
+   },
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Je, kiwango cha asilimia 3 cha VAT withholding kinatumika pia kwa ununuzi wa huduma za IT kutoka kwa msambazaji aliyesajiliwa VAT?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Maana ya 'VAT withholding si VAT yote' kwa msambazaji ni nini?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "VAT ya zuio ni asilimia ngapi kwa bidhaa na kwa huduma?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "What is the VAT withholding rate on services?"
+   }
+  ]
+ },
+ "brela_annual_return_deadline": {
+  "routed_total": 59,
+  "own_probe_rows": 3,
+  "foreign_rows": 56,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "coverage_gate_heldout_040.jsonl",
+    "q": "ritani ya mwaka ya kampuni ninawasilisha kabla ya tarehe ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Annual return ya kampuni inatakiwa lini BRELA?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Annual return ya kampuni inatakiwa kuwasilishwa lini BRELA?"
+   },
+   {
+    "src": "batch_004_cleaned.jsonl",
+    "q": "Annual return ya kampuni inawasilishwa lini kwa BRELA?"
+   },
+   {
+    "src": "raw_pairs_batch_004.jsonl",
+    "q": "Annual return ya kampuni inawasilishwa lini kwa BRELA?"
+   },
+   {
+    "src": "raw_pairs_batch_009.jsonl",
+    "q": "Annual return ya BRELA inapaswa kuwasilishwa lini kila mwaka?"
+   }
+  ]
+ },
+ "sdl_base": {
+  "routed_total": 58,
+  "own_probe_rows": 3,
+  "foreign_rows": 55,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ooc_excise_nhif_probes_2026_11_22.jsonl",
+    "q": "Je, gharama za bima ya afya ninazolipia wafanyakazi zinahesabiwa kwenye SDL?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "How does an employer calculate the SDL amount payable each month?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "Msingi wa kukokotoa SDL ni nini — posho zinaingia?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "Are allowances included in the SDL base?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "SDL inakokotolewa kwa jumla ya mishahara ghafi au mshahara wa msingi tu?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "Bonasi na kamisheni zinahesabiwa kwenye SDL?"
+   }
+  ]
+ },
+ "paye_base": {
+  "routed_total": 55,
+  "own_probe_rows": 0,
+  "foreign_rows": 55,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "PAYE inakokotolewa kwa mshahara wa msingi tu?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "PAYE inakatwa kwenye nini, posho zinaingia?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Posho ya nyumba inahesabiwa kwenye SDL, na tofauti yake na PAYE ni ipi?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "PAYE inakokotolewa kwa mshahara wa msingi tu au pamoja na posho?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Is PAYE calculated on basic salary only or on allowances too?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Bonasi na kamisheni zinaingia kwenye PAYE?"
+   }
+  ]
+ },
+ "sdl_payer": {
+  "routed_total": 46,
+  "own_probe_rows": 10,
+  "foreign_rows": 36,
+  "foreign_in_gate_400": 2,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, SDL inakatwa kutoka mshahara wa mfanyakazi na kulipwa TRA?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Je, si kweli kwamba SDL hailipwi na mfanyakazi?"
+   },
+   {
+    "src": "quantity_instruction_heldout_024.jsonl",
+    "q": "SDL inakatwa kwenye mshahara wa mfanyakazi au inalipwa na mwajiri?"
+   },
+   {
+    "src": "batch_003_cleaned.jsonl",
+    "q": "Accountant wetu anasema SDL inakatwa kutoka mshahara wa mfanyakazi. Je, hiyo ni kweli?"
+   },
+   {
+    "src": "batch_006_cleaned.jsonl",
+    "q": "SDL inakatwa kutoka kwa mfanyakazi au mwajiri ndiye analipa?"
+   },
+   {
+    "src": "batch_006_cleaned.jsonl",
+    "q": "Mfanyakazi wangu ameuliza kwa nini SDL imekatwa kwenye payslip yake — ni sahihi kuikata?"
+   }
+  ]
+ },
+ "sdl_exemptions": {
+  "routed_total": 44,
+  "own_probe_rows": 15,
+  "foreign_rows": 29,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_002_additions.jsonl",
+    "q": "Ni idadi gani ya waajiriwa inayofanya mwajiri kuwa na wajibu wa kulipa SDL Tanzania Bara?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "Shule inalipa SDL kwenye posho za walimu?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "Kampuni yangu inafunza wanafunzi (apprentices) chini ya mpango wa serikali. Je, hii inaathiri wajibu wa SDL?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "Shirika lisilo la faida (NGO au asasi ya kiraia) linalipa SDL?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "Kampuni inayomilikiwa na Serikali (parastatal) inalipa SDL?"
+   },
+   {
+    "src": "batch_003_cleaned.jsonl",
+    "q": "Je, kampuni ya madini lazima ilipe SDL kwa wafanyakazi wake?"
+   }
+  ]
+ },
+ "paye_residency": {
+  "routed_total": 42,
+  "own_probe_rows": 12,
+  "foreign_rows": 30,
+  "foreign_in_gate_400": 2,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia 30, sivyo?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Je, mfanyakazi asiye mkazi HALIPI mabano ya kawaida ya PAYE?"
+   },
+   {
+    "src": "director_probes_2026_11_25.jsonl",
+    "q": "Mkurugenzi mgeni analipa PAYE kwa bendi au 15%?"
+   },
+   {
+    "src": "director_probes_2026_11_25.jsonl",
+    "q": "Mkurugenzi mgeni asiye mkazi analipa PAYE asilimia ngapi?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "PAYE ya mfanyakazi asiye mkazi ni asilimia ngapi?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Does a foreign employee pay PAYE at a different rate from a citizen?"
+   }
+  ]
+ },
+ "sdl_paye_deadline": {
+  "routed_total": 39,
+  "own_probe_rows": 2,
+  "foreign_rows": 37,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Je, SDL na PAYE zinalipwa TRA kwa wakati mmoja — siku ya 7 ya mwezi unaofuata?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL na PAYE zinalipwa lini?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL and PAYE are due on what date?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Tarehe ya mwisho ya SDL na PAYE ni ipi?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "SDL na PAYE zinalipwa lini?"
+   }
+  ]
+ },
+ "director_fees_wht": {
+  "routed_total": 38,
+  "own_probe_rows": 9,
+  "foreign_rows": 29,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "residency_probes_2026_11_25.jsonl",
+    "q": "Mkurugenzi mgeni, ada ya mkurugenzi ni asilimia ngapi?"
+   },
+   {
+    "src": "batch_002a_cleaned.jsonl",
+    "q": "Malipo ya mkurugenzi (director's fee) yanastahili PAYE?"
+   },
+   {
+    "src": "batch_002b_cleaned.jsonl",
+    "q": "Ada ya mkurugenzi asiye wa wakati kamili inalipwa kodi ya zuio ya asilimia ngapi Tanzania?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "Malipo ya mkurugenzi (director's fee) yanastahili PAYE?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "Ada ya mkurugenzi asiye wa wakati kamili inalipwa kodi ya zuio ya asilimia ngapi Tanzania?"
+   },
+   {
+    "src": "batch_004_cleaned.jsonl",
+    "q": "WHT kwa ada za mkurugenzi (director fees) kwa wakazi ni asilimia ngapi?"
+   }
+  ]
+ },
+ "brela_three_forms": {
+  "routed_total": 35,
+  "own_probe_rows": 0,
+  "foreign_rows": 35,
+  "foreign_in_gate_400": 4,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "BRELA inasajilisha aina kuu ngapi za miundo ya biashara Tanzania?"
+   },
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, ushirikiano (partnership) wa watu wawili wanaomiliki duka pamoja unahitaji kusajiliwa BRELA?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Payroll yetu ni TZS 7,000,000 kwa mwezi, sasa je tunatakiwa kujisajili BRELA?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?"
+   },
+   {
+    "src": "group_payroll_probes_008.jsonl",
+    "q": "Nina wafanyakazi 20 na mtaji wa TZS 50,000,000, je nasajili kampuni au jina la biashara BRELA?"
+   },
+   {
+    "src": "vat_denial_probes_2026_11_16.jsonl",
+    "q": "Je nasajili BRELA kama mtaji ni TZS 250,000,000?"
+   }
+  ]
+ },
+ "sector_minimum_wage": {
+  "routed_total": 35,
+  "own_probe_rows": 6,
+  "foreign_rows": 29,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "concord_1pl_in_scope_020.jsonl",
+    "q": "Kima cha chini cha mshahara kwa sekta ya ulinzi ni TZS ngapi"
+   },
+   {
+    "src": "ooc_adversarial_in_scope_015.jsonl",
+    "q": "nina wafanyakazi wa shamba je kima cha chini cha mshahara ni kiasi gani"
+   },
+   {
+    "src": "engine_reachability_probes.jsonl",
+    "q": "Kima cha chini cha mshahara kwa mlinzi ni kiasi gani?"
+   },
+   {
+    "src": "batch_004_cleaned.jsonl",
+    "q": "Kwa mwajiri wa hoteli na utalii, mshahara wa chini ni Shilingi ngapi?"
+   },
+   {
+    "src": "batch_004_cleaned.jsonl",
+    "q": "Mfanyakazi wa viwanda (manufacturing) ana mshahara wa chini wa kiasi gani?"
+   },
+   {
+    "src": "raw_pairs_batch_004.jsonl",
+    "q": "Kwa mwajiri wa hoteli na utalii, mshahara wa chini ni Shilingi ngapi?"
+   }
+  ]
+ },
+ "brela_late_annual_return": {
+  "routed_total": 33,
+  "own_probe_rows": 2,
+  "foreign_rows": 31,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Kampuni isiyo na mtaji wa hisa ikichelewa kuwasilisha annual return adhabu ni ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Kampuni ilishindwa kuwasilisha annual return kwa miaka 2 — matokeo yanayoweza kutokea ni yapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Annual return ya kampuni yangu imechelewa, adhabu ni nini?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Late annual return penalty BRELA is how much?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Nikichelewa kuwasilisha annual return BRELA nalipa faini ngapi?"
+   }
+  ]
+ },
+ "paye_band_table": {
+  "routed_total": 28,
+  "own_probe_rows": 1,
+  "foreign_rows": 27,
+  "foreign_in_gate_400": 2,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_002_additions.jsonl",
+    "q": "Mfumo wa mabano ya PAYE ya kila mwezi unafuata mpangilio gani wa viwango?"
+   },
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Analipwa euro 400 kila mwezi, PAYE yake naihesabuje kwa mabano ya Tanzania?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Mfumo wa mabano ya PAYE ya kila mwezi unafuata mpangilio gani wa viwango?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Viwango vya PAYE ni vipi?"
+   },
+   {
+    "src": "residency_probes_2026_11_25.jsonl",
+    "q": "Bendi za PAYE ni zipi?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Bendi za PAYE ni zipi?"
+   }
+  ]
+ },
+ "vat_professional_services": {
+  "routed_total": 26,
+  "own_probe_rows": 2,
+  "foreign_rows": 24,
+  "foreign_in_gate_400": 2,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, mhasibu aliyeidhinishwa (CPA) lazima asajilishe VAT hata kama ana wateja wachache na mapato madogo sana?"
+   },
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Kwa nini fani kama wakili na wahandisi zinahitajika kusajilisha VAT bila kujali mauzo yao?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Mhasibu lazima ajisajili VAT hata kama mauzo yake ni madogo?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Do lawyers have to register for VAT regardless of turnover?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Mhandisi anayetoa huduma za kitaalamu anatakiwa kusajili VAT?"
+   }
+  ]
+ },
+ "business_licence_validity": {
+  "routed_total": 23,
+  "own_probe_rows": 0,
+  "foreign_rows": 23,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Leseni yangu ya biashara haiishi kila mwaka, inadumu mpaka niifute, sivyo?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Leseni ya biashara huisha lini?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Leseni ya biashara inaisha lini?"
+   },
+   {
+    "src": "d16_followup_probes_2026_11_17.jsonl",
+    "q": "Leseni ya biashara yangu niliyoipata mwaka huu bado ni ileile. Si lazima niifanyie upya kabla ya tarehe 30 Juni, ndiyo?"
+   },
+   {
+    "src": "d16_followup_probes_2026_11_17.jsonl",
+    "q": "Leseni ya biashara ya LGA inahuishwa lini?"
+   },
+   {
+    "src": "d16_followup_probes_2026_11_17.jsonl",
+    "q": "Leseni ya biashara inaisha lini?"
+   }
+  ]
+ },
+ "paye_rate": {
+  "routed_total": 22,
+  "own_probe_rows": 1,
+  "foreign_rows": 21,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "edge_probe_extended_078_DRAFT.jsonl",
+    "q": "Kiwango cha juu kabisa cha PAYE ni asilimia thelathini, kweli?"
+   },
+   {
+    "src": "quantity_instruction_heldout_024.jsonl",
+    "q": "Kiwango cha juu kabisa cha PAYE ni asilimia ngapi?"
+   },
+   {
+    "src": "bucket_f_reach_probes_012.jsonl",
+    "q": "Kiwango cha juu kabisa cha PAYE ni asilimia thelathini, kweli?"
+   },
+   {
+    "src": "residency_probes_2026_11_25.jsonl",
+    "q": "PAYE ni asilimia ngapi?"
+   },
+   {
+    "src": "residency_probes_2026_11_25.jsonl",
+    "q": "Je, kuna tofauti kati ya kiwango cha kodi cha kwanza na cha pili kwa PAYE?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "PAYE ni asilimia ngapi?"
+   }
+  ]
+ },
+ "vat_medical_services": {
+  "routed_total": 21,
+  "own_probe_rows": 7,
+  "foreign_rows": 14,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Huduma za afya zinatozwa VAT?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Daktari anayetoa huduma za kitaalamu anatakiwa kusajili VAT?"
+   },
+   {
+    "src": "batch_008_cleaned.jsonl",
+    "q": "Daktari binafsi aliyefungua kliniki ndogo — anahitaji kusajili VAT kuanzia siku ya kwanza?"
+   },
+   {
+    "src": "batch_008_cleaned.jsonl",
+    "q": "Daktari anasema: 'Huduma za afya zimesamehewa VAT — kwa hivyo sijasajilishwa.' Je, hoja hii ni sahihi?"
+   },
+   {
+    "src": "raw_pairs_batch_008.jsonl",
+    "q": "Daktari binafsi aliyefungua kliniki ndogo — anahitaji kusajili VAT kuanzia siku ya kwanza?"
+   }
+  ]
+ },
+ "sdl_how_to_file_pay": {
+  "routed_total": 20,
+  "own_probe_rows": 9,
+  "foreign_rows": 11,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "Nalipa SDL wapi na kwa fomu gani?"
+   },
+   {
+    "src": "raw_pairs_batch_009.jsonl",
+    "q": "SDL — mwajiri anawasilisha fomu gani na wapi?"
+   },
+   {
+    "src": "checkpoint_005.jsonl",
+    "q": "SDL — mwajiri anawasilisha fomu gani na wapi?"
+   },
+   {
+    "src": "train_sft.jsonl",
+    "q": "Je, kuna njia maalum ya kuripoti malipo ya SDL TRA?"
+   },
+   {
+    "src": "train_sft.jsonl",
+    "q": "SDL — mwajiri anawasilisha fomu gani na wapi?"
+   },
+   {
+    "src": "train_sft.jsonl",
+    "q": "Ninatumia fomu gani kuwasilisha SDL kwa TRA?"
+   }
+  ]
+ },
+ "wcf_accident_reporting": {
+  "routed_total": 17,
+  "own_probe_rows": 0,
+  "foreign_rows": 17,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "edge_probe_natural_048.jsonl",
+    "q": "mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali"
+   },
+   {
+    "src": "false_premise_pairs_016.jsonl",
+    "q": "Ajali ya kazini inatolewa taarifa WCF ndani ya siku ngapi?"
+   },
+   {
+    "src": "quantity_instruction_heldout_024.jsonl",
+    "q": "Ajali ya kazini inatolewa taarifa WCF ndani ya siku ngapi?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Mfanyakazi ameumia jana nina siku ngapi za kupeleka taarifa ya ajali"
+   },
+   {
+    "src": "router_natural_eval_001.jsonl",
+    "q": "Mfanyakazi wangu amepata ajali kazini — nina muda gani wa kutoa taarifa?"
+   },
+   {
+    "src": "batch_004_cleaned.jsonl",
+    "q": "Ikiwa mfanyakazi ameumia kazini, ninapaswa kuripoti lini na wapi?"
+   }
+  ]
+ },
+ "nssf_split": {
+  "routed_total": 14,
+  "own_probe_rows": 0,
+  "foreign_rows": 14,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "NSSF ina mgawanyo mmoja tu wa 10 kwa 10 kati ya mwajiri na mfanyakazi, sivyo?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Naweza kulipa NSSF kwa mgawanyo wa 15 kwa 5?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Mgawanyo wa NSSF kati ya mwajiri na mfanyakazi unaweza kubadilishwa?"
+   },
+   {
+    "src": "batch_003_cleaned.jsonl",
+    "q": "Je, mwajiri anaweza kubadilisha mgawanyo wa NSSF kutoka 10/10 kwenda 15/5?"
+   },
+   {
+    "src": "raw_pairs_batch_003.jsonl",
+    "q": "Je, mwajiri anaweza kubadilisha mgawanyo wa NSSF kutoka 10/10 kwenda 15/5?"
+   }
+  ]
+ },
+ "vat_voluntary_registration": {
+  "routed_total": 13,
+  "own_probe_rows": 1,
+  "foreign_rows": 12,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "bound_premise_probes_2026_11_12.jsonl",
+    "q": "Mauzo yangu bado hayajafika TZS 200 milioni kwa mwaka. Ninaweza kusajili VAT kwa hiari (voluntary VAT registration)?"
+   },
+   {
+    "src": "bound_premise_probes_2026_11_12.jsonl",
+    "q": "Mauzo yangu bado hayajafika TZS milioni 200 kwa mwaka. Ninaweza kusajili VAT kwa hiari?"
+   },
+   {
+    "src": "eval_questions_001.jsonl",
+    "q": "Je, mfanyabiashara ambaye bado hajafika kizingiti cha VAT anaweza kujisajilisha VAT kwa hiari?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Mauzo yangu bado hayajafika milioni 200 kwa mwaka. Naweza kusajili VAT kwa hiari?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Naweza kusajili VAT kwa hiari kama mhasibu?"
+   },
+   {
+    "src": "raw_pairs_batch_003.jsonl",
+    "q": "Ninaweza kujisajili kwa VAT hiari hata kama mauzo yangu ni TZS 80,000,000 kwa mwaka?"
+   }
+  ]
+ },
+ "vat_medicines": {
+  "routed_total": 12,
+  "own_probe_rows": 1,
+  "foreign_rows": 11,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Dawa zinatozwa VAT?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Mhandisi na dawa, VAT inatozwa?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Dawa zinatozwa VAT?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Dawa nyingi za binadamu zinatozwa VAT au ni zero-rated?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Are medicines VAT-exempt in Tanzania?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Vifaa tiba vinatozwa VAT?"
+   }
+  ]
+ },
+ "nssf_party": {
+  "routed_total": 12,
+  "own_probe_rows": 0,
+  "foreign_rows": 12,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "sdl_three_routes_probes_2026_11_23.jsonl",
+    "q": "NSSF inakatwa kwa mfanyakazi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "NSSF inakatwa kwa mfanyakazi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Nani analipa NSSF?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Mfanyakazi anakatwa NSSF kwenye mshahara wake?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Is NSSF deducted from the employee?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "NSSF inalipwa na mwajiri au mfanyakazi?"
+   }
+  ]
+ },
+ "sdl_nssf_party": {
+  "routed_total": 11,
+  "own_probe_rows": 6,
+  "foreign_rows": 5,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL na NSSF zinakatwa kwa mfanyakazi?"
+   },
+   {
+    "src": "batch_006_cleaned.jsonl",
+    "q": "Je, SDL na NSSF ni tofauti gani katika suala la ni nani analipa?"
+   },
+   {
+    "src": "raw_pairs_batch_006.jsonl",
+    "q": "Je, SDL na NSSF ni tofauti gani katika suala la ni nani analipa?"
+   },
+   {
+    "src": "_verify_batch006_all.jsonl",
+    "q": "Je, SDL na NSSF ni tofauti gani katika suala la ni nani analipa?"
+   },
+   {
+    "src": "train_sft.jsonl",
+    "q": "Je, SDL na NSSF ni tofauti gani katika suala la ni nani analipa?"
+   }
+  ]
+ },
+ "tin_apply_deadline": {
+  "routed_total": 10,
+  "own_probe_rows": 0,
+  "foreign_rows": 10,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Naomba TIN ndani ya siku ngapi tangu nianze biashara?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Sina haja ya kuwa na TIN kwa sababu biashara yangu ni ndogo na ndiyo kwanza naanza, sivyo?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Nimefungua saluni yangu mwezi huu. Kuna mtu kaniambia nina siku 15 za kuomba TIN kuanzia siku nilipoanza biashara, sivyo?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Nimeanza biashara ya kuuza vifaa vya ujenzi wiki iliyopita. Nimesikia nina siku 15 za kuomba TIN, kwa hiyo sihitaji kuwa nayo siku ya kwanza kabisa, n"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Naomba TIN lini baada ya kuanza biashara?"
+   }
+  ]
+ },
+ "business_licence_fee_and_validity": {
+  "routed_total": 10,
+  "own_probe_rows": 0,
+  "foreign_rows": 10,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "How much does an LGA business licence cost and when is it renewed?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Nahitaji leseni ya biashara, inagharimu kiasi gani na inaisha lini?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "Leseni ya biashara ya LGA inagharimu kiasi gani na inahuishwa lini?"
+   },
+   {
+    "src": "d18_batch_probes_2026_11_17.jsonl",
+    "q": "How much does an LGA business licence cost and when is it renewed?"
+   }
+  ]
+ },
+ "annual_leave": {
+  "routed_total": 9,
+  "own_probe_rows": 0,
+  "foreign_rows": 9,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "authority_repair_probes_2026_11_16.jsonl",
+    "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?"
+   },
+   {
+    "src": "authority_repair_probes_2026_11_16.jsonl",
+    "q": "Likizo ya mwaka ni siku ngapi?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Likizo ya mwaka haizidi wiki mbili kwa mujibu wa sheria, sivyo?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Mfanyakazi ana haki ya likizo ya mwaka ya siku ngapi?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Likizo ya mwaka ni siku 30, sivyo?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Likizo ya mwaka ni siku ngapi?"
+   }
+  ]
+ },
+ "future_year_rate": {
+  "routed_total": 9,
+  "own_probe_rows": 8,
+  "foreign_rows": 1,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "gate2_prelim_2026_11_22.jsonl",
+    "q": "Nina kampuni mpya na nataka kupanga bajeti ya mwaka ujao. Naomba unipe kiwango rasmi cha VAT kitakachotumika Tanzania mwaka 2028/2029."
+   }
+  ]
+ },
+ "sdl_audit_hedge": {
+  "routed_total": 9,
+  "own_probe_rows": 1,
+  "foreign_rows": 8,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "How does TRA conduct an SDL audit and what do they examine?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "TRA hukagua SDL vipi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Ukaguzi wa SDL unafanyikaje?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Nitajiandaaje kwa SDL audit ya TRA?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "How does TRA conduct an SDL audit and what do they examine?"
+   },
+   {
+    "src": "batch_002_cleaned.jsonl",
+    "q": "TRA inafanya ukaguzi wa SDL vipi na wanakagua nini?"
+   }
+  ]
+ },
+ "brela_fee_no_share_capital": {
+  "routed_total": 8,
+  "own_probe_rows": 0,
+  "foreign_rows": 8,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_003.jsonl",
+    "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa BRELA ni TZS ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Ada ya kusajili kampuni isiyo na mtaji wa hisa (no share capital) BRELA ni TZS ngapi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "How much does it cost to register a company without share capital?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Kampuni isiyo na mtaji wa hisa inagharimu kiasi gani kusajili?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Ada ya kampuni isiyo na mtaji wa hisa ni TZS 300,000, sivyo?"
+   }
+  ]
+ },
+ "individual_income_tax_return": {
+  "routed_total": 8,
+  "own_probe_rows": 0,
+  "foreign_rows": 8,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "d16_followup_probes_2026_11_17.jsonl",
+    "q": "Return ya kodi ya mapato ya mtu binafsi ni lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Return ya kodi ya mapato ya mtu binafsi ni lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Mwisho wa kuwasilisha return ya kodi ya mapato kwa mtu binafsi ni lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Je, mtu binafsi mwenye biashara anatakiwa kuwasilisha return ya kodi ya mapato lini?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Nina biashara binafsi na mwaka wangu wa hesabu umeishia tarehe 31 Desemba. Kwa hiyo return ya income tax sihitaji kusubiri miezi 12 mingine, naweza ku"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Duka langu ni la mtu binafsi, return ya income tax ni mwezi gani?"
+   }
+  ]
+ },
+ "sdl_employee_premise": {
+  "routed_total": 8,
+  "own_probe_rows": 8,
+  "foreign_rows": 0,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": []
+ },
+ "levy_deadlines_three": {
+  "routed_total": 7,
+  "own_probe_rows": 5,
+  "foreign_rows": 2,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL, NSSF na PAYE zinalipwa lini?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL na NSSF na PAYE zinalipwa lini?"
+   }
+  ]
+ },
+ "severance": {
+  "routed_total": 6,
+  "own_probe_rows": 0,
+  "foreign_rows": 6,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?"
+   },
+   {
+    "src": "constant_guards_probes_2026_11_16.jsonl",
+    "q": "Severance pay ni kiasi gani kwa mfanyakazi wa miaka 3?"
+   },
+   {
+    "src": "d16_followup_probes_2026_11_17.jsonl",
+    "q": "Mfanyakazi asiye mkazi analipwa severance, kodi ni ngapi?"
+   },
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Severance ni siku ngapi?"
+   },
+   {
+    "src": "negated_premise_AUTHORED.jsonl",
+    "q": "Mfanyakazi aliyefanya kazi miezi 8 tu akiachishwa, hastahili malipo ya kuachishwa kazi, sivyo?"
+   },
+   {
+    "src": "negated_premise_set2_AUTHORED.jsonl",
+    "q": "Mfanyakazi wangu amefanya kazi miezi 8 tu. Nikisitisha ajira yake sasa, sihitajiki kumlipa severance pay, au siyo?"
+   }
+  ]
+ },
+ "notice": {
+  "routed_total": 6,
+  "own_probe_rows": 0,
+  "foreign_rows": 6,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "d17_batch_probes_2026_11_17.jsonl",
+    "q": "Notisi ya kuacha kazi ni siku ngapi?"
+   },
+   {
+    "src": "negated_premise_AUTHORED.jsonl",
+    "q": "Mfanyakazi wa mshahara wa kila mwezi aliyekaa zaidi ya mwezi mmoja, siwezi kumpa notisi ya siku 7 tu, sivyo?"
+   },
+   {
+    "src": "negated_premise_AUTHORED.jsonl",
+    "q": "Mfanyakazi wangu amefikisha miaka miwili kazini. Nilikuwa nafikiri notice ya kumaliza mkataba ni siku 7 tu hata kama analipwa mshahara wa mwezi. Nimee"
+   },
+   {
+    "src": "negated_premise_AUTHORED.jsonl",
+    "q": "Nimemwajiri mfanyakazi mpya dukani kwangu, analipwa kwa siku. Akianza kazi leo, notice ya kumaliza ajira ndani ya mwezi wake wa kwanza inapaswa kuwa s"
+   },
+   {
+    "src": "negated_premise_set2_AUTHORED.jsonl",
+    "q": "Nina mfanyakazi wa kulipwa kwa wiki ambaye amefanya kazi kwangu miaka miwili. Nikitaka kusitisha ajira yake, notice ya siku 7 bado inatosha, sivyo?"
+   },
+   {
+    "src": "future_year_rate_probes_2026_11_22.jsonl",
+    "q": "Mkataba wa kazi unaisha 2028, ninahitaji kutoa notisi ya siku ngapi?"
+   }
+  ]
+ },
+ "sdl_nssf_paye_party": {
+  "routed_total": 6,
+  "own_probe_rows": 1,
+  "foreign_rows": 5,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Nani analipa SDL, NSSF na PAYE?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Mfanyakazi anakatwa PAYE, NSSF na SDL kwenye mshahara wake?"
+   },
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "Is SDL, NSSF and PAYE deducted from the employee?"
+   },
+   {
+    "src": "three_more_statements_probes_2026_11_24.jsonl",
+    "q": "SDL, NSSF na PAYE zinakatwa kwa mfanyakazi?"
+   }
+  ]
+ },
+ "vat_health_and_medicines": {
+  "routed_total": 6,
+  "own_probe_rows": 0,
+  "foreign_rows": 6,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Huduma za afya zinatozwa VAT? Na dawa je?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Are health services and medicines VAT-exempt?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Kliniki inatozwa VAT kwa huduma na dawa?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Daktari anatozwa VAT kwenye dawa anazoagiza?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Daktari anatozwa VAT kwenye dawa anazoagiza?"
+   },
+   {
+    "src": "two_statements_probes_2026_11_25.jsonl",
+    "q": "Huduma za afya zinatozwa VAT? Na dawa je?"
+   }
+  ]
+ },
+ "wcf_base": {
+  "routed_total": 5,
+  "own_probe_rows": 0,
+  "foreign_rows": 5,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "WCF inakatwa kwenye nini, mshahara wa msingi tu au pamoja na posho?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Msingi wa michango ya WCF ni nini?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Is WCF calculated on basic salary only or on allowances too?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "Posho zinaingia kwenye WCF?"
+   },
+   {
+    "src": "three_routes_probes_2026_11_25.jsonl",
+    "q": "WCF inakokotolewa kwa fedha taslimu tu?"
+   }
+  ]
+ },
+ "wcf_disease_reporting": {
+  "routed_total": 4,
+  "own_probe_rows": 0,
+  "foreign_rows": 4,
+  "foreign_in_gate_400": 1,
+  "foreign_examples": [
+   {
+    "src": "eval_questions_002_additions.jsonl",
+    "q": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Ugonjwa wa kazini unapaswa kutolewa taarifa WCF ndani ya muda gani tangu kugunduliwa?"
+   },
+   {
+    "src": "coverage_routes_probes_2026_11_16.jsonl",
+    "q": "Mfanyakazi amepata ugonjwa kutokana na kazi, mwajiri apeleke taarifa WCF ndani ya siku ngapi?"
+   },
+   {
+    "src": "fabrication_and_deadline_defect_quarantine_2026_08_29.jsonl",
+    "q": "Ugonjwa wa kazini unaripotiwa WCF ndani ya siku ngapi?"
+   }
+  ]
+ },
+ "levy_rates_three": {
+  "routed_total": 4,
+  "own_probe_rows": 3,
+  "foreign_rows": 1,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "SDL, NSSF na PAYE ni asilimia ngapi?"
+   }
+  ]
+ },
+ "overtime": {
+  "routed_total": 1,
+  "own_probe_rows": 0,
+  "foreign_rows": 1,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "negated_premise_set2_AUTHORED.jsonl",
+    "q": "Mfanyakazi wangu anafanya overtime baada ya muda wa kawaida. Nimeambiwa siwezi kumlipa kiwango kilekile cha saa za kawaida, lazima iwe angalau mara mo"
+   }
+  ]
+ },
+ "vat_withholding_mixed_supply": {
+  "routed_total": 1,
+  "own_probe_rows": 0,
+  "foreign_rows": 1,
+  "foreign_in_gate_400": 0,
+  "foreign_examples": [
+   {
+    "src": "ten_more_statements_probes_2026_11_23.jsonl",
+    "q": "VAT withholding kwa mauzo ya bidhaa na huduma pamoja inakatwaje?"
+   }
+  ]
+ }
+}
