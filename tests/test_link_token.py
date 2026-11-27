@@ -263,6 +263,8 @@ def test_a_re_sent_question_through_the_real_handler_marks_the_second_draft_and_
     pushes = []
 
     async def fake_send(to, text):
+        if text.startswith("Nimepata swali lako"):
+            return True, None    # the participant's held-question ack (2026-11-28) is not a reviewer push
         pushes.append(text)
         return True, None
     monkeypatch.setattr(mw, "_send_once", fake_send)
@@ -292,6 +294,8 @@ def test_a_RENOTIFICATION_of_a_draft_held_before_the_flag_existed_still_warns_ab
     pushes = []
 
     async def fake_send(to, text):
+        if text.startswith("Nimepata swali lako"):
+            return True, None    # the participant's held-question ack (2026-11-28) is not a reviewer push
         pushes.append(text)
         return True, None
     monkeypatch.setattr(mw, "_send_once", fake_send)

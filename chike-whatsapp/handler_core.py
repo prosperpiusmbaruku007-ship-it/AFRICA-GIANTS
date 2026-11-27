@@ -69,7 +69,6 @@ WELCOME = (
 # question had been forgotten. Brief on purpose: it says the answer is coming, nothing else.
 PENDING_NOTICE = (
     "Swali lako limepokelewa — jibu bado linaandaliwa. Nitakutumia mara litakapokuwa tayari. 🙏\n\n"
-    "Your question was received — the answer is still being prepared. I will send it as soon as it is ready."
 )
 
 FALLBACK = (
@@ -704,6 +703,18 @@ async def deliver(sender, text, ask, send_once, settings, build="dev",
                 ok, send_error = False, scrub(f"{type(e).__name__}: {e}", settings.secrets)
             row["send_ok"] = ok
             row["send_error"] = send_error
+            # THE SUPERVISED ACK IS A PROPERTY OF "HELD", NOT OF "SLOW" (founder, 2026-11-28). A draft that beat the 12 s threshold (pre-warm made that common) was held
+            # with NO ack, and the participant sat silent until a person reviewed it. A held question therefore gets THE ack once, now, if the ladder has not already sent
+            # it. Nothing is delivered on this path (a model-free auto-send only happens after the review timeout, later and elsewhere), so there is no "answer already
+            # delivered" case to suppress here. Still at most ONE ack per question (`acks_sent`), and the 0 kill switch still disables it.
+            if ok and state["acks_sent"] == 0 and settings.slow_ack_after_s > 0:
+                state["acks_sent"] += 1
+                try:
+                    await send_with_retry(send_once, sender, ACK_TEXT, settings)
+                except Exception as e:                               # noqa: BLE001
+                    print(f"[ack] held-ack failed - {scrub(e, settings.secrets)}")
+                row["acks_sent"] = state["acks_sent"]
+                row["ack_sent"] = True
             # `reply` here is the DRAFT, not what the user received. Renaming the field
             # would break every existing transcript reader, so the distinction is carried
             # by `supervision` — and a reader that ignores it will over-count deliveries,

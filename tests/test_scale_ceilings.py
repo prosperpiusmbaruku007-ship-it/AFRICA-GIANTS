@@ -204,6 +204,8 @@ def _drive_hold(mw, monkeypatch, n_pending_before):
     pushes = []
 
     async def fake_send(to, text):
+        if text.startswith("Nimepata swali lako"):
+            return True, None    # the participant's held-question ack (2026-11-28) is not a reviewer push
         pushes.append(text)
         return True, None
     monkeypatch.setattr(mw, "_send_once", fake_send)
