@@ -1,0 +1,204 @@
+{
+ "items_read": 41,
+ "transcript_rows_read": 75,
+ "population": "all stored senders incl. test (see docstring)",
+ "latency_report": {
+  "answered_sent": 21,
+  "unjoined": 7,
+  "auto_sent_excluded": 7,
+  "excluded_test": 0,
+  "all": {
+   "model_s": {
+    "n": 14,
+    "p50": 33.3,
+    "p90": 59.3,
+    "max": 222.7
+   },
+   "hold_notify_s": {
+    "n": 14,
+    "p50": 3.4,
+    "p90": 15.7,
+    "max": 30.8
+   },
+   "question_to_draft_s": {
+    "n": 14,
+    "p50": 38.6,
+    "p90": 72.2,
+    "max": 224.9
+   },
+   "draft_to_decision_s": {
+    "n": 14,
+    "p50": 746.0,
+    "p90": 5025.2,
+    "max": 78778.0
+   },
+   "question_to_decision_s": {
+    "n": 14,
+    "p50": 864.8,
+    "p90": 5047.7,
+    "max": 78780.4
+   }
+  },
+  "cold": {
+   "model_s": {
+    "n": 7,
+    "p50": 54.0,
+    "p90": 125.6,
+    "max": 222.7
+   },
+   "hold_notify_s": {
+    "n": 7,
+    "p50": 2.2,
+    "p90": 10.2,
+    "max": 17.3
+   },
+   "question_to_draft_s": {
+    "n": 7,
+    "p50": 57.3,
+    "p90": 136.9,
+    "max": 224.9
+   },
+   "draft_to_decision_s": {
+    "n": 7,
+    "p50": 173.0,
+    "p90": 1335.6,
+    "max": 1545.0
+   },
+   "question_to_decision_s": {
+    "n": 7,
+    "p50": 225.1,
+    "p90": 1387.7,
+    "max": 1603.4
+   }
+  },
+  "warm": {
+   "model_s": {
+    "n": 7,
+    "p50": 0.5,
+    "p90": 11.2,
+    "max": 26.7
+   },
+   "hold_notify_s": {
+    "n": 7,
+    "p50": 5.2,
+    "p90": 19.5,
+    "max": 30.8
+   },
+   "question_to_draft_s": {
+    "n": 7,
+    "p50": 9.9,
+    "p90": 31.4,
+    "max": 31.9
+   },
+   "draft_to_decision_s": {
+    "n": 7,
+    "p50": 1367.0,
+    "p90": 35326.6,
+    "max": 78778.0
+   },
+   "question_to_decision_s": {
+    "n": 7,
+    "p50": 1398.9,
+    "p90": 35346.3,
+    "max": 78780.4
+   }
+  },
+  "not_measured": [
+   "decision -> delivered (no per-row delivery stamp is stored)"
+  ]
+ },
+ "hold_notify_gap_by_date_and_build": {
+  "2026-11-10 build 162e98e": {
+   "n": 1,
+   "p50": 0.6,
+   "min": 0.6,
+   "max": 0.6
+  },
+  "2026-11-10 build 81917f8": {
+   "n": 1,
+   "p50": 0.6,
+   "min": 0.6,
+   "max": 0.6
+  },
+  "2026-11-11 build 0143092": {
+   "n": 1,
+   "p50": 17.3,
+   "min": 17.3,
+   "max": 17.3
+  },
+  "2026-11-11 build 162e98e": {
+   "n": 1,
+   "p50": 1.6,
+   "min": 1.6,
+   "max": 1.6
+  },
+  "2026-11-11 build 3619b2b": {
+   "n": 1,
+   "p50": 11.6,
+   "min": 11.6,
+   "max": 11.6
+  },
+  "2026-11-11 build 9ea1136": {
+   "n": 1,
+   "p50": 1.7,
+   "min": 1.7,
+   "max": 1.7
+  },
+  "2026-11-11 build bc4eda6": {
+   "n": 1,
+   "p50": 2.2,
+   "min": 2.2,
+   "max": 2.2
+  },
+  "2026-11-12 build 0c6befc": {
+   "n": 6,
+   "p50": 2.0,
+   "min": 1.8,
+   "max": 9.4
+  },
+  "2026-11-13 build b9e834d": {
+   "n": 2,
+   "p50": 5.2,
+   "min": 5.2,
+   "max": 5.3
+  },
+  "2026-11-15 build 00516ec": {
+   "n": 2,
+   "p50": 8.8,
+   "min": 5.6,
+   "max": 11.9
+  },
+  "2026-11-17 build a2e6611": {
+   "n": 1,
+   "p50": 4.4,
+   "min": 4.4,
+   "max": 4.4
+  },
+  "2026-11-25 build 71bbf08": {
+   "n": 20,
+   "p50": 33.0,
+   "min": 20.2,
+   "max": 47.7
+  },
+  "2026-11-26 build 066a995": {
+   "n": 2,
+   "p50": 31.1,
+   "min": 30.8,
+   "max": 31.3
+  },
+  "2026-11-26 build ea0a73b": {
+   "n": 6,
+   "p50": 13.1,
+   "min": 11.8,
+   "max": 21.5
+  }
+ },
+ "question_rows": {
+  "n": 46,
+  "cold_flagged": 16,
+  "model_s": {
+   "p50": 5.4,
+   "p90": 59.6
+  }
+ }
+}

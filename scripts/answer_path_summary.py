@@ -44,6 +44,21 @@ def render_routes(rep):
     return "\n".join(lines)
 
 
+def render_latency(rep):
+    """The legs, p50 / p90 in seconds. Offline-safe: takes the report dict only."""
+    lines = [f"question-to-answer legs (seconds): {rep['answered_sent']} human-sent answers, {rep['unjoined']} unjoined (no leg), "
+             f"{rep['auto_sent_excluded']} auto-sent excluded, {rep['excluded_test']} test excluded"]
+    names = (("model_s", "model call"), ("hold_notify_s", "hold + notify reviewers"), ("question_to_draft_s", "question -> draft ready"),
+             ("draft_to_decision_s", "draft -> reviewer decision"), ("question_to_decision_s", "question -> decision"))
+    for tag, key in (("all", "all"), ("cold start suspected", "cold"), ("warm", "warm")):
+        lines.append(f"  [{tag}]")
+        for n, label in names:
+            d = rep[key][n]
+            lines.append(f"    {label:<28} n={d['n']:<3} p50={'-' if d['p50'] is None else d['p50']:<8} p90={'-' if d['p90'] is None else d['p90']:<8} max={'-' if d['max'] is None else d['max']}")
+    lines += ["  NOT MEASURED: " + x for x in rep["not_measured"]]
+    return "\n".join(lines)
+
+
 def _volume_aggregates():
     """([aggregates], note). A volume that cannot be read is REPORTED, never silently read as 'no history'."""
     import modal
@@ -102,6 +117,7 @@ def main(argv):
     print(render_routes(core.route_report(reviews, aggs, include_test=inc, test_hashes=th)))
     if note:
         print("  NOTE: " + note)
+    print(render_latency(core.latency_report(reviews, all_rows if live else rows, include_test=inc, test_hashes=th)))
     return 0
 
 

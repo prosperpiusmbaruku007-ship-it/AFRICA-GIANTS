@@ -2876,6 +2876,67 @@ def test_hashes_from(*collections):
     return out
 
 
+def _percentile(xs, p):
+    """Linear-interpolated percentile of a non-empty list; None on empty (never 0.0: R39)."""
+    xs = sorted(xs)
+    if not xs:
+        return None
+    k = (len(xs) - 1) * p
+    f = int(k)
+    c = min(f + 1, len(xs) - 1)
+    return round(xs[f] + (xs[c] - xs[f]) * (k - f), 1)
+
+
+def latency_report(items, rows, include_test=False, test_hashes=()):
+    """QUESTION-TO-ANSWER TIME, LEG BY LEG (founder, 2026-11-28), from stored rows. Counts and seconds only: no text, no sender.
+
+    A leg is reported for an answered question only where the QUESTION ROW and the REVIEW ITEM JOIN EXACTLY (same sender hash, the row's `ts` equal to the item's `ts_held`); a question that
+    does not join is COUNTED as `unjoined` and contributes to no leg, never a guessed number. Only items a HUMAN decided to send (`status: sent` or `edited`, both delivered to the participant) enter the decision legs: an auto-sent engine
+    answer waited the 15-minute timeout, which is a policy, not a reviewer's speed. Legs:
+      model_s            the model call (`model_latency_ms`)
+      hold_notify_s      everything else the handler did before it returned: routing, the ack send, holding the draft and pushing it to every reviewer, each push waiting for WhatsApp's receipt
+                         (`total_latency_ms` minus `model_latency_ms`)
+      question_to_draft_s  `total_latency_ms`: the draft exists and the reviewers were notified
+      draft_to_decision_s  `decided_ts` minus `ts_held`: the reviewer's wait plus thinking
+      question_to_decision_s  the sum of the two above
+    NOT MEASURED, and said so in the report: decision -> delivered (no per-row delivery stamp is stored; the bridge ledger's `receipt_ts` is the LATEST receipt, a read receipt hours later, so it is not
+    a delivery time)."""
+    live_items = [i for i in items if include_test or not _is_test_item(i, test_hashes)]
+    by_row = {}
+    for r in rows:
+        if r.get("kind") == "question" and r.get("sender_hash") and r.get("ts") and (include_test or not _is_test_item(r, test_hashes)):
+            by_row[(r["sender_hash"], r["ts"])] = r
+    names = ("model_s", "hold_notify_s", "question_to_draft_s", "draft_to_decision_s", "question_to_decision_s")
+    legs = {n: [] for n in names}
+    cold = {"cold": {n: [] for n in names}, "warm": {n: [] for n in names}}
+    answered = unjoined = auto_excluded = 0
+    for i in live_items:
+        if i.get("status") == "auto_sent":
+            auto_excluded += 1
+            continue
+        if i.get("status") not in ("sent", "edited") or i.get("fallback"):   # `edited` = a reviewer changed the draft and it WAS sent: an answer delivered, and usually the slowest kind
+            continue
+        answered += 1
+        held, dec = _parse_ts(i.get("ts_held")), _parse_ts(i.get("decided_ts"))
+        q = by_row.get((i.get("sender_hash"), i.get("ts_held")))
+        if q is None or held is None or dec is None or q.get("total_latency_ms") is None or q.get("model_latency_ms") is None:
+            unjoined += 1
+            continue
+        model, total = q["model_latency_ms"] / 1000.0, q["total_latency_ms"] / 1000.0
+        vals = {"model_s": model, "hold_notify_s": max(0.0, total - model), "question_to_draft_s": total,
+                "draft_to_decision_s": dec.timestamp() - held.timestamp(), "question_to_decision_s": total + (dec.timestamp() - held.timestamp())}
+        bucket = cold["cold" if q.get("cold_start_suspected") else "warm"]
+        for n in names:
+            legs[n].append(vals[n])
+            bucket[n].append(vals[n])
+
+    def stats(d):
+        return {n: {"n": len(v), "p50": _percentile(v, 0.5), "p90": _percentile(v, 0.9), "max": (round(max(v), 1) if v else None)} for n, v in d.items()}
+    return {"answered_sent": answered, "unjoined": unjoined, "auto_sent_excluded": auto_excluded, "excluded_test": len(items) - len(live_items),
+            "all": stats(legs), "cold": stats(cold["cold"]), "warm": stats(cold["warm"]),
+            "not_measured": ["decision -> delivered (no per-row delivery stamp is stored)"]}
+
+
 def route_report(items, aggregates=(), include_test=False, test_hashes=()):
     """Per-route review outcomes (item D): for each route, how many drafts a reviewer approved unchanged, edited or withheld, plus auto-sent and
     pending. `items` are the HOT review items; `aggregates` are the archived per-day aggregates (text-free), so history survives archiving.
