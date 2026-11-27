@@ -106,3 +106,60 @@ def test_PLANT_a_prune_failure_is_visible_and_never_fails_or_blocks_the_archive(
     assert out.get("ledger_prune_error") == "RuntimeError" and "ledger_pruned" not in out
     assert mw.ARCHIVE_STATE["last"]["ok"] is True, "the archive itself still succeeded and was recorded"
     assert set(mw.BRIDGE_LEDGER.keys()) == {"R23", "R25", "PENDING-OLD"}, "and nothing was deleted"
+
+
+# ── a MANUAL run followed by the SCHEDULED run (2026-11-27): the second must change nothing ─────────────────────
+def _tree(root):
+    out = {}
+    for dp, _, fs in os.walk(root):
+        for f in fs:
+            p = os.path.join(dp, f)
+            out[os.path.relpath(p, root)] = open(p, "rb").read()
+    return out
+
+
+def test_two_consecutive_full_runs_are_idempotent_so_the_scheduled_run_after_a_manual_one_is_safe(mw):
+    import datetime as dt
+    from test_archive_core import item, NOW as ANOW
+    shift = dt.datetime.now(dt.timezone.utc) - ANOW
+    old = item(1, "sent", days_ago=9)
+    for k in ("decided_ts", "ts_held"):
+        old[k] = (dt.datetime.fromisoformat(old[k]) + shift).isoformat(timespec="seconds")
+    mw.REVIEW_QUEUE[old["review_id"]] = old
+    mw.TRANSCRIPTS["2026-11/old.json"] = {"ts": (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=5)).isoformat(timespec="seconds"), "kind": "question",
+                                          "sender_hash": old["sender_hash"], "question": "q"}
+    first = mw.run_archive.get_raw_f()()
+    assert first["review_archived"] == 1 and first["review_removed"] == 1 and first["transcripts_archived"] == 1 and first["ledger_pruned"] == 1
+    files_1, ledger_1, queue_1, index_1 = _tree(mw.vol.root), dict(mw.BRIDGE_LEDGER), dict(mw.REVIEW_QUEUE), dict(mw.LEDGER_INDEX)
+    second = mw.run_archive.get_raw_f()()
+    for k in ("review_archived", "review_removed", "transcripts_archived", "ledger_pruned", "index_pruned", "aggregates_days"):
+        assert second[k] == 0, f"the second run changed something: {k} = {second[k]}"
+    for k in ("review_kept_failed", "review_kept_leak", "review_changed_since_archive", "review_tombstoned_dropped"):
+        assert not second[k], k
+    assert second["transcripts_already_present"] == 1
+    assert _tree(mw.vol.root) == files_1, "every archive file, including the aggregates, is byte-for-byte identical after the second run"
+    assert dict(mw.BRIDGE_LEDGER) == ledger_1 and dict(mw.REVIEW_QUEUE) == queue_1 and dict(mw.LEDGER_INDEX) == index_1
+    assert mw.ARCHIVE_STATE["last"]["ok"] is True and "lock" not in mw.ARCHIVE_STATE
+
+
+def test_a_manual_run_does_not_suppress_the_scheduled_one_and_both_cannot_overlap(mw):
+    import datetime as dt
+    mw.run_archive.get_raw_f()()
+    assert not [k for k in mw.ARCHIVE_STATE.keys() if str(k).startswith("claim_")], "a manual run leaves the daily claim alone"
+
+    class _F:
+        calls = []
+
+        @staticmethod
+        def spawn():
+            _F.calls.append(1)
+    mw.run_archive_real = mw.run_archive
+    import types
+    mw.run_archive = _F
+    in_window = dt.datetime(2026, 11, 27, 1, 25, tzinfo=dt.timezone.utc).timestamp()
+    try:
+        assert mw._maybe_spawn_archive(in_window) == "2026-11-27" and _F.calls == [1], "so the 01:20 run still happens (and is a no-op: the test above)"
+    finally:
+        mw.run_archive = mw.run_archive_real
+    mw.ARCHIVE_STATE["lock"] = {"token": "manual-run", "ts": __import__("time").time()}
+    assert mw.run_archive.get_raw_f()() == {"skipped": "locked"}, "and if they ever coincide, the lock makes the second one skip rather than overlap"
